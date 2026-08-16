@@ -30,7 +30,7 @@
   <header class="site-header">
     <div class="brand">
       <h1>AI 大乐透娱乐分析助手</h1>
-      <p class="brand-tag">历史开奖数据的统计娱乐分析 · 非预测工具</p>
+      <p class="brand-tag">历史开奖统计与娱乐分析 · 非预测工具</p>
     </div>
     <div class="risk-banner">
       ⚠️ 风险提示：本项目仅作娱乐研究，<strong>不具备预测彩票结果能力</strong>，请理性购彩、量力而行。
@@ -44,9 +44,94 @@
   </div>
 
   <main id="content" hidden>
-    <!-- ① 产品介绍 -->
+    <!-- ① 最新开奖结果（第一眼核心，由 app.js 读取 issues 最后一条渲染） -->
+    <section class="card latest-result">
+      <h2>🎯 最新开奖结果</h2>
+      <p class="latest-meta">最新一期：<strong id="latest-issue">—</strong> ｜ 开奖日期：<strong id="latest-date">—</strong></p>
+      <div class="latest-balls">
+        <span class="grp-label">前区</span>
+        <div class="ball-row" id="latest-front"></div>
+        <span class="grp-label">后区</span>
+        <div class="ball-row" id="latest-back"></div>
+      </div>
+    </section>
+
+    <!-- ② 数据覆盖 -->
+    <section class="card cover-card">
+      <h2>📊 数据覆盖</h2>
+      <div class="cover-count"><span id="cover-count">—</span><span class="cover-unit">期</span></div>
+      <p class="cover-desc">基于真实历史开奖数据</p>
+      <p class="cover-range" id="cover-range">—</p>
+      <p class="cover-source" id="cover-source">数据来源：—</p>
+      <p class="subtitle" id="meta-line">加载中…</p>
+    </section>
+
+    <!-- ③ 下一期娱乐分析 -->
+    <section class="card">
+      <h2>🔮 下一期娱乐分析</h2>
+      <p class="hint">目标期号：<strong id="rec-target">—</strong> ｜ 以下为算法随机娱乐产物，<strong>不等于中奖预测</strong>。</p>
+      <div class="rec-grid" id="recommendations"></div>
+    </section>
+
+    <!-- ④ 数据统计（热号 / 冷号 / 走势） -->
+    <section class="card">
+      <h2>📈 数据统计</h2>
+
+      <div class="stats-sub">
+        <h3>热门号码排行</h3>
+        <div class="block">
+          <h4>前区 Top 10</h4>
+          <div class="rank-list" id="hot-front"></div>
+        </div>
+        <div class="block">
+          <h4>后区 Top 5</h4>
+          <div class="rank-list" id="hot-back"></div>
+        </div>
+      </div>
+
+      <div class="stats-sub">
+        <h3>冷号分析（当前遗漏较大）</h3>
+        <p class="hint">遗漏 = 该号码连续未开出的期数，数值越大越“冷”。</p>
+        <div class="block">
+          <h4>前区遗漏 Top 8</h4>
+          <div class="rank-list" id="cold-front"></div>
+        </div>
+        <div class="block">
+          <h4>后区遗漏 Top 4</h4>
+          <div class="rank-list" id="cold-back"></div>
+        </div>
+      </div>
+
+      <div class="stats-sub">
+        <h3>走势统计</h3>
+        <div class="block">
+          <h4>奇偶比例（前区）</h4>
+          <div class="bars" id="odd-even"></div>
+        </div>
+        <div class="block">
+          <h4>大小比例（前区，分界 18）</h4>
+          <div class="bars" id="big-small"></div>
+        </div>
+        <div class="block">
+          <h4>连号情况</h4>
+          <p id="consec" class="metric-line"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑤ 历史报告 -->
+    <section class="card">
+      <h2>📄 历史报告</h2>
+      <p class="hint">由工作流自动生成的 Markdown 报告：</p>
+      <ul class="report-links">
+        <li><a href="./reports/report_20260816.md">每日分析简报（2026-08-16）</a></li>
+        <li><a href="./reports/validation_report.md">开奖验证报告</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑥ 产品介绍（移至页尾，保留内容） -->
     <section class="card section-intro">
-      <h2>① 产品介绍</h2>
+      <h2>产品介绍</h2>
       <p>本助手基于 500 彩票网公开的历史开奖数据，做纯统计维度的娱乐分析，帮助彩民从频率视角观察大乐透，<strong>不提供任何中奖预测</strong>。</p>
       <ul class="intro-list">
         <li><strong>数据</strong>：每日由 GitHub Actions 自动抓取并统计（前区 1–35 / 后区 1–12）</li>
@@ -57,80 +142,9 @@
       <p class="hint">所有结论均来自历史数据的频率统计，<strong>不构成任何购彩建议</strong>。</p>
     </section>
 
-    <!-- ② 数据覆盖（动态内容由 app.js 写入，仅展示层） -->
-    <section class="card cover-card">
-      <h2>📊 数据覆盖</h2>
-      <div class="cover-count"><span id="cover-count">—</span><span class="cover-unit">期</span></div>
-      <p class="cover-desc">基于真实历史开奖数据</p>
-      <p class="cover-range" id="cover-range">—</p>
-      <p class="cover-source" id="cover-source">数据来源：—</p>
-      <p class="subtitle" id="meta-line">加载中…</p>
-    </section>
-
-    <!-- ③ 热门号码排行 -->
-    <section class="card">
-      <h2>③ 热门号码排行</h2>
-      <div class="block">
-        <h3>前区 Top 10</h3>
-        <div class="rank-list" id="hot-front"></div>
-      </div>
-      <div class="block">
-        <h3>后区 Top 5</h3>
-        <div class="rank-list" id="hot-back"></div>
-      </div>
-    </section>
-
-    <!-- ④ 冷号分析 -->
-    <section class="card">
-      <h2>④ 冷号分析（当前遗漏较大）</h2>
-      <p class="hint">遗漏 = 该号码连续未开出的期数，数值越大越“冷”。</p>
-      <div class="block">
-        <h3>前区遗漏 Top 8</h3>
-        <div class="rank-list" id="cold-front"></div>
-      </div>
-      <div class="block">
-        <h3>后区遗漏 Top 4</h3>
-        <div class="rank-list" id="cold-back"></div>
-      </div>
-    </section>
-
-    <!-- ⑤ 走势统计 -->
-    <section class="card">
-      <h2>⑤ 走势统计</h2>
-      <div class="block">
-        <h3>奇偶比例（前区）</h3>
-        <div class="bars" id="odd-even"></div>
-      </div>
-      <div class="block">
-        <h3>大小比例（前区，分界 18）</h3>
-        <div class="bars" id="big-small"></div>
-      </div>
-      <div class="block">
-        <h3>连号情况</h3>
-        <p id="consec" class="metric-line"></p>
-      </div>
-    </section>
-
-    <!-- ⑥ 娱乐推荐 -->
-    <section class="card">
-      <h2>⑥ 娱乐推荐（仅供参考，非预测）</h2>
-      <p class="hint">以下为算法随机娱乐产物，<strong>不等于中奖预测</strong>。</p>
-      <div class="rec-grid" id="recommendations"></div>
-    </section>
-
-    <!-- ⑦ 历史报告 -->
-    <section class="card">
-      <h2>⑦ 历史报告</h2>
-      <p class="hint">由工作流自动生成的 Markdown 报告：</p>
-      <ul class="report-links">
-        <li><a href="./reports/report_20260816.md">每日分析简报（2026-08-16）</a></li>
-        <li><a href="./reports/validation_report.md">开奖验证报告</a></li>
-      </ul>
-    </section>
-
-    <!-- ⑧ 免责声明 -->
+    <!-- ⑦ 免责声明 -->
     <section class="card disclaimer">
-      <h2>⑧ 免责声明</h2>
+      <h2>⚠️ 免责声明</h2>
       <p>本项目仅用于<strong>历史数据分析和娱乐研究</strong>，<strong>不具备预测彩票结果能力</strong>。</p>
       <p>彩票开奖为独立随机事件，任何历史统计均不构成未来依据。请理性购彩，量力而行，切勿沉迷。</p>
     </section>

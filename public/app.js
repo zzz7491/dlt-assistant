@@ -177,6 +177,13 @@
 
     var a = analyze(issues);
 
+    /* ① 最新开奖结果（issues 最后一条 = 最新一期，仅展示） */
+    var lastIssue = issues[issues.length - 1];
+    document.getElementById("latest-issue").textContent = lastIssue.issue + "期";
+    document.getElementById("latest-date").textContent = lastIssue.date;
+    document.getElementById("latest-front").innerHTML = balls(lastIssue.front, "front");
+    document.getElementById("latest-back").innerHTML = balls(lastIssue.back, "back");
+
     document.getElementById("cover-count").textContent = a.n;
     document.getElementById("cover-range").textContent =
       a.firstDate + " 至 " + a.lastDate;
@@ -198,7 +205,10 @@
       "含连号的期占比 <strong>" + (a.consecProb * 100).toFixed(1) + "%</strong>" +
       "，平均每期 <strong>" + a.consecAvg.toFixed(2) + "</strong> 对连号。";
 
-    if (recs.length) renderRecommendations(document.getElementById("recommendations"), recs);
+    if (recs.length) {
+      document.getElementById("rec-target").textContent = recs[0].target_issue || "—";
+      renderRecommendations(document.getElementById("recommendations"), recs);
+    }
 
     document.getElementById("content").hidden = false;
   }).catch(function (err) {
