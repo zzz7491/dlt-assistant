@@ -64,4 +64,13 @@ jobs:
             git push
           fi
 
+      - name: 部署到 Cloudflare Pages
+        # 仅在仓库配置了 CLOUDFLARE_API_TOKEN secret 后执行；
+        # 未配置则自动跳过，不影响每日数据分析与回写仓库。
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          npx --yes wrangler@latest pages deploy public --project-name dlt-assistant --branch master --commit-dirty=true
+
 # 此注释仅用于触发 GitHub Actions 重新扫描并登记本工作流（minimal refresh, 2026-08-16）
