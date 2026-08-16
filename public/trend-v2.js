@@ -1,0 +1,300 @@
+/* =========================================================
+   专业走势图 · 数据处理与渲染（trend-v2）
+   - 数据唯一来源：./data/dlt_history.json（无模拟、无写死、无外部 API）
+   - 结构：loadJSON() → calculate() → render()
+   - 分析函数独立（calculateHot / calculateMissing /
+     calculateOddEven / calculateBigSmall），便于阶段 13 综合评分复用
+   - 原生 JS，无框架
+   ========================================================= */
+(function (root) {
+  "use strict";
+
+  var PERIODS = [50, 100, 300, 1000];
+  var DEFAULT_PERIOD = 100;
+  var FRONT_MIN = 1, FRONT_MAX = 35;
+  var BACK_MIN = 1, BACK_MAX = 12;
+  var BACK_BOUNDARY = 6; // 后区大小分界：01-06 小 / 07-12 大
+
+  function pad2(n) { return String(n).padStart(2, "0"); }
+
+  function range(a, b) {
+    var out = [];
+    for (var i = a; i <= b; i++) out.push(i);
+    return out;
+  }
+
+  function loadJSON(path) {
+    return fetch(path, { cache: "no-cache" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " @ " + path);
+      return r.json();
+    });
+  }
+
+  /* ================= 纯数据层（分析函数，独立可复用） ================= */
+
+  // 取最近 n 期
+  function sliceWindow(issues, n) {
+    return issues.slice(Math.max(0, issues.length - n));
+  }
+
+  // 热度：{num, count, omit}，按 count 倒序；omit=当前连续未开出期数
+  function calculateHot(issues, n, kind) {
+    var w = sliceWindow(issues, n);
+    var freq = {}, last = {};
+    w.forEach(function (it, idx) {
+      it[kind].forEach(function (x) {
+        freq[x] = (freq[x] || 0) + 1;
+        last[x] = idx;
+      });
+    });
+    var lastIdx = w.length - 1;
+    var out = [];
+    Object.keys(freq).forEach(function (k) {
+      out.push({ num: parseInt(k, 10), count: freq[k], omit: lastIdx - (last[k] != null ? last[k] : lastIdx) });
+    });
+    out.sort(function (a, b) { return b.count - a.count; });
+    return out;
+  }
+
+  // 遗漏分析：{num, cur, max, avg}；cur=当前遗漏，max=最大连续遗漏，avg=平均连续遗漏
+  function calculateMissing(issues, n, kind) {
+    var w = sliceWindow(issues, n);
+    var pool = kind === "front" ? range(FRONT_MIN, FRONT_MAX) : range(BACK_MIN, BACK_MAX);
+    return pool.map(function (num) {
+      var cur = 0;
+      for (var i = w.length - 1; i >= 0; i--) {
+        if (w[i][kind].indexOf(num) >= 0) break;
+        cur++;
+      }
+      var run = 0, max = 0, totalRun = 0, runCount = 0;
+      for (var j = 0; j < w.length; j++) {
+        if (w[j][kind].indexOf(num) >= 0) {
+          if (run > 0) { totalRun += run; runCount++; if (run > max) max = run; run = 0; }
+        } else {
+          run++;
+        }
+      }
+      if (run > 0) { totalRun += run; runCount++; if (run > max) max = run; }
+      return { num: num, cur: cur, max: max, avg: runCount ? Math.round((totalRun / runCount) * 10) / 10 : 0 };
+    });
+  }
+
+  // 奇偶占比（按号码个数统计），返回 {odd, even, total} 百分比
+  function calculateOddEven(issues, n, kind) {
+    var w = sliceWindow(issues, n);
+    var odd = 0, even = 0;
+    w.forEach(function (it) {
+      it[kind].forEach(function (x) { if (x % 2 === 1) odd++; else even++; });
+    });
+    var t = odd + even;
+    return { odd: t ? Math.round((odd / t) * 1000) / 10 : 0, even: t ? Math.round((even / t) * 1000) / 10 : 0, total: t };
+  }
+
+  // 大小占比（按号码个数统计；boundary 为分界，x<=boundary 为小），返回 {small, big, total}
+  function calculateBigSmall(issues, n, kind, boundary) {
+    var w = sliceWindow(issues, n);
+    var small = 0, big = 0;
+    w.forEach(function (it) {
+      it[kind].forEach(function (x) { if (x <= boundary) small++; else big++; });
+    });
+    var t = small + big;
+    return { small: t ? Math.round((small / t) * 1000) / 10 : 0, big: t ? Math.round((big / t) * 1000) / 10 : 0, total: t };
+  }
+
+  // 轨迹矩阵：{labels, issues, matrix}
+  function buildMatrices(issues) {
+    var sorted = issues.slice().sort(function (a, b) {
+      return a.issue < b.issue ? -1 : a.issue > b.issue ? 1 : 0;
+    });
+    function mk(pmin, pmax, key) {
+      var labels = range(pmin, pmax);
+      var matrix = labels.map(function () { return new Array(sorted.length).fill(false); });
+      sorted.forEach(function (it, ci) {
+        it[key].forEach(function (x) { matrix[x - pmin][ci] = true; });
+      });
+      return { labels: labels, issues: sorted, matrix: matrix };
+    }
+    return { front: mk(FRONT_MIN, FRONT_MAX, "front"), back: mk(BACK_MIN, BACK_MAX, "back") };
+  }
+
+  /* ================= 渲染层 ================= */
+
+  function renderTrajectoryHTML(m, kind, n) {
+    var issues = m.issues;
+    var start = Math.max(0, issues.length - n);
+    var cols = issues.slice(start);
+    var hitClass = kind === "front" ? "hit-f" : "hit-b";
+    var numCls = kind === "front" ? "f" : "b";
+    var parts = ['<table class="trend-table"><thead><tr><th class="corner"></th>'];
+    for (var c = 0; c < cols.length; c++) {
+      var show = (c % 10 === 0) || (c === cols.length - 1);
+      parts.push('<th class="issue-cell">' + (show ? cols[c].issue.slice(2) : "") + "</th>");
+    }
+    parts.push("</tr></thead><tbody>");
+    for (var r = 0; r < m.labels.length; r++) {
+      var row = m.matrix[r];
+      parts.push('<tr><th class="num-cell ' + numCls + '">' + pad2(m.labels[r]) + "</th>");
+      for (var ci = 0; ci < cols.length; ci++) {
+        parts.push(row[start + ci] ? '<td class="cell ' + hitClass + '"></td>' : "<td class='cell'></td>");
+      }
+      parts.push("</tr>");
+    }
+    parts.push("</tbody></table>");
+    return parts.join("");
+  }
+
+  function renderHotTable(items, kind) {
+    var numCls = kind === "front" ? "f" : "b";
+    var rows = ['<thead><tr><th>号码</th><th>出现次数</th><th>最近遗漏</th></tr></thead><tbody>'];
+    items.forEach(function (it) {
+      rows.push('<tr><td class="num ' + numCls + '">' + pad2(it.num) + "</td>" +
+        '<td class="val-hot">' + it.count + "</td>" +
+        '<td class="val-omit">' + it.omit + "</td></tr>");
+    });
+    rows.push("</tbody>");
+    return rows.join("");
+  }
+
+  function renderMissingTable(items, kind) {
+    var numCls = kind === "front" ? "f" : "b";
+    var rows = ['<thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>平均遗漏</th></tr></thead><tbody>'];
+    items.forEach(function (it) {
+      rows.push('<tr><td class="num ' + numCls + '">' + pad2(it.num) + "</td>" +
+        '<td class="val-omit">' + it.cur + "</td>" +
+        "<td>" + it.max + "</td><td>" + it.avg + "</td></tr>");
+    });
+    rows.push("</tbody>");
+    return rows.join("");
+  }
+
+  // 奇偶/大小：当前档大条形 + 四档对比小条形
+  function renderRatioBars(el, cur, labelCur, four) {
+    var parts = [];
+    parts.push('<div class="bar-row"><span class="bar-label">' + labelCur + "</span>" +
+      '<span class="bar-track"><span class="bar-fill" style="width:' + cur.pct + '%"></span></span>' +
+      '<span class="bar-val">' + cur.txt + "</span></div>");
+    four.forEach(function (f) {
+      parts.push('<div class="bar-row"><span class="bar-label">' + f.label + "</span>" +
+        '<span class="bar-track"><span class="bar-fill" style="width:' + f.pct + '%;background:linear-gradient(90deg,#8b5cf6 0%,#6d28d9 100%)"></span></span>' +
+        '<span class="bar-val">' + f.txt + "</span></div>");
+    });
+    el.innerHTML = parts.join("");
+  }
+
+  function showError(msg) {
+    document.getElementById("error").hidden = false;
+    document.getElementById("error-detail").textContent = msg || "";
+  }
+
+  /* ================= 页面启动：loadJSON → calculate → render ================= */
+  function init() {
+    var period = DEFAULT_PERIOD;
+    var matrix = null;
+    var meta = { cover: "—", issueRange: "—", frontTotal: "—", backTotal: "—", sourceName: "—" };
+
+    // 📊 数据概览（动态读 JSON；分析范围随当前期数联动）
+    function renderSummary() {
+      document.getElementById("sum-range").textContent = "最近 " + period + " 期";
+      document.getElementById("sum-cover").textContent = meta.cover;
+      document.getElementById("sum-issue").textContent = meta.issueRange;
+      document.getElementById("sum-front").textContent = meta.frontTotal;
+      document.getElementById("sum-back").textContent = meta.backTotal;
+      document.getElementById("sum-source").textContent = meta.sourceName;
+    }
+
+    function draw() {
+      var issues = matrix.front.issues;
+      renderSummary();
+
+      // ① ② 轨迹
+      document.getElementById("front-trajectory").innerHTML =
+        renderTrajectoryHTML(matrix.front, "front", period);
+      document.getElementById("back-trajectory").innerHTML =
+        renderTrajectoryHTML(matrix.back, "back", period);
+
+      // ③ 前区热度排行
+      document.getElementById("front-hot").innerHTML =
+        renderHotTable(calculateHot(issues, period, "front"), "front");
+
+      // ④ 前区遗漏分析
+      document.getElementById("front-missing").innerHTML =
+        renderMissingTable(calculateMissing(issues, period, "front"), "front");
+
+      // ⑤ 后区冷热分析
+      document.getElementById("back-hot").innerHTML =
+        renderHotTable(calculateHot(issues, period, "back"), "back");
+
+      // ⑥ 后区奇偶趋势（当前档 + 50/100/300/1000 对比）
+      var oeCur = calculateOddEven(issues, period, "back");
+      var oeFour = PERIODS.map(function (p) {
+        var r = calculateOddEven(issues, p, "back");
+        return { label: p + "期", pct: r.odd, txt: "奇" + r.odd + "% 偶" + r.even + "%" };
+      });
+      renderRatioBars(document.getElementById("back-odd-even"),
+        { pct: oeCur.odd, txt: "奇数 " + oeCur.odd + "%" },
+        "当前(" + period + "期)奇占比",
+        oeFour);
+
+      // ⑦ 后区大小趋势
+      var bsCur = calculateBigSmall(issues, period, "back", BACK_BOUNDARY);
+      var bsFour = PERIODS.map(function (p) {
+        var r = calculateBigSmall(issues, p, "back", BACK_BOUNDARY);
+        return { label: p + "期", pct: r.big, txt: "小" + r.small + "% 大" + r.big + "%" };
+      });
+      renderRatioBars(document.getElementById("back-big-small"),
+        { pct: bsCur.big, txt: "大 " + bsCur.big + "%" },
+        "当前(" + period + "期)大占比",
+        bsFour);
+    }
+
+    // 时间范围切换（联动）
+    document.getElementById("period-switch").addEventListener("click", function (e) {
+      var btn = e.target.closest("button");
+      if (!btn) return;
+      period = parseInt(btn.getAttribute("data-periods"), 10);
+      this.querySelectorAll("button").forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+      draw();
+    });
+
+    loadJSON("./data/dlt_history.json").then(function (data) {
+      var issues = data.issues || [];
+      if (!issues.length) throw new Error("历史数据为空");
+      var srcName = { "500": "500彩票网" }[data.source] || (data.source || "公开数据源");
+      meta = {
+        cover: issues.length + " 期",
+        issueRange: issues[0].issue + " - " + issues[issues.length - 1].issue,
+        frontTotal: (issues.length * 5) + " 个号码",
+        backTotal: (issues.length * 2) + " 个号码",
+        sourceName: srcName
+      };
+      matrix = buildMatrices(issues);
+      draw();
+    }).catch(function (err) {
+      showError(String(err && err.message ? err.message : err));
+    });
+  }
+
+  var api = {
+    PERIODS: PERIODS,
+    sliceWindow: sliceWindow,
+    calculateHot: calculateHot,
+    calculateMissing: calculateMissing,
+    calculateOddEven: calculateOddEven,
+    calculateBigSmall: calculateBigSmall,
+    buildMatrices: buildMatrices,
+    renderTrajectoryHTML: renderTrajectoryHTML
+  };
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;             // Node 测试用
+  } else {
+    root.TrendV2API = api;
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  }
+})(typeof self !== "undefined" ? self : this);
