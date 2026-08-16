@@ -70,6 +70,42 @@ jobs:
             echo "无新增期，D1 无需更新"
           fi
 
+      - name: 轨 B 服务端分析写入（Python → D1）
+        # 将 Python 分析结果（指标缓存 dlt_analysis + 评分缓存 dlt_scores）写入 D1。
+        # 输入为 step 4 已更新的 data/dlt_history.json；必须在 dlt_draws 增量（step 5）之后执行。
+        # 依赖 CLOUDFLARE_API_TOKEN（需含 D1:Edit 权限）；未配置则跳过。
+        # 失败仅记录日志，绝不阻断开奖数据更新与部署流程（双写容错）。
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "⚠️ 未配置 CLOUDFLARE_API_TOKEN，跳过轨 B 服务端分析写入"
+            exit 0
+          fi
+          set +e
+          python scripts/analysis_run.py
+          RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "⚠️ 轨 B 分析生成失败（exit=$RC），不影响主流程，继续"
+            exit 0
+          fi
+          if [ -f .verify_tmp/analysis_inserts.sql ]; then
+            npx --yes wrangler@latest d1 execute dlt-draws --remote --file=.verify_tmp/analysis_inserts.sql
+            RC=$?
+            if [ $RC -ne 0 ]; then
+              echo "⚠️ dlt_analysis 写入失败（exit=$RC），不影响主流程，继续"
+            fi
+          fi
+          if [ -f .verify_tmp/scores_inserts.sql ]; then
+            npx --yes wrangler@latest d1 execute dlt-draws --remote --file=.verify_tmp/scores_inserts.sql
+            RC=$?
+            if [ $RC -ne 0 ]; then
+              echo "⚠️ dlt_scores 写入失败（exit=$RC），不影响主流程，继续"
+            else
+              echo "✅ 轨 B 服务端分析写入完成"
+            fi
+          fi
+
       - name: 同步网页数据
         run: |
           mkdir -p public/data
