@@ -40,6 +40,36 @@ jobs:
       - name: 运行分析（抓取 → 分析 → 推荐 → 报告）
         run: python -m src.scheduler --once
 
+      - name: 同步 D1 历史数据库（每日增量）
+        # 将最新开奖增量写入 Cloudflare D1 全历史库（dlt-draws）。
+        # 依赖 CLOUDFLARE_API_TOKEN（需含 D1:Edit 权限）；未配置则跳过。
+        # 失败仅记录日志，绝不阻断原 JSON 分析与部署流程（双写容错）。
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "⚠️ 未配置 CLOUDFLARE_API_TOKEN，跳过 D1 增量同步"
+            exit 0
+          fi
+          set +e
+          python scripts/update_dlt_d1.py
+          RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "⚠️ D1 增量生成失败（exit=$RC），不影响 JSON 分析流程，继续"
+            exit 0
+          fi
+          if [ -f .verify_tmp/update_d1.sql ]; then
+            npx --yes wrangler@latest d1 execute dlt-draws --remote --file=.verify_tmp/update_d1.sql
+            RC=$?
+            if [ $RC -ne 0 ]; then
+              echo "⚠️ D1 增量写入失败（exit=$RC），不影响 JSON 分析流程，继续"
+            else
+              echo "✅ D1 增量同步完成"
+            fi
+          else
+            echo "无新增期，D1 无需更新"
+          fi
+
       - name: 同步网页数据
         run: |
           mkdir -p public/data
