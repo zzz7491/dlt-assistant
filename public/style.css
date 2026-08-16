@@ -38,12 +38,14 @@ html, body {
     "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   line-height: 1.65;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;           /* 兜底：杜绝小屏横向滚动 */
 }
+html { scroll-behavior: smooth; }
 
 /* ===================== 头部品牌区 ===================== */
 .site-header {
   text-align: center;
-  padding: 32px 16px 18px;
+  padding: calc(32px + env(safe-area-inset-top, 0px)) 16px 18px;
   background:
     radial-gradient(130% 120% at 50% -10%, var(--accent-soft) 0%, rgba(243,238,254,0) 70%),
     var(--bg);
@@ -128,8 +130,57 @@ main {
   color: var(--accent);
   text-decoration: none;
   font-weight: 500;
+  display: inline-block;        /* touch 友好：扩大命中区域 */
+  padding: 8px 6px;
+  margin: -8px -6px;
 }
 .report-links a:hover { text-decoration: underline; }
+
+/* ===================== ② 数据覆盖卡（移动端首屏重点） ===================== */
+.cover-card { text-align: center; }
+.cover-card h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-left: none;
+  padding-left: 0;
+  margin-bottom: 6px;
+}
+.cover-count {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.1;
+  margin: 6px 0 2px;
+}
+.cover-count .cover-unit {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin-left: 6px;
+  font-weight: 600;
+}
+.cover-desc {
+  color: var(--muted);
+  font-size: .95rem;
+  margin: 4px 0 10px;
+}
+.cover-range {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 2px 0;
+  font-variant-numeric: tabular-nums;
+}
+.cover-source {
+  color: var(--muted);
+  font-size: .88rem;
+  margin: 4px 0 0;
+}
+.cover-card .subtitle {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
 
 .block { margin: 14px 0; }
 .block h3 {
@@ -261,8 +312,25 @@ main {
 .site-footer {
   text-align: center;
   color: var(--muted);
-  font-size: .76rem;
-  padding: 16px 0 8px;
+  font-size: .8rem;
+  padding: 16px 0 calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ===================== 小屏（≤400px）微调：球尺寸 / 条形图 / 层级 ===================== */
+@media (max-width: 400px) {
+  .ball {
+    width: 28px;
+    height: 28px;
+    font-size: .78rem;
+    margin: 2px;
+  }
+  .rec-card { padding: 10px 8px; }
+  .rec-card h4 { font-size: .9rem; }
+  .bar-label { width: 56px; }
+  .bar-val { width: 48px; }
+  .brand h1 { font-size: 1.45rem; }
+  main { padding-left: 12px; padding-right: 12px; }
+  .card { padding: 14px 14px 16px; }
 }
 
 code {

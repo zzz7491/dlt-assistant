@@ -2,7 +2,7 @@
 <html lang="zh-CN" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <!-- ===== SEO 基础 ===== -->
   <title>大乐透娱乐分析助手 - 历史开奖统计与热冷号分析（非预测）</title>
@@ -57,9 +57,13 @@
       <p class="hint">所有结论均来自历史数据的频率统计，<strong>不构成任何购彩建议</strong>。</p>
     </section>
 
-    <!-- ② 最新数据概览（动态内容由 app.js 写入 meta-line） -->
-    <section class="card">
-      <h2>② 最新数据概览</h2>
+    <!-- ② 数据覆盖（动态内容由 app.js 写入，仅展示层） -->
+    <section class="card cover-card">
+      <h2>📊 数据覆盖</h2>
+      <div class="cover-count"><span id="cover-count">—</span><span class="cover-unit">期</span></div>
+      <p class="cover-desc">基于真实历史开奖数据</p>
+      <p class="cover-range" id="cover-range">—</p>
+      <p class="cover-source" id="cover-source">数据来源：—</p>
       <p class="subtitle" id="meta-line">加载中…</p>
     </section>
 

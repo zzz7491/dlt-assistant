@@ -54,6 +54,7 @@
       n: n,
       firstIssue: sorted.length ? sorted[0].issue : "-",
       lastIssue: sorted.length ? sorted[sorted.length - 1].issue : "-",
+      firstDate: sorted.length ? sorted[0].date : "-",
       lastDate: sorted.length ? sorted[sorted.length - 1].date : "-",
       frontHot: frontHot,
       backHot: backHot,
@@ -175,6 +176,12 @@
     if (!issues.length) { showError("历史数据为空"); return; }
 
     var a = analyze(issues);
+
+    document.getElementById("cover-count").textContent = a.n;
+    document.getElementById("cover-range").textContent =
+      a.firstDate + " 至 " + a.lastDate;
+    var srcName = { "500": "500彩票网" }[history.source] || (history.source || "公开数据源");
+    document.getElementById("cover-source").textContent = "数据来源：" + srcName;
 
     document.getElementById("meta-line").textContent =
       "最近 " + a.n + " 期历史统计 · 数据范围 " + a.firstIssue + " ~ " + a.lastIssue +
