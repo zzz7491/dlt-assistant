@@ -1,0 +1,12 @@
+# =========================================================
+# 大乐透AI娱乐分析助手 · wrangler 配置
+# 说明：仅新增（用于 Pages Functions 访问 D1），不替代现有 CLI 部署方式。
+# =========================================================
+name = "dlt-assistant"
+pages_build_output_dir = "public"
+compatibility_date = "2026-08-16"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dlt-draws"
+database_id = "d99a8443-f8f3-4baa-8b21-a061e28757e0"

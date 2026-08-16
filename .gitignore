@@ -7,5 +7,11 @@ logs/
 .workbuddy/
 .git/
 
+# wrangler 本地状态（dev 缓存 / miniflare D1 模拟 / tmp 打包产物），不可入库
+.wrangler/
+
+# 本地验证临时目录
+.verify_tmp/
+
 # 说明：data/ 与 reports/ 不再忽略，需提交回仓库以支持
 # GitHub Actions 增量更新与 Cloudflare Pages 网页展示（阶段4 持久化）。
