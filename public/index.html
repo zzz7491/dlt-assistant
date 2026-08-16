@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 大乐透娱乐分析助手</title>
+  <meta name="description" content="基于历史开奖数据的统计娱乐分析工具，不预测彩票结果。" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>AI 大乐透娱乐分析助手</h1>
+    <p class="subtitle" id="meta-line">加载中…</p>
+  </header>
+
+  <div id="error" class="error-box" hidden>
+    <p>⚠️ 暂未读取到分析数据。</p>
+    <p class="error-detail" id="error-detail"></p>
+    <p class="error-hint">请稍后重试，或确认 <code>data/dlt_history.json</code> 与 <code>data/recommendations.json</code> 已生成。</p>
+  </div>
+
+  <main id="content" hidden>
+    <!-- 1. 热门号码排行 -->
+    <section class="card">
+      <h2>① 热门号码排行</h2>
+      <div class="block">
+        <h3>前区 Top 10</h3>
+        <div class="rank-list" id="hot-front"></div>
+      </div>
+      <div class="block">
+        <h3>后区 Top 5</h3>
+        <div class="rank-list" id="hot-back"></div>
+      </div>
+    </section>
+
+    <!-- 2. 冷号分析 -->
+    <section class="card">
+      <h2>② 冷号分析（当前遗漏较大）</h2>
+      <p class="hint">遗漏 = 该号码连续未开出的期数，数值越大越“冷”。</p>
+      <div class="block">
+        <h3>前区遗漏 Top 8</h3>
+        <div class="rank-list" id="cold-front"></div>
+      </div>
+      <div class="block">
+        <h3>后区遗漏 Top 4</h3>
+        <div class="rank-list" id="cold-back"></div>
+      </div>
+    </section>
+
+    <!-- 3. 号码趋势 -->
+    <section class="card">
+      <h2>③ 号码趋势</h2>
+      <div class="block">
+        <h3>奇偶比例（前区）</h3>
+        <div class="bars" id="odd-even"></div>
+      </div>
+      <div class="block">
+        <h3>大小比例（前区，分界 18）</h3>
+        <div class="bars" id="big-small"></div>
+      </div>
+      <div class="block">
+        <h3>连号情况</h3>
+        <p id="consec" class="metric-line"></p>
+      </div>
+    </section>
+
+    <!-- 4. 娱乐推荐 -->
+    <section class="card">
+      <h2>④ 娱乐推荐（仅供参考，非预测）</h2>
+      <p class="hint">以下为算法随机娱乐产物，<strong>不等于中奖预测</strong>。</p>
+      <div class="rec-grid" id="recommendations"></div>
+    </section>
+
+    <!-- 5. 免责声明 -->
+    <section class="card disclaimer">
+      <h2>⑤ 免责声明</h2>
+      <p>本项目仅用于<strong>历史数据分析和娱乐研究</strong>，<strong>不具备预测彩票结果能力</strong>。</p>
+      <p>彩票开奖为独立随机事件，任何历史统计均不构成未来依据。请理性购彩，量力而行，切勿沉迷。</p>
+    </section>
+
+    <footer class="site-footer">
+      <p>数据来源：500 彩票网 · 仅供娱乐，不构成任何购彩建议。</p>
+    </footer>
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>

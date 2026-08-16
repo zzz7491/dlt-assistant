@@ -1,0 +1,200 @@
+/* 纯静态前端：读取 data/dlt_history.json 与 data/recommendations.json，
+   在浏览器内复算分析指标并渲染页面。无后端、无构建步骤。 */
+(function () {
+  "use strict";
+
+  var FRONT_MIN = 1, FRONT_MAX = 35;
+  var BACK_MIN = 1, BACK_MAX = 12;
+  var BOUNDARY = 18; // 大小分界：1-17 小，18-35 大
+
+  function pad2(n) { return String(n).padStart(2, "0"); }
+
+  function loadJSON(path) {
+    return fetch(path, { cache: "no-cache" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " @ " + path);
+      return r.json();
+    });
+  }
+
+  /* ---------- 分析（与 src/analyzer.py 口径一致） ---------- */
+  function analyze(issues) {
+    var sorted = issues.slice().sort(function (a, b) {
+      return a.issue < b.issue ? -1 : a.issue > b.issue ? 1 : 0;
+    });
+    var n = sorted.length;
+
+    var frontFreq = countFreq(sorted, "front", FRONT_MIN, FRONT_MAX);
+    var backFreq = countFreq(sorted, "back", BACK_MIN, BACK_MAX);
+
+    var frontHot = topN(frontFreq, 10);
+    var backHot = topN(backFreq, 5);
+
+    var frontOmit = currentOmission(sorted, "front", FRONT_MIN, FRONT_MAX);
+    var backOmit = currentOmission(sorted, "back", BACK_MIN, BACK_MAX);
+    var frontCold = topOmission(frontOmit, 8);
+    var backCold = topOmission(backOmit, 4);
+
+    var oddEven = {}, bigSmall = {};
+    var consecIssues = 0, consecPairs = 0;
+    sorted.forEach(function (it) {
+      var f = it.front.slice().sort(function (a, b) { return a - b; });
+      var odd = f.filter(function (x) { return x % 2 === 1; }).length;
+      var oeKey = "奇" + odd + ":偶" + (5 - odd);
+      oddEven[oeKey] = (oddEven[oeKey] || 0) + 1;
+      var big = f.filter(function (x) { return x >= BOUNDARY; }).length;
+      var bsKey = "大" + big + ":小" + (5 - big);
+      bigSmall[bsKey] = (bigSmall[bsKey] || 0) + 1;
+      var pairs = 0;
+      for (var i = 0; i < f.length - 1; i++) if (f[i + 1] - f[i] === 1) pairs++;
+      if (pairs > 0) consecIssues++;
+      consecPairs += pairs;
+    });
+
+    return {
+      n: n,
+      firstIssue: sorted.length ? sorted[0].issue : "-",
+      lastIssue: sorted.length ? sorted[sorted.length - 1].issue : "-",
+      lastDate: sorted.length ? sorted[sorted.length - 1].date : "-",
+      frontHot: frontHot,
+      backHot: backHot,
+      frontCold: frontCold,
+      backCold: backCold,
+      oddEven: oddEven,
+      bigSmall: bigSmall,
+      consecProb: n ? consecIssues / n : 0,
+      consecAvg: n ? consecPairs / n : 0
+    };
+  }
+
+  function countFreq(issues, key, pmin, pmax) {
+    var m = {};
+    for (var i = pmin; i <= pmax; i++) m[i] = 0;
+    issues.forEach(function (it) {
+      it[key].forEach(function (x) { m[x] = (m[x] || 0) + 1; });
+    });
+    return m;
+  }
+
+  function topN(freq, N) {
+    return Object.keys(freq).map(function (k) { return [parseInt(k, 10), freq[k]]; })
+      .sort(function (a, b) { return b[1] - a[1]; }).slice(0, N);
+  }
+
+  function currentOmission(issues, key, pmin, pmax) {
+    var cur = {};
+    for (var i = pmin; i <= pmax; i++) cur[i] = 0;
+    issues.forEach(function (it) {
+      var s = {};
+      it[key].forEach(function (x) { s[x] = true; });
+      for (var j = pmin; j <= pmax; j++) {
+        if (s[j]) cur[j] = 0; else cur[j]++;
+      }
+    });
+    return cur;
+  }
+
+  function topOmission(omit, N) {
+    return Object.keys(omit).map(function (k) { return [parseInt(k, 10), omit[k]]; })
+      .filter(function (e) { return e[1] > 0; })
+      .sort(function (a, b) { return b[1] - a[1]; }).slice(0, N);
+  }
+
+  /* ---------- 渲染 ---------- */
+  function balls(nums, kind) {
+    return nums.map(function (x) {
+      return '<span class="ball ' + kind + '">' + pad2(x) + "</span>";
+    }).join("");
+  }
+
+  function renderHot(container, items, kind) {
+    container.innerHTML = items.map(function (e) {
+      var num = e[0], cnt = e[1];
+      return '<span class="rank-item"><span class="num ' + kind + '">' +
+        pad2(num) + '</span><span class="cnt">出现 ' + cnt + " 次</span></span>";
+    }).join("");
+  }
+
+  function renderCold(container, items, kind) {
+    container.innerHTML = items.map(function (e) {
+      var num = e[0], omit = e[1];
+      return '<span class="rank-item"><span class="num ' + kind + '">' +
+        pad2(num) + '</span><span class="omit">遗漏 ' + omit + " 期</span></span>";
+    }).join("");
+  }
+
+  function renderBars(container, dist) {
+    var entries = Object.keys(dist).map(function (k) {
+      return [k, dist[k]];
+    }).sort(function (a, b) {
+      return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0;
+    });
+    var max = Math.max.apply(null, entries.map(function (e) { return e[1]; }).concat([1]));
+    container.innerHTML = entries.map(function (e) {
+      var pct = Math.round((e[1] / max) * 100);
+      return '<div class="bar-row"><span class="bar-label">' + e[0] +
+        '</span><span class="bar-track"><span class="bar-fill" style="width:' +
+        pct + '%"></span></span><span class="bar-val">' + e[1] + " 期</span></div>";
+    }).join("");
+  }
+
+  function renderRecommendations(container, recs) {
+    var order = { "A": 1, "B": 2, "C": 3 };
+    var groups = {};
+    recs.forEach(function (r) {
+      var prefix = (r.strategy || "").split("-")[0] || "?";
+      (groups[prefix] = groups[prefix] || []).push(r);
+    });
+    var prefixes = Object.keys(groups).sort(function (a, b) {
+      return (order[a] || 9) - (order[b] || 9);
+    });
+    container.innerHTML = prefixes.map(function (p) {
+      var r = groups[p][0];
+      var tag = (r.strategy || "").split("-").slice(1).join("-") || "娱乐型";
+      return '<div class="rec-card"><h4>推荐 ' + p + '</h4>' +
+        '<span class="tag">' + tag + "</span>" +
+        '<div class="grp"><span class="lbl">前区</span>' + balls(r.front, "front") + "</div>" +
+        '<div class="grp"><span class="lbl">后区</span>' + balls(r.back, "back") + "</div></div>";
+    }).join("");
+  }
+
+  /* ---------- 启动 ---------- */
+  function showError(msg) {
+    document.getElementById("content").hidden = true;
+    var box = document.getElementById("error");
+    box.hidden = false;
+    if (msg) document.getElementById("error-detail").textContent = msg;
+  }
+
+  Promise.all([
+    loadJSON("./data/dlt_history.json"),
+    loadJSON("./data/recommendations.json")
+  ]).then(function (res) {
+    var history = res[0];
+    var recs = res[1];
+    var issues = history.issues || [];
+    if (!issues.length) { showError("历史数据为空"); return; }
+
+    var a = analyze(issues);
+
+    document.getElementById("meta-line").textContent =
+      "最近 " + a.n + " 期历史统计 · 数据范围 " + a.firstIssue + " ~ " + a.lastIssue +
+      "（截至 " + a.lastDate + "）" +
+      (recs[0] ? " · 预测期号 " + recs[0].target_issue + "（推荐生成 " + recs[0].date + "）" : "");
+
+    renderHot(document.getElementById("hot-front"), a.frontHot, "front");
+    renderHot(document.getElementById("hot-back"), a.backHot, "back");
+    renderCold(document.getElementById("cold-front"), a.frontCold, "front");
+    renderCold(document.getElementById("cold-back"), a.backCold, "back");
+    renderBars(document.getElementById("odd-even"), a.oddEven);
+    renderBars(document.getElementById("big-small"), a.bigSmall);
+    document.getElementById("consec").innerHTML =
+      "含连号的期占比 <strong>" + (a.consecProb * 100).toFixed(1) + "%</strong>" +
+      "，平均每期 <strong>" + a.consecAvg.toFixed(2) + "</strong> 对连号。";
+
+    if (recs.length) renderRecommendations(document.getElementById("recommendations"), recs);
+
+    document.getElementById("content").hidden = false;
+  }).catch(function (err) {
+    showError(String(err && err.message ? err.message : err));
+  });
+})();

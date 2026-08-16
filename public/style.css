@@ -1,0 +1,190 @@
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --text: #1f2933;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --accent: #2f6fed;
+  --front: #e23b3b;   /* 前区：红 */
+  --back: #2f6fed;    /* 后区：蓝 */
+  --warn: #b45309;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+.site-header {
+  text-align: center;
+  padding: 24px 16px 8px;
+}
+.site-header h1 {
+  font-size: 1.5rem;
+  margin: 0 0 6px;
+  letter-spacing: .5px;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: .9rem;
+  margin: 0;
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 14px 32px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 16px 16px 20px;
+  margin: 14px 0;
+}
+.card h2 {
+  font-size: 1.1rem;
+  margin: 0 0 12px;
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
+}
+.block { margin: 14px 0; }
+.block h3 {
+  font-size: .95rem;
+  color: var(--muted);
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.hint {
+  font-size: .82rem;
+  color: var(--muted);
+  margin: -4px 0 12px;
+}
+
+/* 号码球 */
+.ball {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 700;
+  margin: 3px;
+}
+.ball.front { background: var(--front); }
+.ball.back  { background: var(--back); }
+
+/* 排行榜 */
+.rank-list { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.rank-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  padding: 4px 10px 4px 4px;
+  font-size: .85rem;
+}
+.rank-item .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+}
+.rank-item .num.front { background: var(--front); }
+.rank-item .num.back  { background: var(--back); }
+.rank-item .cnt { color: var(--muted); }
+.rank-item .omit { color: var(--warn); font-weight: 600; }
+
+/* 条形图 */
+.bars { display: flex; flex-direction: column; gap: 7px; }
+.bar-row { display: flex; align-items: center; gap: 8px; font-size: .85rem; }
+.bar-label { width: 64px; flex: none; color: var(--muted); }
+.bar-track {
+  flex: 1;
+  background: #eef1f6;
+  border-radius: 6px;
+  height: 16px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 6px;
+}
+.bar-val { width: 56px; flex: none; text-align: right; color: var(--muted); }
+
+.metric-line { font-size: .95rem; margin: 4px 0; }
+.metric-line strong { color: var(--accent); font-size: 1.05rem; }
+
+/* 推荐卡片 */
+.rec-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 560px) {
+  .rec-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.rec-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.rec-card h4 { margin: 0 0 4px; font-size: .95rem; }
+.rec-card .tag { color: var(--muted); font-size: .78rem; display: block; margin-bottom: 8px; }
+.rec-card .grp { margin: 6px 0; }
+.rec-card .grp span.lbl { font-size: .75rem; color: var(--muted); display: block; }
+
+/* 免责声明 */
+.disclaimer {
+  background: #fffaf0;
+  border: 1px solid #fde9c8;
+}
+.disclaimer h2 { border-left-color: var(--warn); }
+.disclaimer p { font-size: .88rem; margin: 6px 0; }
+
+/* 错误 */
+.error-box {
+  max-width: 720px;
+  margin: 20px auto;
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  color: #9b1c1c;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.error-detail { font-size: .8rem; color: #b91c1c; word-break: break-all; }
+.error-hint { font-size: .82rem; color: var(--muted); }
+
+.site-footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: .76rem;
+  padding: 16px 0 8px;
+}
+code {
+  background: #eef1f6;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: .82em;
+}
