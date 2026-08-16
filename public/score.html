@@ -43,8 +43,23 @@
         <button data-periods="100" class="active">最近100期</button>
         <button data-periods="300">最近300期</button>
         <button data-periods="1000">最近1000期</button>
+        <button data-periods="all">全部</button>
       </div>
       <p class="trend-legend"><span class="legend-note">切换后评分联动重算 · 全部基于真实历史开奖数据</span></p>
+    </section>
+
+    <!-- 🧠 评分模型（多模型切换） -->
+    <section class="card">
+      <h2>🧠 评分模型</h2>
+      <div class="period-switch" id="model-switch">
+        <button data-model="standard" class="active">标准模型</button>
+        <button data-model="cold-hot">冷热模型</button>
+        <button data-model="expert">专家模型</button>
+      </div>
+      <p class="trend-legend">
+        <span>标准：均衡参考</span><span>冷热：强化近期热度</span><span>专家：强化组合结构</span>
+        <span class="legend-note">权重配置化 · 切换即重算</span>
+      </p>
     </section>
 
     <!-- 前区评分 TOP10 -->

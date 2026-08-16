@@ -1,34 +1,61 @@
 /* =========================================================
    综合评分分析 · 评分引擎（score）
-   - 数据唯一来源：./data/dlt_history.json（无模拟、无写死、无外部 API）
+   - 数据来源：优先 Cloudflare Pages Functions API（/api/issues?range=all，全历史 2910 期）；
+               失败自动降级 ./data/dlt_history.json（1000 期快照，零外部依赖）
    - 权重配置化：SCORE_WEIGHTS（禁止硬编码权重）
    - 评分版本信息：SCORE_VERSION
-   - 结构：loadJSON() → scoreAll() → render()
+   - 结构：loadIssues() → scoreAll() → render()
    - 自包含纯函数（不依赖其他 JS），node 可测
    ========================================================= */
 (function (root) {
   "use strict";
 
   /* ===== 评分版本信息 ===== */
+  var MODEL_TYPES = ["standard", "cold-hot", "expert"];  // 支持的多模型列表（先于 SCORE_VERSION 定义）
   var SCORE_VERSION = {
-    scoreVersion: "v1.0",
+    scoreVersion: "v1.1",
     weightVersion: "default",
-    generatedFrom: "1000期历史开奖数据"
+    generatedFrom: "1000期历史开奖数据",
+    modelTypes: MODEL_TYPES
   };
 
   /* ===== 权重配置（配置化，禁止硬编码） =====
-     总和 = 1.0；修改此处即可调整评分倾向 */
-  var SCORE_WEIGHTS = {
-    frequency: 0.25,   // 历史出现频率
-    recentHot: 0.20,   // 近期热度（窗口内出现次数）
-    missing: 0.15,     // 遗漏周期（当前/平均/最大）
-    balance: 0.15,     // 冷热平衡（过热衰减 / 过冷补偿）
-    oddEven: 0.10,     // 奇偶结构
-    bigSmall: 0.10,    // 大小结构
-    structure: 0.05    // 组合结构（连号 / 和值 / 分布）
+     多模型权重表：SCORE_MODELS[modelType]；各模型权重和 = 1.0
+     standard  标准模型：均衡参考（默认）
+     cold-hot  冷热模型：强化近期热度与冷热平衡
+     expert    专家模型：强化组合结构（连号/和值/分布） */
+  var SCORE_MODELS = {
+    standard: {
+      frequency: 0.25,   // 历史出现频率
+      recentHot: 0.20,   // 近期热度（窗口内出现次数）
+      missing: 0.15,     // 遗漏周期（当前/平均/最大）
+      balance: 0.15,     // 冷热平衡（过热衰减 / 过冷补偿）
+      oddEven: 0.10,     // 奇偶结构
+      bigSmall: 0.10,    // 大小结构
+      structure: 0.05    // 组合结构（连号 / 和值 / 分布）
+    },
+    "cold-hot": {
+      frequency: 0.20,
+      recentHot: 0.25,
+      missing: 0.15,
+      balance: 0.20,
+      oddEven: 0.10,
+      bigSmall: 0.05,
+      structure: 0.05
+    },
+    expert: {
+      frequency: 0.20,
+      recentHot: 0.20,
+      missing: 0.15,
+      balance: 0.10,
+      oddEven: 0.10,
+      bigSmall: 0.10,
+      structure: 0.15
+    }
   };
+  var SCORE_WEIGHTS = SCORE_MODELS.standard;   // 兼容导出（默认标准模型）
 
-  var PERIODS = [50, 100, 300, 1000];
+  var PERIODS = [50, 100, 300, 1000, "all"];  // "all" = 全部已加载数据（API 全历史 / 降级 JSON 全量）
   var DEFAULT_PERIOD = 100;
   var FRONT_MIN = 1, FRONT_MAX = 35;
   var BACK_MIN = 1, BACK_MAX = 12;
@@ -48,9 +75,33 @@
     });
   }
 
+  /* 数据加载：API 优先（/api/issues?range=all 全历史）→ 失败自动降级 JSON 快照 */
+  function loadIssues() {
+    return fetch("./api/issues?range=all", { cache: "no-cache" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("API HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || !Array.isArray(d.issues) || !d.issues.length) throw new Error("API 数据为空");
+        return { issues: d.issues, source: "api" };
+      })
+      .catch(function (err) {
+        if (typeof console !== "undefined" && console.warn) {
+          console.warn("[score] API 加载失败，降级 JSON：", err && err.message ? err.message : err);
+        }
+        return loadJSON("./data/dlt_history.json").then(function (d) {
+          return { issues: d.issues || [], source: "json" };
+        });
+      });
+  }
+
   /* ================= 基础分析纯函数（与 trend-v2 同口径，自包含实现） ================= */
 
-  function sliceWindow(issues, n) { return issues.slice(Math.max(0, issues.length - n)); }
+  function sliceWindow(issues, n) {
+    if (n === "all") return issues.slice();
+    return issues.slice(Math.max(0, issues.length - n));
+  }
 
   // 热度：{num, count, omit} 按 count 倒序；omit=当前连续未开出期数
   function calculateHot(issues, n, kind) {
@@ -153,23 +204,26 @@
     var sBigSmall = clamp(Math.round(smallPct), 0, 100);                               // 大小结构
     var sStructure = clamp(Math.round(n ? consecCount / n * 150 : 50), 0, 100);        // 组合结构
 
-    // 加权贡献分（四舍五入，保证七项之和 = 总分）
+    // 加权贡献分（四舍五入，保证七项之和 = 总分）；权重取自当前模型 ctx.weights
+    var W = ctx.weights;
     var parts = {
-      frequency: Math.round(SCORE_WEIGHTS.frequency * sFrequency),
-      recentHot: Math.round(SCORE_WEIGHTS.recentHot * sRecentHot),
-      missing: Math.round(SCORE_WEIGHTS.missing * sMissing),
-      balance: Math.round(SCORE_WEIGHTS.balance * sBalance),
-      oddEven: Math.round(SCORE_WEIGHTS.oddEven * sOddEven),
-      bigSmall: Math.round(SCORE_WEIGHTS.bigSmall * sBigSmall),
-      structure: Math.round(SCORE_WEIGHTS.structure * sStructure)
+      frequency: Math.round(W.frequency * sFrequency),
+      recentHot: Math.round(W.recentHot * sRecentHot),
+      missing: Math.round(W.missing * sMissing),
+      balance: Math.round(W.balance * sBalance),
+      oddEven: Math.round(W.oddEven * sOddEven),
+      bigSmall: Math.round(W.bigSmall * sBigSmall),
+      structure: Math.round(W.structure * sStructure)
     };
     var total = parts.frequency + parts.recentHot + parts.missing + parts.balance +
                 parts.oddEven + parts.bigSmall + parts.structure;
     return { num: num, total: total, tag: ctx.tagMap[num], parts: parts };
   }
 
-  // 批量评分：kind = "front" | "back"，返回按 total 降序的数组
-  function scoreAll(issues, n, kind) {
+  // 批量评分：kind = "front" | "back"，返回按 total 降序的数组；n = 数字窗口或 "all"；modelType = standard|cold-hot|expert
+  function scoreAll(issues, n, kind, modelType) {
+    if (n === "all") n = issues.length;   // "all" → 全量窗口（API 全历史 / 降级 JSON 全量）
+    var weights = SCORE_MODELS[modelType] || SCORE_MODELS.standard;
     var w = sliceWindow(issues, n);
     var nLen = w.length;
     var pool = kind === "front" ? range(FRONT_MIN, FRONT_MAX) : range(BACK_MIN, BACK_MAX);
@@ -205,7 +259,7 @@
     });
 
     var ctx = {
-      window: w, kind: kind, boundary: boundary,
+      window: w, kind: kind, boundary: boundary, weights: weights,
       hotMap: hotMap, missMap: missMap, consecMap: consecMap,
       maxCount: maxCount,
       oddPct: oe.odd, evenPct: oe.even, smallPct: bs.small, bigPct: bs.big,
@@ -267,29 +321,48 @@
   /* ================= 页面启动：loadJSON → scoreAll → render ================= */
   function init() {
     var period = DEFAULT_PERIOD;
+    var modelType = "standard";
 
     // 版本信息
     document.getElementById("score-version").textContent = SCORE_VERSION.scoreVersion;
-    document.getElementById("weight-version").textContent = SCORE_VERSION.weightVersion;
+    document.getElementById("weight-version").textContent = modelType;
     document.getElementById("generated-from").textContent = SCORE_VERSION.generatedFrom;
 
     function draw(issues) {
-      renderScoreList(document.getElementById("front-scores"), scoreAll(issues, period, "front"), "front");
-      renderScoreList(document.getElementById("back-scores"), scoreAll(issues, period, "back"), "back");
+      renderScoreList(document.getElementById("front-scores"), scoreAll(issues, period, "front", modelType), "front");
+      renderScoreList(document.getElementById("back-scores"), scoreAll(issues, period, "back", modelType), "back");
     }
 
     document.getElementById("period-switch").addEventListener("click", function (e) {
       var btn = e.target.closest("button");
       if (!btn) return;
-      period = parseInt(btn.getAttribute("data-periods"), 10);
+      var raw = btn.getAttribute("data-periods");
+      period = raw === "all" ? "all" : parseInt(raw, 10);
       this.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
       draw(this._issues);
     });
 
-    loadJSON("./data/dlt_history.json").then(function (data) {
-      var issues = data.issues || [];
+    // 评分模型切换（standard / cold-hot / expert）
+    var modelSwitch = document.getElementById("model-switch");
+    if (modelSwitch) {
+      modelSwitch.addEventListener("click", function (e) {
+        var btn = e.target.closest("button");
+        if (!btn) return;
+        modelType = btn.getAttribute("data-model") || "standard";
+        this.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+        document.getElementById("weight-version").textContent = modelType;
+        draw(this._issues);
+      });
+    }
+
+    loadIssues().then(function (res) {
+      var issues = res.issues || [];
       if (!issues.length) throw new Error("历史数据为空");
       document.getElementById("period-switch")._issues = issues;
+      // 动态展示实际数据规模（API 全历史 或 快照降级）
+      document.getElementById("generated-from").textContent =
+        SCORE_VERSION.generatedFrom + "（实际 " + issues.length + " 期 · " +
+        (res.source === "api" ? "API 全历史" : "快照降级") + "）";
       draw(issues);
     }).catch(function (err) {
       showError(String(err && err.message ? err.message : err));
@@ -299,6 +372,8 @@
   var api = {
     SCORE_VERSION: SCORE_VERSION,
     SCORE_WEIGHTS: SCORE_WEIGHTS,
+    SCORE_MODELS: SCORE_MODELS,
+    MODEL_TYPES: MODEL_TYPES,
     PERIODS: PERIODS,
     sliceWindow: sliceWindow,
     calculateHot: calculateHot,
@@ -306,7 +381,8 @@
     calculateOddEven: calculateOddEven,
     calculateBigSmall: calculateBigSmall,
     calculateConsec: calculateConsec,
-    scoreAll: scoreAll
+    scoreAll: scoreAll,
+    loadIssues: loadIssues
   };
 
   if (typeof module !== "undefined" && module.exports) {

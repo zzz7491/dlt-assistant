@@ -152,7 +152,7 @@
 
 /* ---- 小屏微调 ---- */
 @media (max-width: 400px) {
-  .period-switch button { min-width: 64px; font-size: .82rem; padding: 10px 2px; }
+  .period-switch button { min-width: 58px; font-size: .78rem; padding: 10px 2px; }
   .score-card-head { gap: 8px; }
   .score-total { font-size: 1.2rem; }
   .score-parts { grid-template-columns: 1fr; gap: 4px; }
