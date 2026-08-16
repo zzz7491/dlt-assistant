@@ -1,0 +1,2 @@
+# 统一换行符为 LF，避免 Windows 开发环境与 Linux CI（GitHub Actions）之间的行尾差异
+* text=auto eol=lf
