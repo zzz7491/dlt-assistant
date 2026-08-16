@@ -63,3 +63,5 @@ jobs:
             git commit -m "chore: 每日大乐透娱乐分析更新 $(date +'%Y-%m-%d')"
             git push
           fi
+
+# 此注释仅用于触发 GitHub Actions 重新扫描并登记本工作流（minimal refresh, 2026-08-16）
