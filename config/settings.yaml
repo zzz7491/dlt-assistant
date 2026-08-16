@@ -5,7 +5,7 @@
 
 scrape:
   source: "500"                 # 数据源标识（当前仅支持 500 彩票网历史数据页）
-  recent_issues: 300            # 抓取并分析最近多少期
+  recent_issues: 1000           # 抓取并分析最近多少期
   # 500彩票网 大乐透历史数据页接口（按 start/end 期号范围查询）
   base_url: "https://datachart.500.com/dlt/history/newinc/history.php"
   timeout: 20                   # 请求超时（秒）

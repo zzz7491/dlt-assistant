@@ -4,7 +4,7 @@
 解析 HTML 表格得到：期号 / 前区5码 / 后区2码 / 开奖日期。
 
 增量更新：若本地已有 JSON 数据库，则仅抓取「最新期号之后」的期数并合并，
-避免每次全量抓取；数据库封顶保留最近 N 期（默认 300）。
+避免每次全量抓取；数据库封顶保留最近 N 期（默认 1000）。
 """
 from __future__ import annotations
 
@@ -93,9 +93,10 @@ def _fetch_range(base_url: str, start: str, end: str, timeout: int, user_agent: 
 
 
 def fetch(recent_issues: int, base_url: str, timeout: int, user_agent: str) -> list[dict[str, Any]]:
-    """全量抓取：覆盖最近约 3 年，返回最近 recent_issues 期（首次运行使用）。"""
+    """全量抓取：覆盖最近约 8 年，返回最近 recent_issues 期（首次运行使用）。"""
     year = datetime.now().year
-    start = f"{(year - 2) % 100:02d}001"
+    # 大乐透每年约 150 期；recent_issues=1000 需约 7 年历史，从 (year-7) 年起覆盖
+    start = f"{(year - 7) % 100:02d}001"
     end = f"{year % 100:02d}365"
     issues = _fetch_range(base_url, start, end, timeout, user_agent)
     return issues[:recent_issues]
