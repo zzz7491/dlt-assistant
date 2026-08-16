@@ -1,16 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 大乐透娱乐分析助手</title>
-  <meta name="description" content="基于历史开奖数据的统计娱乐分析工具，不预测彩票结果。" />
+
+  <!-- ===== SEO 基础 ===== -->
+  <title>大乐透娱乐分析助手 - 历史开奖统计与热冷号分析（非预测）</title>
+  <meta name="description" content="大乐透娱乐分析助手基于 500 彩票网历史开奖数据，提供热号冷号统计、奇偶大小分析与多策略娱乐推荐。仅作娱乐研究，不预测彩票结果。" />
+  <meta name="keywords" content="大乐透,大乐透分析,历史开奖数据,热号,冷号,彩票统计,娱乐分析,不预测" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#6d28d9" />
+  <link rel="canonical" href="https://dlt-assistant.pages.dev/" />
+
+  <!-- ===== favicon（内联 SVG，无外部依赖） ===== -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236d28d9'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='sans-serif'%3E%E4%B9%90%3C/text%3E%3C/svg%3E" />
+
+  <!-- ===== Open Graph / Twitter ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="大乐透娱乐分析助手 - 历史开奖统计与热冷号分析（非预测）" />
+  <meta property="og:description" content="基于 500 彩票网历史开奖数据的统计娱乐分析：热冷号、奇偶大小、多策略推荐。仅娱乐，不预测。" />
+  <meta property="og:url" content="https://dlt-assistant.pages.dev/" />
+  <meta property="og:image" content="./assets/og-cover.png" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <header class="site-header">
-    <h1>AI 大乐透娱乐分析助手</h1>
-    <p class="subtitle" id="meta-line">加载中…</p>
+    <div class="brand">
+      <h1>AI 大乐透娱乐分析助手</h1>
+      <p class="brand-tag">历史开奖数据的统计娱乐分析 · 非预测工具</p>
+    </div>
+    <div class="risk-banner">
+      ⚠️ 风险提示：本项目仅作娱乐研究，<strong>不具备预测彩票结果能力</strong>，请理性购彩、量力而行。
+    </div>
   </header>
 
   <div id="error" class="error-box" hidden>
@@ -20,9 +44,28 @@
   </div>
 
   <main id="content" hidden>
-    <!-- 1. 热门号码排行 -->
+    <!-- ① 产品介绍 -->
+    <section class="card section-intro">
+      <h2>① 产品介绍</h2>
+      <p>本助手基于 500 彩票网公开的历史开奖数据，做纯统计维度的娱乐分析，帮助彩民从频率视角观察大乐透，<strong>不提供任何中奖预测</strong>。</p>
+      <ul class="intro-list">
+        <li><strong>数据</strong>：每日由 GitHub Actions 自动抓取并统计（前区 1–35 / 后区 1–12）</li>
+        <li><strong>分析</strong>：热号冷号、奇偶大小、连号等统计指标</li>
+        <li><strong>推荐</strong>：A / B / C 三套娱乐策略，纯随机生成，非预测</li>
+        <li><strong>展示</strong>：Cloudflare Pages 静态托管，全部代码开源可查</li>
+      </ul>
+      <p class="hint">所有结论均来自历史数据的频率统计，<strong>不构成任何购彩建议</strong>。</p>
+    </section>
+
+    <!-- ② 最新数据概览（动态内容由 app.js 写入 meta-line） -->
     <section class="card">
-      <h2>① 热门号码排行</h2>
+      <h2>② 最新数据概览</h2>
+      <p class="subtitle" id="meta-line">加载中…</p>
+    </section>
+
+    <!-- ③ 热门号码排行 -->
+    <section class="card">
+      <h2>③ 热门号码排行</h2>
       <div class="block">
         <h3>前区 Top 10</h3>
         <div class="rank-list" id="hot-front"></div>
@@ -33,9 +76,9 @@
       </div>
     </section>
 
-    <!-- 2. 冷号分析 -->
+    <!-- ④ 冷号分析 -->
     <section class="card">
-      <h2>② 冷号分析（当前遗漏较大）</h2>
+      <h2>④ 冷号分析（当前遗漏较大）</h2>
       <p class="hint">遗漏 = 该号码连续未开出的期数，数值越大越“冷”。</p>
       <div class="block">
         <h3>前区遗漏 Top 8</h3>
@@ -47,9 +90,9 @@
       </div>
     </section>
 
-    <!-- 3. 号码趋势 -->
+    <!-- ⑤ 走势统计 -->
     <section class="card">
-      <h2>③ 号码趋势</h2>
+      <h2>⑤ 走势统计</h2>
       <div class="block">
         <h3>奇偶比例（前区）</h3>
         <div class="bars" id="odd-even"></div>
@@ -64,16 +107,26 @@
       </div>
     </section>
 
-    <!-- 4. 娱乐推荐 -->
+    <!-- ⑥ 娱乐推荐 -->
     <section class="card">
-      <h2>④ 娱乐推荐（仅供参考，非预测）</h2>
+      <h2>⑥ 娱乐推荐（仅供参考，非预测）</h2>
       <p class="hint">以下为算法随机娱乐产物，<strong>不等于中奖预测</strong>。</p>
       <div class="rec-grid" id="recommendations"></div>
     </section>
 
-    <!-- 5. 免责声明 -->
+    <!-- ⑦ 历史报告 -->
+    <section class="card">
+      <h2>⑦ 历史报告</h2>
+      <p class="hint">由工作流自动生成的 Markdown 报告：</p>
+      <ul class="report-links">
+        <li><a href="./reports/report_20260816.md">每日分析简报（2026-08-16）</a></li>
+        <li><a href="./reports/validation_report.md">开奖验证报告</a></li>
+      </ul>
+    </section>
+
+    <!-- ⑧ 免责声明 -->
     <section class="card disclaimer">
-      <h2>⑤ 免责声明</h2>
+      <h2>⑧ 免责声明</h2>
       <p>本项目仅用于<strong>历史数据分析和娱乐研究</strong>，<strong>不具备预测彩票结果能力</strong>。</p>
       <p>彩票开奖为独立随机事件，任何历史统计均不构成未来依据。请理性购彩，量力而行，切勿沉迷。</p>
     </section>
