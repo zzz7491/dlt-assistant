@@ -1,0 +1,58 @@
+# ============================================================
+# 大乐透AI娱乐分析助手 配置文件
+# 说明：本程序仅作娱乐统计分析，不预测中奖，请理性购彩。
+# ============================================================
+
+scrape:
+  source: "500"                 # 数据源标识（当前仅支持 500 彩票网历史数据页）
+  recent_issues: 300            # 抓取并分析最近多少期
+  # 500彩票网 大乐透历史数据页接口（按 start/end 期号范围查询）
+  base_url: "https://datachart.500.com/dlt/history/newinc/history.php"
+  timeout: 20                   # 请求超时（秒）
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+
+database:
+  path: "data/dlt_history.json" # JSON 数据库路径（容器内建议挂载为 volume）
+
+analysis:
+  front_min: 1
+  front_max: 35                 # 前区号码范围 1-35
+  back_min: 1
+  back_max: 12                  # 后区号码范围 1-12
+  front_zones: 5               # 前区区间划分个数（每区 7 个号）
+  back_zones: 2                # 后区区间划分个数（每区 6 个号）
+  recent_window: 50            # 计算“近期热号”的窗口期数
+
+recommend:
+  combos_per_strategy: 1       # 每个策略（A/B/C）生成几组娱乐号码
+  perturb: 0.35                # （保留）旧加权策略扰动参数，当前三策略未使用
+  hot_weight: 0.6              # （保留）旧加权策略权重参数，当前三策略未使用
+  seed: null                   # 随机种子；null=每次不同（可固定以便复现）
+  log_path: "reports/recommendations.json"  # 推荐记录落盘（供开奖验证比对）
+
+schedule:
+  timezone: "Asia/Shanghai"
+  cron: "0 10 * * *"           # 每日运行时间（容器内时区为 Asia/Shanghai）
+
+report:
+  dir: "reports"               # 报告输出目录
+  filename_fmt: "report_%Y%m%d.md"
+
+notify:
+  feishu:
+    enabled: false             # 飞书通知（扩展，默认关闭）
+    webhook: ""                # 飞书自定义机器人 webhook 地址
+    secret: ""                 # 飞书签名密钥（可选，开启加签时填写）
+
+web:
+  enabled: false               # Web 页面展示（扩展，默认关闭）
+  host: "0.0.0.0"
+  port: 8080
+
+charts:
+  enabled: false               # 图表生成（扩展，默认关闭）
+  dir: "reports/assets"
+
+validate:
+  enabled: true                # 开奖验证（比对历史推荐 vs 真实开奖，仅统计娱乐命中）
+  report_path: "reports/validation_report.md"

@@ -1,0 +1,12 @@
+# 大乐透AI娱乐分析助手 - Python 依赖
+# 核心依赖（必装）
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+pyyaml>=6.0
+
+# 以下为可选扩展依赖（在 config/settings.yaml 中开启对应功能时才需要）
+# 图表分析
+matplotlib>=3.8.0
+# Web 页面展示
+fastapi>=0.110.0
+uvicorn>=0.29.0

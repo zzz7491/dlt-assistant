@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  dlt-assistant:
+    build: .
+    container_name: dlt-assistant
+    image: dlt-assistant:latest
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./config:/app/config           # 配置（可热改）
+      - ./data:/app/data               # JSON 数据库持久化
+      - ./reports:/app/reports         # 报告持久化
+      - ./logs:/app/logs               # 运行日志
+    restart: unless-stopped
+    # 默认前台跑 cron；如需一次性运行可：docker compose run --rm dlt-assistant python -m src.scheduler --once

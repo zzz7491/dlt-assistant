@@ -1,0 +1,54 @@
+name: 大乐透AI娱乐分析
+
+# ============================================================
+# 大乐透 AI 娱乐分析助手 - 每日自动运行工作流
+# 说明：本工作流仅作历史数据娱乐统计分析，不预测彩票结果。
+# 运行后由 Cloudflare Pages（或 GitHub Pages）展示生成的报告网页。
+# ============================================================
+
+on:
+  schedule:
+    # 每日北京时间 10:00 运行
+    # GitHub Actions 的 cron 使用 UTC，北京时间 = UTC+8，故 02:00 UTC = 10:00 CST
+    - cron: "0 2 * * *"
+  workflow_dispatch: {}        # 支持在 Actions 页面手动触发
+
+# 允许工作流把更新后的数据与报告提交回仓库（供增量更新与网页展示）
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0       # 获取完整历史，便于在最新提交之上 rebase 后推送
+
+      - name: 配置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 运行分析（抓取 → 分析 → 推荐 → 报告）
+        run: python -m src.scheduler --once
+
+      - name: 提交更新（数据与报告）
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data reports
+          if git diff --cached --quiet; then
+            echo "无变更，跳过提交"
+          else
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            git commit -m "chore: 每日大乐透娱乐分析更新 $(date +'%Y-%m-%d')"
+            git push
+          fi
