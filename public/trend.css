@@ -1,0 +1,144 @@
+/* =========================================================
+   大乐透历史走势图 · 独立样式（配合 style.css 基础变量）
+   纯 CSS · 移动优先 · 无框架
+   ========================================================= */
+
+/* ---- 头部 ---- */
+.trend-header { padding-bottom: 14px; }
+.trend-header .brand h1 { font-size: 1.5rem; }
+
+/* ---- 期数切换按钮 ---- */
+.period-switch {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 12px;
+  flex-wrap: wrap;
+}
+.period-switch button {
+  flex: 1;
+  min-width: 96px;
+  padding: 10px 6px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--muted);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease;
+  touch-action: manipulation;
+}
+.period-switch button.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.period-switch button:active { transform: scale(.97); }
+
+/* ---- 走势图滚动容器（仅图表区内部滚动，页面本身不横向滚动） ---- */
+.trend-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* ---- 走势表格 ---- */
+.trend-table {
+  border-collapse: collapse;
+  font-size: .72rem;
+  white-space: nowrap;
+}
+.trend-table th,
+.trend-table td {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  text-align: center;
+  padding: 0;
+}
+/* 表头：期号（后3位，稀疏显示），吸顶 */
+.trend-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 3;
+}
+.trend-table thead th.issue-cell {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: .64rem;
+  border-bottom: 1px solid var(--line);
+}
+/* 左上角空格 */
+.trend-table th.corner {
+  width: 40px;
+  min-width: 40px;
+  background: #fff;
+}
+/* 行首号码：吸左 */
+.trend-table th.num-cell {
+  width: 40px;
+  min-width: 40px;
+  font-weight: 700;
+  font-size: .72rem;
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 2;
+  border-right: 1px solid var(--line);
+}
+th.num-cell.f { color: var(--front); }
+th.num-cell.b { color: var(--back); }
+
+/* 单元格：默认空白，出现标记红/蓝圆点 */
+.trend-table td.cell {
+  background: #fafbff;
+  border-bottom: 1px solid #f0f2f8;
+  border-right: 1px solid #f0f2f8;
+}
+.trend-table td.hit-f {
+  background: radial-gradient(circle at center, var(--front) 0%, var(--front) 55%, transparent 62%);
+}
+.trend-table td.hit-b {
+  background: radial-gradient(circle at center, var(--back) 0%, var(--back) 55%, transparent 62%);
+}
+
+/* ---- 图例 ---- */
+.trend-legend {
+  font-size: .8rem;
+  color: var(--muted);
+  margin: 10px 0 0;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+.dot.red { background: var(--front); }
+.dot.blue { background: var(--back); }
+.dot.gray { background: #e5e8f0; }
+.legend-note { margin-left: auto; font-size: .72rem; color: #9aa1ad; }
+
+/* ---- 返回链接 ---- */
+.back-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ---- 加载提示 ---- */
+.trend-loading {
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: .9rem;
+}

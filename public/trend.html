@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <title>大乐透历史走势图 - 1000期开奖轨迹（非预测）</title>
+  <meta name="description" content="基于1000期真实开奖数据的大乐透历史走势图：前区35个号码与后区12个号码的开奖轨迹、遗漏与热度。仅娱乐分析，不预测彩票结果。" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#6d28d9" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236d28d9'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='sans-serif'%3E%E8%B5%B0%3C/text%3E%3C/svg%3E" />
+
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./trend.css" />
+</head>
+<body>
+  <header class="site-header trend-header">
+    <div class="brand">
+      <h1>📈 历史走势图</h1>
+      <p class="brand-tag">基于 1000 期真实开奖数据 · 非预测工具</p>
+    </div>
+    <div class="risk-banner">
+      ⚠️ 风险提示：本页面仅作历史数据娱乐分析，<strong>不具备预测彩票结果能力</strong>，请理性购彩。
+    </div>
+  </header>
+
+  <main id="content">
+    <!-- 前区走势图 -->
+    <section class="card">
+      <h2>前区走势图（01–35）</h2>
+      <div class="period-switch" id="front-switch">
+        <button data-periods="100" class="active">最近100期</button>
+        <button data-periods="300">最近300期</button>
+        <button data-periods="1000">最近1000期</button>
+      </div>
+      <div class="trend-scroll" id="front-scroll">
+        <div class="trend-table-wrap" id="front-table"></div>
+      </div>
+      <p class="trend-legend"><span><span class="dot red"></span>前区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
+    </section>
+
+    <!-- 后区走势图 -->
+    <section class="card">
+      <h2>后区走势图（01–12）</h2>
+      <div class="period-switch" id="back-switch">
+        <button data-periods="100" class="active">最近100期</button>
+        <button data-periods="300">最近300期</button>
+        <button data-periods="1000">最近1000期</button>
+      </div>
+      <div class="trend-scroll" id="back-scroll">
+        <div class="trend-table-wrap" id="back-table"></div>
+      </div>
+      <p class="trend-legend"><span><span class="dot blue"></span>后区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
+    </section>
+
+    <footer class="site-footer">
+      <p><a href="./index.html" class="back-link">← 返回首页</a> ｜ 数据来源：500彩票网 ｜ 仅供娱乐，不构成任何购彩建议。</p>
+    </footer>
+  </main>
+
+  <div id="error" class="error-box" hidden>
+    <p>⚠️ 暂未读取到走势图数据。</p>
+    <p class="error-detail" id="error-detail"></p>
+  </div>
+
+  <script src="./trend.js" defer></script>
+</body>
+</html>
