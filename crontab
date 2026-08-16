@@ -1,4 +1,0 @@
-# 大乐透AI娱乐分析助手 - 容器内定时任务
-# 每日 10:00（Asia/Shanghai）执行一次完整流程：抓取 -> 分析 -> 推荐 -> 报告
-# 日志写入 /app/logs/cron.log
-0 10 * * * cd /app && /usr/local/bin/python -m src.scheduler >> /app/logs/cron.log 2>&1

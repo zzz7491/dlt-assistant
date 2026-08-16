@@ -44,11 +44,6 @@ notify:
     webhook: ""                # 飞书自定义机器人 webhook 地址
     secret: ""                 # 飞书签名密钥（可选，开启加签时填写）
 
-web:
-  enabled: false               # Web 页面展示（扩展，默认关闭）
-  host: "0.0.0.0"
-  port: 8080
-
 charts:
   enabled: false               # 图表生成（扩展，默认关闭）
   dir: "reports/assets"

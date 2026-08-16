@@ -46,6 +46,11 @@ jobs:
           cp data/dlt_history.json public/data/dlt_history.json
           cp reports/recommendations.json public/data/recommendations.json
 
+      - name: 同步历史报告
+        run: |
+          mkdir -p public/reports
+          cp reports/*.md public/reports/
+
       - name: 提交更新（数据与报告）
         run: |
           git config user.name "github-actions[bot]"
