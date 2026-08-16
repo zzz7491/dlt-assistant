@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <title>综合评分分析 - 大乐透历史数据分析（非预测）</title>
+  <meta name="description" content="大乐透历史数据综合评分：前区01-35与后区01-12号码的7维度评分与透明分解（历史频率/近期热度/遗漏周期/冷热平衡/奇偶/大小/组合结构）。基于1000期真实开奖数据，仅娱乐分析，不预测彩票结果。" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#6d28d9" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236d28d9'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='sans-serif'%3E%E5%88%86%3C/text%3E%3C/svg%3E" />
+
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./score.css" />
+</head>
+<body>
+  <header class="site-header score-header">
+    <div class="brand">
+      <h1>📊 综合评分分析</h1>
+      <p class="brand-tag">历史数据研究 · 娱乐选号辅助 · 非预测工具</p>
+    </div>
+    <div class="risk-banner">
+      ⚠️ 风险提示：本页面评分仅基于历史数据统计，<strong>不具备预测彩票结果能力</strong>，请理性购彩。
+    </div>
+  </header>
+
+  <main id="content">
+    <!-- 评分版本信息 -->
+    <section class="card score-meta-card">
+      <h2>📊 综合评分分析</h2>
+      <div class="score-meta">
+        <span>评分版本：<strong id="score-version">—</strong></span>
+        <span>权重版本：<strong id="weight-version">—</strong></span>
+        <span>数据来源：<strong id="generated-from">—</strong></span>
+      </div>
+    </section>
+
+    <!-- ⏱ 时间范围（联动评分） -->
+    <section class="card">
+      <h2>⏱ 时间范围</h2>
+      <div class="period-switch" id="period-switch">
+        <button data-periods="50">最近50期</button>
+        <button data-periods="100" class="active">最近100期</button>
+        <button data-periods="300">最近300期</button>
+        <button data-periods="1000">最近1000期</button>
+      </div>
+      <p class="trend-legend"><span class="legend-note">切换后评分联动重算 · 全部基于真实历史开奖数据</span></p>
+    </section>
+
+    <!-- 前区评分 TOP10 -->
+    <section class="card">
+      <h2>前区评分 TOP10</h2>
+      <p class="hint">点击号码卡片可展开评分组成 · 评分仅供娱乐参考</p>
+      <div class="score-list" id="front-scores"></div>
+    </section>
+
+    <!-- 后区评分 TOP10 -->
+    <section class="card">
+      <h2>后区评分 TOP10</h2>
+      <p class="hint">点击号码卡片可展开评分组成 · 评分仅供娱乐参考</p>
+      <div class="score-list" id="back-scores"></div>
+    </section>
+
+    <footer class="site-footer">
+      <p><a href="./trend-v2.html" class="back-link">← 专业走势图</a> ｜ <a href="./index.html" class="back-link">首页</a> ｜ 数据来源：500彩票网 ｜ 仅供娱乐，不构成任何购彩建议。</p>
+    </footer>
+  </main>
+
+  <div id="error" class="error-box" hidden>
+    <p>⚠️ 暂未读取到评分数据。</p>
+    <p class="error-detail" id="error-detail"></p>
+  </div>
+
+  <script src="./score.js" defer></script>
+</body>
+</html>
