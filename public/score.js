@@ -96,6 +96,28 @@
       });
   }
 
+  /* 轨 B：从 /api/scores 读取缓存评分（仅固定窗口 50/100/300/1000；all 仍走轨 A）
+     返回与 scoreAll 同构 [{num, total, tag, parts}]；失败 reject，由调用方回退轨 A */
+  var CACHE_PERIODS = [50, 100, 300, 1000];
+  function loadScoresFromAPI(period, kind, modelType) {
+    var q = "period=" + encodeURIComponent(period) +
+            "&kind=" + encodeURIComponent(kind) +
+            "&model_type=" + encodeURIComponent(modelType);
+    return fetch("./api/scores?" + q, { cache: "no-cache" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("API HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || !Array.isArray(d.numbers) || !d.numbers.length) {
+          throw new Error("API 缓存为空");
+        }
+        return d.numbers.map(function (n) {
+          return { num: n.num, total: n.total, tag: n.tag, parts: n.parts || {} };
+        });
+      });
+  }
+
   /* ================= 基础分析纯函数（与 trend-v2 同口径，自包含实现） ================= */
 
   function sliceWindow(issues, n) {
@@ -328,9 +350,25 @@
     document.getElementById("weight-version").textContent = modelType;
     document.getElementById("generated-from").textContent = SCORE_VERSION.generatedFrom;
 
+    var drawSeq = 0;
     function draw(issues) {
-      renderScoreList(document.getElementById("front-scores"), scoreAll(issues, period, "front", modelType), "front");
-      renderScoreList(document.getElementById("back-scores"), scoreAll(issues, period, "back", modelType), "back");
+      var seq = ++drawSeq;
+      function renderFront(items) { renderScoreList(document.getElementById("front-scores"), items, "front"); }
+      function renderBack(items) { renderScoreList(document.getElementById("back-scores"), items, "back"); }
+
+      // period = all 保持轨 A（/api/issues 全历史 + 前端即时计算）
+      // 固定窗口（50/100/300/1000）优先轨 B 缓存 /api/scores，失败回退轨 A scoreAll
+      if (CACHE_PERIODS.indexOf(period) < 0) {
+        renderFront(scoreAll(issues, period, "front", modelType));
+        renderBack(scoreAll(issues, period, "back", modelType));
+        return;
+      }
+      loadScoresFromAPI(period, "front", modelType)
+        .catch(function () { return scoreAll(issues, period, "front", modelType); })
+        .then(function (items) { if (seq === drawSeq) renderFront(items); });
+      loadScoresFromAPI(period, "back", modelType)
+        .catch(function () { return scoreAll(issues, period, "back", modelType); })
+        .then(function (items) { if (seq === drawSeq) renderBack(items); });
     }
 
     document.getElementById("period-switch").addEventListener("click", function (e) {
@@ -382,7 +420,8 @@
     calculateBigSmall: calculateBigSmall,
     calculateConsec: calculateConsec,
     scoreAll: scoreAll,
-    loadIssues: loadIssues
+    loadIssues: loadIssues,
+    loadScoresFromAPI: loadScoresFromAPI
   };
 
   if (typeof module !== "undefined" && module.exports) {
