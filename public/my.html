@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <title>我的方案 - 大乐透综合数据分析平台（非预测）</title>
+  <meta name="description" content="大乐透综合数据分析平台 · 我的方案：本地收藏的号码、分析历史、自选方案与偏好设置，全部保存在你的浏览器本地，零上传、零后端。仅娱乐分析，不预测彩票结果。" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#6d28d9" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236d28d9'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='sans-serif'%3E%E6%88%91%3C/text%3E%3C/svg%3E" />
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1>👤 我的方案</h1>
+      <p class="brand-tag">本地收藏与方案 · 仅存储于本机浏览器 · 非预测工具</p>
+    </div>
+    <div class="risk-banner">
+      ⚠️ 本页所有收藏、历史与方案均<strong>仅保存在你当前浏览器本地</strong>，清除浏览器数据或换设备即丢失，不预测彩票结果，请理性购彩。
+    </div>
+  </header>
+
+  <!-- 全局导航（统一品牌：数据分析 / 智能选号 / 趋势分析 / 我的方案） -->
+  <nav class="site-nav" aria-label="主导航">
+    <a href="./score.html"><span class="qi-ico">📊</span><span class="qi-label">数据分析</span><span class="qi-sub">综合评分</span></a>
+    <a href="./pick.html"><span class="qi-ico">🎯</span><span class="qi-label">智能选号</span><span class="qi-sub">机选 / 手动</span></a>
+    <a href="./trend-v2.html"><span class="qi-ico">📈</span><span class="qi-label">趋势分析</span><span class="qi-sub">1000期走势</span></a>
+    <a href="./my.html" aria-current="page"><span class="qi-ico">👤</span><span class="qi-label">我的方案</span><span class="qi-sub">本地收藏</span></a>
+  </nav>
+
+  <main id="content">
+    <!-- Tab 切换栏 -->
+    <div class="my-tabs" role="tablist" aria-label="我的方案分类">
+      <button class="my-tab" role="tab" aria-selected="true" data-tab="fav">⭐ 我的收藏</button>
+      <button class="my-tab" role="tab" aria-selected="false" data-tab="history">🕘 历史记录</button>
+      <button class="my-tab" role="tab" aria-selected="false" data-tab="plans">🗂️ 我的方案</button>
+      <button class="my-tab" role="tab" aria-selected="false" data-tab="prefs">⚙️ 偏好设置</button>
+    </div>
+
+    <!-- a. 我的收藏 -->
+    <section class="card my-panel active" id="panel-fav" role="tabpanel" aria-label="我的收藏">
+      <h2>⭐ 我的收藏</h2>
+      <p class="hint">你收藏的号码组合，保存在本地浏览器。</p>
+      <div id="fav-list" class="my-list"></div>
+    </section>
+
+    <!-- b. 历史记录 -->
+    <section class="card my-panel" id="panel-history" role="tabpanel" aria-label="历史记录" hidden>
+      <h2>🕘 历史记录</h2>
+      <p class="hint">你查看或分析过的号码记录（最多保留 100 条）。</p>
+      <div id="history-list" class="my-list"></div>
+      <div class="my-actions-row">
+        <button class="my-btn btn-danger" id="btn-clear-history">清空历史记录</button>
+      </div>
+    </section>
+
+    <!-- c. 我的方案 -->
+    <section class="card my-panel" id="panel-plans" role="tabpanel" aria-label="我的方案" hidden>
+      <h2>🗂️ 我的方案</h2>
+      <p class="hint">你自建的选号方案（由智能选号页保存）。</p>
+      <div id="plans-list" class="my-list"></div>
+    </section>
+
+    <!-- d. 偏好设置（只读展示，由平台自动维护） -->
+    <section class="card my-panel" id="panel-prefs" role="tabpanel" aria-label="偏好设置" hidden>
+      <h2>⚙️ 偏好设置</h2>
+      <p class="hint">平台自动记录的使用偏好，保存在本地。</p>
+      <div id="prefs-list" class="prefs-list"></div>
+    </section>
+
+    <!-- e. 本地数据说明 + 重置 -->
+    <section class="card disclaimer" id="panel-data">
+      <h2>📦 本地数据说明</h2>
+      <p class="data-note">
+        本平台不要求登录、不收集任何个人信息。你在此处看到的「收藏 / 历史 / 方案 / 偏好」
+        全部以浏览器 <code>localStorage</code> 形式保存在<strong>当前设备当前浏览器</strong>中，
+        不上传任何服务器，清除浏览器缓存或更换设备后数据将无法恢复。
+      </p>
+      <div class="my-actions-row">
+        <button class="my-btn btn-danger" id="btn-reset">重置本地数据（清除全部）</button>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>数据来源：500彩票网 ｜ 仅供娱乐，不构成任何购彩建议。</p>
+    </footer>
+  </main>
+
+  <script src="./storage.js"></script>
+  <script src="./my.js"></script>
+</body>
+</html>
