@@ -107,10 +107,62 @@ jobs:
           fi
 
       - name: 同步网页数据
+        # 仅同步历史开奖数据。首页推荐（recommendations.json）改由下方「推荐一期固定」两步
+        # 从 D1 锁定值导出，不再直接复制每日重随机的候选（避免本期推荐每日变化）。
         run: |
           mkdir -p public/data
           cp data/dlt_history.json public/data/dlt_history.json
-          cp reports/recommendations.json public/data/recommendations.json
+
+      - name: 推荐一期固定 · 写入 D1（首写锁定）
+        # 将当前在售期候选推荐写入 dlt_recommendations（UNIQUE(target_issue,strategy,idx)
+        # + INSERT OR IGNORE ⇒ 首次写入即固定，后续每日重随机被静默忽略，实现一期固定）。
+        # 依赖 CLOUDFLARE_API_TOKEN（需含 D1:Edit 权限）；未配置则跳过。
+        # 失败仅记录日志，绝不阻断主流程（双写容错）。
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "未配置 CLOUDFLARE_API_TOKEN，跳过推荐 D1 锁定"
+            exit 0
+          fi
+          set +e
+          python scripts/write_recommendations_d1.py --input reports/recommendations.json
+          RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "推荐 D1 SQL 生成失败（exit=$RC），不影响主流程，继续"
+            exit 0
+          fi
+          if [ -f .verify_tmp/recommendations_d1.sql ]; then
+            npx --yes wrangler@latest d1 execute dlt-draws --remote --file=.verify_tmp/recommendations_d1.sql
+            RC=$?
+            if [ $RC -ne 0 ]; then
+              echo "推荐 D1 写入失败（exit=$RC），不影响主流程，继续"
+            else
+              echo "推荐一期固定写入 D1 完成"
+            fi
+          else
+            echo "无推荐 SQL，跳过 D1 写入"
+          fi
+
+      - name: 推荐一期固定 · 从 D1 导出 JSON（唯一发布文件）
+        # 从 dlt_recommendations 当前在售期锁定值导出 public/data/recommendations.json，
+        # 作为首页读取的唯一发布文件（替换旧的 cp 候选）。D1 无数据时跳过写入，保留现有文件。
+        # 依赖 CLOUDFLARE_API_TOKEN（需含 D1:Edit 权限）；未配置则跳过。
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "未配置 CLOUDFLARE_API_TOKEN，跳过推荐 JSON 导出"
+            exit 0
+          fi
+          set +e
+          python scripts/export_recommendations_json.py
+          RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "推荐 JSON 导出失败（exit=$RC），保留现有文件，继续"
+          else
+            echo "推荐 JSON 已导出（D1 锁定值）"
+          fi
 
       - name: 同步历史报告
         run: |
