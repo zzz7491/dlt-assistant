@@ -1,0 +1,293 @@
+/* =========================================================
+   专业走势图 · 独立样式（配合 style.css 基础变量）
+   纯 CSS · 移动优先 · 无框架
+   ========================================================= */
+
+/* ---- 期数切换按钮（联动全局） ---- */
+.period-switch {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 8px;
+  flex-wrap: wrap;
+}
+.period-switch button {
+  flex: 1;
+  min-width: 72px;
+  padding: 10px 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--muted);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease;
+  touch-action: manipulation;
+}
+.period-switch button.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent-deep);
+  font-weight: 800;
+  box-shadow: 0 2px 10px rgba(109, 40, 217, .35);
+  transform: scale(1.03);
+}
+.period-switch button:not(.active) { background: #f7f8fb; }
+.period-switch button:active { transform: scale(.97); }
+
+/* ---- 数据概览摘要卡 ---- */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.summary-item {
+  background: #f7f8fb;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.s-label {
+  display: block;
+  font-size: .72rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.s-value {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--accent-deep);
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 480px) {
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- 轨迹表滚动容器（图表区内部滚动，页面不横向滚动） ---- */
+.trend-scroll,
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* ---- 轨迹表 ---- */
+.trend-table {
+  border-collapse: collapse;
+  font-size: .72rem;
+  white-space: nowrap;
+}
+.trend-table th,
+.trend-table td {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  text-align: center;
+  padding: 0;
+}
+.trend-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 3;
+}
+.trend-table thead th.issue-cell {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: .64rem;
+  border-bottom: 1px solid var(--line);
+}
+.trend-table th.corner { width: 40px; min-width: 40px; background: #fff; }
+.trend-table th.num-cell {
+  width: 40px; min-width: 40px;
+  font-weight: 700; font-size: .72rem;
+  position: sticky; left: 0; background: #fff; z-index: 2;
+  border-right: 1px solid var(--line);
+}
+th.num-cell.f { color: var(--front); }
+th.num-cell.b { color: var(--back); }
+.trend-table td.cell {
+  background: #fafbff;
+  border-bottom: 1px solid #f0f2f8;
+  border-right: 1px solid #f0f2f8;
+}
+.trend-table td.hit-f {
+  background: radial-gradient(circle at center, var(--front) 0%, var(--front) 55%, transparent 62%);
+}
+.trend-table td.hit-b {
+  background: radial-gradient(circle at center, var(--back) 0%, var(--back) 55%, transparent 62%);
+}
+
+/* ---- 统计表（热度 / 遗漏 / 冷热） ---- */
+.stat-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 300px;
+  font-size: .86rem;
+}
+.stat-table th,
+.stat-table td {
+  padding: 8px 6px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.stat-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-weight: 700;
+  font-size: .82rem;
+}
+.stat-table td.num {
+  font-weight: 700;
+  font-size: .95rem;
+  width: 52px;
+}
+.stat-table td.num.f { color: var(--front); }
+.stat-table td.num.b { color: var(--back); }
+.stat-table .val-hot { color: var(--front); font-weight: 600; }
+.stat-table .val-omit { color: var(--warn); font-weight: 600; }
+
+/* ---- 图例 ---- */
+.trend-legend {
+  font-size: .8rem;
+  color: var(--muted);
+  margin: 10px 0 0;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+.dot.red { background: var(--front); }
+.dot.blue { background: var(--back); }
+.dot.gray { background: #e5e8f0; }
+.legend-note { margin-left: auto; font-size: .72rem; color: #9aa1ad; }
+
+/* ---- 返回链接 ---- */
+.back-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ---- 小屏微调 ---- */
+@media (max-width: 400px) {
+  .period-switch button { min-width: 64px; font-size: .82rem; padding: 10px 2px; }
+  .stat-table { font-size: .8rem; }
+  .stat-table th, .stat-table td { padding: 7px 4px; }
+}
+
+/* =========================================================
+   视觉升级（Step2-Implement-2）：
+   - 页内锚点导航 anchor-nav（sticky + 移动端横向滑动）
+   - 轨迹遗漏色阶 miss-lv0..4（前区紫系 / 后区蓝系，由浅到深）
+   - 冷热色阶 hot-lv1..4（热度表红系）
+   - 遗漏表色阶 val-omit + miss-lv0..4（琥珀系）
+   - 图例色块 miss-swatch
+   ========================================================= */
+
+/* ---- 页内锚点导航 ---- */
+.anchor-nav {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  margin: 0 -4px 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.anchor-nav::-webkit-scrollbar { display: none; }
+.anchor-item {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #f7f8fb;
+  color: var(--muted);
+  font-size: .82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .15s ease;
+  touch-action: manipulation;
+}
+.anchor-item:active { background: var(--accent-soft); color: var(--accent-deep); border-color: var(--accent); }
+
+/* 锚点跳转不被 sticky 导航遮挡 */
+section[id] { scroll-margin-top: 52px; }
+
+/* ---- 轨迹遗漏色阶（空格 miss-lv0..4，命中格 hit-f/hit-b 保持原状）----
+   前区（#sec-front-trajectory）：紫系由浅到深 */
+#sec-front-trajectory .trend-table td.miss-lv0 { background: hsl(258, 55%, 97%); }
+#sec-front-trajectory .trend-table td.miss-lv1 { background: hsl(258, 55%, 94%); }
+#sec-front-trajectory .trend-table td.miss-lv2 { background: hsl(258, 55%, 90%); }
+#sec-front-trajectory .trend-table td.miss-lv3 { background: hsl(258, 55%, 84%); }
+#sec-front-trajectory .trend-table td.miss-lv4 { background: hsl(258, 60%, 76%); }
+/* 后区（#sec-back-trajectory）：蓝系由浅到深 */
+#sec-back-trajectory .trend-table td.miss-lv0 { background: hsl(222, 55%, 97%); }
+#sec-back-trajectory .trend-table td.miss-lv1 { background: hsl(222, 55%, 94%); }
+#sec-back-trajectory .trend-table td.miss-lv2 { background: hsl(222, 55%, 90%); }
+#sec-back-trajectory .trend-table td.miss-lv3 { background: hsl(222, 55%, 84%); }
+#sec-back-trajectory .trend-table td.miss-lv4 { background: hsl(222, 60%, 76%); }
+
+/* ---- 冷热色阶（热度表 hot-lv1..4，红系由浅到深；热号增强，普通号中性）---- */
+.stat-table td.hot-lv1 { background: hsl(348, 70%, 96%); }
+.stat-table td.hot-lv2 { background: hsl(348, 70%, 92%); }
+.stat-table td.hot-lv3 { background: hsl(348, 70%, 86%); }
+.stat-table td.hot-lv4 { background: hsl(348, 70%, 78%); }
+
+/* ---- 遗漏表色阶（val-omit + miss-lv0..4，琥珀系由浅到深）---- */
+.stat-table td.miss-lv0 { background: hsl(30, 75%, 98%); }
+.stat-table td.miss-lv1 { background: hsl(30, 75%, 96%); }
+.stat-table td.miss-lv2 { background: hsl(30, 75%, 92%); }
+.stat-table td.miss-lv3 { background: hsl(30, 75%, 86%); }
+.stat-table td.miss-lv4 { background: hsl(30, 75%, 78%); }
+
+/* ---- 图例：遗漏深浅色块 ---- */
+.legend-miss {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--muted);
+  font-size: .76rem;
+}
+.miss-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, .06);
+}
+/* 前区图例（紫系） */
+#sec-front-trajectory .miss-s1 { background: hsl(258, 55%, 94%); }
+#sec-front-trajectory .miss-s2 { background: hsl(258, 55%, 86%); }
+#sec-front-trajectory .miss-s3 { background: hsl(258, 60%, 76%); }
+/* 后区图例（蓝系） */
+#sec-back-trajectory .miss-s1 { background: hsl(222, 55%, 94%); }
+#sec-back-trajectory .miss-s2 { background: hsl(222, 55%, 86%); }
+#sec-back-trajectory .miss-s3 { background: hsl(222, 60%, 76%); }
+
+/* ---- 小屏适配补充（轨迹表横向滚动保持表格不压缩，锚点导航横向滑动）---- */
+@media (max-width: 480px) {
+  .anchor-nav { padding: 8px 10px; gap: 6px; }
+  .anchor-item { font-size: .78rem; padding: 5px 10px; }
+  .legend-miss { font-size: .7rem; }
+  section[id] { scroll-margin-top: 46px; }
+}
