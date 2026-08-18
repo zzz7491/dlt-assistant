@@ -119,12 +119,46 @@
 
   /* ================= 渲染层 ================= */
 
+  // 遗漏档位（仅服务 UI）：与轨迹空格 / 遗漏表共用同一阈值语义
+  // 0 = 1-2 期, 1 = 3-5, 2 = 6-10, 3 = 11-20, 4 = 21+
+  function missLevel(miss) {
+    if (miss <= 2) return 0;
+    if (miss <= 5) return 1;
+    if (miss <= 10) return 2;
+    if (miss <= 20) return 3;
+    return 4;
+  }
+
+  // 热度档位（仅服务 UI）：按行内最大值归一化到 1-4（最大值恒为 4）
+  function hotLevel(count, max) {
+    if (!max) return 0;
+    return Math.min(4, Math.max(1, Math.round((count / max) * 4)));
+  }
+
+  // 遗漏计算辅助（仅服务 UI）：返回每个号码在当前窗口内的当前遗漏期数
+  // 输入 buildMatrices() 输出 matrix 对象，输出 [{ number, miss }]
+  function calculateCellMissing(m, n) {
+    var issues = m.issues;
+    var start = Math.max(0, issues.length - (n || issues.length));
+    return m.labels.map(function (num, r) {
+      var miss = 0;
+      for (var ci = issues.length - 1; ci >= start; ci--) {
+        if (m.matrix[r][ci]) break;
+        miss++;
+      }
+      return { number: num, miss: miss };
+    });
+  }
+
   function renderTrajectoryHTML(m, kind, n) {
     var issues = m.issues;
     var start = Math.max(0, issues.length - n);
     var cols = issues.slice(start);
     var hitClass = kind === "front" ? "hit-f" : "hit-b";
     var numCls = kind === "front" ? "f" : "b";
+    // 每号当前遗漏（仅服务 UI）：空格输出 miss-lvN 分级 class，命中格保留 hit-f / hit-b
+    var missMap = {};
+    calculateCellMissing(m, n).forEach(function (it) { missMap[it.number] = it.miss; });
     var parts = ['<table class="trend-table"><thead><tr><th class="corner"></th>'];
     for (var c = 0; c < cols.length; c++) {
       var show = (c % 10 === 0) || (c === cols.length - 1);
@@ -133,9 +167,12 @@
     parts.push("</tr></thead><tbody>");
     for (var r = 0; r < m.labels.length; r++) {
       var row = m.matrix[r];
+      var rowMissLv = missLevel(missMap[m.labels[r]]);
       parts.push('<tr><th class="num-cell ' + numCls + '">' + pad2(m.labels[r]) + "</th>");
       for (var ci = 0; ci < cols.length; ci++) {
-        parts.push(row[start + ci] ? '<td class="cell ' + hitClass + '"></td>' : "<td class='cell'></td>");
+        parts.push(row[start + ci]
+          ? '<td class="cell ' + hitClass + '"></td>'
+          : '<td class="cell miss-lv' + rowMissLv + '"></td>');
       }
       parts.push("</tr>");
     }
@@ -145,10 +182,12 @@
 
   function renderHotTable(items, kind) {
     var numCls = kind === "front" ? "f" : "b";
+    var maxCount = 0;
+    items.forEach(function (it) { if (it.count > maxCount) maxCount = it.count; });
     var rows = ['<thead><tr><th>号码</th><th>出现次数</th><th>最近遗漏</th></tr></thead><tbody>'];
     items.forEach(function (it) {
       rows.push('<tr><td class="num ' + numCls + '">' + pad2(it.num) + "</td>" +
-        '<td class="val-hot">' + it.count + "</td>" +
+        '<td class="val-hot hot-lv' + hotLevel(it.count, maxCount) + '">' + it.count + "</td>" +
         '<td class="val-omit">' + it.omit + "</td></tr>");
     });
     rows.push("</tbody>");
@@ -160,7 +199,7 @@
     var rows = ['<thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>平均遗漏</th></tr></thead><tbody>'];
     items.forEach(function (it) {
       rows.push('<tr><td class="num ' + numCls + '">' + pad2(it.num) + "</td>" +
-        '<td class="val-omit">' + it.cur + "</td>" +
+        '<td class="val-omit miss-lv' + missLevel(it.cur) + '">' + it.cur + "</td>" +
         "<td>" + it.max + "</td><td>" + it.avg + "</td></tr>");
     });
     rows.push("</tbody>");
@@ -188,7 +227,8 @@
 
   /* ================= 页面启动：loadJSON → calculate → render ================= */
   function init() {
-    var period = DEFAULT_PERIOD;
+    // 期数自适应：大屏（≥760px）默认 300 期展示更完整趋势，移动端保持 100 期低密度易读
+    var period = window.innerWidth >= 760 ? 300 : DEFAULT_PERIOD;
     var matrix = null;
     var meta = { cover: "—", issueRange: "—", frontTotal: "—", backTotal: "—", sourceName: "—" };
 
@@ -258,6 +298,18 @@
       draw();
     });
 
+    // 页内锚点导航：平滑滚动（仅 UI，不影响渲染逻辑）
+    document.querySelectorAll(".anchor-nav a").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        var id = this.getAttribute("href").slice(1);
+        var target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
     loadJSON("./data/dlt_history.json").then(function (data) {
       var issues = data.issues || [];
       if (!issues.length) throw new Error("历史数据为空");
@@ -284,6 +336,7 @@
     calculateOddEven: calculateOddEven,
     calculateBigSmall: calculateBigSmall,
     buildMatrices: buildMatrices,
+    calculateCellMissing: calculateCellMissing,
     renderTrajectoryHTML: renderTrajectoryHTML
   };
 

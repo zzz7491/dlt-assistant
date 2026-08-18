@@ -191,3 +191,106 @@ th.num-cell.b { color: var(--back); }
   .stat-table { font-size: .8rem; }
   .stat-table th, .stat-table td { padding: 7px 4px; }
 }
+
+/* =========================================================
+   视觉升级（Step2-Implement-2）：
+   - 页内锚点导航 anchor-nav（sticky + 移动端横向滑动）
+   - 轨迹遗漏色阶 miss-lv0..4（前区紫系 / 后区蓝系，由浅到深）
+   - 冷热色阶 hot-lv1..4（热度表红系）
+   - 遗漏表色阶 val-omit + miss-lv0..4（琥珀系）
+   - 图例色块 miss-swatch
+   ========================================================= */
+
+/* ---- 页内锚点导航 ---- */
+.anchor-nav {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  margin: 0 -4px 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.anchor-nav::-webkit-scrollbar { display: none; }
+.anchor-item {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #f7f8fb;
+  color: var(--muted);
+  font-size: .82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .15s ease;
+  touch-action: manipulation;
+}
+.anchor-item:active { background: var(--accent-soft); color: var(--accent-deep); border-color: var(--accent); }
+
+/* 锚点跳转不被 sticky 导航遮挡 */
+section[id] { scroll-margin-top: 52px; }
+
+/* ---- 轨迹遗漏色阶（空格 miss-lv0..4，命中格 hit-f/hit-b 保持原状）----
+   前区（#sec-front-trajectory）：紫系由浅到深 */
+#sec-front-trajectory .trend-table td.miss-lv0 { background: hsl(258, 55%, 97%); }
+#sec-front-trajectory .trend-table td.miss-lv1 { background: hsl(258, 55%, 94%); }
+#sec-front-trajectory .trend-table td.miss-lv2 { background: hsl(258, 55%, 90%); }
+#sec-front-trajectory .trend-table td.miss-lv3 { background: hsl(258, 55%, 84%); }
+#sec-front-trajectory .trend-table td.miss-lv4 { background: hsl(258, 60%, 76%); }
+/* 后区（#sec-back-trajectory）：蓝系由浅到深 */
+#sec-back-trajectory .trend-table td.miss-lv0 { background: hsl(222, 55%, 97%); }
+#sec-back-trajectory .trend-table td.miss-lv1 { background: hsl(222, 55%, 94%); }
+#sec-back-trajectory .trend-table td.miss-lv2 { background: hsl(222, 55%, 90%); }
+#sec-back-trajectory .trend-table td.miss-lv3 { background: hsl(222, 55%, 84%); }
+#sec-back-trajectory .trend-table td.miss-lv4 { background: hsl(222, 60%, 76%); }
+
+/* ---- 冷热色阶（热度表 hot-lv1..4，红系由浅到深；热号增强，普通号中性）---- */
+.stat-table td.hot-lv1 { background: hsl(348, 70%, 96%); }
+.stat-table td.hot-lv2 { background: hsl(348, 70%, 92%); }
+.stat-table td.hot-lv3 { background: hsl(348, 70%, 86%); }
+.stat-table td.hot-lv4 { background: hsl(348, 70%, 78%); }
+
+/* ---- 遗漏表色阶（val-omit + miss-lv0..4，琥珀系由浅到深）---- */
+.stat-table td.miss-lv0 { background: hsl(30, 75%, 98%); }
+.stat-table td.miss-lv1 { background: hsl(30, 75%, 96%); }
+.stat-table td.miss-lv2 { background: hsl(30, 75%, 92%); }
+.stat-table td.miss-lv3 { background: hsl(30, 75%, 86%); }
+.stat-table td.miss-lv4 { background: hsl(30, 75%, 78%); }
+
+/* ---- 图例：遗漏深浅色块 ---- */
+.legend-miss {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--muted);
+  font-size: .76rem;
+}
+.miss-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, .06);
+}
+/* 前区图例（紫系） */
+#sec-front-trajectory .miss-s1 { background: hsl(258, 55%, 94%); }
+#sec-front-trajectory .miss-s2 { background: hsl(258, 55%, 86%); }
+#sec-front-trajectory .miss-s3 { background: hsl(258, 60%, 76%); }
+/* 后区图例（蓝系） */
+#sec-back-trajectory .miss-s1 { background: hsl(222, 55%, 94%); }
+#sec-back-trajectory .miss-s2 { background: hsl(222, 55%, 86%); }
+#sec-back-trajectory .miss-s3 { background: hsl(222, 60%, 76%); }
+
+/* ---- 小屏适配补充（轨迹表横向滚动保持表格不压缩，锚点导航横向滑动）---- */
+@media (max-width: 480px) {
+  .anchor-nav { padding: 8px 10px; gap: 6px; }
+  .anchor-item { font-size: .78rem; padding: 5px 10px; }
+  .legend-miss { font-size: .7rem; }
+  section[id] { scroll-margin-top: 46px; }
+}

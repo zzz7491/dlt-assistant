@@ -32,9 +32,20 @@
     <a class="quick-item" href="./my.html"><span class="qi-ico">⭐</span><span class="qi-label">我的方案</span></a>
   </nav>
 
+  <!-- 页内锚点导航（移动端可横向滑动，样式由 trend-v2.css 接管） -->
+  <nav class="anchor-nav" aria-label="页内导航">
+    <a class="anchor-item" href="#sec-summary">📊 概览</a>
+    <a class="anchor-item" href="#sec-front-trajectory">🔴 前区轨迹</a>
+    <a class="anchor-item" href="#sec-back-trajectory">🔵 后区轨迹</a>
+    <a class="anchor-item" href="#sec-front-hot">🔥 热度排行</a>
+    <a class="anchor-item" href="#sec-front-missing">⏳ 遗漏分析</a>
+    <a class="anchor-item" href="#sec-back-hot">🌡️ 冷热分析</a>
+    <a class="anchor-item" href="#sec-odd-even">⚖️ 奇偶·大小</a>
+  </nav>
+
   <main id="content">
     <!-- 📊 数据概览（动态读取 JSON，不写死） -->
-    <section class="card summary-card">
+    <section class="card summary-card" id="sec-summary">
       <h2>📊 数据概览</h2>
       <div class="summary-grid">
         <div class="summary-item"><span class="s-label">分析范围</span><span class="s-value" id="sum-range">—</span></div>
@@ -47,7 +58,7 @@
     </section>
 
     <!-- ⏱ 统一时间范围选择（联动全部模块） -->
-    <section class="card">
+    <section class="card" id="sec-period">
       <h2>⏱ 时间范围</h2>
       <div class="period-switch" id="period-switch">
         <button data-periods="50">最近50期</button>
@@ -55,53 +66,53 @@
         <button data-periods="300">最近300期</button>
         <button data-periods="1000">最近1000期</button>
       </div>
-      <p class="trend-legend"><span class="legend-note">切换时间范围后，下方全部模块联动更新</span></p>
+      <p class="trend-legend"><span class="legend-note">切换时间范围后，下方全部模块联动更新 · 默认期数随屏幕宽度自动选择（大屏 300 / 移动 100）</span></p>
     </section>
 
     <!-- ① 前区号码轨迹 -->
-    <section class="card">
+    <section class="card" id="sec-front-trajectory">
       <h2>前区号码轨迹（01–35）</h2>
       <div class="trend-scroll"><div id="front-trajectory"></div></div>
-      <p class="trend-legend"><span><span class="dot red"></span>前区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
+      <p class="trend-legend"><span><span class="dot red"></span>前区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-miss"><span class="miss-swatch miss-s1"></span><span class="miss-swatch miss-s2"></span><span class="miss-swatch miss-s3"></span>遗漏越久颜色越深</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
     </section>
 
     <!-- ② 后区号码轨迹 -->
-    <section class="card">
+    <section class="card" id="sec-back-trajectory">
       <h2>后区号码轨迹（01–12）</h2>
       <div class="trend-scroll"><div id="back-trajectory"></div></div>
-      <p class="trend-legend"><span><span class="dot blue"></span>后区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
+      <p class="trend-legend"><span><span class="dot blue"></span>后区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-miss"><span class="miss-swatch miss-s1"></span><span class="miss-swatch miss-s2"></span><span class="miss-swatch miss-s3"></span>遗漏越久颜色越深</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
     </section>
 
     <!-- ③ 前区热度排行 -->
-    <section class="card">
+    <section class="card" id="sec-front-hot">
       <h2>前区热度排行</h2>
       <p class="hint">按出现次数倒序 · 最近遗漏 = 当前连续未开出期数</p>
       <div class="table-scroll"><table class="stat-table" id="front-hot"></table></div>
     </section>
 
     <!-- ④ 前区遗漏分析 -->
-    <section class="card">
+    <section class="card" id="sec-front-missing">
       <h2>前区遗漏分析</h2>
       <p class="hint">当前遗漏 / 最大遗漏 / 平均遗漏（连续未开出期数）</p>
       <div class="table-scroll"><table class="stat-table" id="front-missing"></table></div>
     </section>
 
     <!-- ⑤ 后区冷热分析 -->
-    <section class="card">
+    <section class="card" id="sec-back-hot">
       <h2>后区冷热分析</h2>
       <p class="hint">按出现次数倒序 · 最近遗漏 = 当前连续未开出期数</p>
       <div class="table-scroll"><table class="stat-table" id="back-hot"></table></div>
     </section>
 
     <!-- ⑥ 后区奇偶趋势 -->
-    <section class="card">
+    <section class="card" id="sec-odd-even">
       <h2>后区奇偶趋势</h2>
       <p class="hint">按后区号码个数统计奇数 / 偶数占比</p>
       <div class="bars" id="back-odd-even"></div>
     </section>
 
     <!-- ⑦ 后区大小趋势 -->
-    <section class="card">
+    <section class="card" id="sec-big-small">
       <h2>后区大小趋势</h2>
       <p class="hint">规则：01–06 小 / 07–12 大 · 按后区号码个数统计占比</p>
       <div class="bars" id="back-big-small"></div>
