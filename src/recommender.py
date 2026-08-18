@@ -189,7 +189,8 @@ def _strategy_scored(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.
     for fc in itertools.combinations(fnums, 5):
         for bc in itertools.combinations(bnums, 2):
             combo = {"front": list(fc), "back": list(bc)}
-            cs = calculate_combination_score(combo, overlap, structure, None,
+            cs = calculate_combination_score(combo, overlap, structure,
+                                             stats.get("sum_span"),
                                              prev_front, prev_back, weights=combo_w)
             avg_single = (sum(fmap[n] for n in fc) + sum(bmap[n] for n in bc)) / 7.0
             total = normalize_score(w_single * avg_single + w_combo * cs["score_total"])

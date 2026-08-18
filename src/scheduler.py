@@ -19,6 +19,7 @@ from .analyzer import (
     analyze_number_temperature,
     analyze_missing_cycle,
     analyze_structure_distribution,
+    analyze_sum_span,
 )
 from .database import load
 from .recommender import recommend, STRATEGY_LABELS
@@ -56,6 +57,7 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
         "temperature": analyze_number_temperature(issues),
         "missing_cycle": analyze_missing_cycle(issues),
         "structure": analyze_structure_distribution(issues),
+        "sum_span": analyze_sum_span(issues),
         "prev_issue": issues[-1] if issues else None,
     }
     recommendations = recommend(analysis, cfg, stats=stats)

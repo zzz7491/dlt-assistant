@@ -303,3 +303,47 @@ def analyze_structure_distribution(issues: list[dict[str, Any]],
             "back": zone_dist(bpool, back_min, back_max, back_zones),
         },
     }
+
+
+def analyze_sum_span(issues: list[dict[str, Any]]) -> dict[str, Any]:
+    """和值/跨度历史分布统计（E-2 新增，纯函数，不生成号码）。
+
+    供 scorer.calculate_combination_score 的 sum_span_stats 使用；
+    输出与 scorer 契约一致：
+      {"front_sum": {"p25", "p75", "mean"},
+       "front_span": {"p25", "p75"},
+       "back_span":  {"p25", "p75"}}
+    空数据 / 无有效期返回空 dict（scorer 端 lo/hi 缺失 → sum_span_match=中性 50）。
+    """
+    seq = sorted(issues, key=lambda x: x["issue"])
+    fsums: list[int] = []
+    fspans: list[int] = []
+    bspans: list[int] = []
+    for it in seq:
+        f = it.get("front") or []
+        b = it.get("back") or []
+        if len(f) >= 2 and len(b) >= 2:
+            fsums.append(sum(f))
+            fspans.append(max(f) - min(f))
+            bspans.append(max(b) - min(b))
+    if not fsums:
+        return {}
+
+    def pct(sorted_arr: list[int], p: int) -> int:
+        n = len(sorted_arr)
+        idx = min(max(0, (n * p) // 100), n - 1)
+        return sorted_arr[idx]
+
+    fs = sorted(fsums)
+    fp = sorted(fspans)
+    bp = sorted(bspans)
+    return {
+        "front_sum": {
+            "p25": pct(fs, 25),
+            "p75": pct(fs, 75),
+            "mean": round(sum(fs) / len(fs), 2),
+        },
+        "front_span": {"p25": pct(fp, 25), "p75": pct(fp, 75)},
+        "back_span": {"p25": pct(bp, 25), "p75": pct(bp, 75)},
+    }
+
