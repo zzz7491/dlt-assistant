@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import itertools
 import random
 from typing import Any
 
@@ -16,6 +17,7 @@ STRATEGY_LABELS: dict[str, str] = {
     "A": "均衡统计型",
     "B": "冷热组合型",
     "C": "纯随机娱乐型",
+    "D": "综合评分型",
 }
 
 
@@ -122,15 +124,115 @@ def _strategy_random(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.
     }
 
 
+def _strategy_scored(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.Random,
+                     stats: dict[str, Any] | None = None) -> dict[str, Any]:
+    """D 综合评分型（C-2-Step2）：C-1 四因素统计 + scorer 双层评分，遍历组合取 Top1。
+
+    流程：单号层评分（前区 Top15 / 后区 Top8）→ itertools 组合遍历 →
+          calculate_combination_score（结构分）→ 综合分 = single×单号均分 + combo×结构分 → 排序取 Top。
+
+    仅依赖 scorer 与 stats（C-1 统计输出 + prev_issue）；A/B/C 策略零影响。
+    权重全部来自 config settings.yaml（recommend.weights），inherit 硬上限 15%（scorer clamp 双保险）。
+    返回：{"front", "back", "model_version", "score_total", "factors", "basis"}。
+    """
+    from .scorer import calculate_number_score, calculate_combination_score, normalize_score
+
+    w_cfg = (cfg.get("recommend") or {}).get("weights") or {}
+    num_w = w_cfg.get("number")
+    combo_w = w_cfg.get("combo")
+    svc = w_cfg.get("single_vs_combo") or {}
+    w_single = float(svc.get("single", 0.7))
+    w_combo = float(svc.get("combo", 0.3))
+    top_front = int(w_cfg.get("top_front", 15))
+    top_back = int(w_cfg.get("top_back", 8))
+
+    stats = stats or {}
+    overlap = stats.get("overlap")
+    temperature = stats.get("temperature") or {}
+    missing_cycle = stats.get("missing_cycle") or {}
+    structure = stats.get("structure")
+    prev_issue = stats.get("prev_issue") or {}
+    prev_front = prev_issue.get("front")
+    prev_back = prev_issue.get("back")
+    prev_front_set = set(prev_front or [])
+    prev_back_set = set(prev_back or [])
+
+    def pool_scores(pmin: int, pmax: int, kind: str) -> list[dict[str, Any]]:
+        scored: list[dict[str, Any]] = []
+        for n in range(pmin, pmax + 1):
+            s = calculate_number_score(
+                n,
+                (temperature.get(kind) or {}).get(n, {}),
+                (missing_cycle.get(kind) or {}).get(n, {}),
+                overlap,
+                is_previous=(n in prev_front_set) if kind == "front" else (n in prev_back_set),
+                weights=num_w,
+            )
+            scored.append(s)
+        scored.sort(key=lambda x: x["score_total"], reverse=True)
+        return scored
+
+    front_top = pool_scores(1, 35, "front")[:top_front]
+    back_top = pool_scores(1, 12, "back")[:top_back]
+    if not front_top or not back_top:  # 防御：统计缺失时回退纯随机（合法规则内）
+        return {"front": sorted(rng.sample(range(1, 36), 5)),
+                "back": sorted(rng.sample(range(1, 13), 2))}
+
+    fnums = [s["number"] for s in front_top]
+    bnums = [s["number"] for s in back_top]
+    fmap = {s["number"]: s["score_total"] for s in front_top}
+    bmap = {s["number"]: s["score_total"] for s in back_top}
+    ffactors = {s["number"]: s["factors"] for s in front_top}
+    bfactors = {s["number"]: s["factors"] for s in back_top}
+
+    scored_combos: list[tuple[float, dict[str, Any], dict[str, Any]]] = []
+    for fc in itertools.combinations(fnums, 5):
+        for bc in itertools.combinations(bnums, 2):
+            combo = {"front": list(fc), "back": list(bc)}
+            cs = calculate_combination_score(combo, overlap, structure, None,
+                                             prev_front, prev_back, weights=combo_w)
+            avg_single = (sum(fmap[n] for n in fc) + sum(bmap[n] for n in bc)) / 7.0
+            total = normalize_score(w_single * avg_single + w_combo * cs["score_total"])
+            scored_combos.append((total, combo, cs))
+
+    scored_combos.sort(key=lambda x: (-x[0], x[1]["front"], x[1]["back"]))
+    total, combo, cs = scored_combos[0]
+
+    def mean_factor(key: str) -> float:
+        vals = [ffactors[n][key] for n in combo["front"]] + [bfactors[n][key] for n in combo["back"]]
+        return round(sum(vals) / len(vals), 2) if vals else 0.0
+
+    return {
+        "front": combo["front"],
+        "back": combo["back"],
+        "model_version": "C-2-D-v1",
+        "score_total": total,
+        "factors": cs["factors"],
+        "basis": {
+            "heat": mean_factor("heat"),
+            "missing": mean_factor("missing"),
+            "trend": mean_factor("trend"),
+            "inherit": mean_factor("inherit"),
+            "structure": cs["factors"],
+        },
+    }
+
+
 _STRATEGY_FUNCS = {
     "A": _strategy_balanced,
     "B": _strategy_hotcold,
     "C": _strategy_random,
+    "D": _strategy_scored,
 }
 
 
-def recommend(analysis: dict[str, Any], cfg: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
-    """生成 A/B/C 三策略的娱乐推荐，返回 {策略键: [组合, ...]}。"""
+def recommend(analysis: dict[str, Any], cfg: dict[str, Any],
+              stats: dict[str, Any] | None = None) -> dict[str, list[dict[str, Any]]]:
+    """生成 A/B/C(/D) 策略的娱乐推荐，返回 {策略键: [组合, ...]}。
+
+    stats（C-1 四因素统计 + prev_issue）非空时追加 D 综合评分策略；
+    为 None 时行为与旧版完全一致（A/B/C），向后兼容。
+    """
     per = cfg["recommend"].get("combos_per_strategy", 1)
     seed = cfg["recommend"].get("seed")
     rng = random.Random(seed)
@@ -138,4 +240,6 @@ def recommend(analysis: dict[str, Any], cfg: dict[str, Any]) -> dict[str, list[d
     for key in ("A", "B", "C"):
         combos = [_STRATEGY_FUNCS[key](analysis, cfg, rng) for _ in range(per)]
         out[key] = combos
+    if stats is not None:
+        out["D"] = [_STRATEGY_FUNCS["D"](analysis, cfg, rng, stats) for _ in range(per)]
     return out

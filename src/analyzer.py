@@ -126,3 +126,180 @@ def analyze(issues: list[dict[str, Any]], cfg: dict[str, Any]) -> dict[str, Any]
         "back_zone_labels": back_zone_labels,
         "back_zone_counter": back_zone_counter,
     }
+
+
+# =========================================================
+# C-1 多因素模型基础统计（只新增，不接入 analyze()/recommend()）
+# 独立纯函数，仅服务后续 C-2 推荐模型；不改变现有输出与推荐结果。
+# =========================================================
+
+
+def analyze_previous_overlap(issues: list[dict[str, Any]]) -> dict[str, Any]:
+    """上期号码继承统计（仅历史分布描述，不预测具体重复号码）。
+
+    输入：issues（任意长度，≥2 期才有分布）。
+    输出：前/后区与上一期重复数量分布（概率 0-1）+ 期望重复个数。
+    """
+    seq = sorted(issues, key=lambda x: x["issue"])
+    n = len(seq)
+    fd: Counter = Counter()
+    bd: Counter = Counter()
+    for i in range(1, n):
+        pf = set(seq[i - 1].get("front") or [])
+        pb = set(seq[i - 1].get("back") or [])
+        cf = set(seq[i].get("front") or [])
+        cb = set(seq[i].get("back") or [])
+        fd[len(pf & cf)] += 1
+        bd[len(pb & cb)] += 1
+    pairs = max(n - 1, 1)
+    fdist = {str(k): round(fd.get(k, 0) / pairs, 6) for k in range(0, 6)}
+    bdist = {str(k): round(bd.get(k, 0) / pairs, 6) for k in range(0, 3)}
+    exp_f = sum(k * fd.get(k, 0) for k in range(6)) / pairs
+    exp_b = sum(k * bd.get(k, 0) for k in range(3)) / pairs
+    return {
+        "front_overlap_distribution": fdist,
+        "back_overlap_distribution": bdist,
+        "expected_front_overlap": round(exp_f, 4),
+        "expected_back_overlap": round(exp_b, 4),
+    }
+
+
+def analyze_number_temperature(issues: list[dict[str, Any]],
+                               front_min: int = 1, front_max: int = 35,
+                               back_min: int = 1, back_max: int = 12) -> dict[str, Any]:
+    """号码冷热统计：总频 / 近30期 / 近100期 / 趋势。
+
+    trend = 近30期每期频率 − 近100期每期频率（正值=近期升温，负值=降温）。
+    输出：{"front": {num: {...}}, "back": {num: {...}}}。
+    """
+    seq = sorted(issues, key=lambda x: x["issue"])
+    n = len(seq)
+
+    def calc(pmin: int, pmax: int, key: str) -> dict:
+        total: Counter = Counter()
+        r30: Counter = Counter()
+        r100: Counter = Counter()
+        for i, it in enumerate(seq):
+            total.update(it.get(key) or [])
+            if i >= n - 30:
+                r30.update(it.get(key) or [])
+            if i >= n - 100:
+                r100.update(it.get(key) or [])
+        w30 = min(30, n)
+        w100 = min(100, n)
+        out: dict[int, dict] = {}
+        for num in range(pmin, pmax + 1):
+            trend = round((r30.get(num, 0) / w30 if w30 else 0) - (r100.get(num, 0) / w100 if w100 else 0), 4)
+            out[num] = {
+                "total_count": total.get(num, 0),
+                "recent_30": r30.get(num, 0),
+                "recent_100": r100.get(num, 0),
+                "trend": trend,
+            }
+        return out
+
+    return {"front": calc(front_min, front_max, "front"), "back": calc(back_min, back_max, "back")}
+
+
+def analyze_missing_cycle(issues: list[dict[str, Any]],
+                          front_min: int = 1, front_max: int = 35,
+                          back_min: int = 1, back_max: int = 12) -> dict[str, Any]:
+    """遗漏周期统计：当前遗漏 / 平均遗漏（周期均值）/ 最大遗漏 / 周期状态。
+
+    cycle_status：
+      just_hit     当前遗漏 0（最新一期开出）
+      within_cycle 当前遗漏 ≤ 平均周期（周期内）
+      over_avg     当前遗漏 > 平均周期 且 < 历史最大（回补观察窗口）
+      at_max       当前遗漏 ≥ 历史最大
+    输出：{"front": {num: {...}}, "back": {num: {...}}}。
+    """
+    seq = sorted(issues, key=lambda x: x["issue"])
+
+    def calc(pmin: int, pmax: int, key: str) -> dict:
+        out: dict[int, dict] = {}
+        for num in range(pmin, pmax + 1):
+            cur = 0
+            for i in range(len(seq) - 1, -1, -1):
+                if num in (seq[i].get(key) or []):
+                    break
+                cur += 1
+            runs: list[int] = []
+            run = 0
+            for it in seq:
+                if num in (it.get(key) or []):
+                    if run:
+                        runs.append(run)
+                        run = 0
+                else:
+                    run += 1
+            if run:
+                runs.append(run)
+            avg = round(sum(runs) / len(runs), 2) if runs else 0.0
+            mx = max(runs) if runs else 0
+            if cur == 0:
+                status = "just_hit"
+            elif avg == 0 or cur <= avg:
+                status = "within_cycle"
+            elif cur < mx:
+                status = "over_avg"
+            else:
+                status = "at_max"
+            out[num] = {"current_missing": cur, "avg_missing": avg, "max_missing": mx, "cycle_status": status}
+        return out
+
+    return {"front": calc(front_min, front_max, "front"), "back": calc(back_min, back_max, "back")}
+
+
+def analyze_structure_distribution(issues: list[dict[str, Any]],
+                                   front_min: int = 1, front_max: int = 35,
+                                   back_min: int = 1, back_max: int = 12,
+                                   front_zones: int = 5, back_zones: int = 2,
+                                   boundary: int = 18) -> dict[str, Any]:
+    """结构分布统计：奇偶 / 大小 / 连号 / 区间分布（口径与 analyze() 对齐）。
+
+    输出：{"odd_even": {...}, "big_small": {...}, "consecutive": {...},
+          "zone_distribution": {"front": {...}, "back": {...}}}。
+    """
+    seq = sorted(issues, key=lambda x: x["issue"])
+    n = len(seq)
+    odd_even: Counter = Counter()
+    big_small: Counter = Counter()
+    consec = 0
+    consec_pairs = 0
+    fpool = [x for it in seq for x in (it.get("front") or [])]
+    bpool = [x for it in seq for x in (it.get("back") or [])]
+
+    def zone_dist(pool: list[int], pmin: int, pmax: int, zones: int) -> dict:
+        size = (pmax - pmin + 1) // zones
+        counter = [0] * zones
+        labels = [f"{pmin + i * size}-{pmin + (i + 1) * size - 1}" for i in range(zones)]
+        for x in pool:
+            idx = min((x - pmin) // size, zones - 1)
+            counter[idx] += 1
+        total = len(pool) or 1
+        return {"labels": labels, "counts": counter, "pct": [round(c / total, 4) for c in counter]}
+
+    for it in seq:
+        fcur = it.get("front") or []
+        odd = sum(1 for x in fcur if x % 2 == 1)
+        odd_even[f"奇{odd}:偶{5 - odd}"] += 1
+        big = sum(1 for x in fcur if x >= boundary)
+        big_small[f"大{big}:小{5 - big}"] += 1
+        f = sorted(fcur)
+        pairs = sum(1 for i in range(len(f) - 1) if f[i + 1] - f[i] == 1)
+        if pairs > 0:
+            consec += 1
+        consec_pairs += pairs
+
+    return {
+        "odd_even": dict(odd_even),
+        "big_small": dict(big_small),
+        "consecutive": {
+            "prob": round(consec / n, 4) if n else 0,
+            "avg_pairs": round(consec_pairs / n, 4) if n else 0,
+        },
+        "zone_distribution": {
+            "front": zone_dist(fpool, front_min, front_max, front_zones),
+            "back": zone_dist(bpool, back_min, back_max, back_zones),
+        },
+    }

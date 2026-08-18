@@ -13,7 +13,13 @@ from typing import Any
 
 import yaml
 
-from .analyzer import analyze
+from .analyzer import (
+    analyze,
+    analyze_previous_overlap,
+    analyze_number_temperature,
+    analyze_missing_cycle,
+    analyze_structure_distribution,
+)
 from .database import load
 from .recommender import recommend, STRATEGY_LABELS
 from .recommendations import build_records, next_issue, save as save_recs
@@ -44,8 +50,15 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
     analysis = analyze(recent, cfg)
     print("分析完成")
 
-    # 3) 娱乐推荐（A/B/C 三策略）
-    recommendations = recommend(analysis, cfg)
+    # 3) 娱乐推荐（A/B/C 三策略 + D 综合评分型）
+    stats = {
+        "overlap": analyze_previous_overlap(issues),
+        "temperature": analyze_number_temperature(issues),
+        "missing_cycle": analyze_missing_cycle(issues),
+        "structure": analyze_structure_distribution(issues),
+        "prev_issue": issues[-1] if issues else None,
+    }
+    recommendations = recommend(analysis, cfg, stats=stats)
 
     # 3.1) 落盘推荐记录（供开奖验证模块比对），按策略分别记录
     rec_cfg = cfg["recommend"]
@@ -53,12 +66,21 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
     target_issue = next_issue(latest_issue)
     rec_date = datetime.now().strftime("%Y-%m-%d")
     all_recs: list[dict[str, Any]] = []
-    for key in ("A", "B", "C"):
+    for key in ("A", "B", "C", "D"):
         label = f"{key}-{STRATEGY_LABELS[key]}"
-        recs = build_records(recommendations[key], target_issue, label, date=rec_date)
+        combos = recommendations.get(key, [])
+        if not combos:
+            continue
+        recs = build_records(combos, target_issue, label, date=rec_date)
+        if key == "D":
+            c0 = combos[0]
+            for r in recs:  # D 策略记录附带模型版本/评分/依据（向后兼容，A/B/C 记录字段不变）
+                r["model_version"] = c0.get("model_version")
+                r["score_total"] = c0.get("score_total")
+                r["basis"] = c0.get("basis")
         all_recs.extend(recs)
     save_recs(rec_cfg["log_path"], all_recs)
-    print(f"[scheduler] 已记录推荐 {len(all_recs)} 组（A/B/C），目标期号 {target_issue}")
+    print(f"[scheduler] 已记录推荐 {len(all_recs)} 组（A/B/C/D），目标期号 {target_issue}")
 
     # 4) 开奖验证（比对历史推荐 vs 真实开奖），在生成报告前取得汇总
     val_cfg = cfg.get("validate", {})
@@ -70,6 +92,27 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
             validation_summary = vr.get("summary")
         except Exception as e:
             print(f"[validator] 验证失败（已跳过）：{e}")
+
+    # 4.5) 推荐回测（C-2-Step3：命中统计/策略表现/因素有效性 → backtest_summary.json；失败不阻断）
+    if val_cfg.get("enabled", True):
+        try:
+            from .backtest import run_backtest
+            bt = run_backtest(rec_cfg["log_path"], db_path,
+                              val_cfg.get("backtest_path", "reports/backtest_summary.json"))
+            print(f"[backtest] 回测完成：已验证 {bt['total_periods']} 期")
+        except Exception as e:
+            print(f"[backtest] 回测失败（已跳过）：{e}")
+
+    # 4.6) 推荐复盘（C-2-Step4：单期复盘/因素三态/策略排行 → reflection_report.json；失败不阻断）
+    if val_cfg.get("enabled", True):
+        try:
+            from .reflection import run_reflect
+            bt_path = val_cfg.get("backtest_path", "reports/backtest_summary.json")
+            rf = run_reflect(rec_cfg["log_path"], db_path, bt_path,
+                             val_cfg.get("reflection_path", "reports/reflection_report.json"))
+            print(f"[reflection] 复盘完成：{len(rf['periods'])} 期已复盘")
+        except Exception as e:
+            print(f"[reflection] 复盘失败（已跳过）：{e}")
 
     # 5) 生成报告（含验证统计汇总）
     gen_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

@@ -24,11 +24,29 @@ analysis:
   recent_window: 50            # 计算“近期热号”的窗口期数
 
 recommend:
-  combos_per_strategy: 1       # 每个策略（A/B/C）生成几组娱乐号码
+  combos_per_strategy: 1       # 每个策略（A/B/C/D）生成几组娱乐号码
   perturb: 0.35                # （保留）旧加权策略扰动参数，当前三策略未使用
   hot_weight: 0.6              # （保留）旧加权策略权重参数，当前三策略未使用
   seed: null                   # 随机种子；null=每次不同（可固定以便复现）
   log_path: "reports/recommendations.json"  # 推荐记录落盘（供开奖验证比对）
+  # D 综合评分策略（C-2-Step2）权重：所有权重来源于此，不硬编码
+  weights:
+    number:                    # 单号码评分权重（inherit 硬上限 15%，scorer 双保险 clamp）
+      heat: 0.30
+      missing: 0.30
+      trend: 0.25
+      inherit: 0.15
+    combo:                     # 组合结构评分权重
+      inherit_match: 0.20
+      odd_even_match: 0.20
+      big_small_match: 0.20
+      zone_match: 0.20
+      sum_span_match: 0.20
+    single_vs_combo:           # 综合分 = single×单号均分 + combo×结构分
+      single: 0.7
+      combo: 0.3
+    top_front: 15              # 前区候选池大小（单号评分 Top N）
+    top_back: 8                # 后区候选池大小
 
 schedule:
   timezone: "Asia/Shanghai"
