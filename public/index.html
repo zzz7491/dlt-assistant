@@ -128,17 +128,27 @@
       </div>
     </section>
 
-    <!-- ⑤ 历史报告 -->
+    <!-- ⑤ 数据档案与复盘（历史报告区改造：去重复导航、简报动态化、模型档案） -->
     <section class="card">
-      <h2>📄 历史报告</h2>
-      <p class="hint">由工作流自动生成的 Markdown 报告：</p>
-      <ul class="report-links">
-        <li><a href="./trend-v2.html">📈 趋势分析（1000期走势图）</a></li>
-        <li><a href="./score.html">📊 数据分析（综合评分）</a></li>
-        <li><a href="./pick.html">🎯 智能选号</a></li>
-        <li><a href="./reports/report_20260816.md">每日分析简报（2026-08-16）</a></li>
-        <li><a href="./reports/validation_report.md">开奖验证报告</a></li>
-      </ul>
+      <h2>📚 数据档案与复盘</h2>
+      <div class="archive-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+        <div class="archive-block">
+          <h3>📄 每日复盘简报</h3>
+          <ul class="report-links">
+            <li id="archive-latest"><span style="color:var(--muted)">正在读取最新简报…</span></li>
+            <li><a href="./reports/validation_report.md">开奖验证报告</a></li>
+          </ul>
+        </div>
+        <div class="archive-block">
+          <h3>🧬 模型演进档案</h3>
+          <ul class="report-links">
+            <li>模型版本：<strong>C-2-D-v1</strong>（综合评分）</li>
+            <li>当前策略：A 均衡 / B 冷热 / C 随机 / D 综合评分</li>
+            <li id="archive-updated">数据更新时间：—</li>
+          </ul>
+        </div>
+      </div>
+      <p class="hint">报告由工作流自动生成（每日与开奖日）· 页面导航入口见上方菜单</p>
     </section>
 
     <!-- ⑥ 产品介绍（移至页尾，保留内容） -->

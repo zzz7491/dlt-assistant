@@ -273,6 +273,47 @@
       '<p class="pick-note">' + r.generated_from + " · " + r.disclaimer + "</p>";
   }
 
+  /* ================= 智能补全结果渲染（复用 analyzePick 详情，不改动现有推荐逻辑） ================= */
+  function renderCompleteReport(container, combo, partialF, partialB, issues) {
+    var r = analyzePick(combo.front, combo.back, issues, "all");
+    var isUserF = {}, isUserB = {};
+    partialF.forEach(function (x) { isUserF[x] = true; });
+    partialB.forEach(function (x) { isUserB[x] = true; });
+
+    function userBall(x, kind) {
+      var isUser = kind === "f" ? isUserF[x] : isUserB[x];
+      return '<span class="ball ' + kind + '" style="' + (isUser ? "outline:2px solid var(--accent);outline-offset:1px" : "") + '" title="' +
+        (isUser ? "你已选" : "自动补全") + '">' + pad2(x) + "</span>";
+    }
+    var fBalls = combo.front.map(function (x) { return userBall(x, "f"); }).join("");
+    var bBalls = combo.back.map(function (x) { return userBall(x, "b"); }).join("");
+
+    var per = r.per_number.map(function (it) {
+      var kind = it.num <= 35 ? "f" : "b";
+      return '<div class="per-row"><span class="ball ' + kind + '">' + pad2(it.num) + "</span>" +
+        '<span>出现 <strong>' + it.count + '</strong> 次</span>' +
+        '<span>遗漏 <strong>' + it.omit + '</strong> 期</span>' +
+        '<span class="tag ' + (it.tag.indexOf("🔥") >= 0 ? "hot" : it.tag.indexOf("❄") >= 0 ? "cold" : "mid") + '">' + it.tag + "</span></div>";
+    }).join("");
+    var c = r.combo;
+    var comboHtml =
+      '<div class="combo-item">奇偶 ' + c.odd_even.odd + ':' + c.odd_even.even + "</div>" +
+      '<div class="combo-item">大小 ' + c.big_small.big + ':' + c.big_small.small + "</div>" +
+      '<div class="combo-item">区间 ' + c.zones.z1 + '/' + c.zones.z2 + '/' + c.zones.z3 + "</div>" +
+      '<div class="combo-item">和值 ' + c.sum + "</div>" +
+      '<div class="combo-item">连号组 ' + c.consec + "</div>";
+
+    container.innerHTML =
+      '<div class="report-block"><h3>🎯 补全结果（已选 ' + (partialF.length + partialB.length) +
+      ' + 补全 ' + (5 - partialF.length) + "+" + (2 - partialB.length) + "）</h3>" +
+      '<div class="pick-balls"><span class="grp-label">前区</span>' + fBalls +
+      '<span class="grp-label">后区</span>' + bBalls + "</div>" +
+      '<p class="pick-note">带紫色描边 = 你已选 · 其余为自动补全</p></div>' +
+      '<div class="report-block"><h3>📋 单号码历史表现（冷热 / 遗漏）</h3>' + per + "</div>" +
+      '<div class="report-block"><h3>🧮 组合结构</h3><div class="combo-grid">' + comboHtml + "</div></div>" +
+      '<p class="pick-note">' + r.generated_from + " · " + r.disclaimer + " · 补全按历史冷热池优先 + 结构均衡（非预测）</p>";
+  }
+
   function showError(msg) {
     document.getElementById("error").hidden = false;
     document.getElementById("error-detail").textContent = msg || "";
@@ -282,6 +323,24 @@
     var nums = text.trim().split(/[\s,，]+/).map(Number).filter(function (x) { return !isNaN(x) && x >= min && x <= max; });
     var uniq = Array.from(new Set(nums));
     if (uniq.length !== count) throw new Error("请选择 " + count + " 个 " + min + "-" + max + " 的不重复号码");
+    return uniq;
+  }
+
+  // 智能补全：解析部分输入（允许 0~maxCount 个；越界/重复自动过滤并校验）
+  function parsePartialInput(text, min, max, maxCount) {
+    var raw = (text || "").trim();
+    if (!raw) return [];
+    var nums = raw.split(/[\s,，]+/).map(Number).filter(function (x) {
+      return !isNaN(x) && x >= min && x <= max;
+    });
+    var uniq = Array.from(new Set(nums));
+    var invalid = raw.split(/[\s,，]+/).filter(function (s) {
+      return s !== "" && (isNaN(Number(s)) || Number(s) < min || Number(s) > max);
+    });
+    if (invalid.length) {
+      throw new Error("无效号码：" + invalid.join("、") + "（范围 " + min + "-" + max + "）");
+    }
+    if (uniq.length > maxCount) throw new Error("最多选择 " + maxCount + " 个 " + min + "-" + max + " 的不重复号码");
     return uniq;
   }
 
@@ -325,6 +384,22 @@
         errBox.hidden = false;
       }
     });
+
+    // 智能补全：部分输入 → completePick 补全 → 冷热/遗漏/组合结构展示
+    document.getElementById("btn-complete").addEventListener("click", function () {
+      var errBox = document.getElementById("complete-error");
+      errBox.hidden = true;
+      try {
+        if (!issues.length) throw new Error("数据未就绪，请稍后重试");
+        var partialF = parsePartialInput(document.getElementById("inp-complete-front").value, FRONT_MIN, FRONT_MAX, 5);
+        var partialB = parsePartialInput(document.getElementById("inp-complete-back").value, BACK_MIN, BACK_MAX, 2);
+        var combo = PickAPI.completePick(partialF, partialB, issues, "all");
+        renderCompleteReport(document.getElementById("complete-report"), combo, partialF, partialB, issues);
+      } catch (e) {
+        errBox.textContent = e.message || String(e);
+        errBox.hidden = false;
+      }
+    });
   }
 
   /* ================= 导出 API ================= */
@@ -336,7 +411,10 @@
     randomPick: randomPick,
     smartPick: smartPick,
     analyzePick: analyzePick,
-    completePick: completePick
+    completePick: completePick,
+    parseInput: parseInput,
+    parsePartialInput: parsePartialInput,
+    renderCompleteReport: renderCompleteReport
   };
 
   if (typeof module !== "undefined" && module.exports) {

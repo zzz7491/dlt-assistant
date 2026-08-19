@@ -166,12 +166,75 @@
     if (msg) document.getElementById("error-detail").textContent = msg;
   }
 
+  /* ---------- ⑤ 数据档案与复盘（历史报告区改造） ---------- */
+
+  // 数据更新时间展示（ISO → 本地可读时间）
+  function fmtUpdated(iso) {
+    if (!iso) return "—";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleString("zh-CN", { hour12: false });
+  }
+
+  // 探测指定日期的简报是否已发布（HEAD 请求，失败返回 null）
+  function probeReport(dateStr) {
+    var fname = "report_" + dateStr.replace(/-/g, "") + ".md";
+    var url = "./reports/" + fname;
+    return fetch(url, { method: "HEAD", cache: "no-cache" }).then(function (r) {
+      return r.ok ? url : null;
+    }).catch(function () { return null; });
+  }
+
+  // 从最新推荐日期向前回退最多 3 天，找到最近一份已发布简报并展示
+  function initArchive(history, recs) {
+    var updatedEl = document.getElementById("archive-updated");
+    if (updatedEl) {
+      updatedEl.innerHTML = "数据更新时间：<strong>" + fmtUpdated(history && history.updated_at) + "</strong>";
+    }
+    var latestEl = document.getElementById("archive-latest");
+    if (!latestEl) return;
+
+    // 基准日期：优先推荐记录生成日期，回退到历史数据更新时间
+    var base = "";
+    if (recs && recs.length && recs[0].date) {
+      base = recs[0].date;
+    } else if (history && history.updated_at) {
+      base = history.updated_at.slice(0, 10);
+    }
+    if (!base) { latestEl.innerHTML = '<span style="color:var(--muted)">暂无已发布简报</span>'; return; }
+
+    var d = new Date(base);
+    if (isNaN(d.getTime())) { latestEl.innerHTML = '<span style="color:var(--muted)">暂无已发布简报</span>'; return; }
+
+    var attempts = [];
+    for (var i = 0; i < 3; i++) {
+      var t = new Date(d);
+      t.setDate(t.getDate() - i);
+      attempts.push(String(t.getFullYear()) + "-" + pad2(t.getMonth() + 1) + "-" + pad2(t.getDate()));
+    }
+
+    (function probe(idx) {
+      if (idx >= attempts.length) {
+        latestEl.innerHTML = '<span style="color:var(--muted)">暂无已发布简报（生成中）</span>';
+        return;
+      }
+      var ds = attempts[idx];
+      probeReport(ds).then(function (url) {
+        if (url) {
+          latestEl.innerHTML = '<a href="' + url + '">每日复盘简报（' + ds + "）</a>";
+        } else {
+          probe(idx + 1);
+        }
+      });
+    })(0);
+  }
+
   Promise.all([
     loadJSON("./data/dlt_history.json"),
-    loadJSON("./data/recommendations.json")
+    loadJSON("./data/recommendations.json").catch(function () { return []; })
   ]).then(function (res) {
     var history = res[0];
-    var recs = res[1];
+    var recs = res[1] || [];
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
 
@@ -209,6 +272,9 @@
       document.getElementById("rec-target").textContent = recs[0].target_issue || "—";
       renderRecommendations(document.getElementById("recommendations"), recs);
     }
+
+    /* ⑤ 数据档案与复盘：动态化每日简报 + 模型档案 */
+    initArchive(history, recs);
 
     document.getElementById("content").hidden = false;
   }).catch(function (err) {

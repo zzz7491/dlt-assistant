@@ -150,6 +150,8 @@
     });
   }
 
+  // 轨迹渲染：命中格显示号码 + data 属性（供 hover tooltip/连线定位），表头带完整期号与日期
+  // 趋势 2.0 第一阶段：号码文本 / 日期标识 / hover 提示 / SVG 连线（坐标基于固定 22px 格）
   function renderTrajectoryHTML(m, kind, n) {
     var issues = m.issues;
     var start = Math.max(0, issues.length - n);
@@ -159,10 +161,11 @@
     // 每号当前遗漏（仅服务 UI）：空格输出 miss-lvN 分级 class，命中格保留 hit-f / hit-b
     var missMap = {};
     calculateCellMissing(m, n).forEach(function (it) { missMap[it.number] = it.miss; });
-    var parts = ['<table class="trend-table"><thead><tr><th class="corner"></th>'];
+    var parts = ['<div class="trend-wrap"><table class="trend-table" data-kind="' + kind + '"><thead><tr><th class="corner"></th>'];
     for (var c = 0; c < cols.length; c++) {
       var show = (c % 10 === 0) || (c === cols.length - 1);
-      parts.push('<th class="issue-cell">' + (show ? cols[c].issue.slice(2) : "") + "</th>");
+      parts.push('<th class="issue-cell" title="第 ' + cols[c].issue + ' 期 · ' + cols[c].date + '">' +
+        (show ? cols[c].issue.slice(2) : "") + "</th>");
     }
     parts.push("</tr></thead><tbody>");
     for (var r = 0; r < m.labels.length; r++) {
@@ -170,14 +173,97 @@
       var rowMissLv = missLevel(missMap[m.labels[r]]);
       parts.push('<tr><th class="num-cell ' + numCls + '">' + pad2(m.labels[r]) + "</th>");
       for (var ci = 0; ci < cols.length; ci++) {
-        parts.push(row[start + ci]
-          ? '<td class="cell ' + hitClass + '"></td>'
-          : '<td class="cell miss-lv' + rowMissLv + '"></td>');
+        if (row[start + ci]) {
+          var miss = missMap[m.labels[r]];
+          parts.push('<td class="cell ' + hitClass + '" data-issue="' + cols[ci].issue +
+            '" data-date="' + cols[ci].date + '" data-num="' + pad2(m.labels[r]) +
+            '" data-omit="' + miss + '" title="第 ' + cols[ci].issue + ' 期 · 号码 ' +
+            pad2(m.labels[r]) + " · 遗漏 " + miss + " 期\">" + pad2(m.labels[r]) + "</td>");
+        } else {
+          parts.push('<td class="cell miss-lv' + rowMissLv + '"></td>');
+        }
       }
       parts.push("</tr>");
     }
-    parts.push("</tbody></table>");
+    parts.push("</tbody></table><svg class=\"trend-lines\" aria-hidden=\"true\"></svg></div>");
     return parts.join("");
+  }
+
+  // 趋势连线：基于固定 22px 格坐标绘制每行命中 polyline（纯增量，不改数据结构）
+  function drawTrendLines(container, kind) {
+    var wrap = container.querySelector(".trend-wrap");
+    var table = container.querySelector(".trend-table");
+    var svg = container.querySelector(".trend-lines");
+    if (!wrap || !table || !svg) return;
+    var body = table.tBodies && table.tBodies[0];
+    if (!body) return;
+
+    var CELL = 22, CORNER = 40, HALF = CELL / 2;
+    var headH = (table.tHead && table.tHead.rows && table.tHead.rows[0])
+      ? table.tHead.rows[0].offsetHeight : 22;
+    var nCols = (table.tHead && table.tHead.rows[0]) ? table.tHead.rows[0].cells.length - 1 : 0;
+    var nRows = body.rows.length;
+    var W = CORNER + nCols * CELL;
+    var H = headH + nRows * CELL;
+
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.style.width = W + "px";
+    svg.style.height = H + "px";
+    svg.innerHTML = "";
+
+    var svgns = "http://www.w3.org/2000/svg";
+    // SVG presentation attribute 不解析 CSS 变量，改用 style 属性（支持 var()）保证连线颜色
+    var stroke = kind === "front" ? "var(--front)" : "var(--back)";
+    for (var r = 0; r < nRows; r++) {
+      var row = body.rows[r];
+      var y = headH + r * CELL + HALF;
+      var pts = [];
+      for (var ci = 1; ci < row.cells.length; ci++) {
+        var td = row.cells[ci];
+        if (td.classList.contains("hit-f") || td.classList.contains("hit-b")) {
+          pts.push((CORNER + (ci - 1) * CELL + HALF) + "," + y);
+        }
+      }
+      if (pts.length >= 2) {
+        var line = document.createElementNS(svgns, "polyline");
+        line.setAttribute("points", pts.join(" "));
+        line.setAttribute("fill", "none");
+        line.style.stroke = stroke;
+        line.setAttribute("stroke-width", "1");
+        line.setAttribute("opacity", "0.5");
+        svg.appendChild(line);
+      }
+    }
+  }
+
+  // hover 详情：命中格 → tooltip（期号/日期/号码/遗漏/该期全部号码）；fixed 跟随鼠标
+  function bindTrendTooltip() {
+    var tip = document.getElementById("trend-tooltip");
+    if (!tip) return;
+    document.addEventListener("mouseover", function (e) {
+      var td = e.target && e.target.closest ? e.target.closest("td[data-issue]") : null;
+      if (!td) { tip.hidden = true; return; }
+      var issue = td.getAttribute("data-issue");
+      var cur = null;
+      var all = window.__trendIssues || [];
+      for (var i = 0; i < all.length; i++) { if (all[i].issue === issue) { cur = all[i]; break; } }
+      var kind = td.classList.contains("hit-f") ? "前区" : "后区";
+      var num = td.getAttribute("data-num");
+      var omit = td.getAttribute("data-omit");
+      var date = td.getAttribute("data-date");
+      var head = '<div class="tt-title">第 ' + issue + " 期 · " + date + "</div>";
+      var line1 = '<div class="tt-line">' + kind + '号码 <strong>' + num + '</strong> · 当前遗漏 <strong>' + omit + " 期</strong></div>";
+      var line2 = "";
+      if (cur) {
+        line2 = '<div class="tt-line">该期开奖：前区 ' + cur.front.map(pad2).join(" ") +
+          " · 后区 " + cur.back.map(pad2).join(" ") + "</div>";
+      }
+      tip.innerHTML = head + line1 + line2;
+      tip.hidden = false;
+      var pad = 14;
+      tip.style.left = (e.clientX + pad) + "px";
+      tip.style.top = (e.clientY + pad) + "px";
+    });
   }
 
   function renderHotTable(items, kind) {
@@ -244,13 +330,16 @@
 
     function draw() {
       var issues = matrix.front.issues;
+      window.__trendIssues = issues;
       renderSummary();
 
-      // ① ② 轨迹
+      // ① ② 轨迹（2.0：号码文本 + hover tooltip + SVG 连线）
       document.getElementById("front-trajectory").innerHTML =
         renderTrajectoryHTML(matrix.front, "front", period);
+      drawTrendLines(document.getElementById("front-trajectory"), "front");
       document.getElementById("back-trajectory").innerHTML =
         renderTrajectoryHTML(matrix.back, "back", period);
+      drawTrendLines(document.getElementById("back-trajectory"), "back");
 
       // ③ 前区热度排行
       document.getElementById("front-hot").innerHTML =
@@ -310,6 +399,9 @@
       });
     });
 
+    // 趋势 2.0：hover 详情提示（事件委托，全局一次绑定）
+    bindTrendTooltip();
+
     loadJSON("./data/dlt_history.json").then(function (data) {
       var issues = data.issues || [];
       if (!issues.length) throw new Error("历史数据为空");
@@ -337,7 +429,9 @@
     calculateBigSmall: calculateBigSmall,
     buildMatrices: buildMatrices,
     calculateCellMissing: calculateCellMissing,
-    renderTrajectoryHTML: renderTrajectoryHTML
+    renderTrajectoryHTML: renderTrajectoryHTML,
+    drawTrendLines: drawTrendLines,
+    bindTrendTooltip: bindTrendTooltip
   };
 
   if (typeof module !== "undefined" && module.exports) {
