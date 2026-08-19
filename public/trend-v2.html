@@ -36,6 +36,7 @@
   <nav class="anchor-nav" aria-label="页内导航">
     <a class="anchor-item" href="#sec-summary">📊 概览</a>
     <a class="anchor-item" href="#sec-occurrence">🔢 号码轨迹</a>
+    <a class="anchor-item" href="#sec-heat-map">🔥 热冷矩阵</a>
     <a class="anchor-item" href="#sec-omission">⏳ 遗漏趋势</a>
     <a class="anchor-item" href="#sec-front-hot">🔥 热度排行</a>
     <a class="anchor-item" href="#sec-front-missing">⏳ 遗漏分析</a>
@@ -112,6 +113,21 @@
       <div class="bars" id="back-big-small"></div>
     </section>
 
+    <!-- ② 热冷矩阵（S4） -->
+    <section class="card" id="sec-heat-map">
+      <h2>🔥 热冷矩阵</h2>
+      <p class="hint">横轴为期号 · 纵轴为号码 · 色深代表出现频率 · ▲升温 ▼降温 · 最新一期高亮</p>
+      <div class="hm-wrapper">
+        <h3 class="sub-h">前区（01–35）</h3>
+        <div id="hm-front" class="hm-wrap"></div>
+        <div class="hm-legend" id="hm-legend-front"></div>
+        <h3 class="sub-h">后区（01–12）</h3>
+        <div id="hm-back" class="hm-wrap"></div>
+        <div class="hm-legend" id="hm-legend-back"></div>
+      </div>
+      <p class="trend-legend"><span class="legend-note">切换时间范围后下方联动更新 · 数据源：dlt_history.json</span></p>
+    </section>
+
     <!-- S3：遗漏趋势分析（前区/后区镜像；横向条形排名，无 SVG，无动画；表格优先） -->
     <section class="card" id="sec-omission">
       <h2>⏳ 遗漏趋势分析</h2>
@@ -158,6 +174,8 @@
 
   <!-- 趋势 2.0：hover 详情提示（fixed 跟随，鼠标悬停命中格显示） -->
   <div id="trend-tooltip" class="trend-tooltip" hidden></div>
+  <!-- S4：热冷矩阵 hover tooltip -->
+  <div id="hm-tooltip" class="hm-tooltip"></div>
 
   <script src="./trend-v2.js" defer></script>
 </body>

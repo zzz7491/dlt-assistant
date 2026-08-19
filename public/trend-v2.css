@@ -498,3 +498,105 @@ section[id] { scroll-margin-top: 52px; }
 #sec-occurrence .ocm-table[data-kind="back"] td.miss-lv2 { background: hsl(222, 55%, 90%); }
 #sec-occurrence .ocm-table[data-kind="back"] td.miss-lv3 { background: hsl(222, 55%, 84%); }
 #sec-occurrence .ocm-table[data-kind="back"] td.miss-lv4 { background: hsl(222, 60%, 76%); }
+
+/* =========================================================
+   S4：热冷矩阵（hm）
+   - 横轴期号 / 纵轴号码 / 色深代表出现频率
+   - 前区红橙 / 后区蓝紫，极冷白色，最新列高亮
+   - 趋势箭头 ▲升温▼降温 · 排名列
+   - 无 SVG / 无动画 / 无纯视觉热力效果
+   ========================================================= */
+.hm-wrapper { display: flex; flex-direction: column; gap: 16px; }
+.hm-wrap {
+  overflow-x: auto; overflow-y: auto;
+  max-height: 520px;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+.hm-table {
+  border-collapse: collapse;
+  font-size: .7rem;
+  white-space: nowrap;
+  min-width: 100%;
+}
+.hm-table th, .hm-table td {
+  width: 22px; min-width: 22px; height: 26px;
+  text-align: center; padding: 0;
+  border-bottom: 1px solid #f0f2f8;
+  border-right: 1px solid #f0f2f8;
+}
+.hm-table thead th {
+  position: sticky; top: 0; background: #fff; z-index: 3;
+  font-size: .6rem; color: var(--muted); font-weight: 400;
+  border-bottom: 1px solid var(--line);
+}
+.hm-table th.hm-issue.is-latest { color: var(--accent-deep); font-weight: 700; border-bottom: 2px solid var(--accent); }
+.hm-table th.corner { width: 42px; min-width: 42px; background: #fff; font-size: .66rem; color: var(--muted); position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--line); }
+.hm-table th.num-cell { width: 42px; min-width: 42px; font-weight: 700; font-size: .68rem; position: sticky; left: 0; background: #fff; z-index: 2; border-right: 1px solid var(--line); }
+.hm-table th.num-cell.front { color: var(--front); }
+.hm-table th.num-cell.back { color: var(--back); }
+.hm-table th.hm-rank-h { width: 34px; min-width: 34px; font-size: .6rem; font-weight: 600; color: var(--muted); text-align: center; }
+
+.hm-table td.hm-cell { cursor: default; transition: none; }
+.hm-table td.hm-cell.is-latest { box-shadow: inset 0 0 0 2px var(--accent-soft); }
+.hm-table td.hm-cell:hover { opacity: .8; }
+.hm-num { display: block; font-size: .6rem; font-weight: 700; line-height: 1; color: rgba(255,255,255,.9); }
+.hm-rank { display: block; font-size: .5rem; line-height: 1; margin-top: 1px; opacity: .7; color: #fff; }
+.hm-arrow { font-size: .55rem; margin-left: 1px; }
+.hm-arrow.up { color: #e53e3e; }
+.hm-arrow.down { color: #38a1db; }
+.hm-arrow.flat { color: rgba(255,255,255,.5); }
+
+/* 色阶等级（前区红橙梯度） */
+.hm-table[data-kind="front"] td.hm-lv5 { background: hsl(10, 85%, 55%); }
+.hm-table[data-kind="front"] td.hm-lv4 { background: hsl(18, 80%, 62%); }
+.hm-table[data-kind="front"] td.hm-lv3 { background: hsl(28, 75%, 68%); }
+.hm-table[data-kind="front"] td.hm-lv2 { background: hsl(38, 60%, 75%); }
+.hm-table[data-kind="front"] td.hm-lv1 { background: hsl(48, 50%, 84%); }
+.hm-table[data-kind="front"] td.hm-lv0 { background: #fff; }
+
+/* 色阶等级（后区蓝紫梯度） */
+.hm-table[data-kind="back"] td.hm-lv5 { background: hsl(220, 70%, 52%); }
+.hm-table[data-kind="back"] td.hm-lv4 { background: hsl(228, 65%, 60%); }
+.hm-table[data-kind="back"] td.hm-lv3 { background: hsl(236, 58%, 68%); }
+.hm-table[data-kind="back"] td.hm-lv2 { background: hsl(242, 50%, 76%); }
+.hm-table[data-kind="back"] td.hm-lv1 { background: hsl(248, 40%, 86%); }
+.hm-table[data-kind="back"] td.hm-lv0 { background: #fff; }
+
+/* 未出现格：极冷底色 */
+.hm-table[data-kind="front"] td.hm-miss-f { background: hsl(10, 85%, 96%); }
+.hm-table[data-kind="back"] td.hm-miss-b { background: hsl(220, 70%, 96%); }
+
+/* 排名列 */
+.hm-table td.hm-rank-c { font-weight: 700; font-size: .65rem; color: var(--muted); background: #f7f8fb; text-align: center; }
+
+/* 图例 */
+.hm-legend {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  font-size: .7rem; color: var(--muted); margin-top: 4px;
+}
+.hm-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(0,0,0,.08); }
+.hm-label { font-size: .68rem; color: var(--muted); }
+
+/* Tooltip */
+.hm-tooltip {
+  position: fixed; z-index: 999; pointer-events: none;
+  background: rgba(31,36,48,.95); color: #fff;
+  padding: 7px 11px; border-radius: 8px;
+  font-size: .75rem; line-height: 1.55;
+  box-shadow: 0 4px 14px rgba(0,0,0,.25);
+  max-width: 260px; white-space: nowrap; display: none;
+}
+.hm-tooltip.show { display: block; }
+.hm-tooltip .tt-title { font-weight: 700; color: #e4d8fb; margin-bottom: 2px; }
+
+/* 小屏适配 */
+@media (max-width: 480px) {
+  .hm-table th, .hm-table td { width: 18px; min-width: 18px; height: 22px; }
+  .hm-table th.corner, .hm-table th.num-cell { width: 34px; min-width: 34px; }
+  .hm-wrap { max-height: 360px; }
+  .hm-num { font-size: .55rem; }
+  .hm-rank { font-size: .45rem; }
+}

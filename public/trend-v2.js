@@ -110,6 +110,170 @@
     });
   }
 
+  /* ================= S4：热冷矩阵（Heat Map）================= */
+
+  // 计算色阶等级 0-5（基于实际频率相对期望频率的比例）
+  // 期望频率 = windowSize / totalNums
+  // ratio >= 1.5 → 极热(5); >= 1.2 → 热(4); >= 0.9 → 温(3); >= 0.7 → 常温(2); >= 0.5 → 冷(1); else → 极冷(0)
+  function calcColorLevel(count, windowSize, totalNums) {
+    var expected = windowSize / totalNums;
+    var ratio = expected > 0 ? count / expected : 0;
+    if (ratio >= 1.5) return 5;
+    if (ratio >= 1.2) return 4;
+    if (ratio >= 0.9) return 3;
+    if (ratio >= 0.7) return 2;
+    if (ratio >= 0.5) return 1;
+    return 0;
+  }
+
+  // 构建热冷数据模型（纯函数）
+  // 返回 { groupRule, period, issues, numbers: [{num, cells, totalAppear, freqRank, trend}] }
+  function buildHeatMap(issues, period, groupRule) {
+    var w = sliceWindow(issues, period);
+    var key = groupRule.key;
+    var hot = calculateHot(issues, period, key);
+    var hotMap = {};
+    hot.forEach(function (h) { hotMap[h.num] = h; });
+
+    // 排名映射（按 count 倒序）
+    var sorted = hot.slice().sort(function (a, b) { return b.count - a.count; });
+    var rankMap = {};
+    sorted.forEach(function (h, i) { rankMap[h.num] = i + 1; });
+
+    // 上一周期热度（用于趋势判断，取当前期的 75% 作为基准）
+    var prevPeriod = Math.max(50, Math.floor(period * 0.75));
+    var prevHot = calculateHot(issues, prevPeriod, key);
+    var prevMap = {};
+    prevHot.forEach(function (h) { prevMap[h.num] = h.count; });
+
+    var out = { groupRule: groupRule, period: period, issues: w, numbers: [] };
+    for (var num = groupRule.min; num <= groupRule.max; num++) {
+      var h = hotMap[num] || { count: 0, omit: period };
+      var prev = prevMap[num] || 0;
+      var trend = h.count > prev * 1.1 ? "up" :
+                  h.count < prev * 0.9 ? "down" : "flat";
+
+      // 构造每期的格子数据
+      var cells = [];
+      var totalAppear = 0;
+      for (var i = 0; i < w.length; i++) {
+        var appeared = w[i][key].indexOf(num) >= 0;
+        if (appeared) totalAppear++;
+        cells.push({ appeared: appeared });
+      }
+
+      out.numbers.push({
+        num: num,
+        cells: cells,
+        totalAppear: totalAppear,
+        currentOmit: h.omit,
+        freqRank: rankMap[num] || 99,
+        trend: trend
+      });
+    }
+    return out;
+  }
+
+  // 渲染热冷矩阵到容器
+  function renderHeatMap(container, data, opts) {
+    if (!container) return;
+    opts = opts || {};
+    var rule = data.groupRule;
+    var w = data.issues;
+    var numCls = rule.key === "front" ? "front" : "back";
+    var parts = ['<table class="hm-table" data-kind="' + rule.key + '"><thead><tr><th class="corner">' + rule.label + '</th>'];
+
+    // 表头：期号（每5期显示后3位）
+    for (var c = 0; c < w.length; c++) {
+      var show = (c % 5 === 0) || (c === w.length - 1);
+      var latest = c === w.length - 1;
+      parts.push('<th class="hm-issue' + (latest ? " is-latest" : "") + '" title="第' + w[c].issue + '期 · ' + w[c].date + '">' + (show ? w[c].issue.slice(2) : "") + '</th>');
+    }
+    parts.push('<th class="hm-rank-h">排名</th></tr></thead><tbody>');
+
+    // 数据行
+    data.numbers.forEach(function (row) {
+      var colorLevel = calcColorLevel(row.totalAppear, w.length, rule.max - rule.min + 1);
+      var arrowHtml = row.trend === "up" ? '<span class="hm-arrow up">▲</span>' :
+                      row.trend === "down" ? '<span class="hm-arrow down">▼</span>' : '';
+
+      parts.push('<tr>');
+      parts.push('<th class="num-cell ' + numCls + '">' + pad2(row.num) + '</th>');
+
+      row.cells.forEach(function (cell, ci) {
+        var latest = ci === w.length - 1;
+        if (cell.appeared) {
+          parts.push('<td class="hm-cell hm-lv' + colorLevel + (latest ? " is-latest" : "") + '"' +
+            'data-issue="' + w[ci].issue + '" data-num="' + pad2(row.num) + '"' +
+            'data-rank="' + row.freqRank + '"' +
+            'data-trend="' + row.trend + '"' +
+            'title="第' + w[ci].issue + '期 · 号码' + pad2(row.num) + ' · 频率排名 #' + row.freqRank + '">' +
+            '<span class="hm-num">' + pad2(row.num) + '</span>' +
+            '<span class="hm-rank">' + row.freqRank + '</span></td>');
+        } else {
+          // 未出现：使用极冷底色
+          var missClass = rule.key === "front" ? "hm-miss-f" : "hm-miss-b";
+          parts.push('<td class="hm-cell hm-lv0 ' + missClass + (latest ? " is-latest" : "") + '" ' +
+            'data-issue="' + w[ci].issue + '" data-num="' + pad2(row.num) + '"' +
+            'data-rank="' + row.freqRank + '"' +
+            'data-trend="' + row.trend + '" ' +
+            'title="第' + w[ci].issue + '期 · 号码' + pad2(row.num) + ' · 频率排名 #' + row.freqRank + '">-</td>');
+        }
+      });
+
+      parts.push('<td class="hm-rank-c">' + row.freqRank + '</td></tr>');
+    });
+
+    parts.push("</tbody></table>");
+    container.innerHTML = parts.join("");
+
+    // 绑定 hover tooltip
+    bindHeatMapTooltip(container);
+  }
+
+  // 渲染图例
+  function renderHeatLegend(container, kind) {
+    if (!container) return;
+    var colors = kind === "front"
+      ? ["hsl(10,85%,96%)", "hsl(48,50%,84%)", "hsl(38,60%,75%)", "hsl(28,75%,68%)", "hsl(18,80%,62%)", "hsl(10,85%,55%)"]
+      : ["hsl(220,70%,96%)", "hsl(248,40%,86%)", "hsl(242,50%,76%)", "hsl(236,58%,68%)", "hsl(228,65%,60%)", "hsl(220,70%,52%)"];
+    var labels = ["极冷", "冷", "温", "偏热", "热", "极热"];
+    var parts = ['<div class="hm-legend">'];
+    for (var i = 0; i < 6; i++) {
+      parts.push('<span class="hm-swatch" style="background:' + colors[i] + '"></span>' +
+        '<span class="hm-label">' + labels[i] + '</span>');
+    }
+    parts.push('</div>');
+    container.innerHTML = parts.join("");
+  }
+
+  // 热冷矩阵 tooltip
+  function bindHeatMapTooltip(container) {
+    var tip = document.getElementById("hm-tooltip");
+    if (!tip || !container) return;
+    container.addEventListener("mouseover", function (e) {
+      var cell = e.target.closest && e.target.closest("td[data-issue]");
+      if (!cell) { tip.classList.remove("show"); return; }
+      var issue = cell.getAttribute("data-issue");
+      var num = cell.getAttribute("data-num");
+      var rank = cell.getAttribute("data-rank");
+      var trend = cell.getAttribute("data-trend");
+      var arrow = trend === "up" ? "▲升温" : trend === "down" ? "▼降温" : "—持平";
+      tip.innerHTML = '<div class="tt-title">第' + issue + '期 · 号码' + num + '</div>' +
+        '<div class="tt-line">频率排名：<strong>#' + rank + '</strong> · ' + arrow + '</div>';
+      tip.classList.add("show");
+      var pad = 12;
+      tip.style.left = (e.clientX + pad) + "px";
+      tip.style.top = (e.clientY + pad) + "px";
+    });
+    container.addEventListener("mouseout", function () { tip.classList.remove("show"); });
+    container.addEventListener("mousemove", function (e) {
+      var pad = 12;
+      document.getElementById("hm-tooltip").style.left = (e.clientX + pad) + "px";
+      document.getElementById("hm-tooltip").style.top = (e.clientY + pad) + "px";
+    });
+  }
+
   // S3：遗漏画像（纯函数）。复用 calculateMissing / calculateHot，不复制遗漏计算逻辑。
   // 仅额外补充「末次出现期号」（位置检索，非遗漏重算）与「趋势」（当前遗漏相对均值的偏离方向）。
   // 输出每个号码：当前遗漏 / 最大遗漏 / 平均遗漏 / 末次出现期号 / 出现次数 / 趋势
@@ -508,6 +672,14 @@
         { pct: bsCur.big, txt: "大 " + bsCur.big + "%" },
         "当前(" + period + "期)大占比",
         bsFour);
+
+      // ② 热冷矩阵（S4：前后区独立展示；联动 period）
+      renderHeatMap(document.getElementById("hm-front"),
+        buildHeatMap(issues, period, GROUP_RULES.front), { latest: true });
+      renderHeatLegend(document.getElementById("hm-legend-front"), "front");
+      renderHeatMap(document.getElementById("hm-back"),
+        buildHeatMap(issues, period, GROUP_RULES.back), { latest: true });
+      renderHeatLegend(document.getElementById("hm-legend-back"), "back");
 
       // ⑧ 遗漏趋势分析（S3：前/后区遗漏排行 + 遗漏变化排名 + 长期遗漏统计；跟随 period 联动）
       renderMissingAnalysis();
