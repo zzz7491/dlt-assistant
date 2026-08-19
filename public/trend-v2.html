@@ -41,6 +41,7 @@
     <a class="anchor-item" href="#sec-front-missing">⏳ 遗漏分析</a>
     <a class="anchor-item" href="#sec-back-hot">🌡️ 冷热分析</a>
     <a class="anchor-item" href="#sec-odd-even">⚖️ 奇偶·大小</a>
+    <a class="anchor-item" href="#sec-omission">⏳ 遗漏趋势</a>
   </nav>
 
   <main id="content">
@@ -116,6 +117,53 @@
       <h2>后区大小趋势</h2>
       <p class="hint">规则：01–06 小 / 07–12 大 · 按后区号码个数统计占比</p>
       <div class="bars" id="back-big-small"></div>
+    </section>
+
+    <!-- ⑧ S3 遗漏趋势分析（新增，不破坏 S2 矩阵结构） -->
+    <section class="card" id="sec-omission">
+      <h2>⏳ 遗漏趋势分析</h2>
+      <p class="hint">基于当前时间范围联动 · 数据来源同 S2（dlt_history.json）· 遗漏 = 连续未开出期数</p>
+
+      <!-- ① 当前遗漏排行 -->
+      <h3 class="sub-h">① 当前遗漏排行</h3>
+      <div class="omission-grid">
+        <div class="omission-col">
+          <h4 class="col-h front-h">前区（01–35）</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-current-front"></table></div>
+        </div>
+        <div class="omission-col">
+          <h4 class="col-h back-h">后区（01–12）</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-current-back"></table></div>
+        </div>
+      </div>
+
+      <!-- ② 遗漏变化排名 -->
+      <h3 class="sub-h">② 遗漏变化排名（当前 − 平均遗漏）</h3>
+      <p class="hint">条形长度 = 当前遗漏与平均遗漏的偏差绝对值 · 越靠上 = 当前比常态更冷</p>
+      <div class="omission-grid">
+        <div class="omission-col">
+          <h4 class="col-h front-h">前区</h4>
+          <div class="bar-rank" id="omission-change-front"></div>
+        </div>
+        <div class="omission-col">
+          <h4 class="col-h back-h">后区</h4>
+          <div class="bar-rank" id="omission-change-back"></div>
+        </div>
+      </div>
+
+      <!-- ③ 长期遗漏统计 -->
+      <h3 class="sub-h">③ 长期遗漏统计</h3>
+      <div class="omission-grid">
+        <div class="omission-col">
+          <h4 class="col-h front-h">前区 · 最大遗漏 TOP5</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-maxtop-front"></table></div>
+        </div>
+        <div class="omission-col">
+          <h4 class="col-h back-h">后区 · 最大遗漏 TOP5</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-maxtop-back"></table></div>
+        </div>
+      </div>
+      <div class="omission-summary" id="omission-stats-summary"></div>
     </section>
 
     <footer class="site-footer">

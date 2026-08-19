@@ -292,6 +292,124 @@
     return rows.join("");
   }
 
+  /* ================= S3 遗漏趋势分析（新增，复用既有分析函数，不改 S2 矩阵） ================= */
+
+  // 遗漏档案：复用 calculateMissing（cur/max/avg）+ calculateHot（appearCount），
+  // 仅新增 lastAppearIssue / trend 计算，不复制遗漏逻辑。
+  // 输出：{number, currentOmission, maxOmission, avgOmission, lastAppearIssue, appearCount, trend}
+  function buildOmissionProfile(issues, n, kind) {
+    var w = sliceWindow(issues, n);
+    var missing = calculateMissing(issues, n, kind); // [{num,cur,max,avg}]
+    var hot = calculateHot(issues, n, kind);          // [{num,count,omit}]
+    var countMap = {};
+    hot.forEach(function (h) { countMap[h.num] = h.count; });
+    // 最近出现期号：从窗口末尾向前扫描，记录每个号码首次（=最近）命中的期号
+    var lastAppear = {};
+    for (var i = w.length - 1; i >= 0; i--) {
+      w[i][kind].forEach(function (x) {
+        if (lastAppear[x] == null) lastAppear[x] = w[i].issue;
+      });
+    }
+    return missing.map(function (m) {
+      var cur = m.cur, avg = m.avg;
+      var trend = (cur > avg * 1.15) ? "high" : (cur < avg * 0.85 ? "low" : "normal");
+      return {
+        number: m.num,
+        currentOmission: cur,
+        maxOmission: m.max,
+        avgOmission: avg,
+        lastAppearIssue: (lastAppear[m.num] != null) ? String(lastAppear[m.num]) : null,
+        appearCount: countMap[m.num] || 0,
+        trend: trend
+      };
+    });
+  }
+
+  // ① 当前遗漏排行（按 currentOmission 倒序；号码 | 当前遗漏 | 最大遗漏 | 最近出现 | 状态）
+  function renderOmissionCurrent(profile, kind) {
+    var numCls = kind === "front" ? "f" : "b";
+    var rows = ['<thead><tr><th>号码</th><th>当前遗漏</th><th>最大遗漏</th><th>最近出现</th><th>状态</th></tr></thead><tbody>'];
+    profile.sort(function (a, b) { return b.currentOmission - a.currentOmission; });
+    profile.forEach(function (p) {
+      var status = p.trend === "high" ? "遗漏偏高" : (p.trend === "low" ? "近期活跃" : "常态");
+      var stCls = p.trend === "high" ? "st-high" : (p.trend === "low" ? "st-low" : "st-normal");
+      rows.push('<tr><td class="num ' + numCls + '">' + pad2(p.number) + "</td>" +
+        '<td class="val-omit miss-lv' + missLevel(p.currentOmission) + '">' + p.currentOmission + "</td>" +
+        "<td>" + p.maxOmission + "</td>" +
+        "<td>" + (p.lastAppearIssue || "—") + "</td>" +
+        '<td class="' + stCls + '">' + status + "</td></tr>");
+    });
+    rows.push("</tbody>");
+    document.getElementById(kind === "front" ? "omission-current-front" : "omission-current-back").innerHTML = rows.join("");
+  }
+
+  // ② 遗漏变化排名（按 当前−平均 偏差降序；横向条形，长度 ∝ |偏差|，不做连线/动画）
+  function renderOmissionChange(profile, kind) {
+    var sorted = profile.slice().sort(function (a, b) {
+      return (b.currentOmission - b.avgOmission) - (a.currentOmission - a.avgOmission);
+    });
+    var maxDev = 1;
+    sorted.forEach(function (p) {
+      var dev = Math.abs(p.currentOmission - p.avgOmission);
+      if (dev > maxDev) maxDev = dev;
+    });
+    var parts = ['<div class="bar-rank-list">'];
+    sorted.forEach(function (p) {
+      var dev = p.currentOmission - p.avgOmission;
+      var pct = Math.max(6, Math.round(Math.abs(dev) / maxDev * 100));
+      var dir = dev >= 0 ? "pos" : "neg";
+      var sign = dev >= 0 ? "+" : "";
+      parts.push('<div class="bar-rank-row">' +
+        '<span class="br-num">' + pad2(p.number) + "</span>" +
+        '<span class="br-track"><span class="br-fill ' + dir + '" style="width:' + pct + '%"></span></span>' +
+        '<span class="br-val">当前 ' + p.currentOmission + ' · 平均 ' + p.avgOmission +
+        ' · <strong>' + sign + dev + "</strong></span></div>");
+    });
+    parts.push("</div>");
+    document.getElementById(kind === "front" ? "omission-change-front" : "omission-change-back").innerHTML = parts.join("");
+  }
+
+  // ③ 长期遗漏统计（最大遗漏 TOP5 + 平均遗漏 + 当前超均值号码）
+  function renderOmissionLong(fp, bp) {
+    function maxTop(list, kind) {
+      var numCls = kind === "front" ? "f" : "b";
+      var top = list.slice().sort(function (a, b) { return b.maxOmission - a.maxOmission; }).slice(0, 5);
+      var rows = ['<thead><tr><th>号码</th><th>最大遗漏</th></tr></thead><tbody>'];
+      top.forEach(function (p) {
+        rows.push('<tr><td class="num ' + numCls + '">' + pad2(p.number) + "</td>" +
+          '<td class="val-omit miss-lv' + missLevel(p.maxOmission) + '">' + p.maxOmission + "</td></tr>");
+      });
+      rows.push("</tbody>");
+      return rows.join("");
+    }
+    document.getElementById("omission-maxtop-front").innerHTML = maxTop(fp, "front");
+    document.getElementById("omission-maxtop-back").innerHTML = maxTop(bp, "back");
+
+    function avgOf(list) { var s = 0; list.forEach(function (p) { s += p.avgOmission; }); return list.length ? Math.round(s / list.length * 10) / 10 : 0; }
+    function overAvg(list) { return list.filter(function (p) { return p.currentOmission > p.avgOmission; }); }
+    var fOver = overAvg(fp), bOver = overAvg(bp);
+    var summary = '<div class="long-stats">' +
+      '<div class="ls-item"><span class="ls-label">前区平均遗漏</span><span class="ls-value">' + avgOf(fp) + "</span></div>" +
+      '<div class="ls-item"><span class="ls-label">后区平均遗漏</span><span class="ls-value">' + avgOf(bp) + "</span></div>" +
+      '<div class="ls-item"><span class="ls-label">前区超均值号码</span><span class="ls-value">' + fOver.length + " 个</span>" +
+        '<span class="ls-detail">' + (fOver.length ? fOver.map(function (p) { return pad2(p.number); }).join(" ") : "无") + "</span></div>" +
+      '<div class="ls-item"><span class="ls-label">后区超均值号码</span><span class="ls-value">' + bOver.length + " 个</span>" +
+        '<span class="ls-detail">' + (bOver.length ? bOver.map(function (p) { return pad2(p.number); }).join(" ") : "无") + "</span></div>" +
+      "</div>";
+    document.getElementById("omission-stats-summary").innerHTML = summary;
+  }
+
+  // S3 总渲染入口（在 draw() 中随 period 联动调用）
+  function renderMissingAnalysis(issues, period) {
+    var fp = buildOmissionProfile(issues, period, "front");
+    var bp = buildOmissionProfile(issues, period, "back");
+    renderOmissionCurrent(fp, "front");
+    renderOmissionCurrent(bp, "back");
+    renderOmissionChange(fp, "front");
+    renderOmissionChange(bp, "back");
+    renderOmissionLong(fp, bp);
+  }
+
   // 奇偶/大小：当前档大条形 + 四档对比小条形
   function renderRatioBars(el, cur, labelCur, four) {
     var parts = [];
@@ -374,6 +492,9 @@
         { pct: bsCur.big, txt: "大 " + bsCur.big + "%" },
         "当前(" + period + "期)大占比",
         bsFour);
+
+      // ⑧ S3 遗漏趋势分析（随 period 联动；复用 S2 同一 issues 数据）
+      renderMissingAnalysis(issues, period);
     }
 
     // 时间范围切换（联动）
@@ -431,7 +552,9 @@
     calculateCellMissing: calculateCellMissing,
     renderTrajectoryHTML: renderTrajectoryHTML,
     drawTrendLines: drawTrendLines,
-    bindTrendTooltip: bindTrendTooltip
+    bindTrendTooltip: bindTrendTooltip,
+    buildOmissionProfile: buildOmissionProfile,
+    renderMissingAnalysis: renderMissingAnalysis
   };
 
   if (typeof module !== "undefined" && module.exports) {

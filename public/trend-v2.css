@@ -331,3 +331,95 @@ section[id] { scroll-margin-top: 52px; }
   .legend-miss { font-size: .7rem; }
   section[id] { scroll-margin-top: 46px; }
 }
+
+/* =========================================================
+   S3 遗漏趋势分析（新增，复用既有表格/色阶，表格优先，无复杂动画）
+   ========================================================= */
+
+/* ---- 子标题与分栏 ---- */
+.sub-h {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-deep);
+  margin: 18px 0 8px;
+  padding-left: 10px;
+  border-left: 4px solid var(--accent);
+}
+.col-h {
+  font-size: .86rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.col-h.front-h { color: var(--front); }
+.col-h.back-h { color: var(--back); }
+
+.omission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .omission-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- ① 当前遗漏排行：状态色 ---- */
+.stat-table td.st-high { color: var(--warn); font-weight: 700; }
+.stat-table td.st-low { color: #1a9e6b; font-weight: 700; }
+.stat-table td.st-normal { color: var(--muted); }
+
+/* ---- ② 遗漏变化排名：横向条形（无连线、无动画） ---- */
+.bar-rank { width: 100%; }
+.bar-rank-list { display: flex; flex-direction: column; gap: 3px; }
+.bar-rank-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+}
+.br-num {
+  flex: 0 0 30px;
+  font-weight: 700;
+  text-align: right;
+  color: var(--accent-deep);
+}
+.br-track {
+  flex: 1 1 auto;
+  min-width: 60px;
+  height: 12px;
+  background: #f0f2f8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.br-fill { display: block; height: 100%; border-radius: 6px; }
+.br-fill.pos { background: var(--warn); }
+.br-fill.neg { background: #1a9e6b; }
+.br-val { flex: 0 0 auto; color: var(--muted); white-space: nowrap; }
+.br-val strong { color: var(--accent-deep); }
+@media (max-width: 480px) {
+  .bar-rank-row { font-size: .74rem; gap: 6px; }
+  .br-val { font-size: .7rem; }
+}
+
+/* ---- ③ 长期遗漏统计：汇总卡 ---- */
+.omission-summary { margin-top: 12px; }
+.long-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.ls-item {
+  background: #f7f8fb;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ls-label { font-size: .74rem; color: var(--muted); }
+.ls-value { font-size: 1rem; font-weight: 800; color: var(--accent-deep); font-variant-numeric: tabular-nums; }
+.ls-detail { font-size: .76rem; color: var(--front); letter-spacing: 1px; word-break: break-all; }
+@media (max-width: 480px) {
+  .long-stats { grid-template-columns: 1fr; }
+}
