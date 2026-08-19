@@ -120,7 +120,7 @@ th.num-cell.b { color: var(--back); }
 .trend-table td.hit-b {
   background: radial-gradient(circle at center, var(--back) 0%, var(--back) 55%, transparent 62%);
 }
-/* ---- 趋势 2.0 第一阶段：命中格号码文本 + 连线容器 + hover tooltip ---- */
+/* ---- 趋势 2.0：命中格号码文本 + hover tooltip（S1 起移除装饰性连线容器） ---- */
 .trend-table td.hit-f,
 .trend-table td.hit-b {
   color: #fff;
@@ -128,17 +128,6 @@ th.num-cell.b { color: var(--back); }
   font-weight: 700;
   line-height: 1;
   text-align: center;
-}
-.trend-wrap {
-  position: relative;
-  display: inline-block;
-}
-.trend-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1;
 }
 .trend-tooltip {
   position: fixed;
@@ -323,6 +312,10 @@ section[id] { scroll-margin-top: 52px; }
 #sec-back-trajectory .miss-s1 { background: hsl(222, 55%, 94%); }
 #sec-back-trajectory .miss-s2 { background: hsl(222, 55%, 86%); }
 #sec-back-trajectory .miss-s3 { background: hsl(222, 60%, 76%); }
+/* S2 轨迹矩阵图例（紫系，遗漏越深越深） */
+#sec-occurrence .miss-s1 { background: hsl(258, 55%, 94%); }
+#sec-occurrence .miss-s2 { background: hsl(258, 55%, 86%); }
+#sec-occurrence .miss-s3 { background: hsl(258, 60%, 76%); }
 
 /* ---- 小屏适配补充（轨迹表横向滚动保持表格不压缩，锚点导航横向滑动）---- */
 @media (max-width: 480px) {
@@ -331,3 +324,177 @@ section[id] { scroll-margin-top: 52px; }
   .legend-miss { font-size: .7rem; }
   section[id] { scroll-margin-top: 46px; }
 }
+
+/* =========================================================
+   S2：号码出现轨迹矩阵（ocm）
+   - 横轴期号 / 纵轴号码 / 命中格=号码+当前遗漏小字
+   - 最新一期列高亮 / 右侧当前遗漏列 / 前后区各自遗漏色阶
+   - 无跨点连线（Task 17.1 产品约束）
+   ========================================================= */
+.ocm-group {
+  font-size: .92rem;
+  margin: 6px 0 4px;
+  color: var(--accent-deep);
+}
+.ocm-group:not(:first-child) { margin-top: 14px; }
+.ocm-wrap { margin-bottom: 4px; }
+
+.ocm-table {
+  border-collapse: collapse;
+  font-size: .72rem;
+  white-space: nowrap;
+}
+.ocm-table th, .ocm-table td {
+  width: 24px; min-width: 24px; height: 26px;
+  text-align: center; padding: 0;
+}
+.ocm-table thead th { position: sticky; top: 0; background: #fff; z-index: 3; }
+.ocm-table th.ocm-issue {
+  color: var(--muted); font-weight: 400; font-size: .6rem;
+  border-bottom: 1px solid var(--line);
+}
+.ocm-table th.ocm-issue.is-latest { color: var(--accent-deep); font-weight: 700; border-bottom: 2px solid var(--accent); }
+.ocm-table th.corner { width: 42px; min-width: 42px; background: #fff; font-size: .66rem; color: var(--muted); }
+.ocm-table th.num-cell {
+  width: 42px; min-width: 42px; font-weight: 700; font-size: .7rem;
+  position: sticky; left: 0; background: #fff; z-index: 2;
+  border-right: 1px solid var(--line);
+}
+.ocm-table th.num-cell.f { color: var(--front); }
+.ocm-table th.num-cell.b { color: var(--back); }
+.ocm-table th.ocm-cur { width: 34px; min-width: 34px; font-size: .6rem; font-weight: 400; color: var(--muted); }
+
+.ocm-table td.ocm-cell {
+  background: #fafbff;
+  border-bottom: 1px solid #f0f2f8;
+  border-right: 1px solid #f0f2f8;
+}
+.ocm-table td.ocm-cell.hit-f {
+  background: radial-gradient(circle at center, var(--front) 0%, var(--front) 58%, transparent 66%);
+}
+.ocm-table td.ocm-cell.hit-b {
+  background: radial-gradient(circle at center, var(--back) 0%, var(--back) 58%, transparent 66%);
+}
+.ocm-table td.ocm-cell.hit-f, .ocm-table td.ocm-cell.hit-b { color: #fff; }
+.ocm-table .ocm-num { display: block; font-size: .62rem; font-weight: 700; line-height: 1; }
+.ocm-table .ocm-omit { display: block; font-size: .5rem; opacity: .8; line-height: 1; margin-top: 1px; }
+.ocm-table td.ocm-cell.is-latest { box-shadow: inset 0 0 0 2px var(--accent-soft); }
+
+.ocm-table td.ocm-cur-val {
+  background: #f7f8fb; font-weight: 600; font-size: .68rem; color: var(--muted);
+  border-left: 1px solid var(--line);
+}
+.ocm-table td.ocm-cur-val.omit { color: #b45309; background: hsl(38, 90%, 96%); }
+
+/* =========================================================
+   S3：遗漏趋势分析（om）
+   - 横向条形排名 / 表格优先 / PC 清晰 / 手机可阅读 / 无复杂动画
+   - 前区（红 #sec-omission[data-kind=front]→红色号）/ 后区（蓝）镜像保持一致
+   - 遗漏色阶沿用琥珀系（与遗漏表一致）；变化排名冷紫(▲)热琥珀(▼)
+   ========================================================= */
+.sub-h {
+  font-size: 1rem;
+  margin: 18px 0 6px;
+  color: var(--accent-deep);
+  border-left: 3px solid var(--accent);
+  padding-left: 8px;
+}
+.sub-h:first-of-type { margin-top: 8px; }
+.sub-h2 {
+  font-size: .86rem;
+  margin: 12px 0 6px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* 条形排名滚动容器（信息密度 + 手机可读：限定高度内滚动） */
+.omission-scroll {
+  max-height: 340px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 6px 8px;
+}
+.om-list { display: flex; flex-direction: column; gap: 4px; }
+.om-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .82rem;
+}
+.om-num {
+  width: 26px; height: 26px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: .76rem;
+  color: #fff;
+}
+.om-num.f { background: var(--front); }
+.om-num.b { background: var(--back); }
+.om-arrow {
+  width: 14px;
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: .72rem;
+  color: var(--muted);
+}
+.om-arrow.up, .om-val.up { color: var(--accent); }
+.om-arrow.down, .om-val.down { color: var(--warn); }
+.om-track {
+  flex: 1 1 auto;
+  height: 14px;
+  background: #f1f2f7;
+  border-radius: 7px;
+  overflow: hidden;
+}
+.om-bar {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  border-radius: 7px;
+}
+/* 当前遗漏：琥珀系色阶（与遗漏表 miss-lv0..4 一致） */
+.om-bar.lv0 { background: hsl(30, 75%, 90%); }
+.om-bar.lv1 { background: hsl(30, 75%, 80%); }
+.om-bar.lv2 { background: hsl(30, 75%, 68%); }
+.om-bar.lv3 { background: hsl(30, 78%, 56%); }
+.om-bar.lv4 { background: hsl(30, 80%, 46%); }
+/* 变化排名：正值遗漏走高(偏冷)→紫；负值遗漏走低(偏热)→琥珀；持平→灰 */
+.om-bar.up   { background: linear-gradient(90deg, #a78bfa, #6d28d9); }
+.om-bar.down { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+.om-bar.flat { background: #cbd2e0; }
+/* 长期遗漏：深紫（历史最冷极值） */
+.om-bar.long { background: linear-gradient(90deg, #7c3aed, #4c1d95); }
+.om-val {
+  width: 34px;
+  flex: 0 0 auto;
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 小屏微调：条形行更紧凑 */
+@media (max-width: 480px) {
+  .sub-h { font-size: .94rem; }
+  .om-row { font-size: .78rem; gap: 6px; }
+  .om-num { width: 24px; height: 24px; font-size: .72rem; }
+  .omission-scroll { max-height: 300px; padding: 5px 6px; }
+}
+
+/* 遗漏色阶（前区紫系 / 后区蓝系，由浅到深） */
+#sec-occurrence .ocm-table[data-kind="front"] td.miss-lv0 { background: hsl(258, 55%, 97%); }
+#sec-occurrence .ocm-table[data-kind="front"] td.miss-lv1 { background: hsl(258, 55%, 94%); }
+#sec-occurrence .ocm-table[data-kind="front"] td.miss-lv2 { background: hsl(258, 55%, 90%); }
+#sec-occurrence .ocm-table[data-kind="front"] td.miss-lv3 { background: hsl(258, 55%, 84%); }
+#sec-occurrence .ocm-table[data-kind="front"] td.miss-lv4 { background: hsl(258, 60%, 76%); }
+#sec-occurrence .ocm-table[data-kind="back"] td.miss-lv0 { background: hsl(222, 55%, 97%); }
+#sec-occurrence .ocm-table[data-kind="back"] td.miss-lv1 { background: hsl(222, 55%, 94%); }
+#sec-occurrence .ocm-table[data-kind="back"] td.miss-lv2 { background: hsl(222, 55%, 90%); }
+#sec-occurrence .ocm-table[data-kind="back"] td.miss-lv3 { background: hsl(222, 55%, 84%); }
+#sec-occurrence .ocm-table[data-kind="back"] td.miss-lv4 { background: hsl(222, 60%, 76%); }

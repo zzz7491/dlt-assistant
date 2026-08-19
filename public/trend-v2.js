@@ -15,6 +15,12 @@
   var BACK_MIN = 1, BACK_MAX = 12;
   var BACK_BOUNDARY = 6; // 后区大小分界：01-06 小 / 07-12 大
 
+  // S1：组规则参数化（为双色球/3D/快乐8 扩展打基础；本轮仅大乐透）
+  var GROUP_RULES = {
+    front: { key: "front", label: "前区", min: 1, max: 35, count: 5, positional: false },
+    back:  { key: "back",  label: "后区", min: 1, max: 12, count: 2, positional: false }
+  };
+
   function pad2(n) { return String(n).padStart(2, "0"); }
 
   function range(a, b) {
@@ -27,6 +33,31 @@
     return fetch(path, { cache: "no-cache" }).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status + " @ " + path);
       return r.json();
+    });
+  }
+
+  // S1：统一数据加载入口。返回 Promise<{ issues, meta }>
+  //   issues: 按期号升序的 {issue, date, front[5], back[2]}
+  //   meta:   { cover, issueRange, frontTotal, backTotal, sourceName, updatedAt }
+  function loadData() {
+    return loadJSON("./data/dlt_history.json").then(function (data) {
+      var issues = data.issues || [];
+      if (!issues.length) throw new Error("历史数据为空");
+      var sorted = issues.slice().sort(function (a, b) {
+        return a.issue < b.issue ? -1 : a.issue > b.issue ? 1 : 0;
+      });
+      var srcName = { "500": "500彩票网" }[data.source] || (data.source || "公开数据源");
+      return {
+        issues: sorted,
+        meta: {
+          cover: sorted.length + " 期",
+          issueRange: sorted[0].issue + " - " + sorted[sorted.length - 1].issue,
+          frontTotal: (sorted.length * GROUP_RULES.front.count) + " 个号码",
+          backTotal: (sorted.length * GROUP_RULES.back.count) + " 个号码",
+          sourceName: srcName,
+          updatedAt: data.updated_at || ""
+        }
+      };
     });
   }
 
@@ -79,6 +110,41 @@
     });
   }
 
+  // S3：遗漏画像（纯函数）。复用 calculateMissing / calculateHot，不复制遗漏计算逻辑。
+  // 仅额外补充「末次出现期号」（位置检索，非遗漏重算）与「趋势」（当前遗漏相对均值的偏离方向）。
+  // 输出每个号码：当前遗漏 / 最大遗漏 / 平均遗漏 / 末次出现期号 / 出现次数 / 趋势
+  function buildOmissionProfile(issues, period, groupRule) {
+    var key = groupRule.key;
+    var w = sliceWindow(issues, period);
+    var miss = calculateMissing(issues, period, key); // [{num,cur,max,avg}]
+    var hot = calculateHot(issues, period, key);       // [{num,count,omit}]
+    var hotMap = {};
+    hot.forEach(function (h) { hotMap[h.num] = h; });
+    // 末次出现期号（仅位置检索，从窗口末尾反向找到首个命中即止）
+    var lastMap = {};
+    for (var i = w.length - 1; i >= 0; i--) {
+      w[i][key].forEach(function (x) { if (lastMap[x] == null) lastMap[x] = w[i].issue; });
+    }
+    return miss.map(function (m) {
+      var h = hotMap[m.num] || { count: 0 };
+      var cur = m.cur, avg = m.avg;
+      var diff = avg ? cur - avg : 0;
+      var trend;
+      if (diff >= avg * 0.5) trend = "up";        // 当前遗漏明显高于均值 → 遗漏走高（偏冷）
+      else if (diff <= -avg * 0.5) trend = "down"; // 当前遗漏明显低于均值 → 遗漏走低（偏热）
+      else trend = "flat";
+      return {
+        number: m.num,
+        currentOmission: cur,
+        maxOmission: m.max,
+        avgOmission: avg,
+        lastAppearIssue: lastMap[m.num] != null ? lastMap[m.num] : null,
+        appearCount: h.count,
+        trend: trend
+      };
+    });
+  }
+
   // 奇偶占比（按号码个数统计），返回 {odd, even, total} 百分比
   function calculateOddEven(issues, n, kind) {
     var w = sliceWindow(issues, n);
@@ -118,6 +184,33 @@
   }
 
   /* ================= 渲染层 ================= */
+
+  // S2：号码出现轨迹矩阵数据模型（纯函数）。
+  // 输出契约：
+  //   { groupRule, period, issues(窗口升序), numbers: [
+  //       { number, cells: [{appeared}...], curOmit, count } ] }
+  // 支持任意组（大乐透前区/后区；未来双色球/3D/快乐8 由 groupRule 驱动）。
+  function buildOccurrenceMatrix(issues, period, groupRule) {
+    var w = sliceWindow(issues, period);
+    var key = groupRule.key;
+    var out = { groupRule: groupRule, period: period, issues: w, numbers: [] };
+    for (var num = groupRule.min; num <= groupRule.max; num++) {
+      var cells = [];
+      var count = 0;
+      for (var i = 0; i < w.length; i++) {
+        var appeared = w[i][key].indexOf(num) >= 0;
+        if (appeared) count++;
+        cells.push({ appeared: appeared });
+      }
+      var curOmit = 0;
+      for (var j = w.length - 1; j >= 0; j--) {
+        if (cells[j].appeared) break;
+        curOmit++;
+      }
+      out.numbers.push({ number: num, cells: cells, curOmit: curOmit, count: count });
+    }
+    return out;
+  }
 
   // 遗漏档位（仅服务 UI）：与轨迹空格 / 遗漏表共用同一阈值语义
   // 0 = 1-2 期, 1 = 3-5, 2 = 6-10, 3 = 11-20, 4 = 21+
@@ -161,7 +254,7 @@
     // 每号当前遗漏（仅服务 UI）：空格输出 miss-lvN 分级 class，命中格保留 hit-f / hit-b
     var missMap = {};
     calculateCellMissing(m, n).forEach(function (it) { missMap[it.number] = it.miss; });
-    var parts = ['<div class="trend-wrap"><table class="trend-table" data-kind="' + kind + '"><thead><tr><th class="corner"></th>'];
+    var parts = ['<table class="trend-table" data-kind="' + kind + '"><thead><tr><th class="corner"></th>'];
     for (var c = 0; c < cols.length; c++) {
       var show = (c % 10 === 0) || (c === cols.length - 1);
       parts.push('<th class="issue-cell" title="第 ' + cols[c].issue + ' 期 · ' + cols[c].date + '">' +
@@ -185,55 +278,8 @@
       }
       parts.push("</tr>");
     }
-    parts.push("</tbody></table><svg class=\"trend-lines\" aria-hidden=\"true\"></svg></div>");
+    parts.push("</tbody></table>");
     return parts.join("");
-  }
-
-  // 趋势连线：基于固定 22px 格坐标绘制每行命中 polyline（纯增量，不改数据结构）
-  function drawTrendLines(container, kind) {
-    var wrap = container.querySelector(".trend-wrap");
-    var table = container.querySelector(".trend-table");
-    var svg = container.querySelector(".trend-lines");
-    if (!wrap || !table || !svg) return;
-    var body = table.tBodies && table.tBodies[0];
-    if (!body) return;
-
-    var CELL = 22, CORNER = 40, HALF = CELL / 2;
-    var headH = (table.tHead && table.tHead.rows && table.tHead.rows[0])
-      ? table.tHead.rows[0].offsetHeight : 22;
-    var nCols = (table.tHead && table.tHead.rows[0]) ? table.tHead.rows[0].cells.length - 1 : 0;
-    var nRows = body.rows.length;
-    var W = CORNER + nCols * CELL;
-    var H = headH + nRows * CELL;
-
-    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
-    svg.style.width = W + "px";
-    svg.style.height = H + "px";
-    svg.innerHTML = "";
-
-    var svgns = "http://www.w3.org/2000/svg";
-    // SVG presentation attribute 不解析 CSS 变量，改用 style 属性（支持 var()）保证连线颜色
-    var stroke = kind === "front" ? "var(--front)" : "var(--back)";
-    for (var r = 0; r < nRows; r++) {
-      var row = body.rows[r];
-      var y = headH + r * CELL + HALF;
-      var pts = [];
-      for (var ci = 1; ci < row.cells.length; ci++) {
-        var td = row.cells[ci];
-        if (td.classList.contains("hit-f") || td.classList.contains("hit-b")) {
-          pts.push((CORNER + (ci - 1) * CELL + HALF) + "," + y);
-        }
-      }
-      if (pts.length >= 2) {
-        var line = document.createElementNS(svgns, "polyline");
-        line.setAttribute("points", pts.join(" "));
-        line.setAttribute("fill", "none");
-        line.style.stroke = stroke;
-        line.setAttribute("stroke-width", "1");
-        line.setAttribute("opacity", "0.5");
-        svg.appendChild(line);
-      }
-    }
   }
 
   // hover 详情：命中格 → tooltip（期号/日期/号码/遗漏/该期全部号码）；fixed 跟随鼠标
@@ -266,6 +312,47 @@
     });
   }
 
+  // S2：号码出现轨迹矩阵渲染（HTML 表格）。
+  // 横轴=期号（表头，每 5 期显示后 3 位），纵轴=号码；
+  // 命中格=号码 + 当前遗漏小字，未命中格=遗漏色阶行背景；
+  // 最新一期列高亮（is-latest）；无任何跨点连线（Task 17.1 产品约束）。
+  // data: buildOccurrenceMatrix() 输出；opts: { latest: bool }
+  function renderOccurrenceMatrix(container, data, opts) {
+    opts = opts || {};
+    var rule = data.groupRule;
+    var w = data.issues;
+    var numCls = rule.key === "front" ? "f" : "b";
+    var hitClass = rule.key === "front" ? "hit-f" : "hit-b";
+    var parts = ['<table class="ocm-table" data-kind="' + rule.key + '"><thead><tr><th class="corner">' + rule.label + '</th>'];
+    for (var c = 0; c < w.length; c++) {
+      var show = (c % 5 === 0) || (c === w.length - 1);
+      var latest = c === w.length - 1;
+      parts.push('<th class="ocm-issue' + (latest ? " is-latest" : "") + '" title="第 ' + w[c].issue +
+        " 期 · " + w[c].date + '">' + (show ? w[c].issue.slice(2) : "") + "</th>");
+    }
+    parts.push('<th class="ocm-cur">遗漏</th></tr></thead><tbody>');
+    data.numbers.forEach(function (row) {
+      parts.push('<tr><th class="num-cell ' + numCls + '">' + pad2(row.number) + "</th>");
+      for (var ci = 0; ci < w.length; ci++) {
+        var cell = row.cells[ci];
+        var latest = ci === w.length - 1;
+        if (cell.appeared) {
+          parts.push('<td class="ocm-cell ' + hitClass + (latest ? " is-latest" : "") + '" data-issue="' +
+            w[ci].issue + '" data-date="' + w[ci].date + '" data-num="' + pad2(row.number) +
+            '" data-omit="' + row.curOmit + '" title="第 ' + w[ci].issue + " 期 · 号码 " +
+            pad2(row.number) + " · 当前遗漏 " + row.curOmit + ' 期">' +
+            '<span class="ocm-num">' + pad2(row.number) + "</span>" +
+            '<span class="ocm-omit">' + row.curOmit + "</span></td>");
+        } else {
+          parts.push('<td class="ocm-cell miss-lv' + missLevel(row.curOmit) + (latest ? " is-latest" : "") + '"></td>');
+        }
+      }
+      parts.push('<td class="ocm-cur-val' + (row.curOmit > 0 ? " omit" : "") + '">' + row.curOmit + "</td></tr>");
+    });
+    parts.push("</tbody></table>");
+    container.innerHTML = parts.join("");
+  }
+
   function renderHotTable(items, kind) {
     var numCls = kind === "front" ? "f" : "b";
     var maxCount = 0;
@@ -290,6 +377,49 @@
     });
     rows.push("</tbody>");
     return rows.join("");
+  }
+
+  // S3：遗漏排行条形渲染（横向条形 / 排名形式，无 SVG sparkline，无动画；表格优先）。
+  // mode: "current" | "change" | "max"；kind: "front" | "back"
+  //   current: 按当前遗漏倒序（条形色阶 = 遗漏档位）
+  //   change : 按「当前遗漏 − 平均遗漏」倒序（正=遗漏走高/偏冷→紫，负=遗漏走低/偏热→琥珀）
+  //   max    : 按窗口内最大连续遗漏倒序（深紫，反映历史最冷极值）
+  function renderOmissionRanking(container, profiles, mode, kind) {
+    if (!container) return;
+    var numCls = kind === "front" ? "f" : "b";
+    var valOf = function (p) {
+      if (mode === "current") return p.currentOmission;
+      if (mode === "change") return p.currentOmission - p.avgOmission;
+      return p.maxOmission; // max
+    };
+    var arr = profiles.slice().sort(function (a, b) { return valOf(b) - valOf(a); });
+    var maxAbs = 1;
+    arr.forEach(function (p) { var v = Math.abs(valOf(p)); if (v > maxAbs) maxAbs = v; });
+    var parts = ['<div class="om-list">'];
+    arr.forEach(function (p) {
+      var v = valOf(p);
+      var abs = Math.abs(v);
+      var wpct = Math.max(4, Math.round((abs / maxAbs) * 100));
+      var cls = "", valCls = "", arrow = "";
+      if (mode === "current") {
+        cls = "lv" + missLevel(v);
+      } else if (mode === "change") {
+        if (v > 0) { cls = "up"; valCls = "up"; }
+        else if (v < 0) { cls = "down"; valCls = "down"; }
+        else { cls = "flat"; }
+        arrow = p.trend === "up" ? "▲" : p.trend === "down" ? "▼" : "—";
+      } else { // max
+        cls = "long";
+      }
+      var valTxt = mode === "change" ? (v > 0 ? "+" + v : String(v)) : String(v);
+      parts.push('<div class="om-row">' +
+        '<span class="om-num ' + numCls + '">' + pad2(p.number) + "</span>" +
+        (arrow ? '<span class="om-arrow ' + valCls + '">' + arrow + "</span>" : "") +
+        '<span class="om-track"><span class="om-bar ' + cls + '" style="width:' + wpct + '%"></span></span>' +
+        '<span class="om-val ' + valCls + '">' + valTxt + "</span></div>");
+    });
+    parts.push("</div>");
+    container.innerHTML = parts.join("");
   }
 
   // 奇偶/大小：当前档大条形 + 四档对比小条形
@@ -333,13 +463,17 @@
       window.__trendIssues = issues;
       renderSummary();
 
-      // ① ② 轨迹（2.0：号码文本 + hover tooltip + SVG 连线）
-      document.getElementById("front-trajectory").innerHTML =
-        renderTrajectoryHTML(matrix.front, "front", period);
-      drawTrendLines(document.getElementById("front-trajectory"), "front");
-      document.getElementById("back-trajectory").innerHTML =
-        renderTrajectoryHTML(matrix.back, "back", period);
-      drawTrendLines(document.getElementById("back-trajectory"), "back");
+      // ① 号码出现轨迹矩阵（S2：替代旧轨迹视觉；矩阵展示号码/出现/遗漏，无连线）
+      var occ = document.getElementById("occurrence-container");
+      if (occ) {
+        occ.innerHTML =
+          '<h3 class="ocm-group">前区（01–35）</h3><div class="ocm-wrap" id="ocm-front"></div>' +
+          '<h3 class="ocm-group">后区（01–12）</h3><div class="ocm-wrap" id="ocm-back"></div>';
+        renderOccurrenceMatrix(document.getElementById("ocm-front"),
+          buildOccurrenceMatrix(issues, period, GROUP_RULES.front), { latest: true });
+        renderOccurrenceMatrix(document.getElementById("ocm-back"),
+          buildOccurrenceMatrix(issues, period, GROUP_RULES.back), { latest: true });
+      }
 
       // ③ 前区热度排行
       document.getElementById("front-hot").innerHTML =
@@ -374,6 +508,23 @@
         { pct: bsCur.big, txt: "大 " + bsCur.big + "%" },
         "当前(" + period + "期)大占比",
         bsFour);
+
+      // ⑧ 遗漏趋势分析（S3：前/后区遗漏排行 + 遗漏变化排名 + 长期遗漏统计；跟随 period 联动）
+      renderMissingAnalysis();
+    }
+
+    // S3：遗漏趋势分析渲染（前区/后区镜像；横向条形排名，无 SVG，无动画）
+    function renderMissingAnalysis() {
+      var issues = window.__trendIssues;
+      if (!issues) return;
+      var front = buildOmissionProfile(issues, period, GROUP_RULES.front);
+      var back = buildOmissionProfile(issues, period, GROUP_RULES.back);
+      renderOmissionRanking(document.getElementById("omission-current-front"), front, "current", "front");
+      renderOmissionRanking(document.getElementById("omission-current-back"), back, "current", "back");
+      renderOmissionRanking(document.getElementById("omission-change-front"), front, "change", "front");
+      renderOmissionRanking(document.getElementById("omission-change-back"), back, "change", "back");
+      renderOmissionRanking(document.getElementById("omission-long-front"), front, "max", "front");
+      renderOmissionRanking(document.getElementById("omission-long-back"), back, "max", "back");
     }
 
     // 时间范围切换（联动）
@@ -402,17 +553,10 @@
     // 趋势 2.0：hover 详情提示（事件委托，全局一次绑定）
     bindTrendTooltip();
 
-    loadJSON("./data/dlt_history.json").then(function (data) {
-      var issues = data.issues || [];
-      if (!issues.length) throw new Error("历史数据为空");
-      var srcName = { "500": "500彩票网" }[data.source] || (data.source || "公开数据源");
-      meta = {
-        cover: issues.length + " 期",
-        issueRange: issues[0].issue + " - " + issues[issues.length - 1].issue,
-        frontTotal: (issues.length * 5) + " 个号码",
-        backTotal: (issues.length * 2) + " 个号码",
-        sourceName: srcName
-      };
+    // S1：统一数据加载入口（loadData → 排序 + meta）
+    loadData().then(function (res) {
+      var issues = res.issues;
+      meta = res.meta;
       matrix = buildMatrices(issues);
       draw();
     }).catch(function (err) {
@@ -422,6 +566,8 @@
 
   var api = {
     PERIODS: PERIODS,
+    GROUP_RULES: GROUP_RULES,
+    loadData: loadData,
     sliceWindow: sliceWindow,
     calculateHot: calculateHot,
     calculateMissing: calculateMissing,
@@ -429,8 +575,11 @@
     calculateBigSmall: calculateBigSmall,
     buildMatrices: buildMatrices,
     calculateCellMissing: calculateCellMissing,
+    buildOmissionProfile: buildOmissionProfile,
+    buildOccurrenceMatrix: buildOccurrenceMatrix,
     renderTrajectoryHTML: renderTrajectoryHTML,
-    drawTrendLines: drawTrendLines,
+    renderOccurrenceMatrix: renderOccurrenceMatrix,
+    renderOmissionRanking: renderOmissionRanking,
     bindTrendTooltip: bindTrendTooltip
   };
 

@@ -35,8 +35,8 @@
   <!-- 页内锚点导航（移动端可横向滑动，样式由 trend-v2.css 接管） -->
   <nav class="anchor-nav" aria-label="页内导航">
     <a class="anchor-item" href="#sec-summary">📊 概览</a>
-    <a class="anchor-item" href="#sec-front-trajectory">🔴 前区轨迹</a>
-    <a class="anchor-item" href="#sec-back-trajectory">🔵 后区轨迹</a>
+    <a class="anchor-item" href="#sec-occurrence">🔢 号码轨迹</a>
+    <a class="anchor-item" href="#sec-omission">⏳ 遗漏趋势</a>
     <a class="anchor-item" href="#sec-front-hot">🔥 热度排行</a>
     <a class="anchor-item" href="#sec-front-missing">⏳ 遗漏分析</a>
     <a class="anchor-item" href="#sec-back-hot">🌡️ 冷热分析</a>
@@ -69,18 +69,12 @@
       <p class="trend-legend"><span class="legend-note">切换时间范围后，下方全部模块联动更新 · 默认期数随屏幕宽度自动选择（大屏 300 / 移动 100）</span></p>
     </section>
 
-    <!-- ① 前区号码轨迹 -->
-    <section class="card" id="sec-front-trajectory">
-      <h2>前区号码轨迹（01–35）</h2>
-      <div class="trend-scroll"><div id="front-trajectory"></div></div>
-      <p class="trend-legend"><span><span class="dot red"></span>前区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-miss"><span class="miss-swatch miss-s1"></span><span class="miss-swatch miss-s2"></span><span class="miss-swatch miss-s3"></span>遗漏越久颜色越深</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
-    </section>
-
-    <!-- ② 后区号码轨迹 -->
-    <section class="card" id="sec-back-trajectory">
-      <h2>后区号码轨迹（01–12）</h2>
-      <div class="trend-scroll"><div id="back-trajectory"></div></div>
-      <p class="trend-legend"><span><span class="dot blue"></span>后区号码开出</span><span><span class="dot gray"></span>未开出</span><span class="legend-miss"><span class="miss-swatch miss-s1"></span><span class="miss-swatch miss-s2"></span><span class="miss-swatch miss-s3"></span>遗漏越久颜色越深</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
+    <!-- ① 号码出现轨迹矩阵（S2：替代旧轨迹视觉；矩阵展示号码/出现/遗漏，无连线） -->
+    <section class="card" id="sec-occurrence">
+      <h2>🔢 号码出现轨迹矩阵</h2>
+      <p class="hint">横轴为期号 · 纵轴为号码 · 命中格显示号码与当前遗漏 · 最新一期高亮</p>
+      <div class="trend-scroll"><div id="occurrence-container"></div></div>
+      <p class="trend-legend"><span><span class="dot red"></span>前区开出</span><span><span class="dot blue"></span>后区开出</span><span class="legend-miss"><span class="miss-swatch miss-s1"></span><span class="miss-swatch miss-s2"></span><span class="miss-swatch miss-s3"></span>遗漏越久颜色越深</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
     </section>
 
     <!-- ③ 前区热度排行 -->
@@ -117,6 +111,40 @@
       <p class="hint">规则：01–06 小 / 07–12 大 · 按后区号码个数统计占比</p>
       <div class="bars" id="back-big-small"></div>
     </section>
+
+    <!-- S3：遗漏趋势分析（前区/后区镜像；横向条形排名，无 SVG，无动画；表格优先） -->
+    <section class="card" id="sec-omission">
+      <h2>⏳ 遗漏趋势分析</h2>
+      <p class="hint">基于当前时间范围计算 · 切换时间范围后下方全部联动更新 · 数据来源 dlt_history.json</p>
+
+      <!-- ① 当前遗漏排行 -->
+      <h3 class="sub-h">① 当前遗漏排行</h3>
+      <p class="hint">按当前连续未开出期数倒序 · 条形越长遗漏越久</p>
+      <h4 class="sub-h2">前区（01–35）</h4>
+      <div id="omission-current-front" class="omission-scroll"></div>
+      <h4 class="sub-h2">后区（01–12）</h4>
+      <div id="omission-current-back" class="omission-scroll"></div>
+
+      <!-- ② 遗漏变化排名 -->
+      <h3 class="sub-h">② 遗漏变化排名</h3>
+      <p class="hint">按「当前遗漏 − 平均遗漏」倒序 · 正▲遗漏走高（偏冷）· 负▼遗漏走低（偏热）</p>
+      <h4 class="sub-h2">前区（01–35）</h4>
+      <div id="omission-change-front" class="omission-scroll"></div>
+      <h4 class="sub-h2">后区（01–12）</h4>
+      <div id="omission-change-back" class="omission-scroll"></div>
+
+      <!-- ③ 长期遗漏统计 -->
+      <h3 class="sub-h">③ 长期遗漏统计</h3>
+      <p class="hint">按窗口内最大连续遗漏倒序 · 反映各号码历史最冷极值</p>
+      <h4 class="sub-h2">前区（01–35）</h4>
+      <div id="omission-long-front" class="omission-scroll"></div>
+      <h4 class="sub-h2">后区（01–12）</h4>
+      <div id="omission-long-back" class="omission-scroll"></div>
+    </section>
+
+    <!-- Task 17.1：后续阶段容器预留（hidden，S4-S5 启用） -->
+    <div id="heat-container" hidden></div>
+    <div id="sum-span-container" hidden></div>
 
     <footer class="site-footer">
       <p><a href="./index.html" class="back-link">首页</a> ｜ 数据来源：500彩票网 ｜ 仅供娱乐，不构成任何购彩建议。</p>
