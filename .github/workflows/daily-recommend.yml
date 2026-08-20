@@ -1,0 +1,63 @@
+name: 每日智能推荐生成
+
+# ============================================================
+# 每日生成推荐数据（静态文件）
+# 说明：本工作流仅生成娱乐性选号辅助数据，不预测彩票结果。
+# 触发时间：每日北京时间 01:00（UTC 17:00 前一日）
+# ============================================================
+
+on:
+  schedule:
+    # 每日 UTC 17:00 = 北京时间次日 01:00
+    - cron: "0 17 * * *"
+  workflow_dispatch: {}  # 支持手动触发
+
+# 不响应 push 事件，避免与主工作流冲突
+permissions:
+  contents: write
+
+jobs:
+  generate-recommendation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # 浅克隆，仅需当前版本
+
+      - name: 配置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: 生成推荐数据
+        run: |
+          python src/generate_recommendation.py
+
+      - name: 验证生成文件
+        run: |
+          if [ ! -f public/data/recommendation_new.json ]; then
+            echo "❌ 生成文件未找到"
+            exit 1
+          fi
+          echo "✅ 生成文件存在"
+          cat public/data/recommendation_new.json | head -20
+
+      - name: 提交更新
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/recommendation_new.json
+          if git diff --cached --quiet; then
+            echo "无变更，跳过提交"
+          else
+            git commit -m "chore: 更新每日智能推荐 [skip ci]"
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            git push
+          fi

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  
+  <title>智能选号助手 - 大乐透娱乐辅助工具（非预测）</title>
+  <meta name="description" content="大乐透智能选号助手，基于历史数据统计提供结构优化的娱乐组合推荐。不构成中奖预测，仅供娱乐参考。" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#6d28d9" />
+  
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./pick-v2.css" />
+</head>
+<body>
+  <header class="site-header pick-header">
+    <div class="brand">
+      <h1>🎯 智能选号助手</h1>
+      <p class="brand-tag">结构优化 · 娱乐辅助 · 非预测工具</p>
+    </div>
+    <div class="risk-banner">
+      ⚠️ 风险提示：本工具仅提供娱乐性选号辅助，<strong>不具备预测彩票结果能力</strong>，请理性购彩。
+    </div>
+  </header>
+
+  <nav class="site-nav" aria-label="主导航">
+    <a class="quick-item" href="./index.html"><span class="qi-ico">🏠</span><span class="qi-label">首页</span></a>
+    <a class="quick-item" href="./score.html"><span class="qi-ico">📊</span><span class="qi-label">数据分析</span></a>
+    <a class="quick-item" href="./pick.html"><span class="qi-ico">🎲</span><span class="qi-label">传统选号</span></a>
+    <a class="quick-item" href="./trend-v2.html"><span class="qi-ico">📈</span><span class="qi-label">趋势分析</span></a>
+    <a class="quick-item" href="./my.html"><span class="qi-ico">⭐</span><span class="qi-label">我的方案</span></a>
+  </nav>
+
+  <main id="content" class="pv2-main">
+    <!-- Loading state -->
+    <div id="pv2-loading" class="pv2-loading">
+      <div class="pv2-spinner"></div>
+      <p>正在生成智能推荐...</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="pv2-error" class="pv2-error" hidden>
+      <p>⚠️ 加载失败，请稍后重试。</p>
+    </div>
+
+    <!-- Section 1: Main Recommendation -->
+    <section id="pv2-hero" class="pv2-card pv2-hero-card" hidden>
+      <h2>🎯 今日智能推荐</h2>
+      
+      <div class="pv2-main-display">
+        <div class="pv2-score-badge">
+          <span class="pv2-score-label">合理度评分</span>
+          <span class="pv2-score-value" id="pv2-main-score">--</span>
+          <span class="pv2-score-max">/ 100</span>
+        </div>
+        
+        <div class="pv2-numbers-display">
+          <div class="pv2-number-group">
+            <span class="pv2-group-label">前区（5个）</span>
+            <div class="pv2-balls-container front" id="pv2-main-front"></div>
+          </div>
+          <div class="pv2-number-group">
+            <span class="pv2-group-label">后区（2个）</span>
+            <div class="pv2-balls-container back" id="pv2-main-back"></div>
+          </div>
+        </div>
+        
+        <div class="pv2-reasons-box">
+          <h3>💡 推荐理由</h3>
+          <ul class="pv2-reasons-list" id="pv2-main-reasons"></ul>
+        </div>
+      </div>
+      
+      <button id="pv2-refresh-btn" class="pv2-refresh-btn">🔄 刷新推荐</button>
+    </section>
+
+    <!-- Section 2: Backup Options -->
+    <section id="pv2-backup" class="pv2-card" hidden>
+      <h2>📋 备选方案</h2>
+      <div class="pv2-backup-grid" id="pv2-backup-list"></div>
+    </section>
+
+    <!-- Section 3: Quality Analysis -->
+    <section id="pv2-analysis" class="pv2-card" hidden>
+      <h2>📊 组合质量分析</h2>
+      <div class="pv2-metrics-grid" id="pv2-metrics"></div>
+      <div class="pv2-chart-container" id="pv2-charts"></div>
+    </section>
+
+    <!-- Section 4: Filter Rules -->
+    <section id="pv2-filters" class="pv2-card pv2-filter-card" hidden>
+      <h2>🛡️ 系统自动过滤</h2>
+      <p class="pv2-hint">以下极端组合已被系统自动过滤，确保推荐质量：</p>
+      <div class="pv2-filter-rules" id="pv2-filter-list"></div>
+      <div class="pv2-stats-summary">
+        <p>本次生成 <strong id="pv2-total-candidates">--</strong> 个候选组合，过滤 <strong id="pv2-filtered-count">--</strong> 个，最终推荐最优组合。</p>
+      </div>
+    </section>
+
+    <!-- Section 5: Navigation Links -->
+    <section class="pv2-card pv2-links-card">
+      <h2>🔗 更多分析工具</h2>
+      <div class="pv2-links-grid">
+        <a href="./trend-v2.html" class="pv2-link-item">
+          <span class="pv2-link-icon">📈</span>
+          <span class="pv2-link-text">趋势分析</span>
+        </a>
+        <a href="./score.html" class="pv2-link-item">
+          <span class="pv2-link-icon">📊</span>
+          <span class="pv2-link-text">号码评分</span>
+        </a>
+        <a href="./pick.html" class="pv2-link-item">
+          <span class="pv2-link-icon">🎲</span>
+          <span class="pv2-link-text">传统选号</span>
+        </a>
+        <a href="./index.html" class="pv2-link-item">
+          <span class="pv2-link-icon">🏠</span>
+          <span class="pv2-link-text">返回首页</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>数据来源：500彩票网历史开奖数据 ｜ 仅供娱乐，不构成任何购彩建议</p>
+  </footer>
+
+  <script src="./pick-v2.js"></script>
+</body>
+</html>

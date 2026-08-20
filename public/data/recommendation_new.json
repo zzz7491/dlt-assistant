@@ -1,0 +1,98 @@
+{
+  "generated_at": "2026-08-20T16:55:45.657193",
+  "issue": "next",
+  "version": "1.0",
+  "mode": "assistant",
+  "main": {
+    "front": [
+      9,
+      10,
+      14,
+      27,
+      32
+    ],
+    "back": [
+      1,
+      9
+    ],
+    "score": 99.0,
+    "reasons": [
+      "和值 92 处于理想区间 [60,140]",
+      "跨度 23 分布合理",
+      "奇偶比 2:3 均衡",
+      "大小比 2:3 均衡",
+      "三区分布 2:1:2 覆盖全面",
+      "连号结构合理"
+    ],
+    "score_details": {
+      "sum_reasonable": 100.0,
+      "span_reasonable": 100.0,
+      "odd_even": 100.0,
+      "big_small": 100.0,
+      "zone_balance": 93.33,
+      "consecutive": 100.0
+    }
+  },
+  "backup": [
+    {
+      "front": [
+        4,
+        5,
+        17,
+        30,
+        35
+      ],
+      "back": [
+        9,
+        11
+      ],
+      "score": 99.0,
+      "reasons": [
+        "和值 91 处于理想区间 [60,140]",
+        "跨度 31 分布合理",
+        "奇偶比 3:2 均衡",
+        "大小比 2:3 均衡",
+        "三区分布 2:1:2 覆盖全面",
+        "连号结构合理"
+      ]
+    },
+    {
+      "front": [
+        3,
+        12,
+        17,
+        18,
+        34
+      ],
+      "back": [
+        4,
+        6
+      ],
+      "score": 99.0,
+      "reasons": [
+        "和值 84 处于理想区间 [60,140]",
+        "跨度 31 分布合理",
+        "奇偶比 2:3 均衡",
+        "大小比 2:3 均衡",
+        "三区分布 2:2:1 覆盖全面",
+        "连号结构合理"
+      ]
+    }
+  ],
+  "stats": {
+    "filtered_count": 4260,
+    "avg_quality_score": 89.32,
+    "max_quality_score": 99.0,
+    "rules_applied": [
+      "five_consecutive",
+      "all_odd",
+      "all_even",
+      "all_big",
+      "all_small",
+      "extreme_sum",
+      "extreme_span",
+      "duplicate_previous"
+    ]
+  },
+  "notice": "本工具仅提供娱乐性选号辅助，不具备预测彩票结果能力。彩票开奖为独立随机事件，请理性购彩。"
+}
