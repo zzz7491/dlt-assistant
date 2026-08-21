@@ -42,6 +42,7 @@
     <a class="anchor-item" href="#sec-front-missing">⏳ 遗漏分析</a>
     <a class="anchor-item" href="#sec-back-hot">🌡️ 冷热分析</a>
     <a class="anchor-item" href="#sec-odd-even">⚖️ 奇偶·大小</a>
+    <a class="anchor-item" href="#sec-omission">⏳ 遗漏趋势</a>
   </nav>
 
   <main id="content">
@@ -128,40 +129,52 @@
       <p class="trend-legend"><span class="legend-note">切换时间范围后下方联动更新 · 数据源：dlt_history.json</span></p>
     </section>
 
-    <!-- S3：遗漏趋势分析（前区/后区镜像；横向条形排名，无 SVG，无动画；表格优先） -->
+    <!-- ⑧ S3 遗漏趋势分析（新增，不破坏 S2 矩阵结构） -->
     <section class="card" id="sec-omission">
       <h2>⏳ 遗漏趋势分析</h2>
-      <p class="hint">基于当前时间范围计算 · 切换时间范围后下方全部联动更新 · 数据来源 dlt_history.json</p>
+      <p class="hint">基于当前时间范围联动 · 数据来源同 S2（dlt_history.json）· 遗漏 = 连续未开出期数</p>
 
       <!-- ① 当前遗漏排行 -->
       <h3 class="sub-h">① 当前遗漏排行</h3>
-      <p class="hint">按当前连续未开出期数倒序 · 条形越长遗漏越久</p>
-      <h4 class="sub-h2">前区（01–35）</h4>
-      <div id="omission-current-front" class="omission-scroll"></div>
-      <h4 class="sub-h2">后区（01–12）</h4>
-      <div id="omission-current-back" class="omission-scroll"></div>
+      <div class="omission-grid">
+        <div class="omission-col">
+          <h4 class="col-h front-h">前区（01–35）</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-current-front"></table></div>
+        </div>
+        <div class="omission-col">
+          <h4 class="col-h back-h">后区（01–12）</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-current-back"></table></div>
+        </div>
+      </div>
 
       <!-- ② 遗漏变化排名 -->
-      <h3 class="sub-h">② 遗漏变化排名</h3>
-      <p class="hint">按「当前遗漏 − 平均遗漏」倒序 · 正▲遗漏走高（偏冷）· 负▼遗漏走低（偏热）</p>
-      <h4 class="sub-h2">前区（01–35）</h4>
-      <div id="omission-change-front" class="omission-scroll"></div>
-      <h4 class="sub-h2">后区（01–12）</h4>
-      <div id="omission-change-back" class="omission-scroll"></div>
+      <h3 class="sub-h">② 遗漏变化排名（当前 − 平均遗漏）</h3>
+      <p class="hint">条形长度 = 当前遗漏与平均遗漏的偏差绝对值 · 越靠上 = 当前比常态更冷</p>
+      <div class="omission-grid">
+        <div class="omission-col">
+          <h4 class="col-h front-h">前区</h4>
+          <div class="bar-rank" id="omission-change-front"></div>
+        </div>
+        <div class="omission-col">
+          <h4 class="col-h back-h">后区</h4>
+          <div class="bar-rank" id="omission-change-back"></div>
+        </div>
+      </div>
 
       <!-- ③ 长期遗漏统计 -->
       <h3 class="sub-h">③ 长期遗漏统计</h3>
-      <p class="hint">按窗口内最大连续遗漏倒序 · 反映各号码历史最冷极值</p>
-      <h4 class="sub-h2">前区（01–35）</h4>
-      <div id="omission-long-front" class="omission-scroll"></div>
-      <h4 class="sub-h2">后区（01–12）</h4>
-      <div id="omission-long-back" class="omission-scroll"></div>
+      <div class="omission-grid">
+        <div class="omission-col">
+          <h4 class="col-h front-h">前区 · 最大遗漏 TOP5</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-maxtop-front"></table></div>
+        </div>
+        <div class="omission-col">
+          <h4 class="col-h back-h">后区 · 最大遗漏 TOP5</h4>
+          <div class="table-scroll"><table class="stat-table" id="omission-maxtop-back"></table></div>
+        </div>
+      </div>
+      <div class="omission-summary" id="omission-stats-summary"></div>
     </section>
-
-    <!-- Task 17.1：后续阶段容器预留（hidden，S4-S5 启用） -->
-    <div id="heat-container" hidden></div>
-    <div id="sum-span-container" hidden></div>
-
     <footer class="site-footer">
       <p><a href="./index.html" class="back-link">首页</a> ｜ 数据来源：500彩票网 ｜ 仅供娱乐，不构成任何购彩建议。</p>
     </footer>
