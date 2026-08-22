@@ -14,7 +14,11 @@
     "back": [
       10,
       11
-    ]
+    ],
+    "score": null,
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-08-22",
@@ -31,7 +35,11 @@
     "back": [
       5,
       8
-    ]
+    ],
+    "score": null,
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-08-22",
@@ -48,7 +56,11 @@
     "back": [
       6,
       12
-    ]
+    ],
+    "score": null,
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-08-22",
@@ -65,6 +77,10 @@
     "back": [
       12,
       6
-    ]
+    ],
+    "score": 41.67,
+    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
+    "is_primary": true,
+    "source": "reports/recommendations.json"
   }
 ]

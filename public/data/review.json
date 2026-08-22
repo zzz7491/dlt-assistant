@@ -1,0 +1,71 @@
+{
+  "updated_at": "2026-08-23 00:14:57",
+  "empty": false,
+  "issue": "26095",
+  "recommendation": {
+    "strategy": "D-综合评分型",
+    "front": [
+      13,
+      23,
+      21,
+      18,
+      6
+    ],
+    "back": [
+      12,
+      4
+    ],
+    "score_total": 41.76
+  },
+  "actual_result": {
+    "front": [
+      4,
+      6,
+      8,
+      10,
+      14
+    ],
+    "back": [
+      4,
+      5
+    ]
+  },
+  "hit_count": {
+    "front": 1,
+    "back": 1,
+    "total": 2,
+    "level": 1
+  },
+  "analysis": {
+    "distance_score": 5,
+    "sum_diff": 39,
+    "factor_review": {
+      "inherit": {
+        "value": 0.0,
+        "median": 0.0,
+        "status": "positive"
+      },
+      "heat": {
+        "value": 17.0,
+        "median": 17.86,
+        "status": "negative"
+      },
+      "missing": {
+        "value": 80.0,
+        "median": 80.0,
+        "status": "positive"
+      },
+      "trend": {
+        "value": 49.36,
+        "median": 49.36,
+        "status": "positive"
+      },
+      "structure": {
+        "value": 42.49,
+        "median": 42.51,
+        "status": "negative"
+      }
+    }
+  },
+  "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖"
+}

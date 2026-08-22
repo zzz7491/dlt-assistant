@@ -167,6 +167,13 @@ jobs:
             echo "推荐 JSON 已导出（D1 锁定值）"
           fi
 
+      - name: Publish AI Recommendation Data
+        # 输出层发布（Phase 11-D1）：将 reports 闭环数据（推荐评分/复盘/策略表现）发布到
+        # public/data（recommendations 加法扩展 + review.json + strategy_score.json）。
+        # 独立步骤：失败不阻断主流程（--safe 内部兜底 + 外层 || 双保险）。
+        run: |
+          python -m src.publisher --safe || echo "publisher skipped"
+
       - name: 同步历史报告
         run: |
           mkdir -p public/reports
