@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-08-22 13:09:12",
+  "update_time": "2026-08-22 13:57:31",
   "periods": [
     {
       "issue": "26093",
@@ -283,8 +283,8 @@
         },
         "trend": {
           "value": 48.93,
-          "median": 48.93,
-          "status": "neutral"
+          "median": 49.36,
+          "status": "negative"
         },
         "structure": {
           "value": 42.51,
@@ -292,77 +292,255 @@
           "status": "neutral"
         }
       }
+    },
+    {
+      "issue": "26095",
+      "strategy": "A-均衡统计型",
+      "recommend": {
+        "front": [
+          6,
+          7,
+          11,
+          24,
+          26
+        ],
+        "back": [
+          3,
+          5
+        ],
+        "score_total": null
+      },
+      "actual": {
+        "front": [
+          4,
+          6,
+          8,
+          10,
+          14
+        ],
+        "back": [
+          4,
+          5
+        ]
+      },
+      "result": {
+        "front_hit": 1,
+        "back_hit": 1,
+        "total_hit": 2,
+        "distance_score": 5
+      },
+      "factor_review": {}
+    },
+    {
+      "issue": "26095",
+      "strategy": "B-冷热组合型",
+      "recommend": {
+        "front": [
+          1,
+          11,
+          24,
+          26,
+          34
+        ],
+        "back": [
+          3,
+          9
+        ],
+        "score_total": null
+      },
+      "actual": {
+        "front": [
+          4,
+          6,
+          8,
+          10,
+          14
+        ],
+        "back": [
+          4,
+          5
+        ]
+      },
+      "result": {
+        "front_hit": 0,
+        "back_hit": 0,
+        "total_hit": 0,
+        "distance_score": 7
+      },
+      "factor_review": {}
+    },
+    {
+      "issue": "26095",
+      "strategy": "C-纯随机娱乐型",
+      "recommend": {
+        "front": [
+          6,
+          7,
+          13,
+          16,
+          27
+        ],
+        "back": [
+          2,
+          10
+        ],
+        "score_total": null
+      },
+      "actual": {
+        "front": [
+          4,
+          6,
+          8,
+          10,
+          14
+        ],
+        "back": [
+          4,
+          5
+        ]
+      },
+      "result": {
+        "front_hit": 1,
+        "back_hit": 0,
+        "total_hit": 1,
+        "distance_score": 6
+      },
+      "factor_review": {}
+    },
+    {
+      "issue": "26095",
+      "strategy": "D-综合评分型",
+      "recommend": {
+        "front": [
+          13,
+          23,
+          21,
+          18,
+          6
+        ],
+        "back": [
+          12,
+          4
+        ],
+        "score_total": 41.76
+      },
+      "actual": {
+        "front": [
+          4,
+          6,
+          8,
+          10,
+          14
+        ],
+        "back": [
+          4,
+          5
+        ]
+      },
+      "result": {
+        "front_hit": 1,
+        "back_hit": 1,
+        "total_hit": 2,
+        "distance_score": 5
+      },
+      "factor_review": {
+        "inherit": {
+          "value": 0.0,
+          "median": 0.0,
+          "status": "positive"
+        },
+        "heat": {
+          "value": 17.0,
+          "median": 17.86,
+          "status": "negative"
+        },
+        "missing": {
+          "value": 80.0,
+          "median": 80.0,
+          "status": "positive"
+        },
+        "trend": {
+          "value": 49.36,
+          "median": 49.36,
+          "status": "positive"
+        },
+        "structure": {
+          "value": 42.49,
+          "median": 42.51,
+          "status": "negative"
+        }
+      }
     }
   ],
   "factor_performance": {
     "inherit": {
-      "times": 1,
-      "positive": 0,
+      "times": 2,
+      "positive": 1,
       "neutral": 1,
       "negative": 0,
-      "score": 0.0
+      "score": 0.5
     },
     "heat": {
-      "times": 1,
+      "times": 2,
       "positive": 0,
       "neutral": 1,
-      "negative": 0,
+      "negative": 1,
       "score": 0.0
     },
     "missing": {
-      "times": 1,
-      "positive": 0,
+      "times": 2,
+      "positive": 1,
       "neutral": 1,
       "negative": 0,
-      "score": 0.0
+      "score": 0.5
     },
     "trend": {
-      "times": 1,
-      "positive": 0,
-      "neutral": 1,
-      "negative": 0,
-      "score": 0.0
+      "times": 2,
+      "positive": 1,
+      "neutral": 0,
+      "negative": 1,
+      "score": 0.5
     },
     "structure": {
-      "times": 1,
+      "times": 2,
       "positive": 0,
       "neutral": 1,
-      "negative": 0,
+      "negative": 1,
       "score": 0.0
     }
   },
   "strategy_rank": {
     "A": {
-      "avg_hit": 1.5,
+      "avg_hit": 1.667,
       "best_hit": 2,
-      "total_distance": 11,
-      "factor_score": 0.0
+      "total_distance": 16,
+      "factor_score": 0.3
     },
     "B": {
-      "avg_hit": 0.5,
+      "avg_hit": 0.333,
       "best_hit": 1,
-      "total_distance": 13,
-      "factor_score": 0.0
+      "total_distance": 20,
+      "factor_score": 0.3
     },
     "C": {
-      "avg_hit": 0.5,
+      "avg_hit": 0.667,
       "best_hit": 1,
-      "total_distance": 13,
-      "factor_score": 0.0
+      "total_distance": 19,
+      "factor_score": 0.3
     },
     "D": {
-      "avg_hit": 0.0,
-      "best_hit": 0,
-      "total_distance": 7,
-      "factor_score": 0.0
+      "avg_hit": 1.0,
+      "best_hit": 2,
+      "total_distance": 12,
+      "factor_score": 0.3
     }
   },
   "conclusion": [],
   "next_review_points": [
-    "inherit 因素数据不足（1 期），继续观察",
-    "heat 因素数据不足（1 期），继续观察",
-    "missing 因素数据不足（1 期），继续观察",
-    "trend 因素数据不足（1 期），继续观察",
-    "structure 因素数据不足（1 期），继续观察"
+    "inherit 因素数据不足（2 期），继续观察",
+    "heat 因素数据不足（2 期），继续观察",
+    "missing 因素数据不足（2 期），继续观察",
+    "trend 因素数据不足（2 期），继续观察",
+    "structure 因素数据不足（2 期），继续观察"
   ]
 }
