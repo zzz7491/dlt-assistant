@@ -49,7 +49,7 @@
   <div id="error" class="error-box" hidden>
     <p>⚠️ 暂未读取到分析数据。</p>
     <p class="error-detail" id="error-detail"></p>
-    <p class="error-hint">请稍后重试，或确认 <code>data/dlt_history.json</code> 与 <code>data/recommendations.json</code> 已生成。</p>
+    <p class="error-hint">请稍后重试，或确认 <code>data/dlt_history.json</code> 与 <code>data/final_recommendation.json</code> 已生成。</p>
   </div>
 
   <main id="content" hidden>
@@ -77,8 +77,8 @@
 
     <!-- ③ 下一期娱乐分析 -->
     <section class="card">
-      <h2>🔮 下一期娱乐分析</h2>
-      <p class="hint">目标期号：<strong id="rec-target">—</strong> ｜ 以下为算法随机娱乐产物，<strong>不等于中奖预测</strong>。</p>
+      <h2>🔮 本期智能推荐</h2>
+      <p class="hint">以下为基于真实历史开奖数据的智能娱乐推荐，<strong>不等于中奖预测</strong>。</p>
       <div class="rec-grid" id="recommendations"></div>
     </section>
 
@@ -143,7 +143,6 @@
           <h3>🧬 模型演进档案</h3>
           <ul class="report-links">
             <li>模型版本：<strong>C-2-D-v1</strong>（综合评分）</li>
-            <li>当前策略：A 均衡 / B 冷热 / C 随机 / D 综合评分</li>
             <li id="archive-updated">数据更新时间：—</li>
           </ul>
         </div>
@@ -158,7 +157,7 @@
       <ul class="intro-list">
         <li><strong>数据</strong>：每日由 GitHub Actions 自动抓取并统计（前区 1–35 / 后区 1–12）</li>
         <li><strong>分析</strong>：热号冷号、奇偶大小、连号等统计指标</li>
-        <li><strong>推荐</strong>：A / B / C / D 四套娱乐策略（均衡统计 / 冷热组合 / 纯随机 / 综合评分），均为历史数据统计产物，非预测</li>
+        <li><strong>推荐</strong>：本期智能推荐（综合评分模型），基于历史数据统计的娱乐产物，非预测</li>
         <li><strong>展示</strong>：Cloudflare Pages 静态托管，全部代码开源可查</li>
       </ul>
       <p class="hint">所有结论均来自历史数据的频率统计，仅供娱乐参考。</p>

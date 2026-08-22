@@ -231,10 +231,10 @@
 
   Promise.all([
     loadJSON("./data/dlt_history.json"),
-    loadJSON("./data/recommendations.json").catch(function () { return []; })
+    loadJSON("./data/final_recommendation.json").catch(function () { return {}; })
   ]).then(function (res) {
     var history = res[0];
-    var recs = res[1] || [];
+    var finalRec = res[1] || {}
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
 
@@ -256,7 +256,7 @@
     document.getElementById("meta-line").textContent =
       "最近 " + a.n + " 期历史统计 · 数据范围 " + a.firstIssue + " ~ " + a.lastIssue +
       "（截至 " + a.lastDate + "）" +
-      (recs[0] ? " · 预测期号 " + recs[0].target_issue + "（推荐生成 " + recs[0].date + "）" : "");
+      (finalRec.final_recommendation?.score_total ? " · 本期推荐综合评分 " + finalRec.final_recommendation.score_total : "");
 
     renderHot(document.getElementById("hot-front"), a.frontHot, "front");
     renderHot(document.getElementById("hot-back"), a.backHot, "back");
@@ -268,9 +268,20 @@
       "含连号的期占比 <strong>" + (a.consecProb * 100).toFixed(1) + "%</strong>" +
       "，平均每期 <strong>" + a.consecAvg.toFixed(2) + "</strong> 对连号。";
 
-    if (recs.length) {
+    if (Object.keys(finalRec.final_recommendation || {}).length) {
       document.getElementById("rec-target").textContent = recs[0].target_issue || "—";
-      renderRecommendations(document.getElementById("recommendations"), recs);
+      var recContainer = document.getElementById("recommendations");
+      var frd = finalRec.final_recommendation || {};
+      recContainer.innerHTML = `
+        <div class="rec-item" style="padding:12px 0;border-bottom:1px solid #eee;">
+          <div style="font-size:15px;font-weight:600;margin-bottom:6px;">前区：<span style="color:#10b981;">${frd.front.map(function(n){return n+""}).join(" ")}</span></div>
+          <div style="font-size:15px;font-weight:600;margin-bottom:4px;">后区：<span style="color:#3b82f6;">${frd.back.map(function(n){return n+""}).join(" ")}</span></div>
+          <div style="font-size:12px;color:#6b7280;margin-top:6px;">
+            综合评分：<strong style="color:#10b981;">${frd.score_total}</strong> 
+            ${frd.strategy ? "· 策略：" + frd.strategy : ""}
+          </div>
+        </div>
+      `;
     }
 
     /* ⑤ 数据档案与复盘：动态化每日简报 + 模型档案 */
