@@ -25,6 +25,36 @@
 **风险**:
 - 低（只读检查 + 新增独立文件）
 
+### Phase 10 Recovery R5.2 - 生产运行错误修复（Hotfix）
+
+**类型**: fix
+
+**问题**:
+- 生产首页 `https://500wan.mootlsv.com/` 报 `Cannot set properties of null (setting 'textContent')`，推荐数据不显示
+
+**原因**:
+- `public/app.js` 第 272 行 `document.getElementById("rec-target").textContent = ...` 引用了 `index.html` 中不存在的元素 `rec-target`
+- 该语句位于 `if (recs.length)` 内，一旦 `recommendations.json` 有数据即必崩；异常被 `.catch` 捕获后隐藏 `#content` 显示错误框，导致"首页无推荐数据"
+
+**修复**:
+- `public/index.html`：在「本期智能推荐」区块补充 `<span id="rec-target">—</span>`（展示预测期号，保持原布局）
+- `public/app.js`：第 272 行增加 null 防护（`var recTargetEl = ...; if (recTargetEl) recTargetEl.textContent = ...`）
+- `public/app.js`：渲染主流程外包 try/catch，任何 DOM 查询失败优雅降级而非白屏
+
+**验证**:
+- **本地**: ✅ Node DOM 桩执行渲染逻辑（正常 + 缺失 rec-target 两种场景）均无 TypeError，推荐数据正常渲染（1629 字符）
+- **部署**: ✅ `wrangler pages deploy public --project-name dlt-assistant --branch master` 实际执行成功（Deployment complete → 绑定 500wan.mootlsv.com）
+- **线上**: ✅ 生产版 app.js + 生产数据 Node 执行无异常；index/app.js/dlt_history.json/recommendations.json 全部 200；首页含 `id="rec-target"`
+
+**影响范围**:
+- ✅ 仅首页推荐区预测期号展示修复 + 防御性 null 防护，未改算法/数据结构/UI 布局/新增功能
+
+**风险**:
+- 低（最小热修复，已本地与生产双重验证）
+
+**回滚**:
+- `git revert 8d33a15` 或 `git checkout 36d9bfc -- public/`，重新部署即可
+
 ### Task: Phase 10 Recovery R2 - 生产稳定基线确认
 
 **类型**: refactor

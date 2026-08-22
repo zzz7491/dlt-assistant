@@ -4,7 +4,7 @@
 
 **Phase**: Phase 10 - 数据降级与恢复机制  
 **Task**: Task #36-R.8 首页展示恢复与验收  
-**Status**: ✅ Phase 10 Recovery R4 生产稳定基线冻结完成
+**Status**: ✅ Phase 10 Recovery R5.2 生产运行错误修复完成（基线仍冻结于 production-stable-v1.0）
 
 ---
 
@@ -167,6 +167,35 @@
 - ❌ 首页业务逻辑 / 推荐算法 / 数据结构 / UI / 生产页面功能 / 一期一注
 
 **下一步**: 等待用户确认版本标识实施方案（方案 B 推荐）后，再决定是否实施 version.json
+
+---
+
+### Phase 10 Recovery R5.2: 生产运行错误修复（Hotfix）
+
+**状态**: ✅ 已完成
+
+**完成内容**:
+- ✅ Step 1 只读检查（确认基线 `production-stable-v1.0` → `36d9bfc`，修复前 master = `d1679f4`）
+- ✅ Step 2 备份状态（git status / branch / commit 记录，确认未提交改动范围）
+- ✅ Step 3 最小修复（仅 2 文件 +7/-2）：
+  - `public/index.html`：在「本期智能推荐」区块补充 `<span id="rec-target">—</span>`（展示预测期号，保持原布局）
+  - `public/app.js`：第 272 行增加 null 防护（`var recTargetEl = ...; if (recTargetEl) ...`）
+  - `public/app.js`：渲染主流程外包 try/catch 安全网（任何 DOM 查询失败优雅降级，不白屏）
+- ✅ Step 4 本地验证（`python -m http.server` + Node DOM 桩执行渲染逻辑，正常 / 缺元素两种场景均无 TypeError，推荐数据正常渲染）
+- ✅ Step 5 Git 提交 `8d33a15`（fix: repair homepage recommendation render crash）
+- ✅ Step 6 正式部署（`wrangler pages deploy` 实际执行成功 → 部署至 dlt-assistant master → 绑定 500wan.mootlsv.com）
+- ✅ Step 7 生产验证（生产版 app.js + 生产数据 Node 执行无异常；全部资源 200；首页含 rec-target）
+- ✅ Step 8 更新工程记录（本段 + CHANGELOG）
+
+**修复前后**:
+- 修复前：`app.js:272` 对 null 赋值 → `TypeError: Cannot set properties of null` → 渲染中断 → 首页无推荐数据
+- 修复后：首页正常显示最新开奖（26094期）+ 推荐策略 + 预测期号 26095
+
+**严禁项遵守**: 未重新设计首页 / 未改推荐算法 / 未改数据结构 / 未改 UI 布局 / 未新增功能（仅最小热修复）
+
+**回滚方法**:
+- `git revert 8d33a15`（保留基线 `36d9bfc` 完好）后重新部署
+- 或 `git checkout 36d9bfc -- public/` 还原两文件后部署
 
 ---
 
