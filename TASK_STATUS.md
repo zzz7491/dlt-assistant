@@ -4,7 +4,7 @@
 
 **Phase**: Phase 10 - 数据降级与恢复机制  
 **Task**: Task #36-R.8 首页展示恢复与验收  
-**Status**: ✅ Phase 10 Recovery R5.2 生产运行错误修复完成（基线仍冻结于 production-stable-v1.0）
+**Status**: ✅ Phase 10 Recovery R5.3 人工验收通过（R5.2 修复确认有效，生产页面正常，基线仍冻结于 production-stable-v1.0）
 
 ---
 
@@ -151,7 +151,7 @@
 
 ### Phase 10 Recovery R5: 生产监控与自动验收基础建设
 
-**状态**: 🟡 进行中（监控基础已建，版本标识待用户确认实施）
+**状态**: ✅ 已完成（监控基础已建 + R5.2 修复 + R5.3 人工验收通过）
 
 **完成内容**（本阶段仅建设监控/验证工具，禁止修改首页/算法/UI/数据结构）:
 - ✅ Step 1 只读检查（AGENTS/TASK_STATUS/CHANGELOG + Git/Cloudflare/域名验证）
@@ -196,6 +196,28 @@
 **回滚方法**:
 - `git revert 8d33a15`（保留基线 `36d9bfc` 完好）后重新部署
 - 或 `git checkout 36d9bfc -- public/` 还原两文件后部署
+
+---
+
+### Phase 10 Recovery R5.3: 生产恢复人工验收
+
+**状态**: ✅ 已完成（用户人工验收通过）
+
+**完成内容**:
+- ✅ Step 1 只读确认当前运行版本（本地 HEAD / 远程 master = `a1661b9`；最新修复 commit = `8d33a15`；标签 `production-stable-v1.0` 仍指向 `36d9bfc`；生产实际代码已含修复痕迹）
+- ✅ Step 2 等待用户打开 `https://500wan.mootlsv.com/` 人工检查（不修改、不部署）
+- ✅ Step 3 提供人工验收清单（首页 / 数据显示 / 五个模块 / 控制台）
+- ✅ Step 4 等待用户确认
+
+**用户验收结论（2026-08-22 22:01）**:
+- ✅ 首页正常打开，无 `Cannot set properties of null`
+- ✅ 无红色错误提示
+- ✅ 最新开奖数据（26094 期）+ 推荐区域 + 预测期号（26095）+ A/B/C/D 策略均正常显示
+- ✅ 五个模块（首页 / 数据分析 / 智能选号 / 趋势分析 / 我的方案）切换正常
+- ✅ Console 无 TypeError / 无 JavaScript error / 无 404 资源错误
+- ✅ 确认 R5.2 修复有效
+
+**严禁项遵守**: 未开发 R6 / 未增加自动化 / 未优化代码 / 未改首页设计 / 未改推荐算法 / 未改数据结构（仅做只读确认与文档记录）
 
 ---
 
@@ -245,7 +267,7 @@
 | **CDN** | Cloudflare Pages |
 | **GitHub** | https://github.com/zzz7491/dlt-assistant |
 | **分支** | master |
-| **最近部署** | `aec11db` 已部署 |
+| **最近部署** | R5.2 热修复（`wrangler pages deploy` → dlt-assistant master → 绑定 500wan.mootlsv.com；生产代码 = `8d33a15`） |
 
 ---
 
@@ -258,5 +280,5 @@
 
 ---
 
-**最后更新**: 2026-08-22 21:15  
+**最后更新**: 2026-08-22 22:01  
 **维护人**: AI Assistant

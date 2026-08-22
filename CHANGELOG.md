@@ -55,6 +55,31 @@
 **回滚**:
 - `git revert 8d33a15` 或 `git checkout 36d9bfc -- public/`，重新部署即可
 
+### Phase 10 Recovery R5.3 - 生产恢复人工验收
+
+**类型**: verify
+
+**范围**: 仅人工验收与生产版本确认，无代码/配置改动
+
+**当前运行版本（只读确认）**:
+- **远程 master / 本地 HEAD**: `a1661b9`（含 R5.2 文档记录）
+- **最新修复 commit**: `8d33a15`（fix: repair homepage recommendation render crash）
+- **production-stable-v1.0 标签**: `36d9bfc`（冻结基线，未含 R5.2 热修复——符合预期，热修复为独立 commit）
+- **生产实际代码**: Cloudflare 部署已含修复（`index.html` 含 `id="rec-target"`；`app.js` 含 `recTargetEl` 防护 + `catch (e)` 安全网）；首页 / app.js / recommendations.json / dlt_history.json 全部 HTTP 200
+
+**用户人工验收结论（2026-08-22 22:01）**:
+- ✅ 首页正常，无 `Cannot set properties of null`，无红色错误提示
+- ✅ 最新开奖数据（26094 期）、推荐区域、预测期号（26095）、A/B/C/D 策略均正常显示
+- ✅ 五个模块（首页 / 数据分析 / 智能选号 / 趋势分析 / 我的方案）切换正常
+- ✅ Console 无 TypeError / JavaScript error / 404 资源错误
+- ✅ 确认 R5.2 修复有效
+
+**影响范围**:
+- ✅ 仅文档记录与版本确认，未触碰任何生产代码或数据结构
+
+**风险**:
+- 无（验收通过，处于只读维护冻结状态）
+
 ### Task: Phase 10 Recovery R2 - 生产稳定基线确认
 
 **类型**: refactor
