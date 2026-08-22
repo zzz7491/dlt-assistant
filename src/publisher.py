@@ -125,6 +125,53 @@ def build_recommendations(current: Any, source_recs: Any) -> list[dict[str, Any]
 
 # ---------------------------------------------------------------- ② 复盘
 
+# 因子三态 → 调整方向规则（纯规则映射，不修改任何算法/评分）
+_FACTOR_ADJUST_RULES: dict[str, tuple[str, str]] = {
+    "heat": ("热号关注", "热号因子指向"),
+    "missing": ("遗漏补偿关注", "遗漏回补"),
+    "trend": ("趋势因子", "趋势判断"),
+    "structure": ("结构贴合", "组合结构判断"),
+}
+
+
+def _build_next_adjustment(analysis: dict[str, Any]) -> list[dict[str, Any]]:
+    """基于 factor_review 三态 + 和值偏差生成规则化调整建议。
+
+    仅读取复盘数据做规则映射，不调用模型、不修改评分、不影响推荐结果。
+    任一数据缺失 → 不产生对应建议；整体无建议 → 返回 []（失败安全）。
+    """
+    suggestions: list[dict[str, Any]] = []
+    fr = (analysis or {}).get("factor_review") or {}
+    for key, (text_head, reason_head) in _FACTOR_ADJUST_RULES.items():
+        status = (fr.get(key) or {}).get("status")
+        if status == "negative":
+            suggestions.append({
+                "type": "reduce",
+                "text": "降低" + text_head + "权重",
+                "reason": reason_head + "偏差（相对历史中位数偏低）",
+            })
+        elif status == "positive":
+            suggestions.append({
+                "type": "keep",
+                "text": "维持" + text_head,
+                "reason": reason_head + "正常（方向判断合理）",
+            })
+        # neutral：方向合理但本期未命中，不产生建议，避免噪音
+    sum_diff = (analysis or {}).get("sum_diff")
+    if isinstance(sum_diff, (int, float)) and sum_diff > 25:
+        suggestions.append({
+            "type": "reduce",
+            "text": "收缩和值区间",
+            "reason": "上期和值偏差较大（差 " + str(sum_diff) + "）",
+        })
+    elif isinstance(sum_diff, (int, float)) and sum_diff <= 10:
+        suggestions.append({
+            "type": "keep",
+            "text": "维持和值区间",
+            "reason": "上期和值贴合历史高频区间",
+        })
+    return suggestions
+
 def build_review(reflection: Any) -> dict[str, Any]:
     """从 reflection_report.json 提取最近一期复盘 → review.json 结构。
 
@@ -170,6 +217,7 @@ def build_review(reflection: Any) -> dict[str, Any]:
             "level": HIT_LEVEL.get(int(res.get("total_hit") or 0), 0),
         },
         "analysis": analysis,
+        "next_adjustment": _build_next_adjustment(analysis),
         "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖",
     }
 

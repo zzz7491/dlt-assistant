@@ -234,6 +234,24 @@
       "</div>";
   }
 
+  // 下一期模型调整方向（D2.2）：next_adjustment 数组 → 方向图标 + 文本 + 理由
+  var ADJUST_ICONS = { "reduce": "↓", "increase": "↑", "keep": "→" };
+  function renderNextAdjustment(list) {
+    if (!Array.isArray(list) || !list.length) {
+      return '<span style="color:var(--muted,#94a3b8)">暂无调整建议。</span>';
+    }
+    return list.map(function (it) {
+      var t = it && it.type ? it.type : "keep";
+      var icon = ADJUST_ICONS[t] || "→";
+      var reason = (it && it.reason && String(it.reason).length)
+        ? '<span style="color:var(--muted,#94a3b8)">（' + esc(it.reason) + "）</span>"
+        : "";
+      return '<div style="margin:3px 0;font-size:13px;"><span style="display:inline-block;width:18px;' +
+        'font-weight:700;color:var(--accent,#6d28d9);">' + icon + "</span>" +
+        esc((it && it.text) || "") + reason + "</div>";
+    }).join("");
+  }
+
   // 策略历史表现小字（唯一推荐卡底部；数据缺失整行隐藏，不新增首页模块）
   function renderStrategyHint(container, strategyScore, primaryStrategy) {
     if (!container || !strategyScore || strategyScore.empty === true) return;
@@ -363,6 +381,12 @@
 
     /* ③ 上期推荐复盘：review.json 动态渲染（缺失/empty → 降级占位） */
     renderReview(document.getElementById("review-placeholder"), review);
+
+    /* ③ 下一期模型调整方向（D2.2）：review 缺失/空 → 暂无建议 */
+    var naBody = document.getElementById("next-adjustment-body");
+    if (naBody) {
+      naBody.innerHTML = renderNextAdjustment(review ? review.next_adjustment : null);
+    }
 
     document.getElementById("content").hidden = false;
     } catch (e) {
