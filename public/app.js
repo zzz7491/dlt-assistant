@@ -231,12 +231,14 @@
 
   (async function loadData() {
     var history = await loadJSON("./data/dlt_history.json");
-    var recs = await loadJSON("./data/recommendations.json").catch(function () {
-      return [];
-    });
+    // 优先加载 final_recommendation.json，失败则降级到 recommendations.json
     var finalRec = await loadJSON("./data/final_recommendation.json").catch(function () {
-      return {};
+      return loadJSON("./data/recommendations.json").catch(function () {
+        return [];
+      });
     });
+    // recs 用于兼容旧逻辑（如果 finalRec 是对象）
+    var recs = Array.isArray(finalRec.final_recommendation) ? finalRec.final_recommendation : finalRec;
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
 
