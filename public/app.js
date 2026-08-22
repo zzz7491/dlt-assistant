@@ -138,11 +138,126 @@
     });
   }
 
-  // 唯一推荐选择逻辑（不写死 D）：final 字段 > score 降序 > D 策略 fallback > 首条
+  // 命中等级映射（前端展示层，不改数据）：level 0-4 → 文案
+  var HIT_LEVEL_LABELS = ["未命中", "低等级命中", "中等级命中", "高等级命中", "极高等级命中"];
+  // 因子三态映射
+  var FACTOR_STATUS = {
+    "positive": ["✅ 正向", "#16a34a"],
+    "neutral": ["⚠️ 中性", "#d97706"],
+    "negative": ["❌ 负向", "#dc2626"]
+  };
+
+  // 推荐理由：兼容 String（「；」切分多行）/ Array（逐条），一律 esc 转义防注入
+  function renderReason(reason) {
+    if (!reason || !String(reason).length) {
+      return '<span style="opacity:.6">推荐理由：建设中</span>';
+    }
+    var items = Array.isArray(reason)
+      ? reason.map(function (s) { return String(s).trim(); }).filter(Boolean)
+      : String(reason).split(/[；;]/).map(function (s) { return s.trim(); }).filter(Boolean);
+    if (!items.length) return '<span style="opacity:.6">推荐理由：建设中</span>';
+    return items.map(function (s) {
+      return '<div style="margin:2px 0;">· ' + esc(s) + "</div>";
+    }).join("");
+  }
+
+  // 因子三态（positive/neutral/negative）徽标列表；无数据返回空串
+  function renderFactorReview(factorReview) {
+    if (!factorReview || !Object.keys(factorReview).length) return "";
+    var keys = Object.keys(factorReview);
+    var badges = keys.map(function (k) {
+      var st = factorReview[k] || {};
+      var status = st.status || "";
+      var conf = FACTOR_STATUS[status] || ["· " + esc(status), "#94a3b8"];
+      return '<span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;' +
+        'border:1px solid ' + conf[1] + ";color:" + conf[1] + '">' + esc(k) + " " + conf[0] + "</span>";
+    }).join("");
+    return '<div style="margin-top:10px;">' +
+      '<div style="font-size:12px;color:var(--muted,#94a3b8);margin-bottom:4px;">因子回顾（相对历史中位数）</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + badges + "</div></div>";
+  }
+
+  // 上期推荐复盘：review.json → 首页③模块动态渲染
+  function renderReview(container, review) {
+    if (!container) return;
+    if (!review || review.empty === true || !review.issue) {
+      container.innerHTML = '<div style="padding:6px;">📭 暂无复盘数据（待开奖后自动生成）</div>';
+      return;
+    }
+    var rec = review.recommendation || {};
+    var act = review.actual_result || {};
+    var hit = review.hit_count || {};
+    var ana = review.analysis || {};
+    var level = typeof hit.level === "number" ? hit.level : 0;
+    var levelLabel = HIT_LEVEL_LABELS[level] || "未知等级";
+    var fr = renderFactorReview(ana.factor_review);
+
+    container.innerHTML =
+      '<div style="text-align:left;">' +
+        '<div style="font-size:13px;color:var(--accent,#6d28d9);font-weight:600;margin-bottom:10px;">' +
+          "复盘期号：" + esc(review.issue) + " 期</div>" +
+        '<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">' +
+          '<div style="flex:1;min-width:220px;">' +
+            '<div style="font-size:12px;color:var(--muted,#94a3b8);margin-bottom:4px;">🤖 AI 上期推荐 · ' +
+              esc(rec.strategy || "") + "</div>" +
+            '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">' +
+              '<span style="color:#a78bfa;font-size:12px;">前区</span>' + balls(rec.front || [], "front") +
+            "</div>" +
+            '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px;">' +
+              '<span style="color:#a78bfa;font-size:12px;">后区</span>' + balls(rec.back || [], "back") +
+            "</div>" +
+          "</div>" +
+          '<div style="flex:1;min-width:220px;">' +
+            '<div style="font-size:12px;color:var(--muted,#94a3b8);margin-bottom:4px;">🎲 实际开奖</div>' +
+            '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">' +
+              '<span style="color:#a78bfa;font-size:12px;">前区</span>' + balls(act.front || [], "front") +
+            "</div>" +
+            '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px;">' +
+              '<span style="color:#a78bfa;font-size:12px;">后区</span>' + balls(act.back || [], "back") +
+            "</div>" +
+          "</div>" +
+        "</div>" +
+        '<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:13px;">' +
+          '<span>前区命中 <strong style="color:#f59e0b">' + (hit.front == null ? 0 : hit.front) + "</strong></span>" +
+          '<span>后区命中 <strong style="color:#f59e0b">' + (hit.back == null ? 0 : hit.back) + "</strong></span>" +
+          '<span>总命中 <strong style="color:#f59e0b">' + (hit.total == null ? 0 : hit.total) + "</strong></span>" +
+          '<span style="display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;' +
+            'border:1px solid var(--accent,#6d28d9);color:var(--accent,#6d28d9);">' + esc(levelLabel) + "</span>" +
+        "</div>" +
+        (typeof ana.sum_diff === "number"
+          ? '<div style="margin-top:8px;font-size:13px;">和值偏差：<strong>' + ana.sum_diff +
+            "</strong>　距一等奖理论距离：" + (ana.distance_score == null ? "—" : ana.distance_score) + "</div>"
+          : "") +
+        fr +
+        '<div style="margin-top:10px;font-size:11px;color:var(--muted,#94a3b8);">' +
+          esc(review.disclaimer || "复盘仅为娱乐回顾，不代表预测中奖") + "</div>" +
+      "</div>";
+  }
+
+  // 策略历史表现小字（唯一推荐卡底部；数据缺失整行隐藏，不新增首页模块）
+  function renderStrategyHint(container, strategyScore, primaryStrategy) {
+    if (!container || !strategyScore || strategyScore.empty === true) return;
+    var list = Array.isArray(strategyScore.strategies) ? strategyScore.strategies : [];
+    var group = (primaryStrategy || "").split("-")[0];
+    var row = null;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] && list[i].strategy === group) { row = list[i]; break; }
+    }
+    if (!row) return;
+    var label = row.label || group;
+    container.innerHTML = "📈 策略历史表现：" + esc(label) +
+      " 当前排名第" + (row.rank == null ? "—" : row.rank) +
+      "（样本 " + (row.total_count == null ? 0 : row.total_count) + " 期）";
+  }
+
+  // 唯一推荐选择逻辑（兼容增强，不改变现有 D 结果）：
+  // final 字段 > is_primary 标记 > score 降序 > D 策略 fallback > 首条
   function selectPrimary(recs) {
     if (!recs || !recs.length) return null;
     var byFinal = recs.filter(function (r) { return r.final === true; })[0];
     if (byFinal) return byFinal;
+    var byPrimary = recs.filter(function (r) { return r.is_primary === true; })[0];
+    if (byPrimary) return byPrimary;
     var withScore = recs.filter(function (r) { return typeof r.score === "number"; });
     if (withScore.length) {
       withScore.sort(function (a, b) { return b.score - a.score; });
@@ -153,16 +268,15 @@
   }
 
   function renderPrimaryRecommendation(container, recs) {
-    if (!container) return;
+    if (!container) return null;
     var p = selectPrimary(recs);
-    if (!p) { container.innerHTML = ""; return; }
+    if (!p) { container.innerHTML = ""; return null; }
     var label = (p.strategy || "综合评分型").split("-").slice(1).join("-") || "综合评分型";
+    // 评分：0-100 量纲统一展示（score_total 为 0-100 综合分，非概率）
     var scoreHtml = (typeof p.score === "number")
-      ? '<span>AI 评分：<strong style="color:#fbbf24">' + p.score.toFixed(1) + "/10</strong></span>"
+      ? '<span title="评分为模型综合评价分（0-100），不代表中奖概率">AI 评分：<strong style="color:#fbbf24">' +
+        p.score.toFixed(1) + " / 100</strong></span>"
       : '<span style="opacity:.6">AI 评分：建设中</span>';
-    var reason = (p.reason && String(p.reason).length)
-      ? esc(p.reason)
-      : '<span style="opacity:.6">推荐理由：建设中（Phase 2 数据就绪后展示）</span>';
     container.innerHTML =
       '<div style="border:1px solid var(--accent, #6d28d9);border-radius:14px;padding:18px;' +
       'background:linear-gradient(135deg, rgba(109,40,217,.14), rgba(109,40,217,.04));">' +
@@ -176,9 +290,14 @@
         '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
           '<span style="color:#a78bfa;font-size:13px;min-width:36px;">后区</span>' + balls(p.back, "back") +
         '</div>' +
-        '<p style="margin:10px 0 0;font-size:13px;line-height:1.5;">💡 ' + reason + '</p>' +
-        '<p style="margin:10px 0 0;font-size:12px;color:#fbbf24;">⚠️ 基于历史统计的娱乐产物，非中奖预测</p>' +
+        '<div style="margin:10px 0 0;font-size:13px;line-height:1.5;">💡 <span id="reason-root">' +
+          renderReason(p.reason) + '</span></div>' +
+        '<p style="margin:8px 0 0;font-size:11px;opacity:.7;">评分说明：模型综合评分（0-100），不代表中奖概率</p>' +
+        '<p style="margin:6px 0 0;font-size:12px;color:#fbbf24;">⚠️ 基于历史统计的娱乐产物，非中奖预测</p>' +
+        '<div id="strategy-hint" style="margin-top:10px;padding-top:8px;border-top:1px dashed ' +
+          'rgba(109,40,217,.25);font-size:12px;color:#c4b5fd;"></div>' +
       '</div>';
+    return p;
   }
 
   /* ---------- 启动 ---------- */
@@ -196,10 +315,14 @@
 
   Promise.all([
     loadJSON("./data/dlt_history.json"),
-    loadJSON("./data/recommendations.json").catch(function () { return []; })
+    loadJSON("./data/recommendations.json").catch(function () { return []; }),
+    loadJSON("./data/review.json").catch(function () { return null; }),
+    loadJSON("./data/strategy_score.json").catch(function () { return null; })
   ]).then(function (res) {
     var history = res[0];
     var recs = res[1] || [];
+    var review = res[2];
+    var strategyScore = res[3];
     try {
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
@@ -231,9 +354,15 @@
     if (recs.length) {
       var recTargetEl = document.getElementById("rec-target");
       if (recTargetEl) recTargetEl.textContent = recs[0].target_issue || "—";
-      renderPrimaryRecommendation(document.getElementById("primary-recommendation"), recs);
+      var primary = renderPrimaryRecommendation(document.getElementById("primary-recommendation"), recs);
       renderRecommendations(document.getElementById("recommendations"), recs);
+      if (primary) {
+        renderStrategyHint(document.getElementById("strategy-hint"), strategyScore, primary.strategy);
+      }
     }
+
+    /* ③ 上期推荐复盘：review.json 动态渲染（缺失/empty → 降级占位） */
+    renderReview(document.getElementById("review-placeholder"), review);
 
     document.getElementById("content").hidden = false;
     } catch (e) {
