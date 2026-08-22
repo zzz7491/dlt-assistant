@@ -74,6 +74,30 @@
 
 ---
 
+## Phase 10 Recovery R3.2
+
+**类型**: fix
+
+**问题**:
+- 生产环境 `https://500wan.mootlsv.com/` 未同步最新 `index.html`（第 52 行错误提示仍显示 `final_recommendation.json`）
+
+**原因**:
+- GitHub Actions workflow `32547242570` 在"提交更新（数据与报告）"步骤 `git push` 被拒绝（非快进合并）
+- 导致后续"部署到 Cloudflare Pages"（`wrangler pages deploy`）从未执行
+- 生产环境停留在旧 commit，未包含 `a1e7e35` 修复
+
+**修复**:
+- 同步本地 HEAD 至 `bf4b7cb`，创建空提交 `36d9bfc` 触发部署
+- 通过 GitHub API 重新触发 workflow_dispatch `32574914238`（completed success）
+- `wrangler pages deploy` 成功执行，部署至 Cloudflare Pages
+
+**验证**:
+- ✅ 正式域名恢复：第 52 行显示 `data/recommendations.json`（非 `final_recommendation.json`）
+- ✅ 所有静态资源（index.html / app.js / recommendations.json / dlt_history.json）返回 200 OK
+- ✅ 标签 `production-stable-v1.0` 已更新至 `36d9bfc`（R4 冻结基线）
+
+---
+
 ### Task: Phase 10 Recovery R1 - 首页推荐恢复
 
 **类型**: fix

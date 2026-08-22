@@ -4,7 +4,7 @@
 
 **Phase**: Phase 10 - 数据降级与恢复机制  
 **Task**: Task #36-R.8 首页展示恢复与验收  
-**Status**: ✅ Phase 10 Recovery R2 完成
+**Status**: ✅ Phase 10 Recovery R4 生产稳定基线冻结完成
 
 ---
 
@@ -12,18 +12,35 @@
 
 | 项目 | 值 |
 |-----|-----|
-| **Git Commit** | `aec11db` |
-| **日期** | 2026-08-22 17:50 |
+| **Git Commit** | `36d9bfc` |
+| **日期** | 2026-08-22 13:09 |
 | **状态** | 🟢 生产可用 |
-| **描述** | revert: restore homepage to use recommendations.json array format |
+| **描述** | Phase 10 Recovery R3.2 首页生产稳定基线（含 index.html 错误提示修复 a1e7e35） |
 
 ---
 
-## 生产稳定基线 (Phase 10 Recovery R2)
+## 生产稳定基线 (Phase 10 Recovery R4 冻结)
 
-**确认时间**: 2026-08-22 18:10  
-**基线版本**: `production-stable-v1.0`  
+**确认时间**: 2026-08-22 21:15  
+**当前稳定基线**: `production-stable-v1.0`  
 **生产地址**: `https://500wan.mootlsv.com/`
+
+### 稳定基线记录
+
+| 项目 | 值 |
+|------|-----|
+| **Git Commit** | `36d9bfc`（含 `a1e7e35` 修复） |
+| **Cloudflare Deployment** | `32574914238`（大乐透 AI 娱乐分析，success） |
+| **URL** | https://500wan.mootlsv.com/ |
+| **标签说明** | Phase 10 Recovery R3.2 homepage production stable baseline |
+
+### 验证项目
+
+- ✅ **首页加载**：index.html 200，第 52 行显示 `data/recommendations.json`（非 final_recommendation.json）
+- ✅ **JS 加载**：`public/app.js` 200，application/javascript
+- ✅ **JSON 加载**：`data/recommendations.json` / `data/dlt_history.json` 均 200
+- ✅ **推荐数据显示**：4 策略 (A/B/C/D) 完整渲染
+- ✅ **Console 无错误**：R3.2 部署后生产验证通过
 
 ### 基线资源确认
 
@@ -55,8 +72,8 @@
 
 ### 回滚方案
 
-- **回滚命令**: `git reset --hard aec11db^`
-- **回滚标签**: `production-stable-v1.0`
+- **回滚命令**: `git reset --hard production-stable-v1.0`
+- **回滚标签**: `production-stable-v1.0`（指向 `36d9bfc`）
 - **部署方式**: GitHub Actions 自动部署
 - **验证地址**: `https://500wan.mootlsv.com/`
 
@@ -98,6 +115,39 @@
 - ✅ `app.js` + 历史数据正常
 - ✅ 无 JS 报错
 - ✅ 兼容性确认通过
+
+---
+
+### Phase 10 Recovery R3.2: 部署触发与生产环境验证
+
+**完成内容**:
+- ✅ 诊断 workflow `32547242570` 失败根因（Git push 被拒绝导致 `wrangler pages deploy` 未执行）
+- ✅ 同步本地 HEAD 至 `bf4b7cb`，创建空提交 `36d9bfc` 触发部署
+- ✅ 手动触发 workflow_dispatch `32574914238`（success）
+- ✅ `wrangler pages deploy` 成功执行（部署到 Cloudflare Pages）
+- ✅ 生产域名 `https://500wan.mootlsv.com/` 第 52 行恢复为 `recommendations.json`
+- ✅ 生成验收报告 `task10-recovery-r3.2-deployment.md`
+
+**验证结果**:
+- ✅ index.html 200 + 错误提示正确
+- ✅ app.js / recommendations.json / dlt_history.json 全部 200
+- ✅ 生产环境恢复正常
+
+---
+
+### Phase 10 Recovery R4: 生产稳定基线冻结
+
+**完成内容**:
+- ✅ Step 1 只读检查（AGENTS.md / TASK_STATUS.md / CHANGELOG.md + Git/Cloudflare/域名验证）
+- ✅ Step 2 建立稳定标签 `production-stable-v1.0` → `36d9bfc`（强制更新，含 R3.2 修复）
+- ✅ Step 3 完善 TASK_STATUS.md 稳定基线记录
+- ✅ Step 4 更新 CHANGELOG.md（Phase 10 Recovery R3.2 段）
+- ✅ Step 5 生成恢复报告 `reports/phase10-production-stable-v1.0.md`
+- ✅ Step 6 建立以后修改规则（7 步流程 + 禁止项）
+- ✅ Step 7 输出最终生产状态
+
+**基线版本**: `production-stable-v1.0` = `36d9bfc`
+**状态**: 🟢 已冻结，等待用户确认后才可进入下一阶段开发
 
 ---
 
@@ -160,5 +210,5 @@
 
 ---
 
-**最后更新**: 2026-08-22 18:09  
+**最后更新**: 2026-08-22 21:15  
 **维护人**: AI Assistant
