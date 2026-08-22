@@ -285,16 +285,48 @@
     return byD || recs[0];
   }
 
+  // 评分拆解（D3.3）：final_breakdown → 小字分量列表；无数据返回空串
+  var BD_LABELS = {
+    "base": "策略基础", "history": "历史表现", "recent": "近期表现",
+    "structure": "结构贴合", "risk": "风险调整"
+  };
+  var STAGE_LABELS = { "cold": "冷启动", "transition": "过渡期", "stable": "稳定期" };
+  function renderScoreBreakdown(b) {
+    if (!b || typeof b !== "object") return "";
+    var chips = ["base", "history", "recent", "structure", "risk"].map(function (k) {
+      if (typeof b[k] !== "number") return "";
+      return '<span style="display:inline-block;padding:1px 7px;border-radius:999px;font-size:11px;' +
+        'border:1px solid rgba(167,139,250,.35);color:#c4b5fd;">' + (BD_LABELS[k] || esc(k)) +
+        " " + b[k].toFixed(1) + "</span>";
+    }).filter(Boolean).join("");
+    var meta = [];
+    if (b.stage && STAGE_LABELS[b.stage]) meta.push("样本阶段：" + STAGE_LABELS[b.stage]);
+    if (b.effective_sample != null) meta.push("有效样本 " + b.effective_sample + " 期");
+    if (b.degraded) meta.push("样本不足降级");
+    if (b.locked_cold_start) meta.push("冷启动锁定综合评分型");
+    var metaHtml = meta.length
+      ? '<div style="margin-top:4px;font-size:11px;color:var(--muted,#94a3b8);">' +
+        meta.map(esc).join(" · ") + "</div>"
+      : "";
+    if (!chips && !metaHtml) return "";
+    return '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(109,40,217,.25);">' +
+      '<div style="font-size:11px;color:var(--muted,#94a3b8);margin-bottom:4px;">评分拆解（模型分量，非概率）</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:5px;">' + chips + "</div>" + metaHtml + "</div>";
+  }
+
   function renderPrimaryRecommendation(container, recs) {
     if (!container) return null;
     var p = selectPrimary(recs);
     if (!p) { container.innerHTML = ""; return null; }
     var label = (p.strategy || "综合评分型").split("-").slice(1).join("-") || "综合评分型";
-    // 评分：0-100 量纲统一展示（score_total 为 0-100 综合分，非概率）
-    var scoreHtml = (typeof p.score === "number")
-      ? '<span title="评分为模型综合评价分（0-100），不代表中奖概率">AI 评分：<strong style="color:#fbbf24">' +
-        p.score.toFixed(1) + " / 100</strong></span>"
-      : '<span style="opacity:.6">AI 评分：建设中</span>';
+    // 评分（D3.3）：优先 final_score（跨策略融合 0-100），旧 score 字段回退兼容；
+    // 两者皆缺 → 建设中。量纲统一展示，非概率。
+    var fs = (typeof p.final_score === "number") ? p.final_score
+           : (typeof p.score === "number") ? p.score : null;
+    var scoreHtml = (fs !== null)
+      ? '<span title="综合评分为模型评价指标，不代表中奖概率">AI 综合评分：<strong style="color:#fbbf24">' +
+        fs.toFixed(1) + " / 100</strong></span>"
+      : '<span style="opacity:.6">AI 综合评分：建设中</span>';
     container.innerHTML =
       '<div style="border:1px solid var(--accent, #6d28d9);border-radius:14px;padding:18px;' +
       'background:linear-gradient(135deg, rgba(109,40,217,.14), rgba(109,40,217,.04));">' +
@@ -310,7 +342,8 @@
         '</div>' +
         '<div style="margin:10px 0 0;font-size:13px;line-height:1.5;">💡 <span id="reason-root">' +
           renderReason(p.reason) + '</span></div>' +
-        '<p style="margin:8px 0 0;font-size:11px;opacity:.7;">评分说明：模型综合评分（0-100），不代表中奖概率</p>' +
+        renderScoreBreakdown(p.final_breakdown) +
+        '<p style="margin:8px 0 0;font-size:11px;opacity:.7;">综合评分为模型评价指标，不代表中奖概率</p>' +
         '<p style="margin:6px 0 0;font-size:12px;color:#fbbf24;">⚠️ 基于历史统计的娱乐产物，非中奖预测</p>' +
         '<div id="strategy-hint" style="margin-top:10px;padding-top:8px;border-top:1px dashed ' +
           'rgba(109,40,217,.25);font-size:12px;color:#c4b5fd;"></div>' +
