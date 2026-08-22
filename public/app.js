@@ -229,12 +229,14 @@
     })(0);
   }
 
-  Promise.all([
-    loadJSON("./data/dlt_history.json"),
-    loadJSON("./data/final_recommendation.json").catch(function () { return {}; })
-  ]).then(function (res) {
-    var history = res[0];
-    var finalRec = res[1] || {}
+  (async function loadData() {
+    var history = await loadJSON("./data/dlt_history.json");
+    var recs = await loadJSON("./data/recommendations.json").catch(function () {
+      return [];
+    });
+    var finalRec = await loadJSON("./data/final_recommendation.json").catch(function () {
+      return {};
+    });
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
 
