@@ -53,9 +53,9 @@
   </div>
 
   <main id="content" hidden>
-    <!-- ① 最新开奖结果（第一眼核心，由 app.js 读取 issues 最后一条渲染） -->
+    <!-- ① 最新开奖 -->
     <section class="card latest-result">
-      <h2>🎯 最新开奖结果</h2>
+      <h2>🎯 最新开奖</h2>
       <p class="latest-meta">最新一期：<strong id="latest-issue">—</strong> ｜ 开奖日期：<strong id="latest-date">—</strong></p>
       <div class="latest-balls">
         <span class="grp-label">前区</span>
@@ -63,22 +63,13 @@
         <span class="grp-label">后区</span>
         <div class="ball-row" id="latest-back"></div>
       </div>
+      <p class="latest-analysis" id="latest-analysis">—</p>
     </section>
 
-    <!-- ② 数据覆盖 -->
-    <section class="card cover-card">
-      <h2>📊 数据覆盖</h2>
-      <div class="cover-count"><span id="cover-count">—</span><span class="cover-unit">期</span></div>
-      <p class="cover-desc">基于真实历史开奖数据</p>
-      <p class="cover-range" id="cover-range">—</p>
-      <p class="cover-source" id="cover-source">数据来源：—</p>
-      <p class="subtitle" id="meta-line">加载中…</p>
-    </section>
-
-    <!-- ③ 本期唯一推荐 -->
+    <!-- ② AI 唯一推荐 -->
     <section class="card">
-      <h2>🔮 本期唯一推荐</h2>
-      <p class="hint">以下为基于真实历史开奖数据的<strong>综合评分型</strong>娱乐推荐（单一注），<strong>不等于中奖预测</strong>。预测期号：<span id="rec-target">—</span></p>
+      <h2>🔮 AI 唯一推荐</h2>
+      <p class="hint">以下为基于真实历史开奖数据的<strong>娱乐推荐</strong>，<strong>不等于中奖预测</strong>。预测期号：<span id="rec-target">—</span></p>
       <div id="primary-recommendation"></div>
       <details style="margin-top:16px;border-top:1px solid var(--accent-line, #e4d8fb);padding-top:12px">
         <summary style="cursor:pointer;font-weight:600;color:var(--accent, #6d28d9)">📂 查看全部策略（A/B/C/D）</summary>
@@ -86,99 +77,38 @@
       </details>
     </section>
 
-    <!-- ④ 数据统计（热号 / 冷号 / 走势） -->
+    <!-- ③ 上期推荐复盘（占位，Phase 2 复盘数据就绪后自动填充） -->
     <section class="card">
-      <h2>📈 数据统计</h2>
-
-      <div class="stats-sub">
-        <h3>热门号码排行</h3>
-        <div class="block">
-          <h4>前区 Top 10</h4>
-          <div class="rank-list" id="hot-front"></div>
-        </div>
-        <div class="block">
-          <h4>后区 Top 5</h4>
-          <div class="rank-list" id="hot-back"></div>
-        </div>
-      </div>
-
-      <div class="stats-sub">
-        <h3>冷号分析（当前遗漏较大）</h3>
-        <p class="hint">遗漏 = 该号码连续未开出的期数，数值越大越“冷”。</p>
-        <div class="block">
-          <h4>前区遗漏 Top 8</h4>
-          <div class="rank-list" id="cold-front"></div>
-        </div>
-        <div class="block">
-          <h4>后区遗漏 Top 4</h4>
-          <div class="rank-list" id="cold-back"></div>
-        </div>
-      </div>
-
-      <div class="stats-sub">
-        <h3>走势统计</h3>
-        <div class="block">
-          <h4>奇偶比例（前区）</h4>
-          <div class="bars" id="odd-even"></div>
-        </div>
-        <div class="block">
-          <h4>大小比例（前区，分界 18）</h4>
-          <div class="bars" id="big-small"></div>
-        </div>
-        <div class="block">
-          <h4>连号情况</h4>
-          <p id="consec" class="metric-line"></p>
-        </div>
+      <h2>📊 上期推荐复盘</h2>
+      <p class="hint">自动闭环：上期推荐 → 实际开奖 → 命中情况 → 错误分析 → 下一期调整方向。</p>
+      <div id="review-placeholder" style="border:1px dashed var(--accent, #6d28d9);border-radius:12px;padding:16px;text-align:center;color:var(--muted,#94a3b8)">
+        🚧 复盘功能建设中（待 Phase 2 复盘数据就绪后自动填充）
       </div>
     </section>
 
-    <!-- ⑤ 数据档案与复盘（历史报告区改造：去重复导航、简报动态化、模型档案） -->
+    <!-- ④ 深度分析入口 -->
     <section class="card">
-      <h2>📚 数据档案与复盘</h2>
-      <div class="archive-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
-        <div class="archive-block">
-          <h3>📄 每日复盘简报</h3>
-          <ul class="report-links">
-            <li id="archive-latest"><span style="color:var(--muted)">正在读取最新简报…</span></li>
-            <li><a href="./reports/validation_report.md">开奖验证报告</a></li>
-          </ul>
-        </div>
-        <div class="archive-block">
-          <h3>🧬 模型演进档案</h3>
-          <ul class="report-links">
-            <li>模型版本：<strong>C-2-D-v1</strong>（综合评分）</li>
-            <li id="archive-updated">数据更新时间：—</li>
-          </ul>
-        </div>
+      <h2>🔗 深度分析入口</h2>
+      <p class="hint">前往各分析页查看完整统计与多策略详情。</p>
+      <div class="entry-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:8px">
+        <a class="entry-card" href="./score.html" style="display:block;padding:16px;border:1px solid var(--accent-line,#e4d8fb);border-radius:12px;text-decoration:none;color:inherit">
+          <div style="font-size:22px">📊</div><div style="font-weight:600;margin-top:6px">数据分析</div><div style="font-size:12px;opacity:.7">历史统计 / 概率分析</div>
+        </a>
+        <a class="entry-card" href="./pick.html" style="display:block;padding:16px;border:1px solid var(--accent-line,#e4d8fb);border-radius:12px;text-decoration:none;color:inherit">
+          <div style="font-size:22px">🎯</div><div style="font-weight:600;margin-top:6px">智能选号</div><div style="font-size:12px;opacity:.7">候选号码 / 多策略</div>
+        </a>
+        <a class="entry-card" href="./trend-v2.html" style="display:block;padding:16px;border:1px solid var(--accent-line,#e4d8fb);border-radius:12px;text-decoration:none;color:inherit">
+          <div style="font-size:22px">📈</div><div style="font-weight:600;margin-top:6px">趋势分析</div><div style="font-size:12px;opacity:.7">热冷号 / 遗漏 / 走势</div>
+        </a>
       </div>
-      <p class="hint">报告由工作流自动生成（每日与开奖日）· 页面导航入口见上方菜单</p>
-    </section>
-
-    <!-- ⑥ 产品介绍（移至页尾，保留内容） -->
-    <section class="card section-intro">
-      <h2>产品介绍</h2>
-      <p>本助手基于 500 彩票网公开的历史开奖数据，做纯统计维度的娱乐分析，帮助彩民从频率视角观察大乐透，<strong>不提供任何中奖预测</strong>。</p>
-      <ul class="intro-list">
-        <li><strong>数据</strong>：每日由 GitHub Actions 自动抓取并统计（前区 1–35 / 后区 1–12）</li>
-        <li><strong>分析</strong>：热号冷号、奇偶大小、连号等统计指标</li>
-        <li><strong>推荐</strong>：本期智能推荐（综合评分模型），基于历史数据统计的娱乐产物，非预测</li>
-        <li><strong>展示</strong>：Cloudflare Pages 静态托管，全部代码开源可查</li>
-      </ul>
-      <p class="hint">所有结论均来自历史数据的频率统计，仅供娱乐参考。</p>
-    </section>
-
-    <!-- ⑦ 免责声明 -->
-    <section class="card disclaimer">
-      <h2>⚠️ 免责声明</h2>
-      <p>本项目仅用于<strong>历史数据分析和娱乐研究</strong>，<strong>不具备预测彩票结果能力</strong>。</p>
-      <p>彩票开奖为独立随机事件，任何历史统计均不构成未来依据。请理性购彩，量力而行，切勿沉迷。</p>
     </section>
 
     <footer class="site-footer">
-      <p><a href="./index.html" class="back-link">首页</a> ｜ 数据来源：500彩票网 ｜ 仅供娱乐，不构成任何购彩建议。</p>
+      <p>⚠️ 本项目仅用于历史数据娱乐分析，<strong>不具备预测彩票结果能力</strong>。数据来源：500彩票网 ｜ 仅供娱乐，不构成任何购彩建议。</p>
+      <p><a href="./index.html" class="back-link">首页</a></p>
     </footer>
   </main>
 
-  <script src="./app.js" defer></script>
+  <script src="./app.js?v=phase11-c1-final" defer></script>
 </body>
 </html>

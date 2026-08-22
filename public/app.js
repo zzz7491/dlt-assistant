@@ -107,36 +107,10 @@
     }).join("");
   }
 
-  function renderHot(container, items, kind) {
-    container.innerHTML = items.map(function (e) {
-      var num = e[0], cnt = e[1];
-      return '<span class="rank-item"><span class="num ' + kind + '">' +
-        pad2(num) + '</span><span class="cnt">出现 ' + cnt + " 次</span></span>";
-    }).join("");
-  }
+  /* 统计大屏渲染函数（renderHot/renderCold/renderBars）已随首页 V2 重构移除，
+     对应区块迁移至 数据分析 / 趋势分析 页，本文件仅保留首页决策入口所需渲染。 */
 
-  function renderCold(container, items, kind) {
-    container.innerHTML = items.map(function (e) {
-      var num = e[0], omit = e[1];
-      return '<span class="rank-item"><span class="num ' + kind + '">' +
-        pad2(num) + '</span><span class="omit">遗漏 ' + omit + " 期</span></span>";
-    }).join("");
-  }
 
-  function renderBars(container, dist) {
-    var entries = Object.keys(dist).map(function (k) {
-      return [k, dist[k]];
-    }).sort(function (a, b) {
-      return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0;
-    });
-    var max = Math.max.apply(null, entries.map(function (e) { return e[1]; }).concat([1]));
-    container.innerHTML = entries.map(function (e) {
-      var pct = Math.round((e[1] / max) * 100);
-      return '<div class="bar-row"><span class="bar-label">' + e[0] +
-        '</span><span class="bar-track"><span class="bar-fill" style="width:' +
-        pct + '%"></span></span><span class="bar-val">' + e[1] + " 期</span></div>";
-    }).join("");
-  }
 
   function renderRecommendations(container, recs) {
     var order = { "A": 1, "B": 2, "C": 3 };
@@ -158,24 +132,51 @@
     }).join("");
   }
 
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // 唯一推荐选择逻辑（不写死 D）：final 字段 > score 降序 > D 策略 fallback > 首条
+  function selectPrimary(recs) {
+    if (!recs || !recs.length) return null;
+    var byFinal = recs.filter(function (r) { return r.final === true; })[0];
+    if (byFinal) return byFinal;
+    var withScore = recs.filter(function (r) { return typeof r.score === "number"; });
+    if (withScore.length) {
+      withScore.sort(function (a, b) { return b.score - a.score; });
+      return withScore[0];
+    }
+    var byD = recs.filter(function (r) { return (r.strategy || "").split("-")[0] === "D"; })[0];
+    return byD || recs[0];
+  }
+
   function renderPrimaryRecommendation(container, recs) {
     if (!container) return;
-    // 唯一推荐来源：strategy 前缀为 D 的综合评分型；缺失时回退到第一条
-    var primary = recs.filter(function (r) {
-      return (r.strategy || "").split("-")[0] === "D";
-    })[0] || recs[0];
-    if (!primary) { container.innerHTML = ""; return; }
-    var label = (primary.strategy || "综合评分型").split("-").slice(1).join("-") || "综合评分型";
+    var p = selectPrimary(recs);
+    if (!p) { container.innerHTML = ""; return; }
+    var label = (p.strategy || "综合评分型").split("-").slice(1).join("-") || "综合评分型";
+    var scoreHtml = (typeof p.score === "number")
+      ? '<span>AI 评分：<strong style="color:#fbbf24">' + p.score.toFixed(1) + "/10</strong></span>"
+      : '<span style="opacity:.6">AI 评分：建设中</span>';
+    var reason = (p.reason && String(p.reason).length)
+      ? esc(p.reason)
+      : '<span style="opacity:.6">推荐理由：建设中（Phase 2 数据就绪后展示）</span>';
     container.innerHTML =
       '<div style="border:1px solid var(--accent, #6d28d9);border-radius:14px;padding:18px;' +
       'background:linear-gradient(135deg, rgba(109,40,217,.14), rgba(109,40,217,.04));">' +
-        '<div style="font-size:13px;color:#c4b5fd;letter-spacing:.5px;margin-bottom:10px;">' + label + ' · 唯一推荐</div>' +
-        '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
-          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">前区</span>' + balls(primary.front, "front") +
+        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;' +
+        'font-size:13px;color:#c4b5fd;letter-spacing:.5px;margin-bottom:10px;">' +
+          '<span>' + esc(label) + ' · 唯一推荐</span>' + scoreHtml +
         '</div>' +
         '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
-          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">后区</span>' + balls(primary.back, "back") +
+          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">前区</span>' + balls(p.front, "front") +
         '</div>' +
+        '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
+          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">后区</span>' + balls(p.back, "back") +
+        '</div>' +
+        '<p style="margin:10px 0 0;font-size:13px;line-height:1.5;">💡 ' + reason + '</p>' +
         '<p style="margin:10px 0 0;font-size:12px;color:#fbbf24;">⚠️ 基于历史统计的娱乐产物，非中奖预测</p>' +
       '</div>';
   }
@@ -188,68 +189,10 @@
     if (msg) document.getElementById("error-detail").textContent = msg;
   }
 
-  /* ---------- ⑤ 数据档案与复盘（历史报告区改造） ---------- */
+  /* 数据档案与复盘（initArchive/fmtUpdated/probeReport）已随首页 V2 重构移除，
+     该区块迁移至对应分析页；本期复盘模块以静态占位呈现，待 Phase 2 数据就绪后填充。 */
 
-  // 数据更新时间展示（ISO → 本地可读时间）
-  function fmtUpdated(iso) {
-    if (!iso) return "—";
-    var d = new Date(iso);
-    if (isNaN(d.getTime())) return iso;
-    return d.toLocaleString("zh-CN", { hour12: false });
-  }
 
-  // 探测指定日期的简报是否已发布（HEAD 请求，失败返回 null）
-  function probeReport(dateStr) {
-    var fname = "report_" + dateStr.replace(/-/g, "") + ".md";
-    var url = "./reports/" + fname;
-    return fetch(url, { method: "HEAD", cache: "no-cache" }).then(function (r) {
-      return r.ok ? url : null;
-    }).catch(function () { return null; });
-  }
-
-  // 从最新推荐日期向前回退最多 3 天，找到最近一份已发布简报并展示
-  function initArchive(history, recs) {
-    var updatedEl = document.getElementById("archive-updated");
-    if (updatedEl) {
-      updatedEl.innerHTML = "数据更新时间：<strong>" + fmtUpdated(history && history.updated_at) + "</strong>";
-    }
-    var latestEl = document.getElementById("archive-latest");
-    if (!latestEl) return;
-
-    // 基准日期：优先推荐记录生成日期，回退到历史数据更新时间
-    var base = "";
-    if (recs && recs.length && recs[0].date) {
-      base = recs[0].date;
-    } else if (history && history.updated_at) {
-      base = history.updated_at.slice(0, 10);
-    }
-    if (!base) { latestEl.innerHTML = '<span style="color:var(--muted)">暂无已发布简报</span>'; return; }
-
-    var d = new Date(base);
-    if (isNaN(d.getTime())) { latestEl.innerHTML = '<span style="color:var(--muted)">暂无已发布简报</span>'; return; }
-
-    var attempts = [];
-    for (var i = 0; i < 3; i++) {
-      var t = new Date(d);
-      t.setDate(t.getDate() - i);
-      attempts.push(String(t.getFullYear()) + "-" + pad2(t.getMonth() + 1) + "-" + pad2(t.getDate()));
-    }
-
-    (function probe(idx) {
-      if (idx >= attempts.length) {
-        latestEl.innerHTML = '<span style="color:var(--muted)">暂无已发布简报（生成中）</span>';
-        return;
-      }
-      var ds = attempts[idx];
-      probeReport(ds).then(function (url) {
-        if (url) {
-          latestEl.innerHTML = '<a href="' + url + '">每日复盘简报（' + ds + "）</a>";
-        } else {
-          probe(idx + 1);
-        }
-      });
-    })(0);
-  }
 
   Promise.all([
     loadJSON("./data/dlt_history.json"),
@@ -270,26 +213,20 @@
     document.getElementById("latest-front").innerHTML = balls(lastIssue.front, "front");
     document.getElementById("latest-back").innerHTML = balls(lastIssue.back, "back");
 
-    document.getElementById("cover-count").textContent = a.n;
-    document.getElementById("cover-range").textContent =
-      a.firstDate + " 至 " + a.lastDate;
-    var srcName = { "500": "500彩票网" }[history.source] || (history.source || "公开数据源");
-    document.getElementById("cover-source").textContent = "数据来源：" + srcName;
-
-    document.getElementById("meta-line").textContent =
-      "最近 " + a.n + " 期历史统计 · 数据范围 " + a.firstIssue + " ~ " + a.lastIssue +
-      "（截至 " + a.lastDate + "）" +
-      (recs[0] ? " · 预测期号 " + recs[0].target_issue + "（推荐生成 " + recs[0].date + "）" : "");
-
-    renderHot(document.getElementById("hot-front"), a.frontHot, "front");
-    renderHot(document.getElementById("hot-back"), a.backHot, "back");
-    renderCold(document.getElementById("cold-front"), a.frontCold, "front");
-    renderCold(document.getElementById("cold-back"), a.backCold, "back");
-    renderBars(document.getElementById("odd-even"), a.oddEven);
-    renderBars(document.getElementById("big-small"), a.bigSmall);
-    document.getElementById("consec").innerHTML =
-      "含连号的期占比 <strong>" + (a.consecProb * 100).toFixed(1) + "%</strong>" +
-      "，平均每期 <strong>" + a.consecAvg.toFixed(2) + "</strong> 对连号。";
+    // ① 最新开奖：简短结果分析
+    var fSorted = lastIssue.front.slice().sort(function (a, b) { return a - b; });
+    var oddCnt = fSorted.filter(function (x) { return x % 2 === 1; }).length;
+    var consecCnt = 0;
+    for (var ci = 0; ci < fSorted.length - 1; ci++) {
+      if (fSorted[ci + 1] - fSorted[ci] === 1) consecCnt++;
+    }
+    var laEl = document.getElementById("latest-analysis");
+    if (laEl) {
+      laEl.textContent = "前区奇偶比 " + oddCnt + ":" + (5 - oddCnt) +
+        "，后区 " + lastIssue.back.join("/") +
+        "；连号 " + (consecCnt > 0 ? "有 " + consecCnt + " 对" : "无") +
+        "。纯历史统计，不构成预测。";
+    }
 
     if (recs.length) {
       var recTargetEl = document.getElementById("rec-target");
@@ -297,9 +234,6 @@
       renderPrimaryRecommendation(document.getElementById("primary-recommendation"), recs);
       renderRecommendations(document.getElementById("recommendations"), recs);
     }
-
-    /* ⑤ 数据档案与复盘：动态化每日简报 + 模型档案 */
-    initArchive(history, recs);
 
     document.getElementById("content").hidden = false;
     } catch (e) {
