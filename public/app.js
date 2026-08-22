@@ -158,6 +158,28 @@
     }).join("");
   }
 
+  function renderPrimaryRecommendation(container, recs) {
+    if (!container) return;
+    // 唯一推荐来源：strategy 前缀为 D 的综合评分型；缺失时回退到第一条
+    var primary = recs.filter(function (r) {
+      return (r.strategy || "").split("-")[0] === "D";
+    })[0] || recs[0];
+    if (!primary) { container.innerHTML = ""; return; }
+    var label = (primary.strategy || "综合评分型").split("-").slice(1).join("-") || "综合评分型";
+    container.innerHTML =
+      '<div style="border:1px solid var(--accent, #6d28d9);border-radius:14px;padding:18px;' +
+      'background:linear-gradient(135deg, rgba(109,40,217,.14), rgba(109,40,217,.04));">' +
+        '<div style="font-size:13px;color:#c4b5fd;letter-spacing:.5px;margin-bottom:10px;">' + label + ' · 唯一推荐</div>' +
+        '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
+          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">前区</span>' + balls(primary.front, "front") +
+        '</div>' +
+        '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
+          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">后区</span>' + balls(primary.back, "back") +
+        '</div>' +
+        '<p style="margin:10px 0 0;font-size:12px;color:#fbbf24;">⚠️ 基于历史统计的娱乐产物，非中奖预测</p>' +
+      '</div>';
+  }
+
   /* ---------- 启动 ---------- */
   function showError(msg) {
     document.getElementById("content").hidden = true;
@@ -272,6 +294,7 @@
     if (recs.length) {
       var recTargetEl = document.getElementById("rec-target");
       if (recTargetEl) recTargetEl.textContent = recs[0].target_issue || "—";
+      renderPrimaryRecommendation(document.getElementById("primary-recommendation"), recs);
       renderRecommendations(document.getElementById("recommendations"), recs);
     }
 

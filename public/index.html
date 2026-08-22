@@ -75,11 +75,15 @@
       <p class="subtitle" id="meta-line">加载中…</p>
     </section>
 
-    <!-- ③ 下一期娱乐分析 -->
+    <!-- ③ 本期唯一推荐 -->
     <section class="card">
-      <h2>🔮 本期智能推荐</h2>
-      <p class="hint">以下为基于真实历史开奖数据的智能娱乐推荐，<strong>不等于中奖预测</strong>。预测期号：<span id="rec-target">—</span></p>
-      <div class="rec-grid" id="recommendations"></div>
+      <h2>🔮 本期唯一推荐</h2>
+      <p class="hint">以下为基于真实历史开奖数据的<strong>综合评分型</strong>娱乐推荐（单一注），<strong>不等于中奖预测</strong>。预测期号：<span id="rec-target">—</span></p>
+      <div id="primary-recommendation"></div>
+      <details style="margin-top:16px;border-top:1px solid var(--accent-line, #e4d8fb);padding-top:12px">
+        <summary style="cursor:pointer;font-weight:600;color:var(--accent, #6d28d9)">📂 查看全部策略（A/B/C/D）</summary>
+        <div class="rec-grid" id="recommendations" style="margin-top:12px"></div>
+      </details>
     </section>
 
     <!-- ④ 数据统计（热号 / 冷号 / 走势） -->
