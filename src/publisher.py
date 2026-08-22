@@ -278,6 +278,133 @@ def _write_json(path: str, data: Any) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def _strip_updated_at(x: Any) -> Any:
+    """递归剥离 dict 中的 updated_at 键（幂等比较用）。"""
+    if isinstance(x, dict):
+        return {k: _strip_updated_at(v) for k, v in x.items() if k != "updated_at"}
+    if isinstance(x, list):
+        return [_strip_updated_at(i) for i in x]
+    return x
+
+
+def _write_json_if_changed(path: str, data: Any) -> bool:
+    """幂等写入：内容（忽略 updated_at）未变时跳过写盘，避免时间戳噪声。
+
+    返回 True=实际写入，False=跳过。现有文件损坏/不可解析 → 视为需写入。
+    """
+    existing = _load_json(path)
+    if existing is not None and _strip_updated_at(existing) == _strip_updated_at(data):
+        return False
+    _write_json(path, data)
+    return True
+
+
+# ---------------------------------------------------------------- 融合评分接入（D3.2）
+
+def _load_final_score_config(config_path: str = "config/settings.yaml") -> dict[str, float] | None:
+    """读取 settings.yaml 的 final_score.weights 配置（方案 B：可选导入+回退）。
+
+    yaml 缺失 / 解析失败 / 段缺失 → 返回 None（调用方使用 final_score.DEFAULT_WEIGHTS）。
+    """
+    try:
+        import yaml  # 第三方可选依赖；CI 环境可用（scheduler 已依赖）
+    except Exception:
+        return None
+    if not config_path or not os.path.exists(config_path):
+        return None
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            cfg = yaml.safe_load(f)
+    except Exception:
+        return None
+    section = (cfg or {}).get("final_score") or {}
+    weights = section.get("weights")
+    if not isinstance(weights, dict) or not weights:
+        return None
+    return {k: float(v) for k, v in weights.items()
+            if isinstance(v, (int, float))}
+
+
+def _recent_map_from_reflection(reflection: Any, window: int = 5) -> dict[str, list[float]]:
+    """从 reflection_report.periods 推导各策略最近 N 次 total_hit 列表。
+
+    periods 条目：{issue, strategy, result:{total_hit,...}}（按时间升序）。
+    缺失/损坏 → 空 map（融合层自动中性化）。
+    """
+    out: dict[str, list[float]] = {}
+    if not isinstance(reflection, dict):
+        return out
+    for p in reflection.get("periods") or []:
+        if not isinstance(p, dict):
+            continue
+        g = _strategy_group(p.get("strategy"))
+        res = p.get("result") or {}
+        hit = res.get("total_hit") if isinstance(res, dict) else None
+        if isinstance(hit, (int, float)):
+            out.setdefault(g, []).append(float(hit))
+    return {g: hits[-window:] for g, hits in out.items() if hits}
+
+
+def _apply_final_scores(recs: list[dict[str, Any]],
+                        backtest: Any,
+                        strategy_score: Any,
+                        reflection: Any,
+                        review: Any,
+                        weights: dict[str, float] | None = None) -> list[dict[str, Any]]:
+    """将 final_score 融合结果回写到 recs（失败安全：任何异常 → 原样返回 recs）。
+
+    - effective_sample ← backtest.total_periods；
+    - history_map ← backtest.strategies[g].avg_total_hit（count>0）；
+    - recent_map ← reflection.periods 最近 5 次 total_hit；
+    - prev_draw ← review.actual_result（风险惩罚用）；
+    - structure_ctx 不传入（结构分中性 50，D3.2.0 已注明为后续增强）。
+    """
+    if not isinstance(recs, list) or not recs:
+        return recs
+    try:
+        from .final_score import compute_final_scores  # 惰性导入，不改 final_score.py
+
+        effective_sample = 0
+        history_map: dict[str, float] = {}
+        strategies = (backtest or {}).get("strategies")
+        if isinstance(strategies, dict):
+            for g, s in strategies.items():
+                if isinstance(s, dict) and s.get("count"):
+                    history_map[str(g)] = float(s.get("avg_total_hit") or 0.0)
+                    effective_sample = max(effective_sample, int(s.get("count") or 0))
+        tp = (backtest or {}).get("total_periods")
+        if isinstance(tp, int):
+            effective_sample = tp
+
+        rank_map: dict[str, int] = {}
+        rows = (strategy_score or {}).get("strategies")
+        if isinstance(rows, list):
+            for row in rows:
+                if isinstance(row, dict) and row.get("strategy") and isinstance(row.get("rank"), int):
+                    rank_map[str(row["strategy"])] = row["rank"]
+
+        actual = (review or {}).get("actual_result") or {}
+        prev_draw = {"front": actual.get("front"), "back": actual.get("back")} \
+            if isinstance(actual, dict) and actual.get("front") else None
+
+        scored = compute_final_scores(
+            recs,
+            effective_sample=effective_sample,
+            strategy_rank=rank_map,
+            history_map=history_map,
+            recent_map=_recent_map_from_reflection(reflection),
+            structure_ctx=None,
+            prev_draw=prev_draw,
+            weights=weights,
+        )
+        # compute_final_scores 失败安全会原样返回入参对象 → 用身份判断是否成功
+        if scored is not recs and isinstance(scored, list):
+            return scored
+        return recs
+    except Exception:
+        return recs
+
+
 # ---------------------------------------------------------------- 入口
 
 def publish(*, rec_path: str = "reports/recommendations.json",
@@ -301,18 +428,26 @@ def publish(*, rec_path: str = "reports/recommendations.json",
         latest = [r for r in source_recs if str(r.get("target_issue")) == latest_issue]
         recs = build_recommendations(latest, source_recs)
 
+    # D3.2 融合评分接入（回退路径之后、写盘之前）：final_score/final_breakdown/final_rank
+    # + is_primary 由融合结果重算；任何异常 → 原样返回（保留 D 硬编码兜底，行为与 D3.1 前一致）
+    recs = _apply_final_scores(recs, backtest, strategy_score, reflection, review,
+                               weights=_load_final_score_config())
+
     rec_out = os.path.join(out_dir, "recommendations.json")
     review_out = os.path.join(out_dir, "review.json")
     strategy_out = os.path.join(out_dir, "strategy_score.json")
-    _write_json(rec_out, recs)
-    _write_json(review_out, review)
-    _write_json(strategy_out, strategy_score)
+    changed = {
+        "recommendations": _write_json_if_changed(rec_out, recs),
+        "review": _write_json_if_changed(review_out, review),
+        "strategy_score": _write_json_if_changed(strategy_out, strategy_score),
+    }
 
     return {
         "updated_at": _now(),
-        "recommendations": {"file": rec_out, "count": len(recs)},
-        "review": {"file": review_out, "empty": bool(review.get("empty"))},
-        "strategy_score": {"file": strategy_out, "count": len(strategy_score.get("strategies", []))},
+        "recommendations": {"file": rec_out, "count": len(recs), "changed": changed["recommendations"]},
+        "review": {"file": review_out, "empty": bool(review.get("empty")), "changed": changed["review"]},
+        "strategy_score": {"file": strategy_out, "count": len(strategy_score.get("strategies", [])),
+                           "changed": changed["strategy_score"]},
     }
 
 

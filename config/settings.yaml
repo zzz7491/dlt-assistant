@@ -69,3 +69,14 @@ charts:
 validate:
   enabled: true                # 开奖验证（比对历史推荐 vs 真实开奖，仅统计娱乐命中）
   report_path: "reports/validation_report.md"
+
+final_score:                   # D3.2 跨策略融合评分（publisher 惰性读取；缺失时回退 src/final_score.py 默认值）
+  weights:                     # 五因子权重（risk 为直接叠加惩罚的占位键，不参与加权归一化）
+    base: 0.40
+    history: 0.20
+    recent: 0.15
+    structure: 0.20
+    risk: 0.05
+  min_sample: 5                # 历史/近期权重启用门槛（<5 冷启动，is_primary 锁定 D）
+  full_sample: 10              # 全权重门槛（5-10 过渡期衰减）
+  transition_decay: 0.5
