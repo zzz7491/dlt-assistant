@@ -235,6 +235,7 @@
   ]).then(function (res) {
     var history = res[0];
     var recs = res[1] || [];
+    try {
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
 
@@ -269,7 +270,8 @@
       "，平均每期 <strong>" + a.consecAvg.toFixed(2) + "</strong> 对连号。";
 
     if (recs.length) {
-      document.getElementById("rec-target").textContent = recs[0].target_issue || "—";
+      var recTargetEl = document.getElementById("rec-target");
+      if (recTargetEl) recTargetEl.textContent = recs[0].target_issue || "—";
       renderRecommendations(document.getElementById("recommendations"), recs);
     }
 
@@ -277,6 +279,9 @@
     initArchive(history, recs);
 
     document.getElementById("content").hidden = false;
+    } catch (e) {
+      showError(String(e && e.message ? e.message : e));
+    }
   }).catch(function (err) {
     showError(String(err && err.message ? err.message : err));
   });
