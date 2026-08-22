@@ -149,6 +149,25 @@
 **基线版本**: `production-stable-v1.0` = `36d9bfc`
 **状态**: 🟢 已冻结，等待用户确认后才可进入下一阶段开发
 
+### Phase 10 Recovery R5: 生产监控与自动验收基础建设
+
+**状态**: 🟡 进行中（监控基础已建，版本标识待用户确认实施）
+
+**完成内容**（本阶段仅建设监控/验证工具，禁止修改首页/算法/UI/数据结构）:
+- ✅ Step 1 只读检查（AGENTS/TASK_STATUS/CHANGELOG + Git/Cloudflare/域名验证）
+- ✅ Step 2 部署链路确认（GitHub→Actions→wrangler pages deploy→dlt-assistant→500wan.mootlsv.com）
+- ✅ Step 3 新增生产检查脚本 `scripts/check-production.sh`（首页/资源/内容/JS/JSON 校验，PASS/FAIL 退出码）
+- ✅ Step 4 版本标识方案设计 `docs/production-version-design.md`（推荐方案 B: version.json，待用户确认实施）
+- ✅ Step 5 新增回滚说明 `docs/ROLLBACK.md`
+- ✅ Step 6 更新工程记录（本段）
+- ✅ Step 7 Git 提交（chore: add production monitoring foundation）
+- ✅ Step 8 输出完成报告
+
+**禁止修改区域（本阶段硬性约束）**:
+- ❌ 首页业务逻辑 / 推荐算法 / 数据结构 / UI / 生产页面功能 / 一期一注
+
+**下一步**: 等待用户确认版本标识实施方案（方案 B 推荐）后，再决定是否实施 version.json
+
 ---
 
 ## 当前未完成任务

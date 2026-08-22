@@ -2,6 +2,29 @@
 
 ## 2026-08-22
 
+### Phase 10 Recovery R5 - 生产监控与自动验收基础建设
+
+**类型**: chore
+
+**新增**:
+- **文件**: `scripts/check-production.sh`
+- **内容**: 生产环境自动检查脚本（首页 HTTP 200 / 关键资源 200 / index.html 含平台标识且不含 final_recommendation / app.js 不含 final_recommendation / recommendations.json 可解析；输出 PASS/FAIL，退出码 0/1 便于 CI/定时任务接入）
+- **文件**: `docs/ROLLBACK.md`
+- **内容**: 如何回滚至 `production-stable-v1.0`（git tag/checkout + 重新部署 + 线上验证），明确红线
+- **文件**: `docs/production-version-design.md`
+- **内容**: 生产版本标识方案设计（方案 A meta / B version.json / C release.json，推荐 B）
+
+**验证**:
+- **脚本运行**: ✅ `bash scripts/check-production.sh` 输出 Result: PASS，正式域名全部资源 200
+- **设计**: 版本标识仅设计未实施（Step 4 要求等待用户确认）
+
+**影响范围**:
+- ✅ 仅新增监控/验证工具与文档，未修改首页/算法/UI/数据结构
+- ✅ 全部新增文件可回滚（纯新增，无既有文件被破坏）
+
+**风险**:
+- 低（只读检查 + 新增独立文件）
+
 ### Task: Phase 10 Recovery R2 - 生产稳定基线确认
 
 **类型**: refactor
