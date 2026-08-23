@@ -18,7 +18,25 @@
     "score": null,
     "reason": null,
     "is_primary": false,
-    "source": "reports/recommendations.json"
+    "source": "reports/recommendations.json",
+    "final_score": 57.23,
+    "final_breakdown": {
+      "base": 68.0,
+      "history": 23.81,
+      "recent": 23.81,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.6154,
+        "history": 0.0,
+        "recent": 0.0,
+        "structure": 0.3077
+      },
+      "degraded": true,
+      "stage": "cold",
+      "effective_sample": 3
+    },
+    "final_rank": 1
   },
   {
     "date": "2026-08-22",
@@ -39,7 +57,25 @@
     "score": null,
     "reason": null,
     "is_primary": false,
-    "source": "reports/recommendations.json"
+    "source": "reports/recommendations.json",
+    "final_score": 49.85,
+    "final_breakdown": {
+      "base": 56.0,
+      "history": 4.76,
+      "recent": 4.76,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.6154,
+        "history": 0.0,
+        "recent": 0.0,
+        "structure": 0.3077
+      },
+      "degraded": true,
+      "stage": "cold",
+      "effective_sample": 3
+    },
+    "final_rank": 4
   },
   {
     "date": "2026-08-22",
@@ -60,7 +96,25 @@
     "score": null,
     "reason": null,
     "is_primary": false,
-    "source": "reports/recommendations.json"
+    "source": "reports/recommendations.json",
+    "final_score": 52.31,
+    "final_breakdown": {
+      "base": 60.0,
+      "history": 9.53,
+      "recent": 9.52,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.6154,
+        "history": 0.0,
+        "recent": 0.0,
+        "structure": 0.3077
+      },
+      "degraded": true,
+      "stage": "cold",
+      "effective_sample": 3
+    },
+    "final_rank": 3
   },
   {
     "date": "2026-08-22",
@@ -81,6 +135,25 @@
     "score": 41.67,
     "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
     "is_primary": true,
-    "source": "reports/recommendations.json"
+    "source": "reports/recommendations.json",
+    "final_score": 54.77,
+    "final_breakdown": {
+      "base": 64.0,
+      "history": 14.29,
+      "recent": 14.29,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.6154,
+        "history": 0.0,
+        "recent": 0.0,
+        "structure": 0.3077
+      },
+      "degraded": true,
+      "stage": "cold",
+      "effective_sample": 3,
+      "locked_cold_start": true
+    },
+    "final_rank": 2
   }
 ]
