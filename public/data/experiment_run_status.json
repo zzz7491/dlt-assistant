@@ -1,0 +1,31 @@
+{
+  "status": "unavailable",
+  "generated_at": "2026-08-28 09:13:10",
+  "source": "/home/runner/work/dlt-assistant/dlt-assistant/data/experiment_runs.sqlite",
+  "monitor_note": "运行记录库尚未生成（experiment_scheduler 未运行过）。实验自动化尚未产生运行数据，属正常初始状态。",
+  "overall_status": "UNKNOWN",
+  "total_runs": 0,
+  "last_run_time": null,
+  "modes": {
+    "daily": {
+      "last_status": null,
+      "last_run": null,
+      "total": 0
+    },
+    "weekly": {
+      "last_status": null,
+      "last_run": null,
+      "total": 0
+    },
+    "manual": {
+      "last_status": null,
+      "last_run": null,
+      "total": 0
+    }
+  },
+  "task_stats": {},
+  "last_failed_task": null,
+  "last_error": null,
+  "coverage_periods": null,
+  "fatal_error": null
+}

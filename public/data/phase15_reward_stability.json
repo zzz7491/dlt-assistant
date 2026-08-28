@@ -1,52 +1,7 @@
 {
-  "generated_at": "2026-08-28 08:58:48",
-  "data_source": "data/experiments.sqlite",
-  "window": 50,
-  "models": {
-    "adaptive": {
-      "n_periods": 900,
-      "total_cost": 9000.0,
-      "total_prize": 398.0,
-      "roi_total": -95.58,
-      "max_drawdown": -8602.0,
-      "longest_consecutive_miss": 706,
-      "avg_win_gap": 63.5,
-      "rolling_roi_std": 5.627,
-      "rolling_winrate_std": 0.01
-    },
-    "random": {
-      "n_periods": 900,
-      "total_cost": 9000.0,
-      "total_prize": 104.0,
-      "roi_total": -98.84,
-      "max_drawdown": -8896.0,
-      "longest_consecutive_miss": 410,
-      "avg_win_gap": 411.0,
-      "rolling_roi_std": 0.891,
-      "rolling_winrate_std": 0.006
-    },
-    "v1": {
-      "n_periods": 900,
-      "total_cost": 9000.0,
-      "total_prize": 2225.0,
-      "roi_total": -75.28,
-      "max_drawdown": -6775.0,
-      "longest_consecutive_miss": 268,
-      "avg_win_gap": 145.67,
-      "rolling_roi_std": 14.875,
-      "rolling_winrate_std": 0.011
-    },
-    "v2": {
-      "n_periods": 900,
-      "total_cost": 9000.0,
-      "total_prize": 2277.0,
-      "roi_total": -74.7,
-      "max_drawdown": -7013.0,
-      "longest_consecutive_miss": 432,
-      "avg_win_gap": 99.25,
-      "rolling_roi_std": 9.647,
-      "rolling_winrate_std": 0.011
-    }
-  },
-  "note": "已剔除每期累计收益序列（cumulative_profit_series）以减小体积；完整序列见 reports/reward_stability_report.json。娱乐分析，非预测。"
+  "status": "unavailable",
+  "reason": "source report missing",
+  "missing": "reward_stability_report.json",
+  "generated_at": "2026-08-28 09:13:10",
+  "note": "该展示数据当前不可用（源报告缺失）。娱乐分析，非预测。"
 }

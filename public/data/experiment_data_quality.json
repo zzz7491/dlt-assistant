@@ -1,0 +1,100 @@
+{
+  "status": "degraded",
+  "generated_at": "2026-08-28 09:13:10",
+  "source": "/home/runner/work/dlt-assistant/dlt-assistant/data/dlt_history.json",
+  "fatal_error": null,
+  "notes": [
+    "期号缺口需人工确认：大乐透存在春节加开期（特殊编号期），相邻期号差 > 1 不必然表示数据缺失，此处仅作完整性提醒，不代表采集失败。"
+  ],
+  "issues_count": 1000,
+  "latest_issue": 26097,
+  "empty": false,
+  "monotonic": true,
+  "duplicates": [],
+  "gaps": [
+    {
+      "prev": 19150,
+      "next": 20001,
+      "diff": 851
+    },
+    {
+      "prev": 20134,
+      "next": 21001,
+      "diff": 867
+    },
+    {
+      "prev": 21150,
+      "next": 22001,
+      "diff": 851
+    },
+    {
+      "prev": 22150,
+      "next": 23001,
+      "diff": 851
+    },
+    {
+      "prev": 23150,
+      "next": 24001,
+      "diff": 851
+    },
+    {
+      "prev": 24152,
+      "next": 25001,
+      "diff": 849
+    },
+    {
+      "prev": 25150,
+      "next": 26001,
+      "diff": 851
+    }
+  ],
+  "missing_fields": [],
+  "field_anomalies": [],
+  "checks": [
+    {
+      "name": "json_parse",
+      "status": "ok",
+      "detail": "ok"
+    },
+    {
+      "name": "structure",
+      "status": "ok",
+      "detail": "ok"
+    },
+    {
+      "name": "issue_present",
+      "status": "ok",
+      "detail": "ok"
+    },
+    {
+      "name": "duplicate",
+      "status": "ok",
+      "detail": "ok"
+    },
+    {
+      "name": "monotonic",
+      "status": "ok",
+      "detail": "ok"
+    },
+    {
+      "name": "gap",
+      "status": "fail",
+      "detail": "fail"
+    },
+    {
+      "name": "field",
+      "status": "ok",
+      "detail": "ok"
+    },
+    {
+      "name": "empty",
+      "status": "ok",
+      "detail": "ok"
+    },
+    {
+      "name": "latest_issue",
+      "status": "ok",
+      "detail": "ok"
+    }
+  ]
+}
