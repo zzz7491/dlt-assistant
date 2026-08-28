@@ -281,6 +281,30 @@
 
 ---
 
+### Phase 16 Step 5: 实验数据自动更新流水线（实验层 · 非生产 · 已完成）
+
+**目标**: 在「绝不修改生产逻辑 / 绝不修改生产推荐 / 生产冻结」前提下，让实验系统随每日开奖**自动运行 + 自动更新 + 增量计算 + 失败隔离 + 结果展示**。
+
+**完成内容**:
+- ✅ Step 1 只读检查（18 文件）：生产入口清晰隔离；实验层 0% 自动化；`experiments.sqlite` 已幂等（可复用，不改 `experiment_store`）；`build_experiment_display_data.py` 缺失容忍改造；`dlt-analysis.yml` 提交范围已覆盖实验数据（注入步骤 + 守卫，不冲突既有流程）。
+- ✅ Step 2 三层自动化设计：daily（开奖后增量追加）/ weekly（walk-forward 重回放，数十分钟）/ manual（仅 `RECOMMENDATION_FOR_REVIEW.json`）。
+- ✅ Step 3 新增 `src/experiment_scheduler.py`：`--daily/--weekly/--manual`；`last_processed_issue` 增量位点；每任务 `try/except` 失败隔离；运行记录 `data/experiment_runs.sqlite`（与实验数据分离）。
+- ✅ Step 4 增量机制：`last_processed_issue` + `experiment_store` 幂等（`INSERT OR IGNORE` + 评估跳过已评估行）；覆盖 NO_NEW_DATA / issue 缺失 / 重复 / 倒退（不向后推进标记，已修复 meta 更新条件）/ 数据损坏 / recommendations 缺失 / SQLite 锁 / 模型缺失 / random 缺失 —— 均不影响生产。
+- ✅ Step 5 `scripts/build_experiment_display_data.py` 容错改造：源报告缺失 → 写 `status=unavailable`；单文件异常隔离。
+- ✅ Step 6 CI 注入 `dlt-analysis.yml`：日实验步骤 + 生产冻结 SHA 守卫（前/后快照 diff，不一致即 `exit 1` 阻断提交）；新增周日 `0 4 * * 0` cron + `workflow_dispatch` 输入 + `weekly-experiment` 作业（超时 90 分钟）。关键修正：`run_pipeline` 的 `generate_structure_profile` 默认落临时 scratch（非 canonical），故守卫对 `structure_profile.json` 不误触发。
+- ✅ Step 7 失败隔离状态机：SUCCESS / PARTIAL_SUCCESS / NO_NEW_DATA / FAILED（BLOCKED_PRODUCTION_CHANGE 由 CI 守卫判定）。退出码：PARTIAL 仍 0，仅 FAILED 为 1，避免单实验失败阻断生产提交。
+- ✅ Step 8 测试 `tests/test_phase16_step5.py` **14 passed**（增量 / 幂等 / 失败隔离 / 守卫 / 周任务 / 手动审阅-only 等）。
+- ✅ Step 9 性能：daily 分钟级（不重放历史）；weekly ~65 分钟（独立作业 90 分钟超时）。
+- ✅ Step 10 生产隔离复核：4 生产文件 mtime 与 Step 4 基线完全一致；`data/structure_profile.json` SHA256 `ef678954…` 一致；`data/recommendations.json` 仍 ABSENT。
+- ✅ Step 11 完整 `pytest tests/` **322 passed / 1 failed**：唯一失败为历史既有 `test_phase14_step3.py::test_load_data`（硬编码期号，与本次无关），**无新增回归**。
+- ✅ Step 12 最终验证通过。
+- ✅ Step 13 报告 `reports/Phase16-Step5-Report.md`（12 节）。
+- ✅ Step 14 Git 提交（仅实验层文件，不触碰既有未提交生产修改、不 push）。
+
+**纪律**: 未改 scorer/recommender/scheduler/publisher；未改 `data/recommendations.json` 生成规则；未写 `config/adaptive_weights.yaml`；未把实验结果包装成预测/收益证据；全部为增量/加法，未删除既有函数。
+
+---
+
 ## 当前未完成任务
 
 ### Phase 9-D: 统一推荐输出层设计
