@@ -213,6 +213,9 @@ def main():
                      transform=_trim_entertainment)
     build_if_present("phase16_step3_validation.json", "phase16_step3_validation.json",
                      transform=_build_step3_validation)
+    # Phase 16 Step 6：运行状态监控 + 数据质量护栏（新增，失败隔离）
+    build_if_present("experiment_run_status.json", "experiment_run_status.json")
+    build_if_present("experiment_data_quality.json", "experiment_data_quality.json")
     print("完成。所有文件均从 reports/*.json 派生，缺失源将标记为 unavailable，"
           "未修改生产推荐链路。")
 

@@ -305,6 +305,35 @@
 
 ---
 
+### Phase 16 Step 6: 实验运行状态监控 + 数据质量护栏（实验层 · 非生产 · 已完成）
+
+**目标**: 在零改生产/零改既有实验算法前提下，补齐两类可观测性缺口——「实验是否真的自动运行了」「实验使用的数据是否可靠」。
+
+**完成内容**:
+- ✅ Step 1 只读检查：生产冻结基线门通过（`structure_profile.json` SHA `ef678954…` 逐字节一致）；`experiment_runs.sqlite` 当时 ABSENT（运行监控数据从未产生）。
+- ✅ Step 2 目标：L 运行状态监控 + M 数据质量监控（均属允许范围，ADD-ONLY）。
+- ✅ Step 3 设计：monitor 只读 `experiment_runs.sqlite`、data_quality 只读 `data/dlt_history.json`；仅写 `reports/experiment_*.json` + `public/data/experiment_*.json`；不 import/调用任何生产模块。
+- ✅ Step 4 实现：
+  - 新增 `src/experiment_monitor.py`：聚合 run_log+meta → `reports/experiment_run_status.json`；处理库不存在/空/损坏(DatabaseError)/意外 → `unavailable/error` 结构化降级，绝不崩溃。
+  - 新增 `src/experiment_data_quality.py`：9 项检查 → `reports/experiment_data_quality.json`；`ok/degraded/error`；年界缺口如实标注「需人工确认」，不臆断缺失。
+  - `scripts/build_experiment_display_data.py` ADD-ONLY 新增两步（run_status / data_quality），沿用 existing `unavailable` 容错。
+  - `experiment.html` 新增 `#sec-health`；`experiment.js` 新增 `renderHealth()` + `loadHealth()`（非阻断，失败仅本区块 unavailable）。
+  - `dlt-analysis.yml` 在 analyze / weekly-experiment 两作业新增「data_quality 前置(非阻断) → 实验任务 → monitor 后置(非阻断) → build 刷新(非阻断)」，生产冻结 SHA 守卫保持最高优先级、未削弱。
+- ✅ Step 5 自动化：Daily/Weekly 链路注入完成；monitor/data_quality/build 均 `|| echo` 非阻断。
+- ✅ Step 6 生产保护：monitor/main、data_quality/main 经测试验证不修改 7 个生产冻结文件（含 `dlt_history.json` 本身只读）。
+- ✅ Step 7 测试 `tests/test_phase16_step6.py` **15 passed**（monitor 6 + data_quality 7 + 生产隔离 2）。
+- ✅ Step 8 生产隔离复核：`PRODUCTION_ISOLATION = PASS`——7 个生产文件 mtime/SHA 与 STEP 1 baseline 逐字节一致；`structure_profile.json` 全量 SHA 匹配；`experiment_scheduler.py`/`experiment_store.py` 对 HEAD 无 diff。
+- ✅ Step 9 报告 `reports/Phase16-Step6-Report.md`（13 节，含 FACT/EXPERIMENT/INTERPRETATION/LIMITATION）。
+- ✅ Step 10 Git 提交（仅实验层文件，不触碰既有未提交生产修改、不 push）。
+
+**测试结论**: 完整 pytest **337 passed / 1 failed**；唯一失败为历史既有 `test_phase14_step3.py::test_load_data`（硬编码期号 19132 vs 当前 19134），**PRE_EXISTING_FAILURE，无 NEW_REGRESSION**。
+
+**已知问题**: `experiment_runs.sqlite` 仍 ABSENT（调度器尚未实际跑过）→ monitor 返回 unavailable（正常初始态）；真实 `dlt_history.json` 1000 期触发 degraded（年界大跳 19150→20001 等，已附注需人工确认，非采集故障）。
+
+**纪律**: 未改 scorer/recommender/scheduler/publisher；未改 `adaptive_weights.yaml`；未改 `structure_profile.json`；未改 `experiment_store` 算法/结构；未改 `experiment_scheduler` daily/weekly/manual 行为；未把监控/质量结论接入生产推荐。
+
+---
+
 ## 当前未完成任务
 
 ### Phase 9-D: 统一推荐输出层设计

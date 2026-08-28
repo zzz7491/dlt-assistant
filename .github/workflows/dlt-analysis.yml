@@ -202,6 +202,20 @@ jobs:
         # 生产推荐冻结：绝不修改 recommendations.json / 评分权重 / 生产源码。
         run: python -m src.experiment_scheduler --daily
 
+      - name: 实验层-数据质量护栏（前置检查，非阻断）
+        # Phase 16 Step 6：校验实验输入数据 data/dlt_history.json 完整性（重复/缺口/非单调/字段异常）。
+        # 失败隔离：仅输出 reports/experiment_data_quality.json（degraded/error），绝不阻断生产提交。
+        run: python -m src.experiment_data_quality || echo "data_quality 检查失败（已隔离，不阻断生产）"
+
+      - name: 实验层-运行状态监控（后置汇总，非阻断）
+        # Phase 16 Step 6：聚合 experiment_runs.sqlite 运行记录 → reports/experiment_run_status.json。
+        # 失败隔离：异常时写 error 状态，绝不阻断生产提交。
+        run: python -m src.experiment_monitor || echo "experiment_monitor 失败（已隔离，不阻断生产）"
+
+      - name: 实验层-刷新展示数据（含监控/质量，非阻断）
+        # 将本运行新生成的 monitor / data_quality 报告复制到 public/data 供前端展示。
+        run: python -m scripts.build_experiment_display_data || echo "build 展示数据失败（已隔离，不阻断生产）"
+
       - name: 实验层-生产文件校验(后)
         # STOP 守卫：若实验流程意外修改了生产冻结文件（含 structure_profile.json），
         # 立即失败并阻断后续提交，保护生产不被污染。
@@ -279,6 +293,10 @@ jobs:
       - name: 运行生产分析（刷新历史，不修改生产推荐）
         run: python -m src.scheduler --once
 
+      - name: 实验层-数据质量护栏（前置检查，非阻断）
+        # Phase 16 Step 6：校验实验输入数据完整性；失败仅输出 degraded/error 报告，不阻断。
+        run: python -m src.experiment_data_quality || echo "data_quality 检查失败（已隔离，不阻断）"
+
       - name: 实验层-生产文件快照(前)
         run: |
           guard_hash() {
@@ -291,6 +309,13 @@ jobs:
 
       - name: 实验层-周度重度更新
         run: python -m src.experiment_scheduler --weekly
+
+      - name: 实验层-运行状态监控（后置汇总，非阻断）
+        # Phase 16 Step 6：聚合本周运行记录；失败仅写 error 状态，不阻断。
+        run: python -m src.experiment_monitor || echo "experiment_monitor 失败（已隔离，不阻断）"
+
+      - name: 实验层-刷新展示数据（含监控/质量，非阻断）
+        run: python -m scripts.build_experiment_display_data || echo "build 展示数据失败（已隔离，不阻断）"
 
       - name: 实验层-生产文件校验(后)
         run: |
