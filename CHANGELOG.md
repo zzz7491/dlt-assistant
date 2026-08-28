@@ -1,5 +1,32 @@
 # 更新记录
 
+## 2026-08-28
+
+### Phase 16 Step 7 - 实验调度器 CI 失败隔离加固 (P1)
+
+**类型**: fix
+
+**问题**:
+- STEP 1 只读检查发现：`.github/workflows/dlt-analysis.yml` 中 `experiment_scheduler --daily`(原 203 行) 与 `--weekly`(原 311 行) 两步骤缺少 `|| echo` 失败隔离，而同 job 的 data_quality/monitor/build 步骤均有。CI 默认 `set -e`，调度器一旦非零退出会中止后续生产 commit/deploy，违反"实验失败不阻断生产"原则。
+
+**修复**:
+- analyze 作业 `--daily` 步骤末尾追加 `|| echo "experiment scheduler 失败（已隔离，不阻断生产）"`
+- weekly-experiment 作业 `--weekly` 步骤末尾追加 `|| echo "experiment scheduler 失败（已隔离，不阻断生产）"`
+- 与 data_quality/monitor/build 步骤失败隔离策略一致
+
+**验证**:
+- ✅ `python -m yaml` 解析 yml 语法通过
+- ✅ `data/structure_profile.json` SHA256 仍为 `ef678954…`（生产冻结文件未触碰）
+- ✅ `git show --stat` 确认仅 `.github/workflows/dlt-analysis.yml`（+4/-2）入提交
+
+**影响范围**:
+- ✅ 仅 CI 配置，零改实验/生产逻辑；调度器行为未变（仅非零退出不再阻断生产）
+
+**风险**:
+- 低（ADD-ONLY 追加失败隔离，与既有步骤一致）
+
+**部署**: 待推送后由 GitHub Actions 自动生效（本地已 commit `7b3876f`，未 push 以免带入工作区 pre-existing 改动 / 覆盖远程每日提交）
+
 ## 2026-08-22
 
 ### Phase 10 Recovery R5 - 生产监控与自动验收基础建设

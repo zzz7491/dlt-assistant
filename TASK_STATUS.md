@@ -334,6 +334,25 @@
 
 ---
 
+### Phase 16 Step 7: 实验调度器 CI 失败隔离加固 (P1 · 实验层 · 非生产 · 已完成)
+
+**目标**: 修复 STEP 1 只读检查发现的 P1 缺口——`experiment_scheduler --daily/--weekly` 两 CI 步骤缺 `|| echo` 失败隔离；CI 默认 `set -e`，调度器一旦非零退出会中止后续生产 commit/deploy，违反"实验失败不阻断生产"原则。
+
+**完成内容**:
+- ✅ Step 1 只读检查：确认 P1（analyze 作业 203 行 / weekly-experiment 作业 311 行缺 `|| echo`）；同 job 内 data_quality/monitor/build 步骤均有隔离。
+- ✅ 实施（ADD-ONLY）：两步骤末尾追加 `|| echo "experiment scheduler 失败（已隔离，不阻断生产）"`，与既有 data_quality/monitor/build 隔离策略一致。
+- ✅ 本地验证：`yaml.safe_load` 语法通过；`data/structure_profile.json` SHA256 `ef678954…` 逐字节未变；`git show --stat` 确认仅 `.github/workflows/dlt-analysis.yml`（+4/-2）。
+- ✅ Git 提交（仅 yml，不 push）：`7b3876f`（fix: Phase16 P1 实验调度器步骤加失败隔离）。
+- ✅ 生产隔离：零改实验/生产逻辑；调度器 `--daily/--weekly/manual` 行为未变。
+
+**已知缺口（P2，可选，本轮未做）**: 开奖日/周日多 cron 并发竞争 SQLite 与 git push；未来可加 `concurrency:` 组缓解，本轮未实施（避免影响既有 job 并发行为，且需用户确认）。
+
+**部署状态**: 本地已提交，待推送后由 GitHub Actions 自动生效（当前工作区有 pre-existing 未提交改动 + 本地落后远程 `aff2d9c`，未擅自 push 以免带入脏数据 / 覆盖 CI 每日提交）。
+
+**纪律**: 未改 scorer/recommender/scheduler/publisher；未改 `experiment_scheduler` 行为；未改 `structure_profile.json`；仅改 CI 配置文件。
+
+---
+
 ## 当前未完成任务
 
 ### Phase 9-D: 统一推荐输出层设计
