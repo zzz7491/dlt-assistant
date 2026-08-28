@@ -221,6 +221,66 @@
 
 ---
 
+---
+
+### Phase 16 Step 2: 娱乐约束优化实验层（实验层 · 非生产）
+
+**状态**: ✅ 已完成（仅实验层，生产链路未改动）
+
+**完成内容**:
+- ✅ Step 1 只读检查：确认 `select_top_n`（`topn_selector.py:81`）按 `total_score` 重排为约束注入点；候选池来自 `generate_candidates`，结构画像写临时文件避免污染 canonical。
+- ✅ Step 2 新增 `src/entertainment_constrained_runner.py`：walk-forward 回放，每期共享候选池，四种策略（baseline / coverage_boost / diversity_boost / miss_streak_breaker）+ random 锚点。
+- ✅ Step 3 测试 + 实跑 + 生产隔离确认：
+  - `tests/test_phase16_step2.py` 3 passed；完整套件 293 passed / 1 既有失败（与本次无关）。
+  - 回放 200 期：三种变体 UX 均高于 baseline 且小奖频率未降（coverage_boost ΔUX+0.1485 / diversity_boost +0.0663 / breaker +0.0389，全部通过）。
+  - 生产 4 文件 mtime 未变；`data/structure_profile.json` 未被污染。
+  - 产物：`reports/entertainment_constrained.json` + `reports/Phase16-Step2-Report.md`。
+
+**诚实结论**: 提升来自结构约束（更广覆盖 → 更多接近中奖），非预测能力；coverage_boost 小奖频率增益需全量+多种子复核后才考虑作为实验展示策略。
+
+**下一步**: 待用户确认是否复核或接入 `experiment.html`（不替换生产推荐）。
+
+---
+
+### Phase 16 Step 3: 娱乐约束优化长期稳定性验证（实验层 · 非生产 · 已完成）
+
+**目标**: 验证 coverage_boost 在 **多窗口（200/500/900 期，取最近 N 期 tail=True）× 多种子（1/42/123/999）** 下是否稳定「不降低小奖频率」且「提升多样性/覆盖率/UX」。
+
+**完成内容**:
+- ✅ 全量验证完成（12 组合）：`reports/phase16_step3_validation.json`。
+- ✅ 稳定性结论：**coverage_boost 不稳定**（pass_rate=0.5<0.75，小奖频率不降率=0.5<0.917，平均 ΔUX=-0.0924）→ 不接入 `experiment.html`。差异大概率仅为随机噪声。
+- ✅ 隔离收尾（用户追加）：发现并修复 `structure_profile.json` 污染。
+  - 根因：`generate_structure_profile` 默认 `output_path=canonical`；`tests/test_structure_profile.py`（MIN_ISSUES=10）与多个实验模块缺 `output_path` 直接命中默认。Step2 仅在 runner 内改 temp，是「点」不是「面」。
+  - 修复：默认改 `SCRATCH_PROFILE_PATH`（temp），仅 `main()` 显式写 canonical；恢复 canonical 为全量 1000 期（SHA256 `ef678954…`）。
+  - SHA256 实证：3 期小实验前后 canonical 完全一致；完整 pytest 跑完仍一致。
+  - Step3 12 组结果判定 **VALID**（验证用 temp scratch，未受污染影响）；已向 JSON 加 `validity` 标记。
+- ✅ 测试：`test_scorer_v2`+`test_structure_profile` 48 passed；完整 `pytest tests/` **295 passed / 1 failed**（唯一失败为既有 `test_load_data` 硬编码期号，无关）。
+- ✅ 生产 4 文件 mtime 全程未变。
+
+**纪律**: 不修改 scorer/recommender/scheduler/publisher；实验层结构画像只写 Temp/。
+
+---
+
+### Phase 16 Step 4: 实验展示层（模型研究 + 娱乐价值实验 · 实验层 · 非生产 · 已完成）
+
+**目标**: 把 Phase 15 + Phase 16 全部实验结论**诚实、可溯源、可降级**地接入 `experiment.html`，显式声明「无统计证据支持自动调权」。
+
+**完成内容**:
+- ✅ Step 1 只读检查：`experiment.html/js/css`、`reports/model_ranking.json`、`feature_gain_report.json`、`model_diagnostic_report.json`、`reward_stability_report.json`、`counterfactual_analysis.json`、`entertainment_evaluation.json`、`entertainment_constrained.json`、`phase16_step3_validation.json`、`public/data/model_ranking.json`、现有 API `functions/api/model/status.ts`、`TASK_STATUS.md`。
+- ✅ Step 2 新增可复现生成器 `scripts/build_experiment_display_data.py`：从 `reports/*.json` 派生 7 个展示 JSON（裁剪 900 长度 `cumulative_profit_series`，Step3 加 `combos[]`）。
+- ✅ Step 3/4 重写 `public/experiment.js` + `public/experiment.html`：新增非阻塞研究层（`safeFetch`/`makeTable`/`verdictTag` + 7 个 render 函数），9 区块按顺序重排；adaptive 覆盖不足（0.5201 vs 随机 0.9992）与 v1 最长空军 25 期两条诚实提示硬编码注入；`coverage_boost=不稳定` 红旗横幅；「为什么没有自动调权」收尾「无统计证据支持自动修改权重」。
+- ✅ Step 5 测试：`tests/test_phase16_step4.py` 13 passed；`tests/_page_step4_dom.cjs` DOM 桩验证（全 JSON 正常 / 缺失单 JSON 降级 / random 基线 / 覆盖不足提示 / coverage_boost=不稳定 / 无「自动调权已启用」伪状态）。
+- ✅ Step 6 完整 `pytest tests/` **308 passed / 1 failed**（唯一失败为历史既有 `test_phase14_step3.py::test_load_data` 硬编码期号，与本次无关）。
+- ✅ Step 7 生产隔离（强制）：4 生产文件 mtime 与 baseline 完全一致；`data/structure_profile.json` SHA256 `ef678954…` 前后一致。
+- ✅ Step 8 Git 提交（仅实验层，不 push）：`public/experiment.js`、`public/experiment.html`、`scripts/build_experiment_display_data.py`、`tests/_page_step4_dom.cjs`、`tests/test_phase16_step4.py`、`public/data/*.json`（7 个）、`reports/Phase16-Step4-Report.md`、本段。
+- ✅ Step 9 报告 `reports/Phase16-Step4-Report.md`（9 节）+ 本段 + 记忆更新。
+
+**诚实结论**: 模型无统计区分度（chi2 全不可区分随机、max cosine 0.969）；奖励稳定性全 ROI 为负；反事实仅 2 变体 exploratory 显著；coverage_boost 多窗口多种子不稳定（pass_rate=0.5）→ 不接入为结论策略。全站无任何「提升中奖率」文案。
+
+**纪律**: 未改 scorer/recommender/scheduler/publisher；未改 `data/recommendations.json`；未改 API；未把实验结果包装成预测/收益证据。
+
+---
+
 ## 当前未完成任务
 
 ### Phase 9-D: 统一推荐输出层设计

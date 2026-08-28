@@ -1,0 +1,168 @@
+{
+  "generated_at": "2026-08-28 08:58:48",
+  "data_source": "data/experiments.sqlite",
+  "n_bets": 18000,
+  "models": {
+    "adaptive": {
+      "variance": {
+        "n_bets": 4500,
+        "mean_prize_per_bet": 0.0884,
+        "std_prize": 3.7276,
+        "cv": 42.146
+      },
+      "bias": {
+        "mean_recommended_sum": 90.06,
+        "history_mean_sum": 88.4,
+        "sum_bias": 1.66
+      },
+      "chi2": {
+        "front_hit_distribution": {
+          "0": 1981,
+          "1": 1902,
+          "2": 553,
+          "3": 61,
+          "4": 3,
+          "5": 0
+        },
+        "chi2_vs_random": 5.101,
+        "df": 5,
+        "distinguishable_from_random": false,
+        "note": "chi2>11.07 即在 0.05 水平与随机分布可区分"
+      },
+      "window_stability": {
+        "first_half_mean_prize": 0.1769,
+        "second_half_mean_prize": 0.0,
+        "drift": -0.1769,
+        "sufficient": true
+      },
+      "feature_similarity_to_random": {
+        "cosine_similarity_to_random": 0.8078
+      }
+    },
+    "random": {
+      "variance": {
+        "n_bets": 4500,
+        "mean_prize_per_bet": 0.0231,
+        "std_prize": 1.096,
+        "cv": 47.4236
+      },
+      "bias": {
+        "mean_recommended_sum": 89.64,
+        "history_mean_sum": 88.4,
+        "sum_bias": 1.24
+      },
+      "chi2": {
+        "front_hit_distribution": {
+          "0": 2003,
+          "1": 1905,
+          "2": 543,
+          "3": 47,
+          "4": 2,
+          "5": 0
+        },
+        "chi2_vs_random": 0.0,
+        "df": 5,
+        "distinguishable_from_random": false,
+        "note": "chi2>11.07 即在 0.05 水平与随机分布可区分"
+      },
+      "window_stability": {
+        "first_half_mean_prize": 0.0231,
+        "second_half_mean_prize": 0.0231,
+        "drift": 0.0,
+        "sufficient": true
+      },
+      "feature_similarity_to_random": {
+        "cosine_similarity_to_random": 1.0
+      }
+    },
+    "v1": {
+      "variance": {
+        "n_bets": 4500,
+        "mean_prize_per_bet": 0.4944,
+        "std_prize": 21.2474,
+        "cv": 42.9723
+      },
+      "bias": {
+        "mean_recommended_sum": 79.91,
+        "history_mean_sum": 88.4,
+        "sum_bias": -8.49
+      },
+      "chi2": {
+        "front_hit_distribution": {
+          "0": 1967,
+          "1": 1919,
+          "2": 548,
+          "3": 64,
+          "4": 2,
+          "5": 0
+        },
+        "chi2_vs_random": 6.945,
+        "df": 5,
+        "distinguishable_from_random": false,
+        "note": "chi2>11.07 即在 0.05 水平与随机分布可区分"
+      },
+      "window_stability": {
+        "first_half_mean_prize": 0.912,
+        "second_half_mean_prize": 0.0769,
+        "drift": -0.8351,
+        "sufficient": true
+      },
+      "feature_similarity_to_random": {
+        "cosine_similarity_to_random": 0.9685
+      }
+    },
+    "v2": {
+      "variance": {
+        "n_bets": 4500,
+        "mean_prize_per_bet": 0.506,
+        "std_prize": 21.2613,
+        "cv": 42.0183
+      },
+      "bias": {
+        "mean_recommended_sum": 88.17,
+        "history_mean_sum": 88.4,
+        "sum_bias": -0.23
+      },
+      "chi2": {
+        "front_hit_distribution": {
+          "0": 1923,
+          "1": 1963,
+          "2": 558,
+          "3": 53,
+          "4": 3,
+          "5": 0
+        },
+        "chi2_vs_random": 6.641,
+        "df": 5,
+        "distinguishable_from_random": false,
+        "note": "chi2>11.07 即在 0.05 水平与随机分布可区分"
+      },
+      "window_stability": {
+        "first_half_mean_prize": 0.0231,
+        "second_half_mean_prize": 0.9889,
+        "drift": 0.9658,
+        "sufficient": true
+      },
+      "feature_similarity_to_random": {
+        "cosine_similarity_to_random": 0.7782
+      }
+    }
+  },
+  "conclusion": {
+    "distinguishable_from_random": {
+      "adaptive": false,
+      "random": false,
+      "v1": false,
+      "v2": false
+    },
+    "max_cosine_similarity_to_random": 0.9685,
+    "window_drift": {
+      "adaptive": -0.1769,
+      "random": 0.0,
+      "v1": -0.8351,
+      "v2": 0.9658
+    },
+    "summary": "所有模型命中分布与随机基准在 0.05 水平均不可区分；与随机特征分布余弦相似度最高 0.969（越接近 1 越像随机）。结论：回放证据不支持任何模型稳定优于随机，据此自动改权重缺乏统计依据。"
+  },
+  "note": "诊断仅基于回放统计；不证明任何模型具备可学习信号。娱乐分析，非预测。"
+}

@@ -1,0 +1,430 @@
+{
+  "generated_at": "2026-08-28 08:32:35",
+  "data_source": "data/dlt_history.json",
+  "validity": {
+    "canonical_profile_pollution_found": true,
+    "pollution_source": "tests/test_structure_profile.py 调用 generate_structure_profile(MIN_ISSUES) 未传 output_path → 命中默认 data/structure_profile.json（total_issues=10）",
+    "fixed": true,
+    "fix": "generate_structure_profile 默认 output_path 改为 temp scratch（SCRATCH_PROFILE_PATH）；仅 main() 显式写 canonical；已用全量历史恢复 canonical（total_issues=1000）。",
+    "affects_step3_results": false,
+    "reason": "Step3 验证每组合均用 _PROFILE_SCRATCH（temp）生成结构画像，绝不读/写 canonical；SHA256 前后比对证明 runner 不触碰 canonical。候选生成与评分未受污染影响。",
+    "verdict": "VALID — 12 组结果可继续使用，无需重跑。",
+    "caveat": "本污染属实验基础设施缺陷（测试副作用），已于本阶段修复并恢复 canonical；与 Phase16 Step3 验证方法学无关。"
+  },
+  "config": {
+    "windows": [
+      200,
+      500,
+      900
+    ],
+    "seeds": [
+      1,
+      42,
+      123,
+      999
+    ],
+    "variants": [
+      "baseline",
+      "coverage_boost",
+      "diversity_boost",
+      "miss_streak_breaker"
+    ],
+    "weights": [
+      0.35,
+      0.25,
+      0.2,
+      0.2
+    ],
+    "n_bets": 5,
+    "target_size": 1500,
+    "coverage_lambda": 6.0,
+    "diversity_jt": 0.3,
+    "breaker_jt": 0.2,
+    "miss_threshold": 15,
+    "recent_window": 20,
+    "tail_window": true
+  },
+  "note": "娱乐约束优化稳定性验证 = 非预测目标实验。覆盖多窗口(200/500/900期) × 多种子(1/42/123/999)。模型间差异可能仅为随机噪声；本验证不构成预测能力提升证据。娱乐分析，非预测。",
+  "aggregate": {
+    "baseline": {
+      "n_combos": 0,
+      "pass_count": 0,
+      "pass_rate": 0.0,
+      "small_win_not_down_count": 0,
+      "small_win_not_down_rate": 0.0,
+      "ux_positive_count": 0,
+      "ux_positive_rate": 0.0,
+      "coverage_up_count": 0,
+      "coverage_up_rate": 0.0,
+      "diversity_up_count": 0,
+      "diversity_up_rate": 0.0,
+      "mean_ux_delta": 0.0,
+      "mean_small_win_freq_delta": 0.0,
+      "mean_coverage_delta": 0.0,
+      "mean_diversity_delta": 0.0,
+      "mean_raw_metrics": {
+        "ux_score": 1.0808,
+        "small_win_freq": 0.2902,
+        "near_miss_rate": 0.2607,
+        "longest_miss_streak": 13.25,
+        "coverage": 0.9867,
+        "diversity": 1.0
+      },
+      "stability_verdict": "not_stable"
+    },
+    "coverage_boost": {
+      "n_combos": 12,
+      "pass_count": 6,
+      "pass_rate": 0.5,
+      "small_win_not_down_count": 6,
+      "small_win_not_down_rate": 0.5,
+      "ux_positive_count": 4,
+      "ux_positive_rate": 0.3333,
+      "coverage_up_count": 12,
+      "coverage_up_rate": 1.0,
+      "diversity_up_count": 0,
+      "diversity_up_rate": 0.0,
+      "mean_ux_delta": -0.0924,
+      "mean_small_win_freq_delta": -0.0443,
+      "mean_coverage_delta": 0.0091,
+      "mean_diversity_delta": -0.0134,
+      "mean_raw_metrics": {
+        "ux_score": 0.9884,
+        "small_win_freq": 0.2774,
+        "near_miss_rate": 0.2491,
+        "longest_miss_streak": 17.25,
+        "coverage": 0.9958,
+        "diversity": 1.0
+      },
+      "stability_verdict": "not_stable"
+    },
+    "diversity_boost": {
+      "n_combos": 12,
+      "pass_count": 9,
+      "pass_rate": 0.75,
+      "small_win_not_down_count": 9,
+      "small_win_not_down_rate": 0.75,
+      "ux_positive_count": 6,
+      "ux_positive_rate": 0.5,
+      "coverage_up_count": 12,
+      "coverage_up_rate": 1.0,
+      "diversity_up_count": 12,
+      "diversity_up_rate": 1.0,
+      "mean_ux_delta": 0.0094,
+      "mean_small_win_freq_delta": 0.0218,
+      "mean_coverage_delta": 0.0023,
+      "mean_diversity_delta": 0.034,
+      "mean_raw_metrics": {
+        "ux_score": 1.0902,
+        "small_win_freq": 0.2954,
+        "near_miss_rate": 0.2662,
+        "longest_miss_streak": 13.6667,
+        "coverage": 0.989,
+        "diversity": 1.0
+      },
+      "stability_verdict": "not_stable"
+    },
+    "miss_streak_breaker": {
+      "n_combos": 12,
+      "pass_count": 2,
+      "pass_rate": 0.1667,
+      "small_win_not_down_count": 12,
+      "small_win_not_down_rate": 1.0,
+      "ux_positive_count": 1,
+      "ux_positive_rate": 0.0833,
+      "coverage_up_count": 2,
+      "coverage_up_rate": 0.1667,
+      "diversity_up_count": 2,
+      "diversity_up_rate": 0.1667,
+      "mean_ux_delta": 0.0005,
+      "mean_small_win_freq_delta": -0.0007,
+      "mean_coverage_delta": 0.0001,
+      "mean_diversity_delta": 0.0001,
+      "mean_raw_metrics": {
+        "ux_score": 1.0814,
+        "small_win_freq": 0.2906,
+        "near_miss_rate": 0.2605,
+        "longest_miss_streak": 13.25,
+        "coverage": 0.9868,
+        "diversity": 1.0
+      },
+      "stability_verdict": "not_stable"
+    }
+  },
+  "stability_verdict": {
+    "coverage_boost_stable": false,
+    "recommend_experiment_html": false,
+    "thresholds": {
+      "pass_rate_min": 0.75,
+      "small_win_not_down_rate_min": 0.917,
+      "coverage_up_rate_min": 0.75
+    },
+    "conclusion": "coverage_boost 长期稳定性判定（非预测）\n================================================\n组合总数=12\n通过率(pass_rate)=0.5 (阈值≥0.75)\n小奖频率不降率=0.5 (阈值≥0.917)\n覆盖率提升率=1.0 (阈值≥0.75)\n平均 ΔUX=-0.0924 平均 Δ小奖频率=-0.0443 平均 Δ覆盖率=0.0091 平均 Δ多样性=-0.0134\n\n结论：coverage_boost 未稳定满足全部阈值，暂不建议作为默认展示策略；差异大概率仅为随机噪声。娱乐分析，非预测。"
+  },
+  "combos": [
+    {
+      "window": 200,
+      "seed": 1,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.0809,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": 0.0212,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 200,
+      "seed": 42,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.0526,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": -0.013,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 200,
+      "seed": 123,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.0462,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": -0.0274,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0292,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 200,
+      "seed": 999,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.3557,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": 0.0329,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 500,
+      "seed": 1,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.0802,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": 0.014,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 500,
+      "seed": 42,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": 0.0404,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": -0.0162,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 500,
+      "seed": 123,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": 0.0111,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": -0.0374,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 500,
+      "seed": 999,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.2038,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": -0.0035,
+        "small_win_not_down": false,
+        "passes": false,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 900,
+      "seed": 1,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.1209,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": 0.0131,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 900,
+      "seed": 42,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": 0.0052,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": 0.0074,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": -0.02,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      }
+    },
+    {
+      "window": 900,
+      "seed": 123,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": -0.2394,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": -0.0171,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": 0.0,
+        "small_win_not_down": true,
+        "passes": false,
+        "improves_diversity_or_coverage": false
+      }
+    },
+    {
+      "window": 900,
+      "seed": 999,
+      "coverage_boost": {
+        "ux_delta_vs_baseline": 0.0138,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "diversity_boost": {
+        "ux_delta_vs_baseline": 0.139,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      },
+      "miss_streak_breaker": {
+        "ux_delta_vs_baseline": -0.0028,
+        "small_win_not_down": true,
+        "passes": true,
+        "improves_diversity_or_coverage": true
+      }
+    }
+  ]
+}
