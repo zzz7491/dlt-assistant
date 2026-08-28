@@ -36,6 +36,13 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Phase 16 P2：实验 CI 并发护栏。analyze 与 weekly-experiment 都会写同一份
+    # data/experiment_runs.sqlite 并执行 git commit/push；周日 04:00 同一触发会并行
+    # 启动两 job，存在 SQLite 竞态与 push 冲突。用共享 group 串行化，cancel-in-progress:false
+    # 保证不取消正在运行的任务（仅排队），不阻断生产部署。
+    concurrency:
+      group: experiment-ci
+      cancel-in-progress: false
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
@@ -272,6 +279,11 @@ jobs:
     # 全量 walk-forward 重回放 / 随机基线回填 / 稳定性校验 / 反事实聚合，耗时数十分钟。
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    # Phase 16 P2：与 analyze 共享 experiment-ci 组，串行化两个会写实验 SQLite + git push 的 job，
+    # 避免周日 04:00 同一触发下并行竞态。cancel-in-progress:false 不取消任务，仅排队。
+    concurrency:
+      group: experiment-ci
+      cancel-in-progress: false
     if: >-
       github.event.schedule == '0 4 * * 0' ||
       (github.event_name == 'workflow_dispatch' && inputs.experiment_mode == 'weekly')
