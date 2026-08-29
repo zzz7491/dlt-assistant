@@ -1,28 +1,28 @@
 [
   {
-    "date": "2026-08-26",
-    "target_issue": "26098",
+    "date": "2026-08-29",
+    "target_issue": "26099",
     "strategy": "A-均衡统计型",
     "idx": 0,
     "front": [
-      3,
+      2,
       5,
-      9,
+      22,
       24,
-      26
+      31
     ],
     "back": [
-      2,
+      3,
       4
     ],
     "score": null,
     "reason": null,
     "is_primary": true,
     "source": "reports/recommendations.json",
-    "final_score": 49.33,
+    "final_score": 49.22,
     "final_breakdown": {
       "base": 68.0,
-      "history": 20.0,
+      "history": 19.04,
       "recent": 20.0,
       "structure": 50.0,
       "risk": 0.0,
@@ -34,35 +34,35 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 5
+      "effective_sample": 6
     },
     "final_rank": 1
   },
   {
-    "date": "2026-08-26",
-    "target_issue": "26098",
+    "date": "2026-08-29",
+    "target_issue": "26099",
     "strategy": "B-冷热组合型",
     "idx": 0,
     "front": [
-      4,
+      5,
       8,
+      22,
       24,
-      26,
-      35
+      25
     ],
     "back": [
-      4,
-      8
+      3,
+      12
     ],
     "score": null,
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 39.88,
+    "final_score": 40.37,
     "final_breakdown": {
       "base": 56.0,
-      "history": 2.86,
-      "recent": 2.86,
+      "history": 4.76,
+      "recent": 5.71,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -73,74 +73,74 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 5
+      "effective_sample": 6
+    },
+    "final_rank": 3
+  },
+  {
+    "date": "2026-08-29",
+    "target_issue": "26099",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      5,
+      7,
+      9,
+      23,
+      25
+    ],
+    "back": [
+      3,
+      4
+    ],
+    "score": null,
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 28.15,
+    "final_breakdown": {
+      "base": 60.0,
+      "history": 9.53,
+      "recent": 8.57,
+      "structure": 50.0,
+      "risk": -15.0,
+      "weights": {
+        "base": 0.4848,
+        "history": 0.1212,
+        "recent": 0.0909,
+        "structure": 0.2424
+      },
+      "degraded": true,
+      "stage": "transition",
+      "effective_sample": 6
     },
     "final_rank": 4
   },
   {
-    "date": "2026-08-26",
-    "target_issue": "26098",
-    "strategy": "C-纯随机娱乐型",
-    "idx": 0,
-    "front": [
-      9,
-      10,
-      11,
-      22,
-      34
-    ],
-    "back": [
-      3,
-      10
-    ],
-    "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 45.58,
-    "final_breakdown": {
-      "base": 64.0,
-      "history": 11.43,
-      "recent": 11.43,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4848,
-        "history": 0.1212,
-        "recent": 0.0909,
-        "structure": 0.2424
-      },
-      "degraded": true,
-      "stage": "transition",
-      "effective_sample": 5
-    },
-    "final_rank": 2
-  },
-  {
-    "date": "2026-08-26",
-    "target_issue": "26098",
+    "date": "2026-08-29",
+    "target_issue": "26099",
     "strategy": "D-综合评分型",
     "idx": 0,
     "front": [
       13,
       23,
-      21,
-      18,
-      28
+      27,
+      28,
+      2
     ],
     "back": [
       11,
       6
     ],
-    "score": 41.46,
+    "score": 41.38,
     "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 43.48,
+    "final_score": 46.18,
     "final_breakdown": {
-      "base": 60.0,
-      "history": 10.71,
-      "recent": 10.71,
+      "base": 64.0,
+      "history": 14.29,
+      "recent": 14.29,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -151,8 +151,8 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 5
+      "effective_sample": 6
     },
-    "final_rank": 3
+    "final_rank": 2
   }
 ]

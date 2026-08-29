@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-08-26 14:25:03",
+  "updated_at": "2026-08-29 17:23:06",
   "empty": false,
-  "issue": "26097",
+  "issue": "26098",
   "recommendation": {
     "strategy": "D-综合评分型",
     "front": [
@@ -15,54 +15,54 @@
       11,
       6
     ],
-    "score_total": 41.6
+    "score_total": 41.46
   },
   "actual_result": {
     "front": [
-      3,
-      10,
-      12,
-      20,
-      25
+      7,
+      9,
+      18,
+      19,
+      21
     ],
     "back": [
-      1,
+      2,
       9
     ]
   },
   "hit_count": {
-    "front": 0,
+    "front": 2,
     "back": 0,
-    "total": 0,
-    "level": 0
+    "total": 2,
+    "level": 1
   },
   "analysis": {
-    "distance_score": 7,
-    "sum_diff": 33,
+    "distance_score": 5,
+    "sum_diff": 29,
     "factor_review": {
       "inherit": {
         "value": 0.0,
         "median": 0.0,
-        "status": "neutral"
+        "status": "positive"
       },
       "heat": {
-        "value": 16.29,
-        "median": 17.0,
+        "value": 16.14,
+        "median": 16.86,
         "status": "negative"
       },
       "missing": {
         "value": 80.0,
         "median": 80.0,
-        "status": "neutral"
+        "status": "positive"
       },
       "trend": {
-        "value": 49.47,
-        "median": 49.36,
-        "status": "neutral"
+        "value": 48.83,
+        "median": 49.19,
+        "status": "negative"
       },
       "structure": {
-        "value": 42.42,
-        "median": 42.49,
+        "value": 42.41,
+        "median": 42.42,
         "status": "negative"
       }
     }
@@ -74,6 +74,16 @@
       "reason": "热号因子指向偏差（相对历史中位数偏低）"
     },
     {
+      "type": "keep",
+      "text": "维持遗漏补偿关注",
+      "reason": "遗漏回补正常（方向判断合理）"
+    },
+    {
+      "type": "reduce",
+      "text": "降低趋势因子权重",
+      "reason": "趋势判断偏差（相对历史中位数偏低）"
+    },
+    {
       "type": "reduce",
       "text": "降低结构贴合权重",
       "reason": "组合结构判断偏差（相对历史中位数偏低）"
@@ -81,7 +91,7 @@
     {
       "type": "reduce",
       "text": "收缩和值区间",
-      "reason": "上期和值偏差较大（差 33）"
+      "reason": "上期和值偏差较大（差 29）"
     }
   ],
   "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖"
