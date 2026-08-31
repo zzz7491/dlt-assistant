@@ -1,44 +1,44 @@
 {
-  "updated_at": "2026-08-29 17:23:06",
+  "updated_at": "2026-08-31 19:40:18",
   "empty": false,
-  "issue": "26098",
+  "issue": "26099",
   "recommendation": {
     "strategy": "D-综合评分型",
     "front": [
       13,
       23,
-      21,
-      18,
-      28
+      27,
+      28,
+      2
     ],
     "back": [
       11,
       6
     ],
-    "score_total": 41.46
+    "score_total": 41.38
   },
   "actual_result": {
     "front": [
-      7,
-      9,
-      18,
-      19,
-      21
+      2,
+      17,
+      20,
+      29,
+      33
     ],
     "back": [
-      2,
+      8,
       9
     ]
   },
   "hit_count": {
-    "front": 2,
+    "front": 1,
     "back": 0,
-    "total": 2,
+    "total": 1,
     "level": 1
   },
   "analysis": {
-    "distance_score": 5,
-    "sum_diff": 29,
+    "distance_score": 6,
+    "sum_diff": 8,
     "factor_review": {
       "inherit": {
         "value": 0.0,
@@ -46,7 +46,7 @@
         "status": "positive"
       },
       "heat": {
-        "value": 16.14,
+        "value": 15.71,
         "median": 16.86,
         "status": "negative"
       },
@@ -56,14 +56,14 @@
         "status": "positive"
       },
       "trend": {
-        "value": 48.83,
+        "value": 48.81,
         "median": 49.19,
         "status": "negative"
       },
       "structure": {
-        "value": 42.41,
-        "median": 42.42,
-        "status": "negative"
+        "value": 42.47,
+        "median": 42.47,
+        "status": "positive"
       }
     }
   },
@@ -84,14 +84,14 @@
       "reason": "趋势判断偏差（相对历史中位数偏低）"
     },
     {
-      "type": "reduce",
-      "text": "降低结构贴合权重",
-      "reason": "组合结构判断偏差（相对历史中位数偏低）"
+      "type": "keep",
+      "text": "维持结构贴合",
+      "reason": "组合结构判断正常（方向判断合理）"
     },
     {
-      "type": "reduce",
-      "text": "收缩和值区间",
-      "reason": "上期和值偏差较大（差 29）"
+      "type": "keep",
+      "text": "维持和值区间",
+      "reason": "上期和值贴合历史高频区间"
     }
   ],
   "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖"

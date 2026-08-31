@@ -1,29 +1,29 @@
 [
   {
-    "date": "2026-08-29",
-    "target_issue": "26099",
+    "date": "2026-08-31",
+    "target_issue": "26100",
     "strategy": "A-均衡统计型",
     "idx": 0,
     "front": [
-      2,
-      5,
-      22,
+      9,
+      11,
       24,
-      31
+      26,
+      32
     ],
     "back": [
-      3,
-      4
+      10,
+      11
     ],
     "score": null,
     "reason": null,
     "is_primary": true,
     "source": "reports/recommendations.json",
-    "final_score": 49.22,
+    "final_score": 48.88,
     "final_breakdown": {
       "base": 68.0,
-      "history": 19.04,
-      "recent": 20.0,
+      "history": 18.37,
+      "recent": 17.14,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -34,35 +34,35 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 6
+      "effective_sample": 7
     },
     "final_rank": 1
   },
   {
-    "date": "2026-08-29",
-    "target_issue": "26099",
+    "date": "2026-08-31",
+    "target_issue": "26100",
     "strategy": "B-冷热组合型",
     "idx": 0,
     "front": [
+      2,
       5,
-      8,
+      20,
       22,
-      24,
-      25
+      24
     ],
     "back": [
-      3,
-      12
+      2,
+      11
     ],
     "score": null,
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 40.37,
+    "final_score": 41.04,
     "final_breakdown": {
       "base": 56.0,
-      "history": 4.76,
-      "recent": 5.71,
+      "history": 8.16,
+      "recent": 8.57,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -73,73 +73,34 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 6
+      "effective_sample": 7
     },
-    "final_rank": 3
+    "final_rank": 4
   },
   {
-    "date": "2026-08-29",
-    "target_issue": "26099",
+    "date": "2026-08-31",
+    "target_issue": "26100",
     "strategy": "C-纯随机娱乐型",
     "idx": 0,
     "front": [
       5,
-      7,
-      9,
-      23,
-      25
+      6,
+      15,
+      27,
+      31
     ],
     "back": [
       3,
-      4
+      6
     ],
     "score": null,
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 28.15,
+    "final_score": 43.99,
     "final_breakdown": {
       "base": 60.0,
-      "history": 9.53,
-      "recent": 8.57,
-      "structure": 50.0,
-      "risk": -15.0,
-      "weights": {
-        "base": 0.4848,
-        "history": 0.1212,
-        "recent": 0.0909,
-        "structure": 0.2424
-      },
-      "degraded": true,
-      "stage": "transition",
-      "effective_sample": 6
-    },
-    "final_rank": 4
-  },
-  {
-    "date": "2026-08-29",
-    "target_issue": "26099",
-    "strategy": "D-综合评分型",
-    "idx": 0,
-    "front": [
-      13,
-      23,
-      27,
-      28,
-      2
-    ],
-    "back": [
-      11,
-      6
-    ],
-    "score": 41.38,
-    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 46.18,
-    "final_breakdown": {
-      "base": 64.0,
-      "history": 14.29,
+      "history": 12.24,
       "recent": 14.29,
       "structure": 50.0,
       "risk": 0.0,
@@ -151,7 +112,46 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 6
+      "effective_sample": 7
+    },
+    "final_rank": 3
+  },
+  {
+    "date": "2026-08-31",
+    "target_issue": "26100",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      13,
+      23,
+      27,
+      16,
+      24
+    ],
+    "back": [
+      7,
+      11
+    ],
+    "score": 41.83,
+    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 46.44,
+    "final_breakdown": {
+      "base": 64.0,
+      "history": 14.29,
+      "recent": 17.14,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.4848,
+        "history": 0.1212,
+        "recent": 0.0909,
+        "structure": 0.2424
+      },
+      "degraded": true,
+      "stage": "transition",
+      "effective_sample": 7
     },
     "final_rank": 2
   }
