@@ -1,29 +1,29 @@
 [
   {
-    "date": "2026-09-02",
-    "target_issue": "26101",
+    "date": "2026-09-05",
+    "target_issue": "26102",
     "strategy": "A-均衡统计型",
     "idx": 0,
     "front": [
-      2,
-      16,
-      25,
-      26,
-      35
+      4,
+      10,
+      15,
+      21,
+      24
     ],
     "back": [
-      2,
-      3
+      1,
+      11
     ],
     "score": null,
     "reason": null,
     "is_primary": true,
     "source": "reports/recommendations.json",
-    "final_score": 48.08,
+    "final_score": 48.51,
     "final_breakdown": {
       "base": 68.0,
-      "history": 16.07,
-      "recent": 11.43,
+      "history": 17.46,
+      "recent": 14.29,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -34,34 +34,34 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 8
+      "effective_sample": 9
     },
     "final_rank": 1
   },
   {
-    "date": "2026-09-02",
-    "target_issue": "26101",
+    "date": "2026-09-05",
+    "target_issue": "26102",
     "strategy": "B-冷热组合型",
     "idx": 0,
     "front": [
-      4,
+      1,
       5,
-      11,
-      12,
+      7,
+      22,
       24
     ],
     "back": [
-      4,
-      5
+      3,
+      6
     ],
     "score": null,
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 40.92,
+    "final_score": 40.82,
     "final_breakdown": {
       "base": 56.0,
-      "history": 7.14,
+      "history": 6.34,
       "recent": 8.57,
       "structure": 50.0,
       "risk": 0.0,
@@ -73,35 +73,35 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 8
+      "effective_sample": 9
     },
     "final_rank": 4
   },
   {
-    "date": "2026-09-02",
-    "target_issue": "26101",
+    "date": "2026-09-05",
+    "target_issue": "26102",
     "strategy": "C-纯随机娱乐型",
     "idx": 0,
     "front": [
-      9,
-      12,
-      14,
-      23,
-      35
+      11,
+      22,
+      24,
+      27,
+      28
     ],
     "back": [
-      7,
-      9
+      5,
+      11
     ],
     "score": null,
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 44.03,
+    "final_score": 44.31,
     "final_breakdown": {
       "base": 60.0,
-      "history": 12.5,
-      "recent": 14.29,
+      "history": 12.7,
+      "recent": 17.14,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -112,35 +112,35 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 8
+      "effective_sample": 9
     },
     "final_rank": 3
   },
   {
-    "date": "2026-09-02",
-    "target_issue": "26101",
+    "date": "2026-09-05",
+    "target_issue": "26102",
     "strategy": "D-综合评分型",
     "idx": 0,
     "front": [
-      26,
       23,
-      13,
       16,
-      1
+      27,
+      13,
+      24
     ],
     "back": [
-      11,
+      5,
       6
     ],
-    "score": 41.74,
+    "score": 41.61,
     "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 46.18,
+    "final_score": 46.66,
     "final_breakdown": {
       "base": 64.0,
-      "history": 14.29,
-      "recent": 14.29,
+      "history": 16.07,
+      "recent": 17.14,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -151,7 +151,7 @@
       },
       "degraded": true,
       "stage": "transition",
-      "effective_sample": 8
+      "effective_sample": 9
     },
     "final_rank": 2
   }

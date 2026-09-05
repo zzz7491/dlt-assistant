@@ -1,44 +1,44 @@
 {
-  "updated_at": "2026-09-02 17:20:53",
+  "updated_at": "2026-09-05 16:15:28",
   "empty": false,
-  "issue": "26100",
+  "issue": "26101",
   "recommendation": {
     "strategy": "D-综合评分型",
     "front": [
-      13,
+      26,
       23,
-      27,
+      13,
       16,
-      24
+      1
     ],
     "back": [
-      7,
-      11
+      11,
+      6
     ],
-    "score_total": 41.83
+    "score_total": 41.74
   },
   "actual_result": {
     "front": [
-      2,
-      6,
+      9,
       11,
-      15,
-      31
+      18,
+      26,
+      33
     ],
     "back": [
-      7,
-      8
+      9,
+      11
     ]
   },
   "hit_count": {
-    "front": 0,
+    "front": 1,
     "back": 1,
-    "total": 1,
+    "total": 2,
     "level": 1
   },
   "analysis": {
-    "distance_score": 6,
-    "sum_diff": 38,
+    "distance_score": 5,
+    "sum_diff": 18,
     "factor_review": {
       "inherit": {
         "value": 0.0,
@@ -46,9 +46,9 @@
         "status": "positive"
       },
       "heat": {
-        "value": 16.14,
-        "median": 16.29,
-        "status": "negative"
+        "value": 16.57,
+        "median": 16.57,
+        "status": "positive"
       },
       "missing": {
         "value": 80.0,
@@ -56,22 +56,22 @@
         "status": "positive"
       },
       "trend": {
-        "value": 50.98,
-        "median": 49.19,
+        "value": 49.81,
+        "median": 49.36,
         "status": "positive"
       },
       "structure": {
-        "value": 42.41,
-        "median": 42.42,
-        "status": "negative"
+        "value": 42.47,
+        "median": 42.47,
+        "status": "positive"
       }
     }
   },
   "next_adjustment": [
     {
-      "type": "reduce",
-      "text": "降低热号关注权重",
-      "reason": "热号因子指向偏差（相对历史中位数偏低）"
+      "type": "keep",
+      "text": "维持热号关注",
+      "reason": "热号因子指向正常（方向判断合理）"
     },
     {
       "type": "keep",
@@ -84,14 +84,9 @@
       "reason": "趋势判断正常（方向判断合理）"
     },
     {
-      "type": "reduce",
-      "text": "降低结构贴合权重",
-      "reason": "组合结构判断偏差（相对历史中位数偏低）"
-    },
-    {
-      "type": "reduce",
-      "text": "收缩和值区间",
-      "reason": "上期和值偏差较大（差 38）"
+      "type": "keep",
+      "text": "维持结构贴合",
+      "reason": "组合结构判断正常（方向判断合理）"
     }
   ],
   "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖"
