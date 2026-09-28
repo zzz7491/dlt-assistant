@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-26 17:24:02",
+  "updated_at": "2026-09-28 20:14:31",
   "empty": false,
-  "issue": "26110",
+  "issue": "26111",
   "recommendation": {
     "strategy": "D-综合评分型",
     "front": [
@@ -12,33 +12,33 @@
       29
     ],
     "back": [
-      7,
+      2,
       5
     ],
-    "score_total": 41.47
+    "score_total": 41.35
   },
   "actual_result": {
     "front": [
-      3,
-      24,
-      25,
+      10,
+      11,
+      17,
       26,
-      35
+      29
     ],
     "back": [
-      7,
-      9
+      1,
+      3
     ]
   },
   "hit_count": {
-    "front": 0,
-    "back": 1,
-    "total": 1,
+    "front": 2,
+    "back": 0,
+    "total": 2,
     "level": 1
   },
   "analysis": {
-    "distance_score": 6,
-    "sum_diff": 38,
+    "distance_score": 5,
+    "sum_diff": 18,
     "factor_review": {
       "inherit": {
         "value": 0.0,
@@ -46,7 +46,7 @@
         "status": "positive"
       },
       "heat": {
-        "value": 15.0,
+        "value": 14.57,
         "median": 16.29,
         "status": "negative"
       },
@@ -56,12 +56,12 @@
         "status": "positive"
       },
       "trend": {
-        "value": 50.36,
-        "median": 49.36,
+        "value": 50.1,
+        "median": 49.47,
         "status": "positive"
       },
       "structure": {
-        "value": 42.37,
+        "value": 42.4,
         "median": 42.44,
         "status": "negative"
       }
@@ -87,11 +87,6 @@
       "type": "reduce",
       "text": "降低结构贴合权重",
       "reason": "组合结构判断偏差（相对历史中位数偏低）"
-    },
-    {
-      "type": "reduce",
-      "text": "收缩和值区间",
-      "reason": "上期和值偏差较大（差 38）"
     }
   ],
   "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖"
