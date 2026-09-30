@@ -1,0 +1,19 @@
+{
+  "report_metadata": {
+    "generated_at": "2026-08-20T14:02:57.644076",
+    "test_type": "reason_authenticity_check",
+    "samples_analyzed": 10,
+    "total_reasons_checked": 60
+  },
+  "verification_results": {
+    "total_reasons": 60,
+    "verified_reasons": 60,
+    "unverifiable_reasons": 0,
+    "verification_rate": 100.0
+  },
+  "unverifiable_details": [],
+  "conclusion": {
+    "status": "PASS",
+    "message": "理由基本基于真实计算生成"
+  }
+}

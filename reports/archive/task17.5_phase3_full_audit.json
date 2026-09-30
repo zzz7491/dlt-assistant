@@ -1,0 +1,275 @@
+{
+  "report_metadata": {
+    "generated_at": "2026-08-20T14:06:02.513268",
+    "test_type": "phase3_full_verification",
+    "engine_version": "new_recommender_v1.0"
+  },
+  "phase1_generation_audit": {
+    "metadata": {
+      "generated_at": "2026-08-20T14:05:52.179311",
+      "test_type": "generation_quality_audit",
+      "sample_size": 1000
+    },
+    "number_frequency": {
+      "front_unique": 35,
+      "back_unique": 12,
+      "front_top10": {
+        "25": 172,
+        "12": 169,
+        "8": 165,
+        "24": 162,
+        "34": 160,
+        "28": 159,
+        "32": 159,
+        "26": 157,
+        "4": 155,
+        "5": 151
+      },
+      "back_top5": {
+        "1": 181,
+        "11": 172,
+        "3": 172,
+        "10": 170,
+        "8": 168
+      }
+    },
+    "constraint_violations": {
+      "five_consecutive": 0,
+      "all_odd": 0,
+      "all_even": 0,
+      "all_big": 0,
+      "all_small": 0,
+      "extreme_sum_low": 0,
+      "extreme_sum_high": 0,
+      "extreme_span_low": 0,
+      "extreme_span_high": 0
+    },
+    "distribution_stats": {
+      "sum": {
+        "min": 61,
+        "max": 119,
+        "avg": 90.58,
+        "std": 10.51
+      },
+      "span": {
+        "min": 14,
+        "max": 34,
+        "avg": 25.32
+      },
+      "odd_even": {
+        "2": 508,
+        "3": 492
+      },
+      "big_small": {
+        "3": 593,
+        "2": 407
+      },
+      "consecutive": {
+        "1": 1000
+      },
+      "zone_distribution": {
+        "2:1:2": 400,
+        "2:2:1": 344,
+        "1:2:2": 256
+      }
+    },
+    "main_backup_overlap": 0,
+    "quality_summary": {
+      "violation_rate": 0.0,
+      "status": "PASS"
+    }
+  },
+  "phase2_comparison": {
+    "new_engine": {
+      "total_periods": 100,
+      "valid_recommendations": 100,
+      "avg_quality_score": 100.0,
+      "scores": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ],
+      "avg_front_hits": 0.58,
+      "avg_back_hits": 0.4,
+      "hits_3plus": 3,
+      "hits_4plus": 0,
+      "hit_rate_3plus": 3.0,
+      "hit_rate_4plus": 0.0
+    },
+    "old_d_strategy": {
+      "total_periods": 0,
+      "valid_recommendations": 0,
+      "avg_quality_score": 0,
+      "scores": [],
+      "error_count": 100
+    }
+  },
+  "phase3_reason_check": {
+    "total_reasons": 120,
+    "verified_reasons": 120,
+    "verification_rate": 100.0,
+    "sample_details": [
+      {
+        "sample": 0,
+        "reason": "和值 86 处于理想区间 [60,140]",
+        "verified": true,
+        "detail": "和值86已验证 ✓"
+      },
+      {
+        "sample": 0,
+        "reason": "跨度 18 分布合理",
+        "verified": true,
+        "detail": "跨度18已验证 ✓"
+      },
+      {
+        "sample": 0,
+        "reason": "奇偶比 2:3 均衡",
+        "verified": true,
+        "detail": "奇偶比2:3已验证 ✓"
+      },
+      {
+        "sample": 0,
+        "reason": "大小比 3:2 均衡",
+        "verified": true,
+        "detail": "大小比3:2已验证 ✓"
+      },
+      {
+        "sample": 0,
+        "reason": "三区分布 2:2:1 覆盖全面",
+        "verified": true,
+        "detail": "三区分布2:2:1已验证 ✓"
+      },
+      {
+        "sample": 0,
+        "reason": "连号结构合理",
+        "verified": true,
+        "detail": "连号结构合理（1对）✓"
+      },
+      {
+        "sample": 1,
+        "reason": "和值 77 处于理想区间 [60,140]",
+        "verified": true,
+        "detail": "和值77已验证 ✓"
+      },
+      {
+        "sample": 1,
+        "reason": "跨度 34 分布合理",
+        "verified": true,
+        "detail": "跨度34已验证 ✓"
+      },
+      {
+        "sample": 1,
+        "reason": "奇偶比 3:2 均衡",
+        "verified": true,
+        "detail": "奇偶比3:2已验证 ✓"
+      },
+      {
+        "sample": 1,
+        "reason": "大小比 2:3 均衡",
+        "verified": true,
+        "detail": "大小比2:3已验证 ✓"
+      }
+    ]
+  },
+  "overall_conclusion": {
+    "status": "PASS",
+    "summary": "新引擎质量验证通过，理由真实性良好"
+  }
+}

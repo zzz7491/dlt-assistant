@@ -1,0 +1,142 @@
+{
+  "update_time": "2026-08-18 11:52:48",
+  "preheat": 200,
+  "train": {
+    "start": 200,
+    "end": 799
+  },
+  "validation": {
+    "start": 800,
+    "end": 999
+  },
+  "groups": [
+    {
+      "group_id": "G0",
+      "weights": {
+        "number": {
+          "heat": 0.3,
+          "missing": 0.3,
+          "trend": 0.25,
+          "inherit": 0.15
+        },
+        "combo": {
+          "inherit_match": 0.2,
+          "odd_even_match": 0.2,
+          "big_small_match": 0.2,
+          "zone_match": 0.2,
+          "sum_span_match": 0.2
+        },
+        "single_vs_combo": {
+          "single": 0.7,
+          "combo": 0.3
+        },
+        "top_front": 15,
+        "top_back": 8
+      },
+      "train": {
+        "n": 600,
+        "avg_front_hit": 0.67,
+        "avg_back_hit": 0.3233,
+        "avg_total_hit": 0.9933,
+        "avg_distance": 6.01,
+        "hit_total_dist": {
+          "0": 201,
+          "2": 127,
+          "1": 238,
+          "3": 32,
+          "4": 2
+        }
+      },
+      "validation": {
+        "n": 200,
+        "avg_front_hit": 0.605,
+        "avg_back_hit": 0.345,
+        "avg_total_hit": 0.95,
+        "avg_distance": 6.05,
+        "hit_total_dist": {
+          "0": 67,
+          "1": 85,
+          "2": 41,
+          "3": 5,
+          "4": 2
+        }
+      },
+      "delta": {
+        "avg_total_hit": -0.0433,
+        "avg_front_hit": -0.065,
+        "avg_back_hit": 0.0217,
+        "avg_distance": 0.04
+      },
+      "vs_random": {
+        "front": 0.1429,
+        "back": 0.1667,
+        "total": 0.3095
+      },
+      "poisson_se": 0.0689
+    },
+    {
+      "group_id": "G5",
+      "weights": {
+        "number": {
+          "heat": 0.25,
+          "missing": 0.25,
+          "trend": 0.4,
+          "inherit": 0.1
+        },
+        "combo": {
+          "inherit_match": 0.2,
+          "odd_even_match": 0.2,
+          "big_small_match": 0.2,
+          "zone_match": 0.2,
+          "sum_span_match": 0.2
+        },
+        "single_vs_combo": {
+          "single": 0.7,
+          "combo": 0.3
+        },
+        "top_front": 15,
+        "top_back": 8
+      },
+      "train": {
+        "n": 600,
+        "avg_front_hit": 0.6867,
+        "avg_back_hit": 0.3283,
+        "avg_total_hit": 1.015,
+        "avg_distance": 5.99,
+        "hit_total_dist": {
+          "0": 196,
+          "2": 119,
+          "1": 243,
+          "3": 40,
+          "4": 2
+        }
+      },
+      "validation": {
+        "n": 200,
+        "avg_front_hit": 0.625,
+        "avg_back_hit": 0.34,
+        "avg_total_hit": 0.965,
+        "avg_distance": 6.04,
+        "hit_total_dist": {
+          "0": 59,
+          "1": 100,
+          "2": 32,
+          "3": 7,
+          "4": 2
+        }
+      },
+      "delta": {
+        "avg_total_hit": -0.05,
+        "avg_front_hit": -0.0617,
+        "avg_back_hit": 0.0117,
+        "avg_distance": 0.05
+      },
+      "vs_random": {
+        "front": 0.1429,
+        "back": 0.1667,
+        "total": 0.3095
+      },
+      "poisson_se": 0.0695
+    }
+  ]
+}

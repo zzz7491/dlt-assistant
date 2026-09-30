@@ -1,0 +1,158 @@
+{
+  "report_metadata": {
+    "generated_at": "2026-08-20T14:00:38.141600",
+    "test_type": "generation_quality_audit",
+    "sample_size": 1000,
+    "engine_version": "new_recommender_v1.0"
+  },
+  "number_frequency": {
+    "front_frequency": {
+      "12": 489,
+      "32": 482,
+      "25": 479,
+      "34": 477,
+      "28": 472,
+      "4": 472,
+      "13": 469,
+      "8": 464,
+      "30": 464,
+      "26": 459
+    },
+    "back_frequency": {
+      "8": 523,
+      "10": 517,
+      "11": 514,
+      "4": 513,
+      "5": 507
+    },
+    "front_total_draws": 5000,
+    "back_total_draws": 2000,
+    "expected_front_freq": 142.85714285714286,
+    "expected_back_freq": 166.66666666666666
+  },
+  "pair_duplicates": {
+    "main_backup_overlap": 1395,
+    "duplicate_combinations": 0
+  },
+  "combination_constraints": {
+    "total": 1000,
+    "five_consecutive": 0,
+    "all_odd": 0,
+    "all_even": 0,
+    "all_big": 0,
+    "all_small": 0,
+    "extreme_sum_low": 0,
+    "extreme_sum_high": 0,
+    "extreme_span_low": 0,
+    "extreme_span_high": 0,
+    "duplicate_previous": 0
+  },
+  "distribution_statistics": {
+    "sum": {
+      "min": 61,
+      "max": 119,
+      "avg": 90.576,
+      "distribution": [
+        {
+          "range": "60-70",
+          "count": 15,
+          "percentage": 1.5
+        },
+        {
+          "range": "70-80",
+          "count": 143,
+          "percentage": 14.3
+        },
+        {
+          "range": "80-90",
+          "count": 317,
+          "percentage": 31.7
+        },
+        {
+          "range": "90-100",
+          "count": 305,
+          "percentage": 30.5
+        },
+        {
+          "range": "100-110",
+          "count": 181,
+          "percentage": 18.1
+        },
+        {
+          "range": "110-120",
+          "count": 39,
+          "percentage": 3.9
+        },
+        {
+          "range": "120-130",
+          "count": 0,
+          "percentage": 0.0
+        },
+        {
+          "range": "130-140",
+          "count": 0,
+          "percentage": 0.0
+        }
+      ]
+    },
+    "span": {
+      "min": 14,
+      "max": 34,
+      "avg": 25.316,
+      "distribution": [
+        {
+          "range": "10-15",
+          "count": 3,
+          "percentage": 0.3
+        },
+        {
+          "range": "15-20",
+          "count": 88,
+          "percentage": 8.8
+        },
+        {
+          "range": "20-25",
+          "count": 346,
+          "percentage": 34.6
+        },
+        {
+          "range": "25-30",
+          "count": 376,
+          "percentage": 37.6
+        },
+        {
+          "range": "30-35",
+          "count": 187,
+          "percentage": 18.7
+        },
+        {
+          "range": "35-40",
+          "count": 0,
+          "percentage": 0.0
+        }
+      ]
+    },
+    "odd_even": {
+      "distribution": {
+        "2": 508,
+        "3": 492
+      }
+    },
+    "big_small": {
+      "distribution": {
+        "3": 593,
+        "2": 407
+      }
+    },
+    "consecutive": {
+      "distribution": {
+        "1": 1000
+      }
+    }
+  },
+  "quality_summary": {
+    "constraint_violation_rate": 0.0,
+    "distribution_balance_score": "good",
+    "recommendation": "All hard filters working correctly"
+  }
+}

@@ -1,0 +1,423 @@
+{
+  "update_time": "2026-08-20 08:33:52",
+  "total_issues": 1000,
+  "issue_range": "19130-26093",
+  "windows": {
+    "100": {
+      "summary": {
+        "n": 900,
+        "start_issue": "20080",
+        "end_issue": "26093",
+        "strategies": {
+          "A": {
+            "count": 900,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 900
+            }
+          },
+          "B": {
+            "count": 900,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 900
+            }
+          },
+          "C": {
+            "count": 900,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 900
+            }
+          },
+          "D": {
+            "count": 900,
+            "avg_front_hit": 0.6733,
+            "avg_back_hit": 0.3244,
+            "avg_total_hit": 0.9978,
+            "max_total_hit": 4,
+            "hit_distribution": {
+              "1": 359,
+              "3": 49,
+              "0": 299,
+              "4": 3,
+              "2": 190
+            }
+          },
+          "random": {
+            "count": 900,
+            "avg_front_hit": 0.7189,
+            "avg_back_hit": 0.3011,
+            "avg_total_hit": 1.02,
+            "max_total_hit": 5,
+            "hit_distribution": {
+              "1": 371,
+              "2": 195,
+              "0": 284,
+              "3": 44,
+              "4": 5,
+              "5": 1
+            }
+          }
+        },
+        "vs_random": {
+          "A": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "B": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "C": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "D": {
+            "front_lift_pct": -6.34,
+            "back_lift_pct": 7.74,
+            "total_lift_pct": -2.18
+          }
+        }
+      },
+      "factor_analysis": {
+        "heat": {
+          "count": 900,
+          "avg_value_low": 1.0089,
+          "avg_value_high": 0.9867,
+          "avg_hit_low": 1.0089,
+          "avg_hit_high": 0.9867,
+          "lift_when_high": -0.0222,
+          "correlation_with_hit": -0.0225
+        },
+        "missing": {
+          "count": 900,
+          "avg_value_low": 0.9644,
+          "avg_value_high": 1.0311,
+          "avg_hit_low": 0.9644,
+          "avg_hit_high": 1.0311,
+          "lift_when_high": 0.0667,
+          "correlation_with_hit": 0.0355
+        },
+        "trend": {
+          "count": 900,
+          "avg_value_low": 0.9956,
+          "avg_value_high": 1.0,
+          "avg_hit_low": 0.9956,
+          "avg_hit_high": 1.0,
+          "lift_when_high": 0.0044,
+          "correlation_with_hit": -0.0019
+        },
+        "inherit": {
+          "count": 900,
+          "avg_value_low": 1.0133,
+          "avg_value_high": 0.9822,
+          "avg_hit_low": 1.0133,
+          "avg_hit_high": 0.9822,
+          "lift_when_high": -0.0311,
+          "correlation_with_hit": -0.0082
+        },
+        "structure": {
+          "count": 900,
+          "avg_value_low": 0.9933,
+          "avg_value_high": 1.0022,
+          "avg_hit_low": 0.9933,
+          "avg_hit_high": 1.0022,
+          "lift_when_high": 0.0089,
+          "correlation_with_hit": -0.0191
+        }
+      },
+      "periods_file": "reports/backtest_rolling\\periods_100.jsonl",
+      "factor_file": "reports/backtest_rolling\\factor_analysis_100.json"
+    },
+    "300": {
+      "summary": {
+        "n": 700,
+        "start_issue": "21146",
+        "end_issue": "26093",
+        "strategies": {
+          "A": {
+            "count": 700,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 700
+            }
+          },
+          "B": {
+            "count": 700,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 700
+            }
+          },
+          "C": {
+            "count": 700,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 700
+            }
+          },
+          "D": {
+            "count": 700,
+            "avg_front_hit": 0.6614,
+            "avg_back_hit": 0.3329,
+            "avg_total_hit": 0.9943,
+            "max_total_hit": 4,
+            "hit_distribution": {
+              "0": 229,
+              "3": 38,
+              "1": 288,
+              "2": 143,
+              "4": 2
+            }
+          },
+          "random": {
+            "count": 700,
+            "avg_front_hit": 0.7157,
+            "avg_back_hit": 0.3,
+            "avg_total_hit": 1.0157,
+            "max_total_hit": 5,
+            "hit_distribution": {
+              "0": 230,
+              "1": 277,
+              "3": 37,
+              "2": 151,
+              "4": 4,
+              "5": 1
+            }
+          }
+        },
+        "vs_random": {
+          "A": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "B": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "C": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "D": {
+            "front_lift_pct": -7.59,
+            "back_lift_pct": 10.97,
+            "total_lift_pct": -2.11
+          }
+        }
+      },
+      "factor_analysis": {
+        "heat": {
+          "count": 700,
+          "avg_value_low": 1.04,
+          "avg_value_high": 0.9486,
+          "avg_hit_low": 1.04,
+          "avg_hit_high": 0.9486,
+          "lift_when_high": -0.0914,
+          "correlation_with_hit": -0.0589
+        },
+        "missing": {
+          "count": 700,
+          "avg_value_low": 1.0029,
+          "avg_value_high": 0.9857,
+          "avg_hit_low": 1.0029,
+          "avg_hit_high": 0.9857,
+          "lift_when_high": -0.0171,
+          "correlation_with_hit": 0.0167
+        },
+        "trend": {
+          "count": 700,
+          "avg_value_low": 1.0029,
+          "avg_value_high": 0.9857,
+          "avg_hit_low": 1.0029,
+          "avg_hit_high": 0.9857,
+          "lift_when_high": -0.0171,
+          "correlation_with_hit": 0.0097
+        },
+        "inherit": {
+          "count": 700,
+          "avg_value_low": 1.0086,
+          "avg_value_high": 0.98,
+          "avg_hit_low": 1.0086,
+          "avg_hit_high": 0.98,
+          "lift_when_high": -0.0286,
+          "correlation_with_hit": 0.0122
+        },
+        "structure": {
+          "count": 700,
+          "avg_value_low": 0.9857,
+          "avg_value_high": 1.0029,
+          "avg_hit_low": 0.9857,
+          "avg_hit_high": 1.0029,
+          "lift_when_high": 0.0171,
+          "correlation_with_hit": 0.0113
+        }
+      },
+      "periods_file": "reports/backtest_rolling\\periods_300.jsonl",
+      "factor_file": "reports/backtest_rolling\\factor_analysis_300.json"
+    },
+    "500": {
+      "summary": {
+        "n": 500,
+        "start_issue": "23046",
+        "end_issue": "26093",
+        "strategies": {
+          "A": {
+            "count": 500,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 500
+            }
+          },
+          "B": {
+            "count": 500,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 500
+            }
+          },
+          "C": {
+            "count": 500,
+            "avg_front_hit": 0.0,
+            "avg_back_hit": 0.0,
+            "avg_total_hit": 0.0,
+            "max_total_hit": 0,
+            "hit_distribution": {
+              "0": 500
+            }
+          },
+          "D": {
+            "count": 500,
+            "avg_front_hit": 0.678,
+            "avg_back_hit": 0.334,
+            "avg_total_hit": 1.012,
+            "max_total_hit": 3,
+            "hit_distribution": {
+              "1": 207,
+              "2": 109,
+              "0": 157,
+              "3": 27
+            }
+          },
+          "random": {
+            "count": 500,
+            "avg_front_hit": 0.726,
+            "avg_back_hit": 0.286,
+            "avg_total_hit": 1.012,
+            "max_total_hit": 5,
+            "hit_distribution": {
+              "2": 106,
+              "0": 170,
+              "1": 192,
+              "3": 27,
+              "4": 4,
+              "5": 1
+            }
+          }
+        },
+        "vs_random": {
+          "A": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "B": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "C": {
+            "front_lift_pct": -100.0,
+            "back_lift_pct": -100.0,
+            "total_lift_pct": -100.0
+          },
+          "D": {
+            "front_lift_pct": -6.61,
+            "back_lift_pct": 16.78,
+            "total_lift_pct": 0.0
+          }
+        }
+      },
+      "factor_analysis": {
+        "heat": {
+          "count": 500,
+          "avg_value_low": 1.1,
+          "avg_value_high": 0.924,
+          "avg_hit_low": 1.1,
+          "avg_hit_high": 0.924,
+          "lift_when_high": -0.176,
+          "correlation_with_hit": -0.0888
+        },
+        "missing": {
+          "count": 500,
+          "avg_value_low": 1.036,
+          "avg_value_high": 0.988,
+          "avg_hit_low": 1.036,
+          "avg_hit_high": 0.988,
+          "lift_when_high": -0.048,
+          "correlation_with_hit": 0.0486
+        },
+        "trend": {
+          "count": 500,
+          "avg_value_low": 0.992,
+          "avg_value_high": 1.032,
+          "avg_hit_low": 0.992,
+          "avg_hit_high": 1.032,
+          "lift_when_high": 0.04,
+          "correlation_with_hit": 0.0138
+        },
+        "inherit": {
+          "count": 500,
+          "avg_value_low": 1.056,
+          "avg_value_high": 0.968,
+          "avg_hit_low": 1.056,
+          "avg_hit_high": 0.968,
+          "lift_when_high": -0.088,
+          "correlation_with_hit": -0.0368
+        },
+        "structure": {
+          "count": 500,
+          "avg_value_low": 1.008,
+          "avg_value_high": 1.016,
+          "avg_hit_low": 1.008,
+          "avg_hit_high": 1.016,
+          "lift_when_high": 0.008,
+          "correlation_with_hit": 0.0671
+        }
+      },
+      "periods_file": "reports/backtest_rolling\\periods_500.jsonl",
+      "factor_file": "reports/backtest_rolling\\factor_analysis_500.json"
+    }
+  }
+}

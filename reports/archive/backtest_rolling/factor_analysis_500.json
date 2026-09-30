@@ -1,0 +1,47 @@
+{
+  "heat": {
+    "count": 500,
+    "avg_value_low": 1.1,
+    "avg_value_high": 0.924,
+    "avg_hit_low": 1.1,
+    "avg_hit_high": 0.924,
+    "lift_when_high": -0.176,
+    "correlation_with_hit": -0.0888
+  },
+  "missing": {
+    "count": 500,
+    "avg_value_low": 1.036,
+    "avg_value_high": 0.988,
+    "avg_hit_low": 1.036,
+    "avg_hit_high": 0.988,
+    "lift_when_high": -0.048,
+    "correlation_with_hit": 0.0486
+  },
+  "trend": {
+    "count": 500,
+    "avg_value_low": 0.992,
+    "avg_value_high": 1.032,
+    "avg_hit_low": 0.992,
+    "avg_hit_high": 1.032,
+    "lift_when_high": 0.04,
+    "correlation_with_hit": 0.0138
+  },
+  "inherit": {
+    "count": 500,
+    "avg_value_low": 1.056,
+    "avg_value_high": 0.968,
+    "avg_hit_low": 1.056,
+    "avg_hit_high": 0.968,
+    "lift_when_high": -0.088,
+    "correlation_with_hit": -0.0368
+  },
+  "structure": {
+    "count": 500,
+    "avg_value_low": 1.008,
+    "avg_value_high": 1.016,
+    "avg_hit_low": 1.008,
+    "avg_hit_high": 1.016,
+    "lift_when_high": 0.008,
+    "correlation_with_hit": 0.0671
+  }
+}
