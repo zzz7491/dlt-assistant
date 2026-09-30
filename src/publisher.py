@@ -56,6 +56,147 @@ def _strategy_group(strategy: Any) -> str:
     return head if head in ("A", "B", "C", "D") else "other"
 
 
+# ---------------------------------------------------------------- P0-1 不可变发布快照
+#
+# 契约：同一 issue 一旦正式发布，复盘必须读取该 issue 的已发布快照；
+# 禁止开奖后重算 primary / 重选策略 / 硬编码 D / 依开奖结果改快照。
+# 仅使用标准库（json / hashlib / os / datetime），不引入任何第三方依赖。
+
+import hashlib  # P0-1：快照完整性哈希（完整性标识，非安全签名）
+
+SNAPSHOT_SCHEMA_VERSION = "1.1"  # P1-2：快照新增冻结的 structured explanation（旧 "1" 快照仍可读）
+SNAPSHOT_DEFAULT_PATH = "public/data/published_recommendations.json"
+
+
+def _canonical_json(obj: Any) -> str:
+    """确定性序列化：稳定键序 + 固定分隔符 + 非 ASCII 原样，保证同内容同字符串。"""
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def snapshot_hash(snapshot: Any) -> str | None:
+    """对快照内容字段做确定性 SHA-256（覆盖 issue/primary_strategy/front/back/
+    reason/final_score/final_breakdown/model_version/explanation；不含
+    published_at 与 snapshot_hash，使幂等重放不变）。非 dict → None。"""
+    if not isinstance(snapshot, dict):
+        return None
+    numbers = snapshot.get("numbers") or {}
+    d = {
+        "issue": str(snapshot.get("issue")),
+        "primary_strategy": snapshot.get("primary_strategy"),
+        "front": numbers.get("front"),
+        "back": numbers.get("back"),
+        "reason": snapshot.get("reason"),
+        "final_score": snapshot.get("final_score"),
+        "final_breakdown": snapshot.get("final_breakdown"),
+        "model_version": snapshot.get("model_version"),
+        "explanation": snapshot.get("explanation"),
+    }
+    return hashlib.sha256(_canonical_json(d).encode("utf-8")).hexdigest()
+
+
+def build_snapshot(primary: Any, *, published_at: str) -> dict[str, Any] | None:
+    """由「发布给前端的同一 primary」构造不可变快照。非 dict primary → None。
+
+    字段名适配当前 canonical 结构（recommendations.json 记录字段）：
+      target_issue→issue, strategy→primary_strategy, front/back→numbers,
+      reason/final_score/final_breakdown/model_version 原样保留。
+    """
+    if not isinstance(primary, dict):
+        return None
+    numbers = {"front": list(primary.get("front") or []),
+               "back": list(primary.get("back") or [])}
+    snap = {
+        "schema_version": SNAPSHOT_SCHEMA_VERSION,
+        "issue": str(primary.get("target_issue")),
+        "published_at": published_at,
+        "primary_strategy": primary.get("strategy"),
+        "numbers": numbers,
+        "reason": primary.get("reason"),
+        "final_score": primary.get("final_score"),
+        "final_breakdown": primary.get("final_breakdown"),
+        "model_version": primary.get("model_version"),
+        "explanation": primary.get("explanation"),  # P1-2：冻结结构化 explanation
+        "snapshot_hash": None,  # 下方填充
+    }
+    snap["snapshot_hash"] = snapshot_hash(snap)
+    return snap
+
+
+def _load_published_store(path: str) -> dict[str, Any]:
+    data = _load_json(path)
+    if not isinstance(data, dict) or not isinstance(data.get("items"), list):
+        return {"schema_version": SNAPSHOT_SCHEMA_VERSION, "items": []}
+    data.setdefault("schema_version", SNAPSHOT_SCHEMA_VERSION)
+    return data
+
+
+def _build_primary_explanation(primary: dict[str, Any], history_data: Any,
+                               recent_window: int = 50) -> dict[str, Any] | None:
+    """P1-2：为唯一 primary 生成确定性 explanation（惰性导入 src.explanation，失败安全）。
+
+    输入：primary 记录（strategy/front/back/basis/factors/model_version/score_total/target_issue）
+          + dlt_history.json 数据（真实统计依据来源）。
+    输出：结构化 explanation dict；任何异常 → None（snapshot 仍冻结，reason_status 由前端兜底）。
+    """
+    try:
+        from .explanation import build_explanation  # 惰性导入，不强制顶层依赖
+        issues = (history_data or {}).get("issues") if isinstance(history_data, dict) else None
+        return build_explanation(
+            strategy=primary.get("strategy"),
+            front=primary.get("front") or [],
+            back=primary.get("back") or [],
+            history=issues if isinstance(issues, list) else None,
+            recent_window=recent_window,
+            basis=primary.get("basis"),
+            factors=primary.get("factors"),
+            model_version=primary.get("model_version"),
+            score_total=primary.get("score_total") or primary.get("final_score"),
+            target_issue=primary.get("target_issue"),
+        )
+    except Exception:
+        return None
+
+
+def upsert_published_snapshot(path: str, snapshot: dict[str, Any]) -> str:
+    """写不可变快照。返回状态：created / unchanged / conflict。
+
+    - 该 issue 无快照 → 追加（created）
+    - 已有且内容 hash 相同 → 不写盘（unchanged，幂等）
+    - 已有但内容不同 → 保留原快照，不覆盖（conflict，不可变核心）
+    """
+    store = _load_published_store(path)
+    items = store.get("items", [])
+    issue = str(snapshot.get("issue"))
+    existing = next((s for s in items if str(s.get("issue")) == issue), None)
+    if existing is not None:
+        if snapshot_hash(existing) == snapshot_hash(snapshot):
+            return "unchanged"
+        return "conflict"  # 保留原快照，绝不静默覆盖
+    items.append(snapshot)
+    store["items"] = items
+    store["updated_at"] = _now()
+    _write_json(path, store)
+    return "created"
+
+
+def load_published_by_issue(path: str) -> dict[str, dict[str, Any]]:
+    """读取全部已发布快照，返回 {issue: snapshot}（供复盘按 issue 查询）。"""
+    items = _load_published_store(path).get("items", [])
+    return {str(s.get("issue")): s for s in items if isinstance(s, dict)}
+
+
+def _hit_counts(front: Any, back: Any, actual_front: Any, actual_back: Any) -> dict[str, Any]:
+    """用「冻结号码」对「实际开奖」计算命中（前/后/总 + 等级）。"""
+    ff = set(x for x in (front or []) if isinstance(x, int))
+    fb = set(x for x in (back or []) if isinstance(x, int))
+    af = set(x for x in (actual_front or []) if isinstance(x, int))
+    ab = set(x for x in (actual_back or []) if isinstance(x, int))
+    f_hit = len(ff & af)
+    b_hit = len(fb & ab)
+    total = f_hit + b_hit
+    return {"front": f_hit, "back": b_hit, "total": total, "level": HIT_LEVEL.get(total, 0)}
+
+
 def _build_reason(rec: dict[str, Any]) -> str | None:
     """基于 basis 规则生成简短推荐理由（纯规则文案，非 AI、非预测）。无 basis 时返回 None。"""
     basis = rec.get("basis")
@@ -123,7 +264,7 @@ def build_recommendations(current: Any, source_recs: Any) -> list[dict[str, Any]
     return out
 
 
-# ---------------------------------------------------------------- ② 复盘
+# ---------------------------------------------------------------- ② 复盘（P0-1：快照优先）
 
 # 因子三态 → 调整方向规则（纯规则映射，不修改任何算法/评分）
 _FACTOR_ADJUST_RULES: dict[str, tuple[str, str]] = {
@@ -132,6 +273,18 @@ _FACTOR_ADJUST_RULES: dict[str, tuple[str, str]] = {
     "trend": ("趋势因子", "趋势判断"),
     "structure": ("结构贴合", "组合结构判断"),
 }
+
+
+def pick_primary(recs: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """P0 唯一权威 primary：只读 publisher 设定的 is_primary 标记（与前端 selectPrimary 同契约）。
+
+    不做 score 重排 / 不猜 final / 不回退 D / 不选 first。
+    恰好 1 个 is_primary=True → 返回它；0 个或多个（契约违反）→ None（fail-closed，不猜）。
+    """
+    if not isinstance(recs, list):
+        return None
+    primaries = [r for r in recs if isinstance(r, dict) and r.get("is_primary") is True]
+    return primaries[0] if len(primaries) == 1 else None
 
 
 def _build_next_adjustment(analysis: dict[str, Any]) -> list[dict[str, Any]]:
@@ -172,54 +325,112 @@ def _build_next_adjustment(analysis: dict[str, Any]) -> list[dict[str, Any]]:
         })
     return suggestions
 
-def build_review(reflection: Any) -> dict[str, Any]:
-    """从 reflection_report.json 提取最近一期复盘 → review.json 结构。
+def build_review(reflection: Any, published_by_issue: dict[str, Any] | None = None) -> dict[str, Any]:
+    """生成复盘 → review.json 结构（P0-1 快照驱动）。
 
-    reflection 含 periods（每期 {issue,strategy,recommend,actual,result,factor_review}）。
-    无数据 → 返回空结构（含 updated_at + 空标记）。
+    权威来源 = published_by_issue 中该 issue 的不可变发布快照：
+      draw issue → 查快照 → 冻结 front/back → 对实际开奖算命中。
+    绝不重算 primary / 不重选策略 / 不硬编码 D。
+
+    reflection：reflection_report.json（提供各期 actual 开奖 + factor_review，
+    亦作为「无快照时」的 legacy 兼容来源）。
+    published_by_issue：{str(issue): snapshot}（不可变发布快照索引）。
+    无数据 → 空结构；有 issue 但无快照 → legacy/non-authoritative fallback（明确标记）。
     """
     if not isinstance(reflection, dict):
         return {"updated_at": _now(), "empty": True, "issue": None}
     periods = reflection.get("periods")
     if not isinstance(periods, list) or not periods:
         return {"updated_at": _now(), "empty": True, "issue": None}
-    # 取 issue 最大（最新）一期；同 issue 取 D 优先（唯一推荐复盘语义）
-    p = max(periods, key=lambda x: (str(x.get("issue", "")), _strategy_group(x.get("strategy", "")) == "D"))
-    rec = p.get("recommend") or {}
-    act = p.get("actual") or {}
-    res = p.get("result") or {}
-    front = rec.get("front") or []
+    published = published_by_issue if isinstance(published_by_issue, dict) else {}
+
+    # 目标 issue：最近一期「已开奖」（actual 有前区号码）
+    drawn = [p for p in periods if isinstance(p, dict) and ((p.get("actual") or {}).get("front"))]
+    if not drawn:
+        return {"updated_at": _now(), "empty": True, "issue": None}
+    target_issue = max(str(p.get("issue")) for p in drawn)
+
+    # 实际开奖（供命中计算）
+    act_by_issue = {str(p.get("issue")): (p.get("actual") or {}) for p in drawn}
+    act = act_by_issue.get(target_issue, {})
     actual_front = act.get("front") or []
-    sum_diff = abs(sum(front) - sum(actual_front)) if front and actual_front else None
-    analysis: dict[str, Any] = {
-        "distance_score": res.get("distance_score"),
-        "sum_diff": sum_diff,
-        "factor_review": p.get("factor_review") or {},
-    }
+    actual_back = act.get("back") or []
+
+    snap = published.get(target_issue)
+    if isinstance(snap, dict) and snap.get("numbers"):
+        # —— 权威复盘：读不可变快照 ——
+        numbers = snap.get("numbers") or {}
+        front = numbers.get("front") or []
+        back = numbers.get("back") or []
+        hits = _hit_counts(front, back, actual_front, actual_back)
+        factor_review = _factor_review_of(periods, target_issue, snap.get("primary_strategy"))
+        sum_diff = abs(sum(front) - sum(actual_front)) if front and actual_front else None
+        return {
+            "updated_at": _now(),
+            "empty": False,
+            "issue": target_issue,
+            "snapshot_status": "ok",
+            "authoritative": True,
+            "snapshot_hash": snap.get("snapshot_hash"),
+            "recommendation": {
+                "strategy": snap.get("primary_strategy"),
+                "front": front,
+                "back": back,
+                "score_total": snap.get("final_score"),
+                "model_version": snap.get("model_version"),
+            },
+            "reason": snap.get("reason"),
+            "explanation": snap.get("explanation"),  # P1-2：复盘读取冻结 explanation，绝不重算
+            "actual_result": {"front": actual_front, "back": actual_back},
+            "hit_count": hits,
+            "analysis": {"sum_diff": sum_diff, "factor_review": factor_review},
+            "next_adjustment": _build_next_adjustment(
+                {"factor_review": factor_review, "sum_diff": sum_diff}),
+            "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖",
+        }
+
+    # —— legacy / non-authoritative fallback：该 issue 无不可变快照 ——
+    # 仅从 reflection 恢复该 issue 的推荐（D 优先只是历史兼容选择，明确标记 non-authoritative），
+    # 绝不把它当作「当时发布的唯一推荐」。
+    cand = [p for p in periods if str(p.get("issue")) == target_issue]
+    if not cand:
+        return {"updated_at": _now(), "empty": True, "issue": None}
+    p = max(cand, key=lambda x: _strategy_group(x.get("strategy", "")) == "D")
+    rec = p.get("recommend") or {}
+    front = rec.get("front") or []
+    back = rec.get("back") or []
+    hits = _hit_counts(front, back, actual_front, actual_back)
     return {
         "updated_at": _now(),
         "empty": False,
-        "issue": p.get("issue"),
+        "issue": target_issue,
+        "snapshot_status": "missing",
+        "authoritative": False,
+        "legacy": True,
+        "snapshot_hash": None,
         "recommendation": {
             "strategy": p.get("strategy"),
             "front": front,
-            "back": rec.get("back") or [],
+            "back": back,
             "score_total": rec.get("score_total"),
         },
-        "actual_result": {
-            "front": actual_front,
-            "back": act.get("back") or [],
-        },
-        "hit_count": {
-            "front": res.get("front_hit"),
-            "back": res.get("back_hit"),
-            "total": res.get("total_hit"),
-            "level": HIT_LEVEL.get(int(res.get("total_hit") or 0), 0),
-        },
-        "analysis": analysis,
-        "next_adjustment": _build_next_adjustment(analysis),
-        "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖",
+        "actual_result": {"front": actual_front, "back": actual_back},
+        "hit_count": hits,
+        "analysis": {"factor_review": (p.get("factor_review") or {})},
+        "next_adjustment": _build_next_adjustment({"factor_review": (p.get("factor_review") or {})}),
+        "disclaimer": "该期无不可变发布快照，复盘为 legacy 兼容（非权威，不代表当时实际发布内容）",
     }
+
+
+def _factor_review_of(periods: list[dict[str, Any]], issue: str, strategy: str) -> dict[str, Any]:
+    """取该 issue 且策略前缀匹配 primary 的 factor_review（无则空 dict）。"""
+    for p in periods:
+        if isinstance(p, dict) and str(p.get("issue")) == issue and \
+                _strategy_group(p.get("strategy", "")) == _strategy_group(strategy or ""):
+            fr = p.get("factor_review")
+            if isinstance(fr, dict):
+                return fr
+    return {}
 
 
 # ---------------------------------------------------------------- ③ 策略表现
@@ -411,15 +622,22 @@ def publish(*, rec_path: str = "reports/recommendations.json",
             reflect_path: str = "reports/reflection_report.json",
             backtest_path: str = "reports/backtest_summary.json",
             current_path: str = "public/data/recommendations.json",
-            out_dir: str = "public/data") -> dict[str, Any]:
-    """执行输出层发布，返回各文件生成结果摘要（永不抛异常）。"""
+            out_dir: str = "public/data",
+            published_path: str | None = None,
+            history_path: str = "public/data/dlt_history.json",
+            recent_window: int = 50) -> dict[str, Any]:
+    """执行输出层发布，返回各文件生成结果摘要（永不抛异常）。
+
+    P0-1：确定唯一 primary 后写不可变发布快照（published_path，默认
+    out_dir/published_recommendations.json），复盘按 issue 读取该快照。
+    P1-2：发布前用真实历史数据为 primary 生成确定性 explanation 并冻结进快照。
+    """
     current = _load_json(current_path)
     source_recs = _load_json(rec_path)
     reflection = _load_json(reflect_path)
     backtest = _load_json(backtest_path)
 
     recs = build_recommendations(current, source_recs)
-    review = build_review(reflection)
     strategy_score = build_strategy_score(backtest)
 
     # recommendations.json 的号码源存在性检查：D1 导出缺失时回退 reports 最新一期（仍失败安全）
@@ -430,14 +648,46 @@ def publish(*, rec_path: str = "reports/recommendations.json",
 
     # D3.2 融合评分接入（回退路径之后、写盘之前）：final_score/final_breakdown/final_rank
     # + is_primary 由融合结果重算；任何异常 → 原样返回（保留 D 硬编码兜底，行为与 D3.1 前一致）
-    recs = _apply_final_scores(recs, backtest, strategy_score, reflection, review,
+    recs = _apply_final_scores(recs, backtest, strategy_score, reflection, None,
                                weights=_load_final_score_config())
+
+    # P0 唯一权威 primary + 不可变发布快照：在「恰好一个 is_primary」确定之后写快照。
+    # 快照必须使用与前端展示一致的同一 primary（pick_primary 与 selectPrimary 同契约：只读 is_primary）。
+    snapshot_path = published_path or os.path.join(out_dir, "published_recommendations.json")
+    published_status: dict[str, Any] = {"path": snapshot_path, "issues": {}}
+    primary = pick_primary(recs)          # 恰好 1 个 is_primary=True 才返回；0/多个 → None
+    snapshot_write_ok = isinstance(primary, dict)
+    if snapshot_write_ok:
+        # P1-2：用真实历史数据为该 primary 生成确定性 explanation（不改 numbers/score/is_primary）。
+        expl = _build_primary_explanation(primary, _load_json(history_path), recent_window=recent_window)
+        primary["explanation"] = expl                      # 仅新增加法字段，供快照冻结 + 前端展示
+        primary["reason"] = primary.get("reason") or (expl.get("summary") if expl else None)
+        snap = build_snapshot(primary, published_at=_now())
+        st = upsert_published_snapshot(snapshot_path, snap)
+        published_status["issues"][str(primary.get("target_issue"))] = st
+        # CONFLICT = 该 issue 已有不同不可变快照。fail-closed：不得把新推荐写进
+        # recommendations.json（否则 displayed != snapshot）。保留冻结展示。
+        if st == "conflict":
+            snapshot_write_ok = False
+
+    # P0-1 复盘：读不可变快照索引（含历史已发布 + 本期新写），按 issue 查询
+    published_by_issue = load_published_by_issue(snapshot_path)
+    review = build_review(reflection, published_by_issue)
 
     rec_out = os.path.join(out_dir, "recommendations.json")
     review_out = os.path.join(out_dir, "review.json")
     strategy_out = os.path.join(out_dir, "strategy_score.json")
+
+    # STEP 7 fail-closed：primary 恰好一个且快照非 conflict 才写 recommendations.json；
+    # 否则（0/多个 primary，或 conflict）跳过写盘，保留冻结展示，避免 display/snapshot 分叉。
+    if snapshot_write_ok:
+        changed_recommendations = _write_json_if_changed(rec_out, recs)
+    else:
+        changed_recommendations = False
+    published_status["fail_closed"] = (not snapshot_write_ok)
+
     changed = {
-        "recommendations": _write_json_if_changed(rec_out, recs),
+        "recommendations": changed_recommendations,
         "review": _write_json_if_changed(review_out, review),
         "strategy_score": _write_json_if_changed(strategy_out, strategy_score),
     }
@@ -445,7 +695,9 @@ def publish(*, rec_path: str = "reports/recommendations.json",
     return {
         "updated_at": _now(),
         "recommendations": {"file": rec_out, "count": len(recs), "changed": changed["recommendations"]},
-        "review": {"file": review_out, "empty": bool(review.get("empty")), "changed": changed["review"]},
+        "review": {"file": review_out, "empty": bool(review.get("empty")), "changed": changed["review"],
+                   "snapshot_status": review.get("snapshot_status", "missing")},
+        "published": published_status,
         "strategy_score": {"file": strategy_out, "count": len(strategy_score.get("strategies", [])),
                            "changed": changed["strategy_score"]},
     }
@@ -458,12 +710,14 @@ def main() -> None:
     parser.add_argument("--backtest-path", default="reports/backtest_summary.json")
     parser.add_argument("--current-path", default="public/data/recommendations.json")
     parser.add_argument("--out-dir", default="public/data")
+    parser.add_argument("--published-path", default=None,
+                        help="P0-1 不可变发布快照路径（默认 <out-dir>/published_recommendations.json）")
     parser.add_argument("--safe", action="store_true", help="CI 模式：任何异常仅打印并 exit 0")
     args = parser.parse_args()
     try:
         result = publish(rec_path=args.rec_path, reflect_path=args.reflect_path,
                          backtest_path=args.backtest_path, current_path=args.current_path,
-                         out_dir=args.out_dir)
+                         out_dir=args.out_dir, published_path=args.published_path)
         print(f"[publisher] 输出层发布完成：推荐 {result['recommendations']['count']} 条，"
               f"复盘 empty={result['review']['empty']}，策略 {result['strategy_score']['count']} 组")
     except Exception as e:  # 顶层兜底（--safe 时 exit 0）

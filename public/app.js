@@ -148,14 +148,14 @@
   };
 
   // 推荐理由：兼容 String（「；」切分多行）/ Array（逐条），一律 esc 转义防注入
+  // P1-1：理由缺失时显示中性占位（不编造理由；真实 explanation generator 属 P1-2）。
   function renderReason(reason) {
-    if (!reason || !String(reason).length) {
-      return '<span style="opacity:.6">推荐理由：建设中</span>';
-    }
     var items = Array.isArray(reason)
       ? reason.map(function (s) { return String(s).trim(); }).filter(Boolean)
-      : String(reason).split(/[；;]/).map(function (s) { return s.trim(); }).filter(Boolean);
-    if (!items.length) return '<span style="opacity:.6">推荐理由：建设中</span>';
+      : String(reason || "").split(/[；;]/).map(function (s) { return s.trim(); }).filter(Boolean);
+    if (!items.length) {
+      return '<span style="opacity:.6">本期推荐理由暂未生成</span>';
+    }
     return items.map(function (s) {
       return '<div style="margin:2px 0;">· ' + esc(s) + "</div>";
     }).join("");
@@ -191,11 +191,19 @@
     var level = typeof hit.level === "number" ? hit.level : 0;
     var levelLabel = HIT_LEVEL_LABELS[level] || "未知等级";
     var fr = renderFactorReview(ana.factor_review);
+    // P0-2：无不可变发布快照（legacy/missing）时，明确告知用户这是非权威兼容复盘，
+    // 不代表"当时实际购买的唯一推荐"，避免与正式复盘样式混淆。
+    var legacyBanner = (review.legacy === true || review.snapshot_status === "missing")
+      ? '<div style="margin:8px 0 0;padding:8px 10px;border:1px dashed #d97706;border-radius:8px;' +
+        'background:#fffbeb;color:#92400e;font-size:12px;line-height:1.5;">' +
+        "⚠️ 该历史期无不可变发布快照，以上为兼容展示（非权威），不代表你当时购买的唯一推荐。</div>"
+      : "";
 
     container.innerHTML =
       '<div style="text-align:left;">' +
         '<div style="font-size:13px;color:var(--accent,#6d28d9);font-weight:600;margin-bottom:10px;">' +
           "复盘期号：" + esc(review.issue) + " 期</div>" +
+        legacyBanner +
         '<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">' +
           '<div style="flex:1;min-width:220px;">' +
             '<div style="font-size:12px;color:var(--muted,#94a3b8);margin-bottom:4px;">🤖 AI 上期推荐 · ' +
@@ -268,21 +276,13 @@
       "（样本 " + (row.total_count == null ? 0 : row.total_count) + " 期）";
   }
 
-  // 唯一推荐选择逻辑（兼容增强，不改变现有 D 结果）：
-  // final 字段 > is_primary 标记 > score 降序 > D 策略 fallback > 首条
+  // P0 唯一权威 primary：前端只读取 publisher 写定的 is_primary 标记（有且仅一个）。
+  // 不再按 score 重排 / 不再猜 final / 不再回退 D / 不再选 first —— 正式推荐由
+  // backend 决定，前端仅呈现。0 个或多个 is_primary（契约违反）→ 返回 null（fail-closed）。
   function selectPrimary(recs) {
     if (!recs || !recs.length) return null;
-    var byFinal = recs.filter(function (r) { return r.final === true; })[0];
-    if (byFinal) return byFinal;
-    var byPrimary = recs.filter(function (r) { return r.is_primary === true; })[0];
-    if (byPrimary) return byPrimary;
-    var withScore = recs.filter(function (r) { return typeof r.score === "number"; });
-    if (withScore.length) {
-      withScore.sort(function (a, b) { return b.score - a.score; });
-      return withScore[0];
-    }
-    var byD = recs.filter(function (r) { return (r.strategy || "").split("-")[0] === "D"; })[0];
-    return byD || recs[0];
+    var primaries = recs.filter(function (r) { return r && r.is_primary === true; });
+    return primaries.length === 1 ? primaries[0] : null;
   }
 
   // 评分拆解（D3.3）：final_breakdown → 小字分量列表；无数据返回空串
@@ -314,41 +314,68 @@
       '<div style="display:flex;flex-wrap:wrap;gap:5px;">' + chips + "</div>" + metaHtml + "</div>";
   }
 
+    // P1-1：普通用户唯一推荐卡。只呈现权威 primary（is_primary 恰好一个），
+  // 不暴露内部 strategy ID / 不并列 A/B/C/D / 不做策略诊断。
+  // 0 个或多个 is_primary → fail-closed 明确异常态，不猜一组。
   function renderPrimaryRecommendation(container, recs) {
     if (!container) return null;
     var p = selectPrimary(recs);
-    if (!p) { container.innerHTML = ""; return null; }
-    var label = (p.strategy || "综合评分型").split("-").slice(1).join("-") || "综合评分型";
-    // 评分（D3.3）：优先 final_score（跨策略融合 0-100），旧 score 字段回退兼容；
-    // 两者皆缺 → 建设中。量纲统一展示，非概率。
+    if (!p) {
+      container.innerHTML =
+        '<div style="padding:14px;border:1px dashed var(--muted,#94a3b8);border-radius:12px;' +
+        'text-align:center;font-size:14px;color:var(--muted,#94a3b8);line-height:1.6;">' +
+        "📭 本期推荐数据暂不可用<br><span style='font-size:12px;'>权威推荐标记缺失（契约校验），请稍后刷新或联系维护。</span></div>";
+      return null;
+    }
+    var issueNo = p.target_issue ? ("预测期号 " + esc(String(p.target_issue))) : "";
     var fs = (typeof p.final_score === "number") ? p.final_score
            : (typeof p.score === "number") ? p.score : null;
     var scoreHtml = (fs !== null)
       ? '<span title="综合评分为模型评价指标，不代表中奖概率">AI 综合评分：<strong style="color:#fbbf24">' +
         fs.toFixed(1) + " / 100</strong></span>"
-      : '<span style="opacity:.6">AI 综合评分：建设中</span>';
+      : "";
     container.innerHTML =
       '<div style="border:1px solid var(--accent, #6d28d9);border-radius:14px;padding:18px;' +
       'background:linear-gradient(135deg, rgba(109,40,217,.14), rgba(109,40,217,.04));">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;' +
         'font-size:13px;color:#c4b5fd;letter-spacing:.5px;margin-bottom:10px;">' +
-          '<span>' + esc(label) + ' · 唯一推荐</span>' + scoreHtml +
+          '<span>本期唯一推荐</span>' + (issueNo ? '<span style="opacity:.7">'+issueNo+'</span>' : "") + scoreHtml +
         '</div>' +
         '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
-          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">前区</span>' + balls(p.front, "front") +
+          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">前区</span>' + balls(p.front || [], "front") +
         '</div>' +
         '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;">' +
-          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">后区</span>' + balls(p.back, "back") +
+          '<span style="color:#a78bfa;font-size:13px;min-width:36px;">后区</span>' + balls(p.back || [], "back") +
         '</div>' +
         '<div style="margin:10px 0 0;font-size:13px;line-height:1.5;">💡 <span id="reason-root">' +
-          renderReason(p.reason) + '</span></div>' +
-        renderScoreBreakdown(p.final_breakdown) +
+          renderReasonBlock(p) + '</span></div>' +
         '<p style="margin:8px 0 0;font-size:11px;opacity:.7;">综合评分为模型评价指标，不代表中奖概率</p>' +
         '<p style="margin:6px 0 0;font-size:12px;color:#fbbf24;">⚠️ 基于历史统计的娱乐产物，非中奖预测</p>' +
-        '<div id="strategy-hint" style="margin-top:10px;padding-top:8px;border-top:1px dashed ' +
-          'rgba(109,40,217,.25);font-size:12px;color:#c4b5fd;"></div>' +
       '</div>';
     return p;
+  }
+
+  // P1-2：优先展示结构化 explanation（summary + 「查看分析依据」2~5 因子折叠），
+  // 无结构化 explanation 时回退到字符串 reason。不展示内部 debug score dump，不出现 A/B/C/D。
+  function renderReasonBlock(p) {
+    var ex = p && p.explanation;
+    if (ex && ex.summary) {
+      var factors = Array.isArray(ex.factors) ? ex.factors.slice(0, 5) : [];
+      var factorsHtml = factors.length
+        ? '<details style="margin-top:6px;font-size:12px;">' +
+            '<summary style="cursor:pointer;opacity:.75;">📋 查看分析依据（' + factors.length + '）</summary>' +
+            '<div style="margin:6px 0 0;line-height:1.6;">' +
+            factors.map(function (f) {
+              return '<div style="margin:3px 0;"><strong>' + esc(f.label || f.type || "") +
+                '</strong>　' + esc(f.detail || "") + '</div>';
+            }).join("") +
+            '</div></details>'
+        : "";
+      var statusNote = (ex.reason_status === "unavailable")
+        ? '<div style="font-size:12px;opacity:.6;margin-top:4px;">本期推荐理由暂未生成</div>' : "";
+      return esc(ex.summary) + statusNote + factorsHtml;
+    }
+    return renderReason(p && p.reason);
   }
 
   /* ---------- 启动 ---------- */
@@ -402,15 +429,13 @@
         "。纯历史统计，不构成预测。";
     }
 
-    if (recs.length) {
-      var recTargetEl = document.getElementById("rec-target");
-      if (recTargetEl) recTargetEl.textContent = recs[0].target_issue || "—";
-      var primary = renderPrimaryRecommendation(document.getElementById("primary-recommendation"), recs);
-      renderRecommendations(document.getElementById("recommendations"), recs);
-      if (primary) {
-        renderStrategyHint(document.getElementById("strategy-hint"), strategyScore, primary.strategy);
-      }
-    }
+    // P1-1：普通用户仅见唯一推荐卡。不再渲染 A/B/C/D 折叠网格（#recommendations），
+    // 不再渲染策略诊断（renderStrategyHint / #strategy-hint）。
+    // recs 为空 / 0 个或多个 is_primary → renderPrimaryRecommendation 走 fail-closed 异常态。
+    var recTargetEl = document.getElementById("rec-target");
+    var authPrimary = selectPrimary(recs);
+    if (recTargetEl) recTargetEl.textContent = (authPrimary && authPrimary.target_issue) ? authPrimary.target_issue : "—";
+    renderPrimaryRecommendation(document.getElementById("primary-recommendation"), recs);
 
     /* ③ 上期推荐复盘：review.json 动态渲染（缺失/empty → 降级占位） */
     renderReview(document.getElementById("review-placeholder"), review);
