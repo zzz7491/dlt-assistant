@@ -1,7 +1,11 @@
 {
-  "updated_at": "2026-09-28 20:14:31",
+  "updated_at": "2026-09-30 08:30:19",
   "empty": false,
   "issue": "26111",
+  "snapshot_status": "missing",
+  "authoritative": false,
+  "legacy": true,
+  "snapshot_hash": null,
   "recommendation": {
     "strategy": "D-综合评分型",
     "front": [
@@ -37,8 +41,6 @@
     "level": 1
   },
   "analysis": {
-    "distance_score": 5,
-    "sum_diff": 18,
     "factor_review": {
       "inherit": {
         "value": 0.0,
@@ -89,5 +91,5 @@
       "reason": "组合结构判断偏差（相对历史中位数偏低）"
     }
   ],
-  "disclaimer": "复盘仅为娱乐回顾，不代表预测中奖"
+  "disclaimer": "该期无不可变发布快照，复盘为 legacy 兼容（非权威，不代表当时实际发布内容）"
 }
