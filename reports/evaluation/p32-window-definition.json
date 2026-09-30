@@ -1,0 +1,40 @@
+{
+  "dataset_sha256": "ba4bfb09d46aa66ab72c2ba3f72057e37ffca293ac76e1e3a21dde77f1e4dbbf",
+  "windows": [
+    "50",
+    "100",
+    "300",
+    "500",
+    "1000",
+    "FULL"
+  ],
+  "common_warmup": 1000,
+  "target_count": 1930,
+  "strategies": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "random_seeds": 50,
+  "metrics": [
+    "front_mean",
+    "back_mean",
+    "total_mean",
+    "front_ge3",
+    "front_ge4",
+    "back_ge1",
+    "back_eq2",
+    "prize_hits",
+    "known_payout",
+    "cost",
+    "roi_status"
+  ],
+  "bootstrap_seed": 20260930,
+  "bootstrap_resamples": 10000,
+  "multiple_comparison_method": "holm-bonferroni",
+  "dev_ratio": 0.8,
+  "note": "frozen BEFORE results; do NOT modify windows/rules after run",
+  "frozen_at": "2026-09-30T22:55:43",
+  "definition_sha256": "7749db21e2f6c529bf819b32995549314dbc6456dc77f0b6fc22f5f6f2384615"
+}

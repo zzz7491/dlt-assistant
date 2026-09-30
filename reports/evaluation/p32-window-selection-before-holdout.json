@@ -1,0 +1,17 @@
+{
+  "A": {
+    "dev_best_window": "1000",
+    "dev_best_mean": 1.0661,
+    "dev_control_1000_mean": 1.0661
+  },
+  "B": {
+    "dev_best_window": "500",
+    "dev_best_mean": 1.0861,
+    "dev_control_1000_mean": 1.068
+  },
+  "D": {
+    "dev_best_window": "50",
+    "dev_best_mean": 1.0699,
+    "dev_control_1000_mean": 1.0693
+  }
+}
