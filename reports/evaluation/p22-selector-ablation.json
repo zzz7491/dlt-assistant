@@ -1,0 +1,780 @@
+{
+  "meta": {
+    "evaluation_version": "p22-v1",
+    "history_count": 1000,
+    "warmup": 100,
+    "evaluated_periods": 900,
+    "earliest_issue": "19148",
+    "latest_issue": "26111",
+    "s7_seeds": 50,
+    "s0_seeds": 50,
+    "bootstrap_n": 10000,
+    "bootstrap_seed": 12345,
+    "note": "exploratory model-selection analysis; multiple comparisons adjusted via Holm; ORACLE is POST-HOC invalid for production"
+  },
+  "variants": {
+    "S1": {
+      "variant": "CURRENT_SELECTOR",
+      "description": "生产 selector（base+hist+rec+str+risk）",
+      "oracle": false,
+      "n_records": 900,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 900,
+        "mean": 1.0878,
+        "median": 1.0,
+        "std": 0.8957,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.7278,
+      "back_mean": 0.36,
+      "payout_summary": {
+        "n": 900,
+        "cost_total": 1800.0,
+        "known_fixed_payout_total": 550.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "9": 55,
+          "None": 839,
+          "8": 5,
+          "6": 1
+        },
+        "roi_lower_bound_total": -0.6944,
+        "roi_fully_determinable": true
+      }
+    },
+    "S2": {
+      "variant": "NO_RECENT",
+      "description": "S1 但 recent=0",
+      "oracle": false,
+      "n_records": 900,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 900,
+        "mean": 1.0878,
+        "median": 1.0,
+        "std": 0.8957,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.7278,
+      "back_mean": 0.36,
+      "payout_summary": {
+        "n": 900,
+        "cost_total": 1800.0,
+        "known_fixed_payout_total": 550.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "9": 55,
+          "None": 839,
+          "8": 5,
+          "6": 1
+        },
+        "roi_lower_bound_total": -0.6944,
+        "roi_fully_determinable": true
+      }
+    },
+    "S3": {
+      "variant": "NO_HISTORY",
+      "description": "S1 但 history=0",
+      "oracle": false,
+      "n_records": 900,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 900,
+        "mean": 1.0878,
+        "median": 1.0,
+        "std": 0.8957,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.7278,
+      "back_mean": 0.36,
+      "payout_summary": {
+        "n": 900,
+        "cost_total": 1800.0,
+        "known_fixed_payout_total": 550.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "9": 55,
+          "None": 839,
+          "8": 5,
+          "6": 1
+        },
+        "roi_lower_bound_total": -0.6944,
+        "roi_fully_determinable": true
+      }
+    },
+    "S4": {
+      "variant": "NO_RECENT_NO_HISTORY",
+      "description": "S1 但 recent=0 且 history=0",
+      "oracle": false,
+      "n_records": 900,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 900,
+        "mean": 1.0878,
+        "median": 1.0,
+        "std": 0.8957,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.7278,
+      "back_mean": 0.36,
+      "payout_summary": {
+        "n": 900,
+        "cost_total": 1800.0,
+        "known_fixed_payout_total": 550.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "9": 55,
+          "None": 839,
+          "8": 5,
+          "6": 1
+        },
+        "roi_lower_bound_total": -0.6944,
+        "roi_fully_determinable": true
+      }
+    },
+    "S5": {
+      "variant": "BASE_ONLY",
+      "description": "S1 但只保留 base（+risk）",
+      "oracle": false,
+      "n_records": 900,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 900,
+        "mean": 1.0878,
+        "median": 1.0,
+        "std": 0.8957,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.7278,
+      "back_mean": 0.36,
+      "payout_summary": {
+        "n": 900,
+        "cost_total": 1800.0,
+        "known_fixed_payout_total": 550.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "9": 55,
+          "None": 839,
+          "8": 5,
+          "6": 1
+        },
+        "roi_lower_bound_total": -0.6944,
+        "roi_fully_determinable": true
+      }
+    },
+    "S6": {
+      "variant": "BASE_STRUCTURE",
+      "description": "S1 但只保留 base+structure（+risk）",
+      "oracle": false,
+      "n_records": 900,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 900,
+        "mean": 1.0878,
+        "median": 1.0,
+        "std": 0.8957,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.7278,
+      "back_mean": 0.36,
+      "payout_summary": {
+        "n": 900,
+        "cost_total": 1800.0,
+        "known_fixed_payout_total": 550.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "9": 55,
+          "None": 839,
+          "8": 5,
+          "6": 1
+        },
+        "roi_lower_bound_total": -0.6944,
+        "roi_fully_determinable": true
+      }
+    },
+    "S0": {
+      "variant": "RANDOM_SINGLE",
+      "description": "独立单注随机 5+2",
+      "oracle": false,
+      "n_records": 45000,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 45000,
+        "mean": 1.0445,
+        "median": 1.0,
+        "std": 0.8887,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.712,
+      "back_mean": 0.3324,
+      "payout_summary": {
+        "n": 45000,
+        "cost_total": 90000.0,
+        "known_fixed_payout_total": 25385.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "None": 42067,
+          "9": 2616,
+          "8": 287,
+          "7": 13,
+          "6": 11,
+          "5": 5,
+          "4": 1
+        },
+        "roi_lower_bound_total": -0.7179,
+        "roi_fully_determinable": true
+      }
+    },
+    "S7": {
+      "variant": "RANDOM_CHOICE_ABCD",
+      "description": "每期从 [A,B,C,D] 均匀随机选一（fair null baseline）",
+      "oracle": false,
+      "n_records": 45000,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 45000,
+        "mean": 1.0368,
+        "median": 1.0,
+        "std": 0.887,
+        "p05": 0.0,
+        "p50": 1.0,
+        "p95": 3.0,
+        "p99": 3.0
+      },
+      "front_mean": 0.6983,
+      "back_mean": 0.3385,
+      "payout_summary": {
+        "n": 45000,
+        "cost_total": 90000.0,
+        "known_fixed_payout_total": 22280.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "None": 42070,
+          "9": 2683,
+          "8": 211,
+          "6": 21,
+          "7": 15
+        },
+        "roi_lower_bound_total": -0.7524,
+        "roi_fully_determinable": true
+      }
+    },
+    "S8": {
+      "variant": "ORACLE_ABCD",
+      "description": "每期挑命中最高（POST-HOC，仅理论上限，INVALID FOR PRODUCTION）",
+      "oracle": true,
+      "n_records": 900,
+      "unique_periods": 900,
+      "total_hit_stats": {
+        "n": 900,
+        "mean": 1.94,
+        "median": 2.0,
+        "std": 0.7607,
+        "p05": 1.0,
+        "p50": 2.0,
+        "p95": 3.0,
+        "p99": 4.0
+      },
+      "front_mean": 1.2778,
+      "back_mean": 0.6622,
+      "payout_summary": {
+        "n": 900,
+        "cost_total": 1800.0,
+        "known_fixed_payout_total": 1670.0,
+        "variable_prize_count": 0,
+        "prize_tier_counts": {
+          "9": 183,
+          "None": 697,
+          "8": 17,
+          "7": 1,
+          "6": 2
+        },
+        "roi_lower_bound_total": -0.0722,
+        "roi_fully_determinable": true
+      }
+    }
+  },
+  "comparisons": {
+    "S1_vs_S2": {
+      "bootstrap": {
+        "mean_delta": 0.0,
+        "se": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "ci_level": 95.0,
+        "ci_contains_zero": true,
+        "n_resamples": 10000,
+        "n_pairs": 900
+      },
+      "signflip": {
+        "observed_delta": 0.0,
+        "p_value": 1.0,
+        "n_nonzero": 0,
+        "direction": "no_difference",
+        "p_value_raw": 1.0,
+        "p_value_holm": 1.0
+      },
+      "t": {
+        "t": 0.0,
+        "p": 1.0,
+        "n": 900
+      },
+      "paired_delta_mean": 0.0
+    },
+    "S1_vs_S3": {
+      "bootstrap": {
+        "mean_delta": 0.0,
+        "se": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "ci_level": 95.0,
+        "ci_contains_zero": true,
+        "n_resamples": 10000,
+        "n_pairs": 900
+      },
+      "signflip": {
+        "observed_delta": 0.0,
+        "p_value": 1.0,
+        "n_nonzero": 0,
+        "direction": "no_difference",
+        "p_value_raw": 1.0,
+        "p_value_holm": 1.0
+      },
+      "t": {
+        "t": 0.0,
+        "p": 1.0,
+        "n": 900
+      },
+      "paired_delta_mean": 0.0
+    },
+    "S1_vs_S4": {
+      "bootstrap": {
+        "mean_delta": 0.0,
+        "se": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "ci_level": 95.0,
+        "ci_contains_zero": true,
+        "n_resamples": 10000,
+        "n_pairs": 900
+      },
+      "signflip": {
+        "observed_delta": 0.0,
+        "p_value": 1.0,
+        "n_nonzero": 0,
+        "direction": "no_difference",
+        "p_value_raw": 1.0,
+        "p_value_holm": 1.0
+      },
+      "t": {
+        "t": 0.0,
+        "p": 1.0,
+        "n": 900
+      },
+      "paired_delta_mean": 0.0
+    },
+    "S1_vs_S7": {
+      "bootstrap": {
+        "mean_delta": 0.05098,
+        "se": 0.02555,
+        "ci_low": 0.00015,
+        "ci_high": 0.10133,
+        "ci_level": 95.0,
+        "ci_contains_zero": false,
+        "n_resamples": 10000,
+        "n_pairs": 900
+      },
+      "signflip": {
+        "observed_delta": 0.05098,
+        "p_value": 0.02549,
+        "n_nonzero": 855,
+        "n_resamples": 2000,
+        "direction": "positive",
+        "p_value_raw": 0.02549,
+        "p_value_holm": 0.10196
+      },
+      "t": {
+        "t": 1.996,
+        "p": 0.04593,
+        "n": 900
+      },
+      "paired_delta_mean": 0.05098
+    }
+  },
+  "selection_frequency_S1": {
+    "A": 17.67,
+    "B": 0.44,
+    "C": 78.89,
+    "D": 3.0,
+    "early": {
+      "A": 33.67,
+      "B": 1.33,
+      "C": 56.0,
+      "D": 9.0
+    },
+    "middle": {
+      "A": 8.67,
+      "B": 0.0,
+      "C": 91.33,
+      "D": 0.0
+    },
+    "late": {
+      "A": 10.67,
+      "B": 0.0,
+      "C": 89.33,
+      "D": 0.0
+    }
+  },
+  "switching_S1": {
+    "n": 900,
+    "switches": 147,
+    "switch_rate": 0.1635,
+    "mean_run": 6.027,
+    "runs": [
+      1,
+      9,
+      1,
+      7,
+      59,
+      1,
+      1,
+      5,
+      14,
+      8,
+      1,
+      3,
+      2,
+      13,
+      4,
+      1,
+      21,
+      1,
+      2,
+      1,
+      4,
+      1,
+      30,
+      1,
+      2,
+      1,
+      4,
+      1,
+      12,
+      1,
+      9,
+      1,
+      20,
+      1,
+      11,
+      2,
+      9,
+      1,
+      10,
+      2,
+      22,
+      1,
+      10,
+      1,
+      12,
+      2,
+      3,
+      1,
+      6,
+      1,
+      13,
+      1,
+      2,
+      1,
+      22,
+      1,
+      14,
+      1,
+      23,
+      1,
+      34,
+      1,
+      5,
+      1,
+      6,
+      1,
+      3,
+      2,
+      1,
+      1,
+      5,
+      1,
+      2,
+      1,
+      6,
+      1,
+      2,
+      1,
+      22,
+      1,
+      18,
+      2,
+      4,
+      1,
+      49,
+      1,
+      3,
+      1,
+      13,
+      1,
+      20,
+      1,
+      8,
+      1,
+      41,
+      1,
+      1,
+      1,
+      7,
+      1,
+      13,
+      1,
+      4,
+      1,
+      15,
+      1,
+      2,
+      1,
+      8,
+      1,
+      7,
+      1,
+      8,
+      1,
+      1,
+      1,
+      29,
+      1,
+      13,
+      1,
+      2,
+      1,
+      8,
+      1,
+      2,
+      1,
+      6,
+      1,
+      6,
+      1,
+      4,
+      1,
+      11,
+      1,
+      18,
+      1,
+      5,
+      2,
+      5,
+      1,
+      3,
+      1,
+      4,
+      1,
+      3,
+      2,
+      1,
+      1
+    ],
+    "switch_after_win_rate": 0.1765,
+    "switch_after_loss_rate": 0.1382,
+    "win_events": 595,
+    "loss_events": 304
+  },
+  "temporal_S1": {
+    "early": {
+      "n": 300,
+      "mean": 1.13,
+      "median": 1.0,
+      "std": 0.9308,
+      "p05": 0.0,
+      "p50": 1.0,
+      "p95": 3.0,
+      "p99": 3.01
+    },
+    "middle": {
+      "n": 300,
+      "mean": 1.17,
+      "median": 1.0,
+      "std": 0.8913,
+      "p05": 0.0,
+      "p50": 1.0,
+      "p95": 3.0,
+      "p99": 3.0
+    },
+    "late": {
+      "n": 300,
+      "mean": 0.9633,
+      "median": 1.0,
+      "std": 0.8497,
+      "p05": 0.0,
+      "p50": 1.0,
+      "p95": 2.0,
+      "p99": 3.0
+    }
+  },
+  "temporal_S2": {
+    "early": {
+      "n": 300,
+      "mean": 1.13,
+      "median": 1.0,
+      "std": 0.9308,
+      "p05": 0.0,
+      "p50": 1.0,
+      "p95": 3.0,
+      "p99": 3.01
+    },
+    "middle": {
+      "n": 300,
+      "mean": 1.17,
+      "median": 1.0,
+      "std": 0.8913,
+      "p05": 0.0,
+      "p50": 1.0,
+      "p95": 3.0,
+      "p99": 3.0
+    },
+    "late": {
+      "n": 300,
+      "mean": 0.9633,
+      "median": 1.0,
+      "std": 0.8497,
+      "p05": 0.0,
+      "p50": 1.0,
+      "p95": 2.0,
+      "p99": 3.0
+    }
+  },
+  "rolling_S1_minus_S2": [
+    {
+      "block_index": 0,
+      "start_idx": 0,
+      "end_idx": 99,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 1,
+      "start_idx": 100,
+      "end_idx": 199,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 2,
+      "start_idx": 200,
+      "end_idx": 299,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 3,
+      "start_idx": 300,
+      "end_idx": 399,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 4,
+      "start_idx": 400,
+      "end_idx": 499,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 5,
+      "start_idx": 500,
+      "end_idx": 599,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 6,
+      "start_idx": 600,
+      "end_idx": 699,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 7,
+      "start_idx": 700,
+      "end_idx": 799,
+      "n": 100,
+      "mean": 0.0
+    },
+    {
+      "block_index": 8,
+      "start_idx": 800,
+      "end_idx": 899,
+      "n": 100,
+      "mean": 0.0
+    }
+  ],
+  "s7_seed_stats": {
+    "n": 50,
+    "mean": 1.0368,
+    "median": 1.0422,
+    "std": 0.0233,
+    "p05": 0.9969,
+    "p50": 1.0422,
+    "p95": 1.0662,
+    "p99": 1.0768
+  },
+  "s7_full_stats": {
+    "n": 45000,
+    "mean": 1.0368,
+    "median": 1.0,
+    "std": 0.887,
+    "p05": 0.0,
+    "p50": 1.0,
+    "p95": 3.0,
+    "p99": 3.0
+  },
+  "s8_oracle_stats": {
+    "n": 900,
+    "mean": 1.94,
+    "median": 2.0,
+    "std": 0.7607,
+    "p05": 1.0,
+    "p50": 2.0,
+    "p95": 3.0,
+    "p99": 4.0
+  },
+  "s8_oracle_warning": "POST-HOC / INVALID FOR PRODUCTION — theoretical upper bound only",
+  "s0_stats": {
+    "n": 45000,
+    "mean": 1.0445,
+    "median": 1.0,
+    "std": 0.8887,
+    "p05": 0.0,
+    "p50": 1.0,
+    "p95": 3.0,
+    "p99": 3.0
+  }
+}
