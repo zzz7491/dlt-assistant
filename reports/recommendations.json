@@ -383,58 +383,58 @@
     }
   },
   {
-    "date": "2026-08-28",
+    "date": "2026-08-29",
     "target_issue": "26098",
     "strategy": "A-均衡统计型",
     "idx": 0,
     "front": [
-      2,
+      1,
       3,
-      6,
+      16,
       24,
-      33
+      25
     ],
     "back": [
       2,
-      10
+      7
     ]
   },
   {
-    "date": "2026-08-28",
+    "date": "2026-08-29",
     "target_issue": "26098",
     "strategy": "B-冷热组合型",
     "idx": 0,
     "front": [
-      8,
+      4,
+      7,
       11,
-      24,
-      26,
-      27
+      17,
+      24
     ],
     "back": [
-      2,
-      3
+      3,
+      12
     ]
   },
   {
-    "date": "2026-08-28",
+    "date": "2026-08-29",
     "target_issue": "26098",
     "strategy": "C-纯随机娱乐型",
     "idx": 0,
     "front": [
-      1,
-      15,
-      24,
-      29,
-      32
+      6,
+      25,
+      26,
+      32,
+      35
     ],
     "back": [
-      1,
-      10
+      6,
+      12
     ]
   },
   {
-    "date": "2026-08-28",
+    "date": "2026-08-29",
     "target_issue": "26098",
     "strategy": "D-综合评分型",
     "idx": 0,
@@ -461,6 +461,1168 @@
         "odd_even_match": 36.1,
         "big_small_match": 0.0,
         "zone_match": 19.8,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-08-31",
+    "target_issue": "26099",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      9,
+      11,
+      16,
+      20,
+      32
+    ],
+    "back": [
+      2,
+      3
+    ]
+  },
+  {
+    "date": "2026-08-31",
+    "target_issue": "26099",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      8,
+      18,
+      20,
+      24,
+      26
+    ],
+    "back": [
+      1,
+      9
+    ]
+  },
+  {
+    "date": "2026-08-31",
+    "target_issue": "26099",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      3,
+      8,
+      20,
+      32,
+      33
+    ],
+    "back": [
+      3,
+      10
+    ]
+  },
+  {
+    "date": "2026-08-31",
+    "target_issue": "26099",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      13,
+      23,
+      27,
+      28,
+      2
+    ],
+    "back": [
+      11,
+      6
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.38,
+    "basis": {
+      "heat": 15.71,
+      "missing": 80.0,
+      "trend": 48.81,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.21,
+        "odd_even_match": 36.0,
+        "big_small_match": 0.0,
+        "zone_match": 20.15,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-02",
+    "target_issue": "26100",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      8,
+      13,
+      25,
+      28,
+      34
+    ],
+    "back": [
+      4,
+      10
+    ]
+  },
+  {
+    "date": "2026-09-02",
+    "target_issue": "26100",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      1,
+      3,
+      22,
+      24,
+      26
+    ],
+    "back": [
+      3,
+      10
+    ]
+  },
+  {
+    "date": "2026-09-02",
+    "target_issue": "26100",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      1,
+      4,
+      9,
+      12,
+      31
+    ],
+    "back": [
+      6,
+      9
+    ]
+  },
+  {
+    "date": "2026-09-02",
+    "target_issue": "26100",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      13,
+      23,
+      27,
+      16,
+      24
+    ],
+    "back": [
+      7,
+      11
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.83,
+    "basis": {
+      "heat": 16.14,
+      "missing": 80.0,
+      "trend": 50.98,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.21,
+        "odd_even_match": 36.0,
+        "big_small_match": 0.0,
+        "zone_match": 19.82,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-05",
+    "target_issue": "26101",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      3,
+      11,
+      12,
+      24,
+      26
+    ],
+    "back": [
+      6,
+      7
+    ]
+  },
+  {
+    "date": "2026-09-05",
+    "target_issue": "26101",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      2,
+      5,
+      8,
+      24,
+      35
+    ],
+    "back": [
+      2,
+      8
+    ]
+  },
+  {
+    "date": "2026-09-05",
+    "target_issue": "26101",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      4,
+      5,
+      17,
+      26,
+      32
+    ],
+    "back": [
+      8,
+      12
+    ]
+  },
+  {
+    "date": "2026-09-05",
+    "target_issue": "26101",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      26,
+      23,
+      13,
+      16,
+      1
+    ],
+    "back": [
+      11,
+      6
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.74,
+    "basis": {
+      "heat": 16.57,
+      "missing": 80.0,
+      "trend": 49.81,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.16,
+        "odd_even_match": 36.1,
+        "big_small_match": 0.0,
+        "zone_match": 20.11,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-07",
+    "target_issue": "26102",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      2,
+      11,
+      16,
+      22,
+      27
+    ],
+    "back": [
+      1,
+      11
+    ]
+  },
+  {
+    "date": "2026-09-07",
+    "target_issue": "26102",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      8,
+      11,
+      14,
+      20,
+      24
+    ],
+    "back": [
+      1,
+      11
+    ]
+  },
+  {
+    "date": "2026-09-07",
+    "target_issue": "26102",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      3,
+      8,
+      16,
+      18,
+      29
+    ],
+    "back": [
+      6,
+      7
+    ]
+  },
+  {
+    "date": "2026-09-07",
+    "target_issue": "26102",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      23,
+      16,
+      27,
+      13,
+      24
+    ],
+    "back": [
+      5,
+      6
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.61,
+    "basis": {
+      "heat": 15.71,
+      "missing": 80.0,
+      "trend": 50.24,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.11,
+        "odd_even_match": 36.1,
+        "big_small_match": 0.0,
+        "zone_match": 19.81,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-09",
+    "target_issue": "26103",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      2,
+      7,
+      24,
+      28,
+      33
+    ],
+    "back": [
+      3,
+      8
+    ]
+  },
+  {
+    "date": "2026-09-09",
+    "target_issue": "26103",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      3,
+      8,
+      11,
+      17,
+      24
+    ],
+    "back": [
+      7,
+      10
+    ]
+  },
+  {
+    "date": "2026-09-09",
+    "target_issue": "26103",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      9,
+      21,
+      24,
+      32,
+      33
+    ],
+    "back": [
+      2,
+      8
+    ]
+  },
+  {
+    "date": "2026-09-09",
+    "target_issue": "26103",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      23,
+      16,
+      13,
+      24,
+      5
+    ],
+    "back": [
+      5,
+      10
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.49,
+    "basis": {
+      "heat": 15.86,
+      "missing": 80.0,
+      "trend": 49.22,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.16,
+        "odd_even_match": 36.1,
+        "big_small_match": 0.0,
+        "zone_match": 20.12,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-12",
+    "target_issue": "26104",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      12,
+      16,
+      21,
+      24,
+      33
+    ],
+    "back": [
+      10,
+      12
+    ]
+  },
+  {
+    "date": "2026-09-12",
+    "target_issue": "26104",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      2,
+      5,
+      16,
+      20,
+      24
+    ],
+    "back": [
+      5,
+      10
+    ]
+  },
+  {
+    "date": "2026-09-12",
+    "target_issue": "26104",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      2,
+      4,
+      7,
+      11,
+      29
+    ],
+    "back": [
+      8,
+      9
+    ]
+  },
+  {
+    "date": "2026-09-12",
+    "target_issue": "26104",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      14,
+      23,
+      13,
+      24,
+      5
+    ],
+    "back": [
+      5,
+      4
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.63,
+    "basis": {
+      "heat": 16.29,
+      "missing": 80.0,
+      "trend": 49.48,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.16,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 20.16,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-14",
+    "target_issue": "26105",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      4,
+      15,
+      20,
+      22,
+      35
+    ],
+    "back": [
+      2,
+      3
+    ]
+  },
+  {
+    "date": "2026-09-14",
+    "target_issue": "26105",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      2,
+      7,
+      21,
+      24,
+      26
+    ],
+    "back": [
+      4,
+      9
+    ]
+  },
+  {
+    "date": "2026-09-14",
+    "target_issue": "26105",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      11,
+      16,
+      23,
+      24,
+      28
+    ],
+    "back": [
+      4,
+      10
+    ]
+  },
+  {
+    "date": "2026-09-14",
+    "target_issue": "26105",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      12,
+      13,
+      4,
+      23,
+      25
+    ],
+    "back": [
+      5,
+      4
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.46,
+    "basis": {
+      "heat": 16.29,
+      "missing": 80.0,
+      "trend": 48.52,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.16,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 20.16,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-16",
+    "target_issue": "26106",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      1,
+      2,
+      7,
+      24,
+      26
+    ],
+    "back": [
+      4,
+      9
+    ]
+  },
+  {
+    "date": "2026-09-16",
+    "target_issue": "26106",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      2,
+      4,
+      11,
+      22,
+      24
+    ],
+    "back": [
+      10,
+      11
+    ]
+  },
+  {
+    "date": "2026-09-16",
+    "target_issue": "26106",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      6,
+      12,
+      18,
+      26,
+      29
+    ],
+    "back": [
+      4,
+      5
+    ]
+  },
+  {
+    "date": "2026-09-16",
+    "target_issue": "26106",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      12,
+      13,
+      8,
+      19,
+      23
+    ],
+    "back": [
+      5,
+      1
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.46,
+    "basis": {
+      "heat": 16.71,
+      "missing": 80.0,
+      "trend": 48.07,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.06,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 19.92,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-19",
+    "target_issue": "26107",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      3,
+      13,
+      15,
+      24,
+      28
+    ],
+    "back": [
+      3,
+      9
+    ]
+  },
+  {
+    "date": "2026-09-19",
+    "target_issue": "26107",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      2,
+      9,
+      11,
+      22,
+      24
+    ],
+    "back": [
+      3,
+      9
+    ]
+  },
+  {
+    "date": "2026-09-19",
+    "target_issue": "26107",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      4,
+      5,
+      7,
+      9,
+      25
+    ],
+    "back": [
+      2,
+      7
+    ]
+  },
+  {
+    "date": "2026-09-19",
+    "target_issue": "26107",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      12,
+      13,
+      8,
+      19,
+      23
+    ],
+    "back": [
+      5,
+      1
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.42,
+    "basis": {
+      "heat": 16.43,
+      "missing": 80.0,
+      "trend": 48.22,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.11,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 19.95,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-21",
+    "target_issue": "26108",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      5,
+      9,
+      22,
+      24,
+      28
+    ],
+    "back": [
+      6,
+      8
+    ]
+  },
+  {
+    "date": "2026-09-21",
+    "target_issue": "26108",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      3,
+      5,
+      22,
+      24,
+      29
+    ],
+    "back": [
+      1,
+      6
+    ]
+  },
+  {
+    "date": "2026-09-21",
+    "target_issue": "26108",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      1,
+      9,
+      15,
+      23,
+      33
+    ],
+    "back": [
+      1,
+      4
+    ]
+  },
+  {
+    "date": "2026-09-21",
+    "target_issue": "26108",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      12,
+      11,
+      8,
+      13,
+      29
+    ],
+    "back": [
+      7,
+      5
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.6,
+    "basis": {
+      "heat": 16.29,
+      "missing": 80.0,
+      "trend": 49.48,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 56.01,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 19.91,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-23",
+    "target_issue": "26109",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      1,
+      5,
+      20,
+      24,
+      32
+    ],
+    "back": [
+      2,
+      8
+    ]
+  },
+  {
+    "date": "2026-09-23",
+    "target_issue": "26109",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      11,
+      20,
+      24,
+      26,
+      27
+    ],
+    "back": [
+      1,
+      6
+    ]
+  },
+  {
+    "date": "2026-09-23",
+    "target_issue": "26109",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      9,
+      13,
+      17,
+      32,
+      33
+    ],
+    "back": [
+      5,
+      12
+    ]
+  },
+  {
+    "date": "2026-09-23",
+    "target_issue": "26109",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      9,
+      12,
+      11,
+      24,
+      23
+    ],
+    "back": [
+      7,
+      5
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.62,
+    "basis": {
+      "heat": 15.71,
+      "missing": 80.0,
+      "trend": 50.24,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 55.96,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 19.94,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-26",
+    "target_issue": "26110",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      3,
+      6,
+      9,
+      24,
+      26
+    ],
+    "back": [
+      11,
+      12
+    ]
+  },
+  {
+    "date": "2026-09-26",
+    "target_issue": "26110",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      2,
+      7,
+      20,
+      24,
+      32
+    ],
+    "back": [
+      4,
+      8
+    ]
+  },
+  {
+    "date": "2026-09-26",
+    "target_issue": "26110",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      2,
+      10,
+      18,
+      21,
+      26
+    ],
+    "back": [
+      3,
+      7
+    ]
+  },
+  {
+    "date": "2026-09-26",
+    "target_issue": "26110",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      9,
+      11,
+      18,
+      8,
+      29
+    ],
+    "back": [
+      7,
+      5
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.47,
+    "basis": {
+      "heat": 15.0,
+      "missing": 80.0,
+      "trend": 50.36,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 55.91,
+        "odd_even_match": 36.1,
+        "big_small_match": 0.0,
+        "zone_match": 19.86,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-28",
+    "target_issue": "26111",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      3,
+      15,
+      19,
+      22,
+      26
+    ],
+    "back": [
+      6,
+      7
+    ]
+  },
+  {
+    "date": "2026-09-28",
+    "target_issue": "26111",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      5,
+      7,
+      9,
+      22,
+      24
+    ],
+    "back": [
+      4,
+      6
+    ]
+  },
+  {
+    "date": "2026-09-28",
+    "target_issue": "26111",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      1,
+      15,
+      20,
+      31,
+      34
+    ],
+    "back": [
+      2,
+      9
+    ]
+  },
+  {
+    "date": "2026-09-28",
+    "target_issue": "26111",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      9,
+      11,
+      18,
+      8,
+      29
+    ],
+    "back": [
+      2,
+      5
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.35,
+    "basis": {
+      "heat": 14.57,
+      "missing": 80.0,
+      "trend": 50.1,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 55.96,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 19.83,
+        "sum_span_match": 100.0
+      }
+    }
+  },
+  {
+    "date": "2026-09-30",
+    "target_issue": "26112",
+    "strategy": "A-均衡统计型",
+    "idx": 0,
+    "front": [
+      3,
+      8,
+      13,
+      24,
+      28
+    ],
+    "back": [
+      3,
+      10
+    ]
+  },
+  {
+    "date": "2026-09-30",
+    "target_issue": "26112",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      11,
+      22,
+      24,
+      26,
+      27
+    ],
+    "back": [
+      1,
+      8
+    ]
+  },
+  {
+    "date": "2026-09-30",
+    "target_issue": "26112",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      7,
+      12,
+      14,
+      22,
+      27
+    ],
+    "back": [
+      4,
+      10
+    ]
+  },
+  {
+    "date": "2026-09-30",
+    "target_issue": "26112",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      9,
+      4,
+      19,
+      13,
+      32
+    ],
+    "back": [
+      5,
+      2
+    ],
+    "model_version": "C-2-D-v1",
+    "score_total": 41.12,
+    "basis": {
+      "heat": 14.71,
+      "missing": 80.0,
+      "trend": 48.59,
+      "inherit": 0.0,
+      "structure": {
+        "inherit_match": 55.96,
+        "odd_even_match": 36.2,
+        "big_small_match": 0.0,
+        "zone_match": 20.06,
         "sum_span_match": 100.0
       }
     }
