@@ -2,7 +2,25 @@
 
 ## 当前阶段
 
-**最新研究门禁（2026-10-01）**: DLT P3-4 SELECTOR EDGE DECOMPOSITION & ROBUSTNESS GATE = ✅ PASS（本地 commit，未 push/deploy）
+**P3 RESEARCH PHASE = CLOSED**（P3-1..P3-5 全部 PASS；本地 commit，未 push/deploy；等待下一阶段正式决策）
+
+**最新收口门禁（2026-10-01）**: DLT P3-5 RESEARCH CLOSURE & PRODUCTION SIMPLIFICATION DECISION GATE = ✅ PASS
+
+| 项目 | 结果 |
+|---|---|
+| 核心发现 | B7_CURRENT（最复杂流水线）full mean 1.0544，在 B0-B7 中排倒数第 3；简化反事实 CI 均含 0 |
+| 复杂度 | CURRENT = 5 因子 + OOS walk-forward + 4 候选 + selector（最高工程成本，无预测收益） |
+| C RNG 可复现性 | **REPRODUCIBILITY_RISK = YES**（seed=None；标记，不改；修复：deterministic/snapshot-bound/移除 RNG） |
+| 1000-draw 窗口 | **KEEP_1000_TEMPORARILY**（区分 data retention 与 analysis window；无确认性证据） |
+| P2/P3 统一解释 | 所有表观 edge 在 fair-null + Holm + holdout + 可复现口径下消失；流水线为娱乐/分析系统，非预测器 |
+| 产品语义 | explanation.py 免责 PASS；experiment.html 预测词标记待未来修订（本 Gate 不改 UI） |
+| P35 方向 | **KEEP_CURRENT_TEMPORARILY**（simplification_warranted_for_engineering=True，非部署授权） |
+| 研究停止规则 | STOP FEATURE MINING / SELECTOR TUNING / ML ESCALATION（须按 EXPERIMENT-CONTRACT 预注册新假设） |
+| 生产完整性 | 生产文件 / 26112 / recent_issues=1000 / dataset SHA 全部 UNCHANGED；PUSH NO / DEPLOY NO |
+
+产物：`src/evaluation/research_closure.py`、`scripts/evaluate_research_closure.py`、`tests/test_p35_research_closure.py`（27/27）、`reports/p35-{evidence-ledger,component-inventory,baseline-comparison,production-options}.json` + `P35-SIMPLIFICATION-DECISION.md` + `P3-RESEARCH-CLOSURE.md` + `docs/research/EXPERIMENT-CONTRACT.md`。
+
+### P3-4 研究门禁（2026-10-01）：DLT P3-4 SELECTOR EDGE DECOMPOSITION & ROBUSTNESS GATE = ✅ PASS
 
 | 项目 | 结果 |
 |---|---|

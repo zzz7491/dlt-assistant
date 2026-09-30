@@ -1,0 +1,105 @@
+[
+  {
+    "claim": "selector mean historically higher than a random single ticket (P2-1)",
+    "source_gate": "P2-1",
+    "population": "1000 draws, warmup 100, 900 OOS",
+    "metric": "S1 total-hit mean",
+    "effect": 1.0878,
+    "CI": null,
+    "raw_p": null,
+    "adjusted_p": null,
+    "holdout_status": "exploratory (pre-holdout design)",
+    "interpretation": "apparent edge over a single random ticket (S0)",
+    "limitations": "single-ticket null is weak; not the fair null; population 900 not 1930"
+  },
+  {
+    "claim": "selector has fair-null edge over random-choice(A/B/C/D)",
+    "source_gate": "P2-2",
+    "population": "1000 draws, 900 OOS",
+    "metric": "S1 vs S7 delta",
+    "effect": 0.05098,
+    "CI": [
+      0.00015,
+      0.10133
+    ],
+    "raw_p": 0.04593,
+    "adjusted_p": 0.10196,
+    "holdout_status": "NOT CONFIRMED (Holm)",
+    "interpretation": "raw p<0.05 but Holm-adjusted p=0.102 -> not a confirmed edge",
+    "limitations": "multiple-variant comparison; C seed=None non-reproducible; C 78.89% share"
+  },
+  {
+    "claim": "a simpler candidate beats CURRENT on final holdout",
+    "source_gate": "P2-3",
+    "population": "900, dev 630 / holdout 270",
+    "metric": "T0 vs S7 holdout",
+    "effect": -0.0134,
+    "CI": [
+      -0.1023,
+      0.07585
+    ],
+    "raw_p": 1.0,
+    "adjusted_p": 1.0,
+    "holdout_status": "NOT CONFIRMED",
+    "interpretation": "best simple candidate not better than CURRENT vs fair-null; DECISION=KEEP_CURRENT_TEMPORARILY",
+    "limitations": "C seed-0 proxy at 4th percentile; T5/T7 identical to T0"
+  },
+  {
+    "claim": "full history (2930) integrity + production 1000 overlap",
+    "source_gate": "P3-1",
+    "population": "07001->26112, 2930 draws",
+    "metric": "1000/1000 exact overlap",
+    "effect": 1.0,
+    "CI": null,
+    "raw_p": null,
+    "adjusted_p": null,
+    "holdout_status": "n/a (data gate)",
+    "interpretation": "frozen dataset SHA ba4bfb09; dataset reliable",
+    "limitations": "single source (500.com); no cross-source"
+  },
+  {
+    "claim": "a rolling window beats the 1000 window for A/B/D",
+    "source_gate": "P3-2",
+    "population": "1930 OOS, dev 1544 / holdout 386",
+    "metric": "FULL vs 1000 delta (A/D)",
+    "effect": -0.067,
+    "CI": [
+      -0.113,
+      -0.022
+    ],
+    "raw_p": 0.053,
+    "adjusted_p": 0.15891,
+    "holdout_status": "NOT CONFIRMED",
+    "interpretation": "FULL point estimate worse but not significant after Holm; A KEEP_1000 / B NO_WINDOW_EDGE / D KEEP_1000; cap=INSUFFICIENT",
+    "limitations": "no window confirmed better; desciptive only"
+  },
+  {
+    "claim": "a historical statistic feature has strict OOS predictive value",
+    "source_gate": "P3-3",
+    "population": "1930 OOS, dev 1544 / holdout 386",
+    "metric": "single-number AUC + D-ablation",
+    "effect": "AUC~0.5",
+    "CI": null,
+    "raw_p": null,
+    "adjusted_p": "ablation all Holm p=1.0",
+    "holdout_status": "NOT CONFIRMED",
+    "interpretation": "SUPPORTED features = NONE; no identifiable predictive feature; ML not justified",
+    "limitations": "highly imbalanced labels; redundancy (freq~avg_omit, cur_omit~omit_ratio)"
+  },
+  {
+    "claim": "CURRENT selector edge is robust and informative",
+    "source_gate": "P3-4",
+    "population": "1930 OOS, dev 1544 / holdout 386",
+    "metric": "H1-H4 confirmatory + freq-matched/conditional nulls",
+    "effect": -0.025,
+    "CI": [
+      -0.094,
+      0.056
+    ],
+    "raw_p": 0.747,
+    "adjusted_p": 1.0,
+    "holdout_status": "NOT CONFIRMED",
+    "interpretation": "CURRENT (1.0544) below fair-random (1.0563) and freq-matched null; mechanism = SEED_DEPENDENT+UNCALIBRATED+ERA_DEPENDENT+NOISE_COMPATIBLE; ML reconsideration NOT warranted",
+    "limitations": "P3-4 reconstruction uses reproducible P3-2 candidates; P2-2 seed=None not directly comparable; walk-forward OOS differs from P2 warmup=100"
+  }
+]

@@ -1,0 +1,198 @@
+{
+  "A": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "OPERATIONALLY_REQUIRED",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "P2-2/P3-4: candidate quality near fair-random; not a predictor",
+    "note": "candidate generator (balanced stat sample); retention for compatibility"
+  },
+  "B": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "OPERATIONALLY_REQUIRED",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "P3-2 B NO_WINDOW_EDGE; candidate mean ~1.065",
+    "note": "candidate generator (hot/cold mix)"
+  },
+  "C": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "ENTERTAINMENT_ANALYTIC",
+      "LEGACY_COMPATIBILITY"
+    ],
+    "evidence": "P2-3/P3-4: C seed unstable, non-reproducible (seed=None); C is a random baseline not a model",
+    "note": "random entertainment ticket; REPRODUCIBILITY_RISK"
+  },
+  "D": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "OPERATIONALLY_REQUIRED",
+      "PREDICTIVE_INCONCLUSIVE"
+    ],
+    "evidence": "P3-3 all D-feature ablations Holm p=1.0 (no feature has value)",
+    "note": "scored combinatorial generator; no confirmed predictive edge"
+  },
+  "frequency": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_UNSUPPORTED",
+      "ENTERTAINMENT_ANALYTIC",
+      "REDUNDANT"
+    ],
+    "evidence": "P3-3 front/back freq AUC~0.5, redundant with avg_omit",
+    "note": "used only as construction factor, not a signal"
+  },
+  "omission": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_UNSUPPORTED",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "P3-3 omission family AUC~0.5, not supported",
+    "note": ""
+  },
+  "hot_cold": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_UNSUPPORTED",
+      "ENTERTAINMENT_ANALYTIC",
+      "REDUNDANT"
+    ],
+    "evidence": "P3-3 hot indicator redundant with freq",
+    "note": ""
+  },
+  "trend": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_UNSUPPORTED",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "P3-3 temperature/trend AUC~0.5",
+    "note": ""
+  },
+  "inherit": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_INCONCLUSIVE",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "P3-3 overlap/inherit no confirmed value (capped 15%)",
+    "note": ""
+  },
+  "odd_even_big_small_zone_sum_span": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_UNSUPPORTED",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "P3-3 candidate structure features |spearman|<=0.03",
+    "note": "structural construction only"
+  },
+  "base": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "OPERATIONALLY_REQUIRED"
+    ],
+    "evidence": "static 60 + rank adjust; no history",
+    "note": "final_score component"
+  },
+  "risk": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "OPERATIONALLY_REQUIRED",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "static structural penalty",
+    "note": ""
+  },
+  "history": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_INCONCLUSIVE",
+      "OPERATIONALLY_REQUIRED"
+    ],
+    "evidence": "P2-2/P2-3: OOS history feedback no marginal selector effect; P3-3 outcome-feedback not re-wrapped as feature",
+    "note": "selector input; no confirmed predictive value"
+  },
+  "recent": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_INCONCLUSIVE",
+      "OPERATIONALLY_REQUIRED"
+    ],
+    "evidence": "P2-2 S1 vs S2(drop recent) delta 0; recent-5 feedback not confirmed",
+    "note": "selector input; no confirmed predictive value"
+  },
+  "structure": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_UNSUPPORTED",
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "P3-4 structure component std=0 (structure_ctx=None neutral)",
+    "note": "selector input"
+  },
+  "final_score": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "OPERATIONALLY_REQUIRED",
+      "PREDICTIVE_INCONCLUSIVE"
+    ],
+    "evidence": "P3-4 margin not calibrated; final_score not a predictor",
+    "note": "cross-strategy ranking layer"
+  },
+  "selector": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "PREDICTIVE_UNSUPPORTED",
+      "OPERATIONALLY_REQUIRED"
+    ],
+    "evidence": "P3-4 H1-H4 all Holm p=1.0; NO robust edge; noise-compatible",
+    "note": "no confirmed predictive benefit"
+  },
+  "c_rng_seed": {
+    "role": "PRODUCTION_USED",
+    "classification": [
+      "LEGACY_COMPATIBILITY"
+    ],
+    "evidence": "P2-3/P3-4: seed=None non-reproducible; seed performance unstable",
+    "note": "REPRODUCIBILITY_RISK"
+  },
+  "recent_issues_1000": {
+    "role": "OPERATIONALLY_REQUIRED",
+    "classification": [
+      "OPERATIONALLY_REQUIRED",
+      "LEGACY_COMPATIBILITY"
+    ],
+    "evidence": "P3-2: 1000 not confirmed superior; data retention separate",
+    "note": "KEEP_1000_TEMPORARILY"
+  },
+  "publication_snapshot": {
+    "role": "PUBLICATION_CRITICAL",
+    "classification": [
+      "PUBLICATION_REQUIRED",
+      "OPERATIONALLY_REQUIRED"
+    ],
+    "evidence": "P0 immutable snapshot; 26112 hash bea8ef87 frozen",
+    "note": "must stay immutable"
+  },
+  "explanation_generation": {
+    "role": "DISPLAY_ONLY",
+    "classification": [
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "deterministic explanation engine; no predictive claim allowed",
+    "note": "wording audit required (STEP 12)"
+  },
+  "frontend_trend": {
+    "role": "DISPLAY_ONLY",
+    "classification": [
+      "ENTERTAINMENT_ANALYTIC"
+    ],
+    "evidence": "descriptive trend/trajectory views; no prediction wording",
+    "note": ""
+  }
+}

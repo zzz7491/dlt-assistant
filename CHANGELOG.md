@@ -2,6 +2,56 @@
 
 ## 2026-10-01
 
+### DLT P3-5 RESEARCH CLOSURE & PRODUCTION SIMPLIFICATION DECISION GATE（research only，本地 commit，未 push/deploy）
+
+**类型**: research（收口决策）+ docs
+**Gate 结论**: P3-5 = PASS（P3 研究阶段收口；NO PRODUCTION CHANGE；P3 RESEARCH PHASE = CLOSED）
+
+**目标**: 基于 P2+P3 全部 OOS/holdout 证据，判断当前生产推荐链复杂度的证据支持度、
+可简化度与 RNG 可复现性；形成 P35 生产方向建议 + 研究停止规则 + 未来实验契约。
+
+**产物**:
+| 文件 | 说明 |
+|---|---|
+| `src/evaluation/research_closure.py` | 证据台账 / 组件 inventory + 分类 / B0-B7 baseline / 复杂度成本 / 简化反事实 / RNG+1000cap 决策 / 三生产方案 / 停止规则 / 产品语义审计 / P2-P3 统一解释 |
+| `scripts/evaluate_research_closure.py` | P3-5 runner（integrity 校验 → 各 artifact 生成） |
+| `tests/test_p35_research_closure.py` | 27 断言（≥25） |
+| `reports/p35-evidence-ledger.json` | P2-1→P3-4 冻结证据台账（7 gate） |
+| `reports/p35-component-inventory.json` | 22 组件 role + 证据分类 |
+| `reports/p35-baseline-comparison.json` | B0-B7 指标 + 复杂度成本 + 简化反事实 |
+| `reports/p35-production-options.json` | 三方案 + direction + RNG + cap + 停止规则 + 产品语义审计 |
+| `reports/P35-SIMPLIFICATION-DECISION.md` | 最终决策报告 |
+| `reports/P3-RESEARCH-CLOSURE.md` | P3 全阶段收口总结 |
+| `docs/research/EXPERIMENT-CONTRACT.md` | 未来研究契约（10 条 + STOP 规则） |
+
+**核心结论**（1930 OOS；B0-B7 复用 P3-2 cache + P3-4 重建）:
+- **B7_CURRENT（最复杂：5 因子 + OOS walk-forward + 4 候选 + selector）full mean 1.0544，
+  在 8 个 baseline 中排倒数第 3**（B3 fixed-C 1.0731 / B5·B6 random-choice 1.0636 之上，
+  B4 fixed-D 1.0513 / B0 随机票 1.0508 之上）
+- 简化反事实：CURRENT vs random-choice Δ=-0.020（CI 含 0）；vs fixed-D Δ=+0.057（CI 含 0）
+  → **不得声称复杂 selector 有实际收益**
+- C RNG 可复现性风险 = **YES**（seed=None 不可复现；本 Gate 标记 REPRODUCIBILITY_RISK，不改）
+- 1000-draw 窗口决策 = **KEEP_1000_TEMPORARILY**（区分 DATA RETENTION 与 ANALYSIS WINDOW；无确认性证据）
+- P2/P3 统一解释：所有表观 edge 在 fair-null + Holm + holdout + 可复现口径下消失；
+  流水线是**娱乐/分析系统，非预测器**
+- 产品语义：explanation.py 免责 PASS；experiment.html 预测性措辞标记待未来修订（本 Gate 不改 UI）
+
+**P35_RECOMMENDED_PRODUCTION_DIRECTION = KEEP_CURRENT_TEMPORARILY**（simplification_warranted_for_engineering=True，
+但**非部署授权**；任何修改须走独立 production-change Gate）。
+
+**研究停止规则（STEP 15）**: 无独立于现有历史统计体系的新可检验假设前，
+STOP FEATURE MINING / SELECTOR TUNING / ML ESCALATION；未来研究须先按
+`docs/research/EXPERIMENT-CONTRACT.md` 预注册。
+
+**生产完整性**（未改）: 生产文件 / 26112 snapshot / recent_issues=1000 / dataset SHA 全部 UNCHANGED；
+PUSH NO / DEPLOY NO。
+
+**回归**: `tests/test_p35_research_closure.py` 27/27 OK。
+
+**P3 RESEARCH PHASE = CLOSED**（P3-1..P3-5 全部 PASS；等待下一阶段正式决策）。
+
+---
+
 ### DLT P3-4 SELECTOR EDGE DECOMPOSITION & ROBUSTNESS GATE（research only，本地 commit，未 push/deploy）
 
 **类型**: research（机制分解）+ docs

@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "dataset_sha256": "ba4bfb09d46aa66ab72c2ba3f72057e37ffca293ac76e1e3a21dde77f1e4dbbf",
+    "n_oos": 1930,
+    "dev": 1544,
+    "holdout": 386,
+    "source": "P3-2 candidate cache (window=1000, frozen) + P3-4 CURRENT reconstruction",
+    "no_retraining": true
+  },
+  "baselines": {
+    "B0_uniform_random_valid_ticket": {
+      "full": 1.0508,
+      "dev": 1.0551,
+      "holdout": 1.0337,
+      "variance": 0.7871,
+      "n": 1930
+    },
+    "B1_fixed_A": {
+      "full": 1.0648,
+      "dev": 1.0661,
+      "holdout": 1.0596,
+      "variance": 0.8088,
+      "n": 1930
+    },
+    "B2_fixed_B": {
+      "full": 1.0653,
+      "dev": 1.068,
+      "holdout": 1.0544,
+      "variance": 0.8071,
+      "n": 1930
+    },
+    "B3_fixed_C": {
+      "full": 1.0731,
+      "dev": 1.0583,
+      "holdout": 1.1321,
+      "variance": 0.7921,
+      "n": 1930
+    },
+    "B4_fixed_D": {
+      "full": 1.0513,
+      "dev": 1.0693,
+      "holdout": 0.9793,
+      "variance": 0.8114,
+      "n": 1930
+    },
+    "B5_random_choice_ABCD": {
+      "full": 1.0636,
+      "dev": 1.0654,
+      "holdout": 1.0563,
+      "variance": 0.2136,
+      "n": 1930
+    },
+    "B6_frequency_matched_random_selector": {
+      "full": 1.0636,
+      "dev": 1.0654,
+      "holdout": 1.0563,
+      "variance": 0.2136,
+      "n": 1930
+    },
+    "B7_CURRENT": {
+      "full": 1.0544,
+      "dev": 1.0589,
+      "holdout": 1.0363,
+      "variance": 0.8007,
+      "n": 1930
+    }
+  },
+  "complexity_costs": {
+    "B0_uniform_random_valid_ticket": {
+      "required_historical_state": "none",
+      "scoring_components": 0,
+      "rng_dependency": "yes (ticket)",
+      "walk_forward": "no",
+      "candidate_generators": 0,
+      "explanation_complexity": "none"
+    },
+    "B1_fixed_A": {
+      "required_historical_state": "last 1000 issues",
+      "scoring_components": "freq+recent+hot/cold+balance",
+      "rng_dependency": "yes (strategy A sample)",
+      "walk_forward": "no",
+      "candidate_generators": 1,
+      "explanation_complexity": "low"
+    },
+    "B2_fixed_B": {
+      "required_historical_state": "last 1000 issues",
+      "scoring_components": "freq+recent+hot/cold",
+      "rng_dependency": "yes (strategy B sample)",
+      "walk_forward": "no",
+      "candidate_generators": 1,
+      "explanation_complexity": "low"
+    },
+    "B3_fixed_C": {
+      "required_historical_state": "none",
+      "scoring_components": 0,
+      "rng_dependency": "yes (random 5+2)",
+      "walk_forward": "no",
+      "candidate_generators": 1,
+      "explanation_complexity": "none"
+    },
+    "B4_fixed_D": {
+      "required_historical_state": "last 1000 issues",
+      "scoring_components": "heat+missing+trend+inherit + combo 5 factors",
+      "rng_dependency": "no (deterministic top-1)",
+      "walk_forward": "no",
+      "candidate_generators": 1,
+      "explanation_complexity": "high (scored factors)"
+    },
+    "B5_random_choice_ABCD": {
+      "required_historical_state": "last 1000 issues",
+      "scoring_components": "4 candidate generators",
+      "rng_dependency": "yes (choice)",
+      "walk_forward": "no",
+      "candidate_generators": 4,
+      "explanation_complexity": "medium"
+    },
+    "B6_frequency_matched_random_selector": {
+      "required_historical_state": "last 1000 issues + OOS selection history",
+      "scoring_components": "4 candidate generators",
+      "rng_dependency": "yes (choice)",
+      "walk_forward": "yes (selection frequency)",
+      "candidate_generators": 4,
+      "explanation_complexity": "medium"
+    },
+    "B7_CURRENT": {
+      "required_historical_state": "last 1000 issues + walk-forward OOS history/recent/rank",
+      "scoring_components": "base+history+recent+structure+risk + 4 candidate generators",
+      "rng_dependency": "yes (A/B/C sample) + C seed=null risk",
+      "walk_forward": "yes (OOS maps, stateful)",
+      "candidate_generators": 4,
+      "explanation_complexity": "highest (5-factor + OOS + selector)"
+    }
+  },
+  "simplification_counterfactual": {
+    "current_vs_random_choice_ABCD": {
+      "full": {
+        "delta": -0.0092,
+        "ci": [
+          -0.0431,
+          0.0246
+        ],
+        "contains_zero": true,
+        "n_pairs": 1930,
+        "n_resamples": 10000
+      },
+      "holdout": {
+        "delta": -0.0201,
+        "ci": [
+          -0.0939,
+          0.0544
+        ],
+        "contains_zero": true,
+        "n_pairs": 386,
+        "n_resamples": 10000
+      },
+      "claim_allowed": false
+    },
+    "current_vs_fixed_D_deterministic": {
+      "holdout": {
+        "delta": 0.057,
+        "ci": [
+          -0.0648,
+          0.1813
+        ],
+        "contains_zero": true,
+        "n_pairs": 386,
+        "n_resamples": 10000
+      },
+      "claim_allowed": false
+    },
+    "note": "CI contains 0 → complex selector NOT demonstrated to beat the simpler alternative"
+  },
+  "ranking_by_full_mean": [
+    [
+      "B3_fixed_C",
+      {
+        "full": 1.0731,
+        "dev": 1.0583,
+        "holdout": 1.1321,
+        "variance": 0.7921,
+        "n": 1930
+      }
+    ],
+    [
+      "B2_fixed_B",
+      {
+        "full": 1.0653,
+        "dev": 1.068,
+        "holdout": 1.0544,
+        "variance": 0.8071,
+        "n": 1930
+      }
+    ],
+    [
+      "B1_fixed_A",
+      {
+        "full": 1.0648,
+        "dev": 1.0661,
+        "holdout": 1.0596,
+        "variance": 0.8088,
+        "n": 1930
+      }
+    ],
+    [
+      "B5_random_choice_ABCD",
+      {
+        "full": 1.0636,
+        "dev": 1.0654,
+        "holdout": 1.0563,
+        "variance": 0.2136,
+        "n": 1930
+      }
+    ],
+    [
+      "B6_frequency_matched_random_selector",
+      {
+        "full": 1.0636,
+        "dev": 1.0654,
+        "holdout": 1.0563,
+        "variance": 0.2136,
+        "n": 1930
+      }
+    ],
+    [
+      "B7_CURRENT",
+      {
+        "full": 1.0544,
+        "dev": 1.0589,
+        "holdout": 1.0363,
+        "variance": 0.8007,
+        "n": 1930
+      }
+    ],
+    [
+      "B4_fixed_D",
+      {
+        "full": 1.0513,
+        "dev": 1.0693,
+        "holdout": 0.9793,
+        "variance": 0.8114,
+        "n": 1930
+      }
+    ],
+    [
+      "B0_uniform_random_valid_ticket",
+      {
+        "full": 1.0508,
+        "dev": 1.0551,
+        "holdout": 1.0337,
+        "variance": 0.7871,
+        "n": 1930
+      }
+    ]
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "options": {
+    "OPTION_A_KEEP_CURRENT": {
+      "implementation_impact": "none",
+      "reproducibility": "LOW (C seed=None, stateful walk-forward selector)",
+      "research_evidence": "no confirmed edge; keeps complexity without demonstrated benefit",
+      "backward_compatibility": "full",
+      "snapshot_compatibility": "full (26112 unchanged)",
+      "migration_risk": "none"
+    },
+    "OPTION_B_SIMPLIFY_SELECTOR": {
+      "implementation_impact": "replace 5-factor + OOS walk-forward selector with fixed or random-choice among A/B/C/D; remove stateful OOS maps",
+      "reproducibility": "MEDIUM-HIGH (deterministic or fixed seed)",
+      "research_evidence": "P3-4: simplification loses nothing confirmed (all nulls not beaten; candidate means ~= random)",
+      "backward_compatibility": "candidate generation unchanged; only selection policy changes",
+      "snapshot_compatibility": "requires new snapshot (numbers may shift) - re-publish",
+      "migration_risk": "LOW (selection layer isolated; requires a production-change Gate)"
+    },
+    "OPTION_C_BASELINE_FIRST_DETERMINISTIC": {
+      "implementation_impact": "publish a single deterministic entertainment ticket (e.g. fixed C with deterministic seed) - remove A/B/D + selector",
+      "reproducibility": "HIGH (deterministic, seed-bound)",
+      "research_evidence": "P3-3/P3-4: no predictive feature/edge; simplest honest baseline",
+      "backward_compatibility": "BREAKING (removes multi-candidate display)",
+      "snapshot_compatibility": "new snapshot required; 26112 immutable until then",
+      "migration_risk": "MEDIUM (largest change; separate production-change Gate)"
+    }
+  },
+  "p35_recommended_direction": {
+    "direction": "KEEP_CURRENT_TEMPORARILY",
+    "rationale": "no confirmatory evidence supports either keeping the complex selector for a predicted benefit OR changing it now. Selector edge is noise-compatible (P3-4); no predictive feature confirmed (P3-3). A production change (OPTION B/C) would be engineering-simplification-driven, not evidence-confirmed; it requires a separate, explicitly authorized production-change Gate.",
+    "production_change_authorized": false,
+    "simplification_warranted_for_engineering": true,
+    "note": "KEEP_CURRENT_TEMPORARILY = no algorithm change now; simplification is an engineering option flagged for a future authorized production-change Gate."
+  },
+  "rng_reproducibility": {
+    "c_rng_reproducibility_risk": true,
+    "reason": "production recommend() uses recommend.seed=null → C strategy RNG state differs every run; P2-3 seed-0 proxy sits at 4th percentile of 50-seed C distribution; P3-4 C seed x era rank unstable (mean|rho|=0.10).",
+    "impact": "published C numbers are NOT reproducible across runs; snapshot hash pins one realization only.",
+    "future_fix_options": [
+      "deterministic seed (config recommend.seed fixed)",
+      "snapshot-bound seed (seed derived from issue/dataset sha)",
+      "remove RNG dependency for C (deterministic pseudo-random or fixed strategy)"
+    ],
+    "this_gate_change": "NO (no production modification in P3-5)"
+  },
+  "window_cap_decision": {
+    "data_retention": "KEEP (1000 draws retained; not the question here)",
+    "analysis_window_decision": "KEEP_1000_TEMPORARILY",
+    "evidence": "P3-2 FULL vs 1000: A delta -0.067 (Holm p=0.159), D -0.025 (Holm p=0.614); no window confirmed better; B NO_WINDOW_EDGE",
+    "conclusion": "no confirmatory evidence supports changing the 1000 analysis window; retain temporarily, revisit only with a pre-registered hypothesis",
+    "note": "data retention (storage) and analysis window are separate architectural concerns"
+  },
+  "research_stop_rule": {
+    "stop_feature_mining": true,
+    "stop_selector_tuning": true,
+    "stop_ml_escalation": true,
+    "reason": "P3-3 confirmed no identifiable predictive feature; P3-4 confirmed no robust selector edge (noise-compatible, seed/era/unstable). Continuing to mine within the same historical-statistics family or escalate to ML would only expand overfitting space.",
+    "future_research_requires": [
+      "a NEW testable hypothesis INDEPENDENT of the current historical-statistics system",
+      "pre-registered hypothesis + mechanism + metric + holdout protocol BEFORE running",
+      "immutable dataset version + walk-forward + baseline + effect size + CI + multiple-comparison correction + seed policy + negative-result retention",
+      "no post-hoc production change"
+    ]
+  },
+  "reconcile": {
+    "unified_explanation": "Across P2-1..P3-4, the production recommendation chain shows NO confirmed predictive edge. P2-1's 'selector beats a random ticket' was a weak single-ticket null. P2-2's fair-null delta (0.051, raw p 0.046) failed Holm correction (0.102) and used non-reproducible C (seed=None) with a 78.9% C share. P2-3 final holdout could not beat the fair null (p=1.0). P3-3 confirmed no historical-statistics feature has OOS value and no D ablation improves OOS hits. P3-4 decomposed the apparent edge and found the CURRENT selector sits BELOW the fair-random and frequency-matched nulls on the final holdout; the effect is seed-dependent, uncalibrated in margin, era-dependent, and compatible with noise. The single coherent story: the pipeline is a well-implemented ENTERTAINMENT/analytics system, not a predictor; every apparent edge disappears under a proper multiple-comparison-corrected, reproducible, holdout-confirmed test.",
+    "no_cherry_picking": "each gate's HOLDOUT/adjusted evidence (not the best exploratory slice) is used; exploratory P2-1 single-ticket advantage is explicitly superseded by P2-2/P3-4 fair-null nulls.",
+    "common_thread": "high candidate interchangeability + seed/era instability + high lottery noise -> small deltas are noise, not signal."
+  },
+  "production_change_authorized": false,
+  "product_semantics_audit": {
+    "banned_terms_scanned": [
+      "提高中奖",
+      "中奖概率",
+      "稳赢",
+      "高概率",
+      "命中模型",
+      "AI预测",
+      "更可能出现",
+      "更容易出",
+      "will hit",
+      "more likely to hit"
+    ],
+    "frontend_findings": [
+      {
+        "file": "public/experiment.html",
+        "banned_terms": [
+          "中奖概率"
+        ],
+        "action": "future revision required (this Gate: NO UI change)"
+      },
+      {
+        "file": "public/pick.html",
+        "banned_terms": [
+          "中奖概率"
+        ],
+        "action": "future revision required (this Gate: NO UI change)"
+      }
+    ],
+    "explanation_engine": {
+      "file": "src/explanation.py",
+      "has_disclaimer": true,
+      "banned_terms_found": [],
+      "verdict": "PASS (no unsupported→predictive packaging)"
+    },
+    "this_gate_changes_ui": false
+  }
+}
