@@ -1,0 +1,842 @@
+{
+  "meta": {
+    "evaluation_version": "p21-v1",
+    "total_issues": 1000,
+    "earliest_issue": "19148",
+    "latest_issue": "26111",
+    "warmup": 100,
+    "evaluated_periods": 900,
+    "random_seeds": 25,
+    "include_d": true,
+    "include_selector": true,
+    "cost_per_ticket": 2.0,
+    "strategy_status": {}
+  },
+  "metrics": {
+    "A": {
+      "n": 900,
+      "front_hit_mean": 0.6889,
+      "back_hit_mean": 0.3067,
+      "total_hit_mean": 0.9956,
+      "front_hit_distribution": {
+        "0": 407,
+        "1": 384,
+        "2": 92,
+        "3": 16,
+        "4": 1,
+        "5": 0
+      },
+      "back_hit_distribution": {
+        "0": 634,
+        "1": 256,
+        "2": 10
+      },
+      "total_hit_distribution": {
+        "0": 284,
+        "1": 389,
+        "2": 182,
+        "3": 37,
+        "4": 8,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      },
+      "thresholds": {
+        "front_ge1": 493,
+        "front_ge2": 109,
+        "front_ge3": 17,
+        "back_ge1": 266,
+        "back_eq2": 10
+      },
+      "prize_hit_count": 50,
+      "prize_tier_counts": {
+        "none": 850,
+        "9": 42,
+        "8": 7,
+        "7": 1
+      }
+    },
+    "B": {
+      "n": 900,
+      "front_hit_mean": 0.6811,
+      "back_hit_mean": 0.3422,
+      "total_hit_mean": 1.0233,
+      "front_hit_distribution": {
+        "0": 419,
+        "1": 363,
+        "2": 104,
+        "3": 14,
+        "4": 0,
+        "5": 0
+      },
+      "back_hit_distribution": {
+        "0": 602,
+        "1": 288,
+        "2": 10
+      },
+      "total_hit_distribution": {
+        "0": 284,
+        "1": 372,
+        "2": 188,
+        "3": 51,
+        "4": 5,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      },
+      "thresholds": {
+        "front_ge1": 481,
+        "front_ge2": 118,
+        "front_ge3": 14,
+        "back_ge1": 298,
+        "back_eq2": 10
+      },
+      "prize_hit_count": 60,
+      "prize_tier_counts": {
+        "none": 840,
+        "9": 55,
+        "8": 5
+      }
+    },
+    "C": {
+      "n": 900,
+      "front_hit_mean": 0.6844,
+      "back_hit_mean": 0.3522,
+      "total_hit_mean": 1.0367,
+      "front_hit_distribution": {
+        "0": 405,
+        "1": 388,
+        "2": 93,
+        "3": 14,
+        "4": 0,
+        "5": 0
+      },
+      "back_hit_distribution": {
+        "0": 603,
+        "1": 277,
+        "2": 20
+      },
+      "total_hit_distribution": {
+        "0": 270,
+        "1": 388,
+        "2": 189,
+        "3": 46,
+        "4": 6,
+        "5": 1,
+        "6": 0,
+        "7": 0
+      },
+      "thresholds": {
+        "front_ge1": 495,
+        "front_ge2": 107,
+        "front_ge3": 14,
+        "back_ge1": 297,
+        "back_eq2": 20
+      },
+      "prize_hit_count": 65,
+      "prize_tier_counts": {
+        "none": 835,
+        "9": 58,
+        "8": 6,
+        "6": 1
+      }
+    },
+    "D": {
+      "n": 900,
+      "front_hit_mean": 0.6722,
+      "back_hit_mean": 0.3233,
+      "total_hit_mean": 0.9956,
+      "front_hit_distribution": {
+        "0": 430,
+        "1": 344,
+        "2": 117,
+        "3": 9,
+        "4": 0,
+        "5": 0
+      },
+      "back_hit_distribution": {
+        "0": 620,
+        "1": 269,
+        "2": 11
+      },
+      "total_hit_distribution": {
+        "0": 299,
+        "1": 361,
+        "2": 188,
+        "3": 50,
+        "4": 1,
+        "5": 1,
+        "6": 0,
+        "7": 0
+      },
+      "thresholds": {
+        "front_ge1": 470,
+        "front_ge2": 126,
+        "front_ge3": 9,
+        "back_ge1": 280,
+        "back_eq2": 11
+      },
+      "prize_hit_count": 57,
+      "prize_tier_counts": {
+        "9": 55,
+        "none": 843,
+        "6": 1,
+        "8": 1
+      }
+    },
+    "RANDOM": {
+      "n": 22500,
+      "front_hit_mean": 0.7135,
+      "back_hit_mean": 0.3346,
+      "total_hit_mean": 1.0481,
+      "front_hit_distribution": {
+        "0": 9843,
+        "1": 9574,
+        "2": 2779,
+        "3": 295,
+        "4": 9,
+        "5": 0
+      },
+      "back_hit_distribution": {
+        "0": 15293,
+        "1": 6885,
+        "2": 322
+      },
+      "total_hit_distribution": {
+        "0": 6699,
+        "1": 9482,
+        "2": 4992,
+        "3": 1197,
+        "4": 125,
+        "5": 5,
+        "6": 0,
+        "7": 0
+      },
+      "thresholds": {
+        "front_ge1": 12657,
+        "front_ge2": 3083,
+        "front_ge3": 304,
+        "back_ge1": 7207,
+        "back_eq2": 322
+      },
+      "prize_hit_count": 1462,
+      "prize_tier_counts": {
+        "none": 21038,
+        "9": 1332,
+        "8": 118,
+        "6": 3,
+        "7": 7,
+        "5": 2
+      }
+    },
+    "SELECTOR": {
+      "n": 890,
+      "front_hit_mean": 0.7719,
+      "back_hit_mean": 0.3618,
+      "total_hit_mean": 1.1337,
+      "front_hit_distribution": {
+        "0": 368,
+        "1": 377,
+        "2": 126,
+        "3": 18,
+        "4": 1,
+        "5": 0
+      },
+      "back_hit_distribution": {
+        "0": 581,
+        "1": 296,
+        "2": 13
+      },
+      "total_hit_distribution": {
+        "0": 240,
+        "1": 366,
+        "2": 218,
+        "3": 57,
+        "4": 9,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      },
+      "thresholds": {
+        "front_ge1": 522,
+        "front_ge2": 145,
+        "front_ge3": 19,
+        "back_ge1": 309,
+        "back_eq2": 13
+      },
+      "prize_hit_count": 72,
+      "prize_tier_counts": {
+        "9": 63,
+        "none": 818,
+        "8": 8,
+        "7": 1
+      }
+    },
+    "SIMPLE_FREQ": {
+      "n": 900,
+      "front_hit_mean": 0.7189,
+      "back_hit_mean": 0.3444,
+      "total_hit_mean": 1.0633,
+      "front_hit_distribution": {
+        "0": 385,
+        "1": 392,
+        "2": 114,
+        "3": 9,
+        "4": 0,
+        "5": 0
+      },
+      "back_hit_distribution": {
+        "0": 602,
+        "1": 286,
+        "2": 12
+      },
+      "total_hit_distribution": {
+        "0": 258,
+        "1": 394,
+        "2": 187,
+        "3": 55,
+        "4": 6,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      },
+      "thresholds": {
+        "front_ge1": 515,
+        "front_ge2": 123,
+        "front_ge3": 9,
+        "back_ge1": 298,
+        "back_eq2": 12
+      },
+      "prize_hit_count": 68,
+      "prize_tier_counts": {
+        "none": 832,
+        "9": 62,
+        "8": 6
+      }
+    }
+  },
+  "random_stats": {
+    "seeds": 25,
+    "total_hit_mean": 1.0481,
+    "total_hit_median": 1.05,
+    "total_hit_std": 0.0311,
+    "total_hit_p05": 1.0024,
+    "total_hit_p95": 1.1026,
+    "front_hit_mean": 0.7135,
+    "back_hit_mean": 0.3346
+  },
+  "comparisons": {
+    "A": {
+      "strategy_total_mean": 0.9956,
+      "random_total_mean": 1.0481,
+      "diff_vs_random": -0.0525,
+      "in_random_p05_p95": false,
+      "within_1sd": false
+    },
+    "B": {
+      "strategy_total_mean": 1.0233,
+      "random_total_mean": 1.0481,
+      "diff_vs_random": -0.0248,
+      "in_random_p05_p95": true,
+      "within_1sd": true
+    },
+    "C": {
+      "strategy_total_mean": 1.0367,
+      "random_total_mean": 1.0481,
+      "diff_vs_random": -0.0114,
+      "in_random_p05_p95": true,
+      "within_1sd": true
+    },
+    "D": {
+      "strategy_total_mean": 0.9956,
+      "random_total_mean": 1.0481,
+      "diff_vs_random": -0.0525,
+      "in_random_p05_p95": false,
+      "within_1sd": false
+    },
+    "SIMPLE_FREQ": {
+      "strategy_total_mean": 1.0633,
+      "random_total_mean": 1.0481,
+      "diff_vs_random": 0.0152,
+      "in_random_p05_p95": true,
+      "within_1sd": true
+    },
+    "SELECTOR": {
+      "strategy_total_mean": 1.1337,
+      "random_total_mean": 1.0481,
+      "diff_vs_random": 0.0856,
+      "in_random_p05_p95": false,
+      "within_1sd": false
+    }
+  },
+  "payout_summary": {
+    "A": {
+      "n": 900,
+      "cost_total": 1800.0,
+      "known_fixed_payout_total": 415.0,
+      "variable_prize_count": 0,
+      "prize_tier_counts": {
+        "None": 850,
+        "9": 42,
+        "8": 7,
+        "7": 1
+      },
+      "roi_lower_bound_total": -0.7694,
+      "roi_fully_determinable": true
+    },
+    "B": {
+      "n": 900,
+      "cost_total": 1800.0,
+      "known_fixed_payout_total": 350.0,
+      "variable_prize_count": 0,
+      "prize_tier_counts": {
+        "None": 840,
+        "9": 55,
+        "8": 5
+      },
+      "roi_lower_bound_total": -0.8056,
+      "roi_fully_determinable": true
+    },
+    "C": {
+      "n": 900,
+      "cost_total": 1800.0,
+      "known_fixed_payout_total": 580.0,
+      "variable_prize_count": 0,
+      "prize_tier_counts": {
+        "None": 835,
+        "9": 58,
+        "8": 6,
+        "6": 1
+      },
+      "roi_lower_bound_total": -0.6778,
+      "roi_fully_determinable": true
+    },
+    "D": {
+      "n": 900,
+      "cost_total": 1800.0,
+      "known_fixed_payout_total": 490.0,
+      "variable_prize_count": 0,
+      "prize_tier_counts": {
+        "9": 55,
+        "None": 843,
+        "6": 1,
+        "8": 1
+      },
+      "roi_lower_bound_total": -0.7278,
+      "roi_fully_determinable": true
+    },
+    "SIMPLE_FREQ": {
+      "n": 900,
+      "cost_total": 1800.0,
+      "known_fixed_payout_total": 400.0,
+      "variable_prize_count": 0,
+      "prize_tier_counts": {
+        "None": 832,
+        "9": 62,
+        "8": 6
+      },
+      "roi_lower_bound_total": -0.7778,
+      "roi_fully_determinable": true
+    },
+    "SELECTOR": {
+      "n": 890,
+      "cost_total": 1780.0,
+      "known_fixed_payout_total": 535.0,
+      "variable_prize_count": 0,
+      "prize_tier_counts": {
+        "9": 63,
+        "None": 818,
+        "8": 8,
+        "7": 1
+      },
+      "roi_lower_bound_total": -0.6994,
+      "roi_fully_determinable": true
+    },
+    "RANDOM": {
+      "n": 22500,
+      "cost_total": 45000.0,
+      "known_fixed_payout_total": 10330.0,
+      "variable_prize_count": 0,
+      "prize_tier_counts": {
+        "None": 21038,
+        "9": 1332,
+        "8": 118,
+        "6": 3,
+        "7": 7,
+        "5": 2
+      },
+      "roi_lower_bound_total": -0.7704,
+      "roi_fully_determinable": true
+    }
+  },
+  "elapsed_sec": 1022.5,
+  "records_sample": [
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "A",
+      "front": [
+        13,
+        15,
+        20,
+        21,
+        30
+      ],
+      "back": [
+        3,
+        10
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 1,
+      "back_hits": 1,
+      "total_hits": 2,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "B",
+      "front": [
+        1,
+        13,
+        16,
+        26,
+        28
+      ],
+      "back": [
+        6,
+        7
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 0,
+      "back_hits": 0,
+      "total_hits": 0,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "C",
+      "front": [
+        5,
+        7,
+        24,
+        25,
+        28
+      ],
+      "back": [
+        7,
+        12
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 1,
+      "back_hits": 0,
+      "total_hits": 1,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "D",
+      "front": [
+        20,
+        1,
+        9,
+        35,
+        22
+      ],
+      "back": [
+        10,
+        1
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 2,
+      "back_hits": 1,
+      "total_hits": 3,
+      "cost": 2.0,
+      "payout": 5.0,
+      "roi": 1.5,
+      "evaluation_version": "p21-v1",
+      "model_version": "C-2-D-v1",
+      "prize_tier": 9,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "RANDOM",
+      "front": [
+        6,
+        17,
+        21,
+        27,
+        29
+      ],
+      "back": [
+        8,
+        9
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 0,
+      "back_hits": 0,
+      "total_hits": 0,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "seed": 1,
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "RANDOM",
+      "front": [
+        3,
+        18,
+        23,
+        27,
+        34
+      ],
+      "back": [
+        2,
+        3
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 0,
+      "back_hits": 0,
+      "total_hits": 0,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "seed": 2,
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "RANDOM",
+      "front": [
+        6,
+        7,
+        23,
+        25,
+        30
+      ],
+      "back": [
+        2,
+        3
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 0,
+      "back_hits": 0,
+      "total_hits": 0,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "seed": 3,
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "RANDOM",
+      "front": [
+        3,
+        9,
+        15,
+        19,
+        28
+      ],
+      "back": [
+        1,
+        11
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 2,
+      "back_hits": 0,
+      "total_hits": 2,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "seed": 4,
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "RANDOM",
+      "front": [
+        8,
+        9,
+        14,
+        25,
+        30
+      ],
+      "back": [
+        9,
+        11
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 1,
+      "back_hits": 0,
+      "total_hits": 1,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "seed": 5,
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    },
+    {
+      "target_issue": "20098",
+      "train_last_issue": "20097",
+      "strategy": "RANDOM",
+      "front": [
+        2,
+        9,
+        17,
+        26,
+        34
+      ],
+      "back": [
+        9,
+        12
+      ],
+      "actual_front": [
+        4,
+        9,
+        15,
+        24,
+        35
+      ],
+      "actual_back": [
+        4,
+        10
+      ],
+      "front_hits": 1,
+      "back_hits": 0,
+      "total_hits": 1,
+      "cost": 2.0,
+      "payout": 0.0,
+      "roi": -1.0,
+      "evaluation_version": "p21-v1",
+      "seed": 6,
+      "prize_tier": null,
+      "roi_fully_determinable": true
+    }
+  ]
+}
