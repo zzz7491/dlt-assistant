@@ -1,0 +1,159 @@
+{
+  "evaluation_version": "p23-v1",
+  "frozen_at": "2026-09-30T18:51:15",
+  "note": "candidate definitions + pre-fixed weights; MUST be generated before evaluation run",
+  "weights": {
+    "T0_prod_weights": {
+      "base": 0.4,
+      "history": 0.2,
+      "recent": 0.15,
+      "structure": 0.2,
+      "risk": 0.05
+    },
+    "T7_base_structure_fixed": {
+      "base": 0.5,
+      "structure": 0.5
+    },
+    "base_norm_range": [
+      56.0,
+      68.0
+    ]
+  },
+  "candidates": {
+    "T0": {
+      "name": "CURRENT_SELECTOR",
+      "oracle": false,
+      "signals": [
+        "base",
+        "history",
+        "recent",
+        "structure",
+        "risk"
+      ],
+      "uses_recent": true,
+      "uses_history": true,
+      "uses_structure": true,
+      "learned_weight": false,
+      "stateful": true,
+      "explainability": "medium (5-factor weighted sum + OOS rank/history)"
+    },
+    "T1": {
+      "name": "FIXED_A",
+      "oracle": false,
+      "signals": [
+        "none"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": false,
+      "learned_weight": false,
+      "stateful": false,
+      "explainability": "trivial (always strategy A)"
+    },
+    "T2": {
+      "name": "FIXED_B",
+      "oracle": false,
+      "signals": [
+        "none"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": false,
+      "learned_weight": false,
+      "stateful": false,
+      "explainability": "trivial (always strategy B)"
+    },
+    "T3": {
+      "name": "FIXED_C",
+      "oracle": false,
+      "signals": [
+        "none"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": false,
+      "learned_weight": false,
+      "stateful": false,
+      "explainability": "trivial (always strategy C = random)"
+    },
+    "T4": {
+      "name": "FIXED_D",
+      "oracle": false,
+      "signals": [
+        "none"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": false,
+      "learned_weight": false,
+      "stateful": false,
+      "explainability": "trivial (always strategy D = scored)"
+    },
+    "T5": {
+      "name": "SIMPLE_BASE",
+      "oracle": false,
+      "signals": [
+        "base",
+        "risk"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": false,
+      "learned_weight": false,
+      "stateful": true,
+      "explainability": "high (rank-based base + structural risk penalty only)"
+    },
+    "T6": {
+      "name": "SIMPLE_STRUCTURE",
+      "oracle": false,
+      "signals": [
+        "structure"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": true,
+      "learned_weight": false,
+      "stateful": false,
+      "explainability": "high (single pre-target structure quality score)"
+    },
+    "T7": {
+      "name": "SIMPLE_BASE_STRUCTURE",
+      "oracle": false,
+      "signals": [
+        "base",
+        "structure"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": true,
+      "learned_weight": false,
+      "stateful": false,
+      "explainability": "high (pre-fixed 50/50 base+structure, no tuning)"
+    },
+    "T8": {
+      "name": "DIVERSITY_SELECTOR",
+      "oracle": false,
+      "signals": [
+        "candidate_diversity"
+      ],
+      "uses_recent": false,
+      "uses_history": false,
+      "uses_structure": false,
+      "learned_weight": false,
+      "stateful": false,
+      "explainability": "high (max symmetric-diff distance from other 3 candidates)"
+    }
+  },
+  "c_sensitivity": {
+    "n_seeds": 50,
+    "fixed_proxy_seed": 0
+  },
+  "bootstrap": {
+    "n": 10000,
+    "seed": 12345
+  },
+  "dev_holdout": {
+    "ratio": 0.7
+  },
+  "definition_hash": "2878c6851a8b33d8c3979e2e3f012caf0b579bfbcd3f18095ca07c8fd6eb6c46"
+}
