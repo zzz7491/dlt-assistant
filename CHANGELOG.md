@@ -1,5 +1,39 @@
 # 更新记录
 
+## 2026-09-30
+
+### DLT 产品基线里程碑（WP0 恢复 → P0/P1 全链路 → CHECKPOINT-1 受控提交）
+
+**类型**: feat + docs + chore（恢复与产品基线）
+
+**背景**:
+- 本地工作区曾处于 mid-rebase 破坏态（73 文件被删），以 push-clean bundle 为唯一可信源完成 WP0 恢复，并在恢复之上建立 P0/P1 产品基线。
+
+**本次已提交的 5 个本地 commit（均在 master，领先 origin/master 5 个，未 push）**：
+
+| Commit | 内容 |
+|---|---|
+| `6d4170b` | docs: 恢复历史研究/项目记录（docs/history、docs/research、reports/archive、DECISIONS、Gate4 批准项，46 文件） |
+| `282670c` | chore: 移除退役推荐路径（api_server.py、src/generate_recommendation.py、src/recommendation_adapter.py、daily-recommend.yml，均 0 生产引用） |
+| `1fa2235` | feat: P0 不可变发布快照 + P1-1 唯一推荐前端 + P1-2 确定性解释引擎（src/publisher.py、src/explanation.py、public/app.js、public/index.html + 4 个测试文件；P0 与 P1-1/P1-2 在 app.js 内 hunk 互锁，合并为 1 commit 避免 broken intermediate） |
+| `fb31d45` | feat: P1-3A 移动优先趋势页三层 IA + P1-3B 连接轨迹视图（public/trend-v2.{html,js,css} + p13a/p13b 契约测试，原生 SVG、无第三方 chart 库、历史描述性无预测文案） |
+| `e63f552` | merge: 合入远端 52 个每日数据更新（dlt_history → 26111/2026-09-28；推荐目标期 26112 > 已开 26111；恰好 1 个 is_primary；未改算法） |
+
+**数据新鲜度（RELEASE-1 STEP 2 硬门禁）**:
+- ✅ history 最新已开奖 = 26111（2026-09-28）；推荐目标期 = 26112 > 已开奖期
+- ✅ 恰好 1 个 `is_primary`（C-纯随机娱乐型，D1 锁定值）
+
+**回归**:
+- P0 snapshot 26 OK · P1-1 ALL PASS · P1-2 10 OK · P1-3A ALL PASS · P1-3B ALL PASS
+- `node --check` app.js / trend-v2.js OK；现存 Python py_compile OK
+
+**未提交/保留项**:
+- `.agnes/`、`.recovery-import/`（bundle + tar.gz 恢复源）、`tmp5gn2ua3v/`（P0 临时 fixture）→ intentional untracked，不 commit、不删除
+- 恢复备份 `/Users/Shared/projects/.recovery-backup-20260930` 保留
+
+**状态**:
+- 本地 master = `e63f552`（ahead 5 / behind 0）；**push 阻塞**：环境无 github.com HTTPS 凭据（keychain 无、.netrc 无、GH_TOKEN 无），需用户提供 token 后执行 `git push origin master`；随后经 `dlt-analysis.yml` workflow_dispatch 触发 CI 完成 Cloudflare 部署（需 CLOUDFLARE_API_TOKEN）
+
 ## 2026-08-28
 
 ### Phase 16 Step 7 - 实验调度器 CI 失败隔离加固 (P1)

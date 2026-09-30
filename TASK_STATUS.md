@@ -2,7 +2,38 @@
 
 ## 当前阶段
 
-**Phase**: Phase 10 - 数据降级与恢复机制  
+**Phase**: Phase 17 - 产品基线恢复与 P0/P1 全链路（WP0 → CHECKPOINT-1 → RELEASE-1）  
+**Task**: RELEASE-1 TODAY-USABLE 发布门禁  
+**Status**: ✅ 本地 5 commit 完成（`6d4170b`/`282670c`/`1fa2235`/`fb31d45`/merge `e63f552`）+ CHANGELOG/TASK_STATUS 记录已提交；⚠️ push 阻塞（环境无 github 凭据），部署与线上 smoke 待凭据到位后执行
+
+### 里程碑记录（2026-09-30）
+
+| 里程碑 | 状态 | 对应 commit |
+|---|---|---|
+| WP0 Recovery（mid-rebase 73 文件删除恢复，push-clean bundle 为源） | ✅ PASS | 恢复基线 |
+| P0 不可变发布快照（published==snapshot==review 一致性） | ✅ PASS | `1fa2235` |
+| P1-1 唯一推荐前端（移除 A/B/C/D 网格） | ✅ PASS | `1fa2235` |
+| P1-2 确定性解释引擎（src/explanation.py，纯 stdlib） | ✅ PASS | `1fa2235` |
+| P1-3A 移动优先趋势页（L1 摘要 / L2 紧凑矩阵+Focus / L3 折叠全矩阵） | ✅ PASS | `fb31d45` |
+| P1-3B 连接轨迹视图（原生 SVG lane，≤3 focus，无跨号连线，无预测文案） | ✅ PASS | `fb31d45` |
+| CHECKPOINT-1 commit 分解（docs→chore→feat(P0+P1)→feat(trend)） | ✅ PASS | 4 commit |
+| RELEASE-1 数据新鲜度 | ✅ 26111 已开 / 26112 在售（merge `e63f552` 合入远端 52 个每日更新） | `e63f552` |
+| RELEASE-1 push → 部署 → 线上 smoke | ⏸️ 阻塞（无 github.com 凭据；待用户提供） | — |
+
+### 数据与推荐状态（merge 后）
+
+| 项目 | 值 |
+|---|---|
+| history 最新已开奖 | 26111（2026-09-28） |
+| 推荐目标期 | 26112（> 已开奖，今日在售） |
+| is_primary | 恰好 1 个（C-纯随机娱乐型，D1 锁定值） |
+| published_recommendations.json | 本地 absent；由部署后 CI `src.publisher --safe` 生成 |
+
+---
+
+## 遗留状态（Phase 10）
+
+**Phase**: Phase 10 - 数据降级与恢复机制（历史状态，已被 Phase 17 取代）  
 **Task**: Task #36-R.8 首页展示恢复与验收  
 **Status**: ✅ Phase 10 Recovery R5.3 人工验收通过（R5.2 修复确认有效，生产页面正常，基线仍冻结于 production-stable-v1.0）
 
