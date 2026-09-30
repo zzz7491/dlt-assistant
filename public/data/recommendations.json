@@ -1,29 +1,29 @@
 [
   {
-    "date": "2026-09-28",
-    "target_issue": "26112",
+    "date": "2026-09-30",
+    "target_issue": "26113",
     "strategy": "A-均衡统计型",
     "idx": 0,
     "front": [
-      7,
-      17,
+      6,
+      9,
       24,
-      26,
+      27,
       28
     ],
     "back": [
-      7,
-      9
+      2,
+      8
     ],
     "score": null,
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 41.03,
+    "final_score": 42.03,
     "final_breakdown": {
       "base": 64.0,
-      "history": 14.29,
-      "recent": 17.14,
+      "history": 15.0,
+      "recent": 22.86,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -34,35 +34,35 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 19
+      "effective_sample": 20
     },
     "final_rank": 2
   },
   {
-    "date": "2026-09-28",
-    "target_issue": "26112",
+    "date": "2026-09-30",
+    "target_issue": "26113",
     "strategy": "B-冷热组合型",
     "idx": 0,
     "front": [
-      3,
-      5,
-      11,
+      1,
+      2,
+      10,
       24,
       26
     ],
     "back": [
-      1,
+      4,
       9
     ],
     "score": null,
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 36.93,
+    "final_score": 35.97,
     "final_breakdown": {
       "base": 56.0,
-      "history": 9.77,
-      "recent": 17.14,
+      "history": 9.29,
+      "recent": 11.43,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -73,35 +73,35 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 19
+      "effective_sample": 20
     },
     "final_rank": 4
   },
   {
-    "date": "2026-09-28",
-    "target_issue": "26112",
+    "date": "2026-09-30",
+    "target_issue": "26113",
     "strategy": "C-纯随机娱乐型",
     "idx": 0,
     "front": [
-      5,
-      12,
-      17,
-      28,
-      31
+      6,
+      7,
+      20,
+      25,
+      35
     ],
     "back": [
       4,
-      7
+      5
     ],
     "score": null,
     "reason": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
     "is_primary": true,
     "source": "reports/recommendations.json",
-    "final_score": 43.66,
+    "final_score": 43.2,
     "final_breakdown": {
       "base": 68.0,
-      "history": 17.3,
-      "recent": 20.0,
+      "history": 17.14,
+      "recent": 17.14,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -112,14 +112,14 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 19
+      "effective_sample": 20
     },
     "final_rank": 1,
     "explanation": {
       "explanation_version": "1.1",
       "strategy_type": "random_baseline",
       "strategy": "C-纯随机娱乐型",
-      "target_issue": "26112",
+      "target_issue": "26113",
       "summary": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
       "factors": [
         {
@@ -133,18 +133,18 @@
         {
           "type": "structure",
           "label": "结构分布（仅描述）",
-          "detail": "前区 奇偶比 3:2、大小比 2:3、和值 93、跨度 26。",
+          "detail": "前区 奇偶比 3:2、大小比 3:2、和值 93、跨度 29。",
           "evidence": {
             "front_odd_even": [
               3,
               2
             ],
             "front_big_small": [
-              2,
-              3
+              3,
+              2
             ],
             "front_sum": 93,
-            "front_span": 26
+            "front_span": 29
           }
         }
       ],
@@ -155,33 +155,33 @@
       ],
       "reason_status": "ok",
       "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
-      "explanation_hash": "e89fc0c7ebafa6bc"
+      "explanation_hash": "f24f179c1f9044b4"
     }
   },
   {
-    "date": "2026-09-28",
-    "target_issue": "26112",
+    "date": "2026-09-30",
+    "target_issue": "26113",
     "strategy": "D-综合评分型",
     "idx": 0,
     "front": [
       9,
-      4,
+      15,
+      6,
       19,
-      13,
       32
     ],
     "back": [
-      5,
-      2
+      12,
+      5
     ],
-    "score": 41.12,
+    "score": 41.22,
     "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 38.41,
+    "final_score": 38.27,
     "final_breakdown": {
       "base": 60.0,
-      "history": 13.49,
+      "history": 12.79,
       "recent": 11.43,
       "structure": 50.0,
       "risk": 0.0,
@@ -193,7 +193,7 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 19
+      "effective_sample": 20
     },
     "final_rank": 3
   }

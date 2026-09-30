@@ -1,95 +1,98 @@
 {
-  "updated_at": "2026-09-30 08:30:19",
+  "updated_at": "2026-09-30 18:34:06",
   "empty": false,
-  "issue": "26111",
-  "snapshot_status": "missing",
-  "authoritative": false,
-  "legacy": true,
-  "snapshot_hash": null,
+  "issue": "26112",
+  "snapshot_status": "ok",
+  "authoritative": true,
+  "snapshot_hash": "bea8ef87f3f137238686ae52712f922956215408f0cf54187b9295d8f1ae5fad",
   "recommendation": {
-    "strategy": "D-综合评分型",
+    "strategy": "C-纯随机娱乐型",
     "front": [
-      9,
-      11,
-      18,
-      8,
-      29
+      5,
+      12,
+      17,
+      28,
+      31
     ],
     "back": [
-      2,
-      5
+      4,
+      7
     ],
-    "score_total": 41.35
+    "score_total": 43.66,
+    "model_version": null
+  },
+  "reason": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
+  "explanation": {
+    "explanation_version": "1.1",
+    "strategy_type": "random_baseline",
+    "strategy": "C-纯随机娱乐型",
+    "target_issue": "26112",
+    "summary": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
+    "factors": [
+      {
+        "type": "random",
+        "label": "随机基线",
+        "detail": "该组合为合法规则内随机抽取，非基于热冷/遗漏/趋势的统计构造。",
+        "evidence": {
+          "is_random": true
+        }
+      },
+      {
+        "type": "structure",
+        "label": "结构分布（仅描述）",
+        "detail": "前区 奇偶比 3:2、大小比 2:3、和值 93、跨度 26。",
+        "evidence": {
+          "front_odd_even": [
+            3,
+            2
+          ],
+          "front_big_small": [
+            2,
+            3
+          ],
+          "front_sum": 93,
+          "front_span": 26
+        }
+      }
+    ],
+    "generated_from": [
+      "dlt_history.json",
+      "window=50",
+      "strategy_type=random_baseline"
+    ],
+    "reason_status": "ok",
+    "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
+    "explanation_hash": "e89fc0c7ebafa6bc"
   },
   "actual_result": {
     "front": [
+      1,
+      3,
+      5,
       10,
-      11,
-      17,
-      26,
-      29
+      22
     ],
     "back": [
-      1,
-      3
+      3,
+      9
     ]
   },
   "hit_count": {
-    "front": 2,
+    "front": 1,
     "back": 0,
-    "total": 2,
+    "total": 1,
     "level": 1
   },
   "analysis": {
-    "factor_review": {
-      "inherit": {
-        "value": 0.0,
-        "median": 0.0,
-        "status": "positive"
-      },
-      "heat": {
-        "value": 14.57,
-        "median": 16.29,
-        "status": "negative"
-      },
-      "missing": {
-        "value": 80.0,
-        "median": 80.0,
-        "status": "positive"
-      },
-      "trend": {
-        "value": 50.1,
-        "median": 49.47,
-        "status": "positive"
-      },
-      "structure": {
-        "value": 42.4,
-        "median": 42.44,
-        "status": "negative"
-      }
-    }
+    "sum_diff": 52,
+    "factor_review": {}
   },
   "next_adjustment": [
     {
       "type": "reduce",
-      "text": "降低热号关注权重",
-      "reason": "热号因子指向偏差（相对历史中位数偏低）"
-    },
-    {
-      "type": "keep",
-      "text": "维持遗漏补偿关注",
-      "reason": "遗漏回补正常（方向判断合理）"
-    },
-    {
-      "type": "keep",
-      "text": "维持趋势因子",
-      "reason": "趋势判断正常（方向判断合理）"
-    },
-    {
-      "type": "reduce",
-      "text": "降低结构贴合权重",
-      "reason": "组合结构判断偏差（相对历史中位数偏低）"
+      "text": "收缩和值区间",
+      "reason": "上期和值偏差较大（差 52）"
     }
   ],
-  "disclaimer": "该期无不可变发布快照，复盘为 legacy 兼容（非权威，不代表当时实际发布内容）"
+  "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖"
 }
