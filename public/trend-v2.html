@@ -71,12 +71,64 @@
       <p class="trend-legend"><span class="legend-note">切换时间范围后，下方全部模块联动更新 · 默认期数随屏幕宽度自动选择（大屏 300 / 移动 100）</span></p>
     </section>
 
-    <!-- ① 号码出现轨迹矩阵（S2：替代旧轨迹视觉；矩阵展示号码/出现/遗漏，无连线） -->
-    <section class="card" id="sec-occurrence">
-      <h2>🔢 号码出现轨迹矩阵</h2>
-      <p class="hint">横轴为期号 · 纵轴为号码 · 命中格显示号码与当前遗漏 · 最新一期高亮</p>
-      <div class="trend-scroll"><div id="occurrence-container"></div></div>
-      <p class="trend-legend"><span><span class="dot red"></span>前区开出</span><span><span class="dot blue"></span>后区开出</span><span class="legend-miss"><span class="miss-swatch miss-s1"></span><span class="miss-swatch miss-s2"></span><span class="miss-swatch miss-s3"></span>遗漏越久颜色越深</span><span class="legend-note">表头为期号（后3位）· 可左右滑动</span></p>
+    <!-- ═══════ P1-3A mobile-first 分层 ═══════ -->
+    <!-- L1 趋势摘要：手机第一视觉层（默认近 30 期，只描述历史事实，不预测） -->
+    <section class="card" id="sec-l1">
+      <h2>📊 趋势摘要</h2>
+      <p class="hint">近 N 期历史事实（窗口可切换）· 不构成预测</p>
+      <div class="period-switch l1-switch" id="l1-period-switch">
+        <button data-periods="30" class="active">近30期</button>
+        <button data-periods="50">近50期</button>
+        <button data-periods="100">近100期</button>
+      </div>
+      <div id="l1-summary" aria-live="polite"></div>
+    </section>
+
+    <!-- L2 近期命中视图：前区/后区 Tab（默认前区，不同时堆两张大表）+ Focus 号码 + 紧凑命中矩阵 + 轨迹视图 -->
+    <section class="card" id="sec-l2">
+      <h2>🔢 近期命中</h2>
+      <div class="cb-tabs" id="cb-tabs" role="tablist">
+        <button data-tab="front" class="active">前区</button>
+        <button data-tab="back">后区</button>
+      </div>
+      <div class="period-switch l2-switch" id="l2-period-switch">
+        <button data-periods="30" class="active">近30期</button>
+        <button data-periods="50">近50期</button>
+        <button data-periods="100">近100期</button>
+      </div>
+      <!-- P1-3B：L2 视图切换 [命中矩阵 | 轨迹]，默认命中矩阵；两视图共享 focus 号码 -->
+      <div class="l2-view-switch" id="l2-view-switch" role="tablist" aria-label="L2 视图切换">
+        <button data-l2view="matrix" class="active" aria-pressed="true">命中矩阵</button>
+        <button data-l2view="trajectory" aria-pressed="false">轨迹</button>
+      </div>
+      <div id="focus-panel-front" data-focus-panel="front" class="focus-panel"></div>
+      <div id="focus-panel-back" data-focus-panel="back" class="focus-panel" hidden></div>
+      <!-- 命中矩阵视图（默认） -->
+      <div class="cm-scroll" id="cb-matrix-front" data-matrix="front"></div>
+      <div class="cm-scroll" id="cb-matrix-back" data-matrix="back" hidden></div>
+      <!-- P1-3B：轨迹视图（SVG，单号/多号 lane；仅当前 tab 显示） -->
+      <div class="cm-scroll traj-scroll" id="cb-trajectory-front" data-matrix="front" hidden></div>
+      <div class="cm-scroll traj-scroll" id="cb-trajectory-back" data-matrix="back" hidden></div>
+      <p class="trend-legend"><span><span class="dot red"></span>实心圆=该号开出</span><span><span class="dot blue"></span>后区开出</span><span class="legend-note">最新一期加粗边框 · 右侧数字=当前遗漏 · 点号码关注（最多3个） / 点命中格看详情 · 轨迹视图描述历史出现节奏，非预测</span></p>
+    </section>
+
+    <!-- L3 完整专业矩阵：默认折叠，用户主动展开（高级分析层，允许 50/100/300/1000 + 横滑） -->
+    <section class="card" id="sec-l3">
+      <h2>📈 完整专业矩阵</h2>
+      <details id="l3-details">
+        <summary class="l3-summary">查看完整专业矩阵（高级）</summary>
+        <div class="period-switch l3-switch" id="l3-period-switch">
+          <button data-periods="50" class="active">50期</button>
+          <button data-periods="100">100期</button>
+          <button data-periods="300">300期</button>
+          <button data-periods="1000">1000期</button>
+        </div>
+        <div class="cb-tabs" id="l3-tabs" role="tablist">
+          <button data-tab="front" class="active">前区</button>
+          <button data-tab="back">后区</button>
+        </div>
+        <div class="trend-scroll" id="l3-matrix"></div>
+      </details>
     </section>
 
     <!-- ③ 前区热度排行 -->
@@ -189,6 +241,8 @@
   <div id="trend-tooltip" class="trend-tooltip" hidden></div>
   <!-- S4：热冷矩阵 hover tooltip -->
   <div id="hm-tooltip" class="hm-tooltip"></div>
+  <!-- P1-3A：触摸详情 bottom-sheet（点击命中格，非 hover 依赖；PC hover 仍保留） -->
+  <div id="trend-detail-sheet" class="trend-detail-sheet" hidden role="dialog" aria-label="号码详情"></div>
 
   <script src="./trend-v2.js" defer></script>
 </body>

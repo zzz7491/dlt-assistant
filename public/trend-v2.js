@@ -14,6 +14,7 @@
   var FRONT_MIN = 1, FRONT_MAX = 35;
   var BACK_MIN = 1, BACK_MAX = 12;
   var BACK_BOUNDARY = 6; // 后区大小分界：01-06 小 / 07-12 大
+  var FRONT_BOUNDARY = 18; // P1-3A：前区大小分界 01-17 小 / 18-35 大（L1 摘要用）
 
   // S1：组规则参数化（为双色球/3D/快乐8 扩展打基础；本轮仅大乐透）
   var GROUP_RULES = {
@@ -22,6 +23,12 @@
   };
 
   function pad2(n) { return String(n).padStart(2, "0"); }
+  // P1-3B：本地 HTML 转义（trend 页自包含，不依赖其它页面脚本）
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
 
   function range(a, b) {
     var out = [];
@@ -646,16 +653,528 @@
     document.getElementById("error-detail").textContent = msg || "";
   }
 
+  /* ================= P1-3A：mobile-first 分层（L1 摘要 / L2 紧凑矩阵+Focus / 触摸详情） ================= */
+  // 以下全部为纯函数：只读 dlt_history.json（排序后 issues），确定性、无随机、无后端 API。
+
+  // L1 趋势摘要：仅描述历史事实（近 N 期窗口），不做预测性文案。
+  function computeL1Summary(issues, n) {
+    var w = sliceWindow(issues, n);
+    var pool = { front: range(FRONT_MIN, FRONT_MAX), back: range(BACK_MIN, BACK_MAX) };
+    var s = { window: w.length };
+    ["front", "back"].forEach(function (kind) {
+      var nums = pool[kind];
+      var freq = {};
+      nums.forEach(function (x) { freq[x] = 0; });
+      w.forEach(function (it) { it[kind].forEach(function (x) { if (freq[x] != null) freq[x]++; }); });
+      // 热号 top5（按次数，次数相同按号码升序）
+      var hot = nums.slice().sort(function (a, b) { return (freq[b] - freq[a]) || (a - b); }).slice(0, 5);
+      // 当前遗漏较高（从最新往回）
+      var omit = {};
+      nums.forEach(function (x) {
+        var m = 0;
+        for (var i = w.length - 1; i >= 0; i--) { if (w[i][kind].indexOf(x) >= 0) break; m++; }
+        omit[x] = m;
+      });
+      var cold = nums.slice().sort(function (a, b) { return (omit[b] - omit[a]) || (a - b); }).filter(function (x) { return omit[x] > 0; }).slice(0, 5);
+      // 近期重复号（窗口内出现 >=2 次）
+      var repeated = nums.filter(function (x) { return freq[x] >= 2; }).sort(function (a, b) { return freq[b] - freq[a]; });
+      s[kind] = { hot: hot.map(function (x) { return [x, freq[x]]; }), cold: cold.map(function (x) { return [x, omit[x]]; }), repeated: repeated, freq: freq, omit: omit };
+    });
+    // 近 N 期连号（每期前区相邻差 1 的组数）
+    var consecPeriods = 0, consecPairs = 0;
+    w.forEach(function (it) {
+      var f = it.front.slice().sort(function (a, b) { return a - b; });
+      var p = 0;
+      for (var i = 0; i < f.length - 1; i++) if (f[i + 1] - f[i] === 1) p++;
+      if (p > 0) consecPeriods++;
+      consecPairs += p;
+    });
+    // 奇偶/大小/和值/跨度/区间（前区）
+    var oddCnt = 0, bigCnt = 0, sumTotal = 0, spanSum = 0, sumMin = Infinity, sumMax = -Infinity;
+    var zone = [0, 0, 0]; // 01-11 / 12-23 / 24-35
+    w.forEach(function (it) {
+      var f = it.front.slice().sort(function (a, b) { return a - b; });
+      oddCnt += f.filter(function (x) { return x % 2 === 1; }).length;
+      bigCnt += f.filter(function (x) { return x >= FRONT_BOUNDARY; }).length;
+      var sm = f.reduce(function (a, b) { return a + b; }, 0);
+      sumTotal += sm; sumMin = Math.min(sumMin, sm); sumMax = Math.max(sumMax, sm);
+      spanSum += f[f.length - 1] - f[0];
+      f.forEach(function (x) { zone[x <= 11 ? 0 : (x <= 23 ? 1 : 2)]++; });
+    });
+    var frontCount = w.length * 5 || 1;
+    s.consecutive = { periods: consecPeriods, pairs: consecPairs };
+    // 前区结构字段并入 s.front（不覆盖 hot/cold/repeated/freq/omit）
+    s.front.oddEven = [oddCnt, frontCount - oddCnt];
+    s.front.bigSmall = [bigCnt, frontCount - bigCnt];
+    s.front.sum = { avg: (sumTotal / w.length) || 0, min: sumMin === Infinity ? 0 : sumMin, max: sumMax === -Infinity ? 0 : sumMax };
+    s.front.span = { avg: spanSum / (w.length || 1) };
+    s.front.zone = zone;
+    return s;
+  }
+
+  function renderL1Summary(container, issues, n) {
+    var s = computeL1Summary(issues, n);
+    function chip(nums, unit) {
+      return nums.map(function (e) { return '<span class="l1-chip">' + pad2(e[0]) + '<i>' + e[1] + (unit || "") + "</i></span>"; }).join("");
+    }
+    var f = s.front || {};
+    var zlabels = ["01–11", "12–23", "24–35"];
+    var zoneTxt = zlabels.map(function (lz, i) { return lz + " " + (f.zone && f.zone[i] != null ? f.zone[i] : "—"); }).join(" · ");
+    container.innerHTML =
+      '<div class="l1-grid">' +
+      '<div class="l1-item"><span class="l1-k">近期热号（前区）</span>' + chip((s.front && s.front.hot) || [], "次") + "</div>" +
+      '<div class="l1-item"><span class="l1-k">当前遗漏较高（前区）</span>' + chip((s.front && s.front.cold) || [], "期") + "</div>" +
+      '<div class="l1-item"><span class="l1-k">近期重复号（前区≥2）</span>' + ((s.front && s.front.repeated && s.front.repeated.length) ? chip(s.front.repeated.map(function (x) { return [x, (s.front.freq && s.front.freq[x]) || 0]; }), "次") : '<span class="l1-none">无</span>') + "</div>" +
+      '<div class="l1-item"><span class="l1-k">近期连号</span><span class="l1-v">近 ' + s.window + ' 期中 ' + s.consecutive.periods + " 期出现连号，共 " + s.consecutive.pairs + " 对</span></div>" +
+      '<div class="l1-item"><span class="l1-k">前区奇偶 / 大小</span><span class="l1-v">奇 ' + (f.oddEven && f.oddEven[0]) + " : 偶 " + (f.oddEven && f.oddEven[1]) + " ｜ 大 " + (f.bigSmall && f.bigSmall[0]) + " : 小 " + (f.bigSmall && f.bigSmall[1]) + "</span></div>" +
+      '<div class="l1-item"><span class="l1-k">前区和值 / 跨度</span><span class="l1-v">和值均值 ' + (f.sum ? Math.round(f.sum.avg * 10) / 10 : "—") + "（" + (f.sum ? f.sum.min : "—") + "–" + (f.sum ? f.sum.max : "—") + "）｜ 跨度均值 " + (f.span ? Math.round(f.span.avg * 10) / 10 : "—") + "</span></div>" +
+      '<div class="l1-item"><span class="l1-k">前区区间（' + zlabels.join("/") + '）</span><span class="l1-v">' + zoneTxt + '</span></div>' +
+      '<p class="l1-note">以上均为近 ' + s.window + " 期历史事实描述，不构成预测。</p>" +
+      "</div>";
+  }
+
+  // Focus 号码：单个号码在窗口内的可追溯统计（确定性）。
+  function computeFocusStats(issues, num, kind, n) {
+    var w = sliceWindow(issues, n);
+    var gaps = [];
+    var lastIdx = -1;
+    for (var i = 0; i < w.length; i++) {
+      if (w[i][kind].indexOf(num) >= 0) {
+        if (lastIdx >= 0) gaps.push(i - lastIdx);
+        lastIdx = i;
+      }
+    }
+    // 当前遗漏（从最新往回）
+    var curOmit = 0;
+    for (var j = w.length - 1; j >= 0; j--) { if (w[j][kind].indexOf(num) >= 0) break; curOmit++; }
+    var count = (lastIdx >= 0) ? (gaps.length + 1) : 0;
+    var lastIssue = (lastIdx >= 0) ? w[lastIdx].issue : null;
+    // 平均间隔 = 相邻两次出现间隔的均值（仅当出现次数 ≥2 时有意义）
+    var maxGap = gaps.length ? Math.max.apply(null, gaps) : 0;
+    var avgGap = (gaps.length) ? Math.round((gaps.reduce(function (a, b) { return a + b; }, 0) / gaps.length) * 10) / 10 : 0;
+    return { num: num, kind: kind, window: w.length, currentOmit: curOmit, recentCount: count, lastAppearIssue: lastIssue,
+             maxOmission: maxGap, avgGap: avgGap, gapSequence: gaps };
+  }
+
+  // P1-3B：Focus 多选（每种前区/后区最多 3 个；共享 L2 两个视图 + L3 矩阵高亮）。
+  // window.__focus[kind] = number[]（旧版单值 number 自动兼容为 [number]）。
+  var FOCUS_MAX = 3;
+
+  function normalizeFocus(arr) {
+    if (arr == null) return [];
+    if (!Array.isArray(arr)) arr = [arr];
+    return arr.slice(0, FOCUS_MAX);
+  }
+
+  // P1-3B：focus 读写。优先 window.__focus；Node（module.exports）环境回落模块级 __focusStore。
+  var __focusStore = { windowRef: null };
+  function focusRoot() {
+    if (typeof window !== "undefined") {
+      if (!window.__focus) window.__focus = {};
+      return window.__focus;
+    }
+    return __focusStore;
+  }
+
+  // 当前 kind 的 focus 号码数组（兼容旧版单值）
+  function getFocusNumbers(kind) { return normalizeFocus(focusRoot()[kind]); }
+  // 仅写 focus store（不做 DOM 刷新；测试/脚本环境用）
+  function focusSet(kind, nums) {
+    if (nums == null) nums = [];
+    if (!Array.isArray(nums)) nums = [nums];
+    var clean = normalizeFocus(nums);
+    var root = focusRoot();
+    if (clean.length) root[kind] = clean; else delete root[kind];
+    return clean;
+  }
+
+  function renderFocusPanel(container, issues, kind, n) {
+    var pool = kind === "front" ? range(FRONT_MIN, FRONT_MAX) : range(BACK_MIN, BACK_MAX);
+    var state = normalizeFocus(focusRoot()[kind]);
+    var chips = pool.map(function (x) {
+      var active = state.indexOf(x) >= 0;
+      return '<button class="focus-chip' + (active ? " active" : "") + '" data-focus-num="' + pad2(x) +
+        '" aria-pressed="' + active + '" aria-label="' + (kind === "front" ? "前区" : "后区") + '号码 ' + pad2(x) + '">' + pad2(x) + "</button>";
+    }).join("");
+    var detailId = "focus-detail-" + kind;
+    if (typeof document !== "undefined" && document.getElementById) document.getElementById(detailId); // 保留既有 DOM 节点引用语义；Node 环境跳过
+    container.innerHTML =
+      '<div class="focus-chips" role="tablist" aria-label="' + (kind === "front" ? "前区" : "后区") + '号码关注（最多同时 ' + FOCUS_MAX + " 个）" + '" data-focus-kind="' + kind + '">' +
+      '<button class="focus-chip focus-clear" data-focus-clear="' + kind + '">清除关注</button>' +
+      chips + "</div>" +
+      '<p class="focus-hint" data-focus-kind="' + kind + '" hidden>最多同时关注 ' + FOCUS_MAX + " 个号码</p>" +
+      '<div class="focus-detail" id="' + detailId + '" data-focus-detail="' + kind + '">' +
+        (state.length ? "" : '<p class="focus-empty">点击上方号码查看其近 ' + n + " 期节奏（当前遗漏 / 出现次数 / 最大遗漏 / 间隔；最多同时 " + FOCUS_MAX + " 个）。</p>") +
+      "</div>";
+    if (state.length) renderFocusDetail(kind, state, issues, n);
+    bindFocusChips(container, issues, n);
+  }
+
+  function bindFocusChips(container, issues, n) {
+    var kind = (container.querySelector("[data-focus-clear]") || {}).getAttribute
+      ? container.querySelector("[data-focus-clear]").getAttribute("data-focus-clear") : null;
+    if (!kind) return;
+    container.querySelectorAll(".focus-chip[data-focus-num]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        toggleFocus(kind, parseInt(b.getAttribute("data-focus-num"), 10), issues, n);
+      });
+    });
+    var clr = container.querySelector('.focus-clear[data-focus-clear="' + kind + '"]');
+    if (clr) clr.addEventListener("click", function () { setFocus(kind, [], issues, n); });
+    var hint = container.querySelector('.focus-hint[data-focus-kind="' + kind + '"]');
+    if (hint) hint.addEventListener("click", function () { hint.hidden = true; });
+  }
+
+  function toggleFocus(kind, num, issues, n) {
+    var arr = normalizeFocus(focusRoot()[kind]).slice();
+    var i = arr.indexOf(num);
+    var hint = (typeof document !== "undefined" && document.querySelector) ? document.querySelector('.focus-hint[data-focus-kind="' + kind + '"]') : null;
+    if (i >= 0) {
+      arr.splice(i, 1);
+      if (hint) hint.hidden = true;
+    } else if (arr.length >= FOCUS_MAX) {
+      if (hint) hint.hidden = false;
+      refreshFocus(kind, issues, n);
+      return;
+    } else {
+      arr.push(num);
+      if (hint) hint.hidden = true;
+    }
+    setFocus(kind, arr, issues, n);
+  }
+
+  function setFocus(kind, nums, issues, n) {
+    if (nums == null) nums = [];
+    if (!Array.isArray(nums)) nums = [nums];
+    var clean = normalizeFocus(nums);
+    var root = focusRoot();
+    if (clean.length) root[kind] = clean; else delete root[kind];
+    refreshFocus(kind, issues, n);
+  }
+
+  function refreshFocus(kind, issues, n) {
+    if (typeof document === "undefined" || !document.querySelector) return;
+    var panel = document.querySelector('[data-focus-panel="' + kind + '"]');
+    if (panel) renderFocusPanel(panel, issues, kind, n);
+  }
+
+  // P1-3B：renderFocusDetail 支持多号（最多 3）。每个号码独立 focus-card + 独立 SVG 轨迹。
+  // 轨迹语义（历史描述性）：X=时间(期序) Y=单号码出现 lane；仅连接真实 hit point；
+  // 连线=两次出现之间时间间隔（gap）；gap 数字复用 computeFocusStats.gapSequence；
+  // 不做任何跨号码连接；禁止预测性文案。
+  var LANES = [
+    { shape: "circle", dash: "", color: "#6d28d9" },
+    { shape: "square", dash: "6 3", color: "#2563eb" },
+    { shape: "triangle", dash: "2 3", color: "#0f9d58" }
+  ];
+
+  // 单号码轨迹数据模型（纯函数；hit 点 + gap 标注）。issues=已排序全量；n=窗口；num/kind。
+  function buildTrajectory(issues, num, kind, n) {
+    var w = sliceWindow(issues, n);
+    var st = computeFocusStats(issues, num, kind, n);
+    var hits = [];
+    for (var i = 0; i < w.length; i++) {
+      if (w[i][kind].indexOf(num) >= 0) hits.push({ idx: i, issue: w[i].issue, date: w[i].date });
+    }
+    return { num: num, kind: kind, window: w.length, hits: hits, stats: st, windowIssues: w };
+  }
+
+  // P1-3B：单号码 SVG lane HTML（纯字符串；marker shape/dash/color 随 laneIndex，多号比较不只靠颜色）。
+  function buildTrajectoryLaneHTML(d, laneIndex, kind) {
+    var L = LANES[laneIndex] || LANES[0];
+    return '<div class="traj-lane" data-traj-lane="' + pad2(d.num) + '" data-traj-kind="' + kind + '">' +
+      '<div class="traj-lane-h"><span class="traj-lane-num" style="color:' + L.color + '">' + pad2(d.num) +
+      '</span><span class="traj-lane-meta">近 ' + d.window + ' 期 · 出现 ' + d.stats.recentCount +
+      ' 次 · 当前遗漏 ' + d.stats.currentOmit + ' 期 · 最大遗漏 ' + d.stats.maxOmission +
+      ' 期 · 平均间隔 ' + d.stats.avgGap + ' 期</span></div>' +
+      buildTrajectorySVG(d, L, kind) +
+      '<div class="traj-lane-gaps">出现间隔：' + (d.stats.gapSequence.length ? d.stats.gapSequence.join(" → ") : "（窗口内无相邻两次出现）") + "</div></div>";
+  }
+
+  function renderTrajectoryLane(container, laneIndex, issues, kind, n) {
+    var num = getFocusNumbers(kind)[laneIndex];
+    if (num == null) return;
+    var d = buildTrajectory(issues, num, kind, n);
+    var box = container.querySelector('[data-traj-lane="' + pad2(num) + '"]');
+    if (!box) {
+      var frag = document.createElement("div");
+      frag.innerHTML = buildTrajectoryLaneHTML(d, laneIndex, kind);
+      box = frag.firstElementChild || frag;
+      container.appendChild(box);
+    } else {
+      box.innerHTML = buildTrajectoryLaneHTML(d, laneIndex, kind).replace(/^<div[^>]*>/, "").replace(/<\/div>$/, "");
+    }
+  }
+
+  // 生成 SVG 字符串（原生 SVG；viewBox 固定比例；hit point 可 tap；仅连本号 hit）。
+  function buildTrajectorySVG(d, L, kind) {
+    var w = d.window;
+    var padL = 8, padR = 8, padT = 18, padB = 22;
+    var laneH = 46;
+    var width = Math.max(320, Math.ceil((padL + padR + w * 14))); // 30 期≈ 30*14+16=436
+    var height = padT + laneH + padB;
+    var step = (width - padL - padR) / Math.max(1, w - 1);
+    var yLane = padT + laneH / 2;
+    // gap 区间：hit[i-1]→hit[i] 间隔 = d.stats.gapSequence[i-1]
+    var parts = [];
+    parts.push('<svg class="traj-svg" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="xMinYMid meet" role="img" ' +
+      'aria-label="号码 ' + pad2(d.num) + ' 近 ' + w + ' 期出现轨迹：出现 ' + d.stats.recentCount + ' 次，当前遗漏 ' + d.stats.currentOmit + ' 期">' +
+      '<title>号码 ' + pad2(d.num) + ' 近 ' + w + ' 期出现节奏（历史描述，非预测）</title>');
+    // 轴线
+    parts.push('<line x1="' + padL + '" y1="' + yLane + '" x2="' + (width - padR) + '" y2="' + yLane + '" class="traj-axis"/>');
+    // x 轴刻度（每 5 期一个 label，避免 375px 下 30 个文字过密）
+    for (var i = 0; i < w; i++) {
+      var x = padL + i * step;
+      var major = (i % 5 === 0) || (i === w - 1);
+      parts.push('<line x1="' + x.toFixed(1) + '" y1="' + (yLane + 10) + '" x2="' + x.toFixed(1) + '" y2="' +
+        (yLane + (major ? 16 : 13)) + '" class="traj-tick' + (major ? " major" : "") + '"/>');
+      if (major) {
+        parts.push('<text x="' + x.toFixed(1) + '" y="' + (height - 4) + '" class="traj-ticklabel" text-anchor="middle">' +
+          d.windowIssues[i].issue.slice(2) + "</text>");
+      }
+    }
+    // 连线：仅连接本号相邻 hit（gap 线段）
+    for (var k = 0; k < d.hits.length - 1; k++) {
+      var a = d.hits[k], b = d.hits[k + 1];
+      var x1 = padL + a.idx * step, x2 = padL + b.idx * step;
+      var gap = d.stats.gapSequence[k];
+      parts.push('<line x1="' + x1.toFixed(1) + '" y1="' + yLane + '" x2="' + x2.toFixed(1) + '" y2="' + yLane +
+        '" class="traj-seg" data-num="' + pad2(d.num) + '" data-gap="' + gap + '" stroke="' + L.color +
+        '" stroke-width="2" stroke-dasharray="' + (L.dash || "none") + '"/>');
+      // 间隔数字（两次 hit 中间）
+      var gx = (x1 + x2) / 2;
+      parts.push('<text x="' + gx.toFixed(1) + '" y="' + (yLane - 8) + '" class="traj-gap" text-anchor="middle">' + gap + "</text>");
+    }
+    // 当前遗漏段（最近 hit → 窗口末端）
+    if (d.hits.length && d.stats.currentOmit > 0) {
+      var lastHit = d.hits[d.hits.length - 1];
+      var x1c = padL + lastHit.idx * step, x2c = width - padR;
+      parts.push('<line x1="' + x1c.toFixed(1) + '" y1="' + yLane + '" x2="' + x2c.toFixed(1) + '" y2="' + yLane +
+        '" class="traj-omit" data-num="' + pad2(d.num) + '" stroke="' + L.color + '" stroke-width="2" stroke-dasharray="2 4" opacity="0.55"/>');
+      parts.push('<text x="' + ((x1c + x2c) / 2).toFixed(1) + '" y="' + (yLane - 8) + '" class="traj-omitlabel" text-anchor="middle">当前遗漏 ' + d.stats.currentOmit + "</text>");
+    }
+    // hit points（可 tap；marker shape 区分多号，不只靠颜色；data-hitordinal=该 hit 在出现序列中的序号）
+    for (var h = 0; h < d.hits.length; h++) {
+      var p = d.hits[h];
+      var px = padL + p.idx * step;
+      var label = "第 " + p.issue + " 期 · " + p.date;
+      if (h > 0) label += " · 距上一次出现 " + d.stats.gapSequence[h - 1] + " 期";
+      parts.push('<g class="traj-hit" data-num="' + pad2(d.num) + '" data-hitordinal="' + (h + 1) + '" data-issue="' + p.issue +
+        '" data-kind="' + kind + '" tabindex="0" role="button" aria-label="' + label + '">' +
+        '<circle cx="' + px.toFixed(1) + '" cy="' + yLane + '" r="11" class="traj-hit-halo" fill="' + L.color + '"></circle>' +
+        trajMarker(px, yLane, L) +
+        '</g>');
+    }
+    parts.push("</svg>");
+    return parts.join("");
+  }
+
+  function trajMarker(x, y, L) {
+    if (L.shape === "square") {
+      return '<rect x="' + (x - 6).toFixed(1) + '" y="' + (y - 6).toFixed(1) + '" width="12" height="12" fill="' + L.color + '" stroke="#fff" stroke-width="1.5" rx="1"></rect>';
+    }
+    if (L.shape === "triangle") {
+      return '<path d="M ' + x.toFixed(1) + ' ' + (y - 8).toFixed(1) + ' L ' + (x + 8).toFixed(1) + ' ' + (y + 7).toFixed(1) + ' L ' + (x - 8).toFixed(1) + ' ' + (y + 7).toFixed(1) + ' Z" fill="' + L.color + '" stroke="#fff" stroke-width="1.5"></path>';
+    }
+    return '<circle cx="' + x.toFixed(1) + '" cy="' + y + '" r="7" fill="' + L.color + '" stroke="#fff" stroke-width="1.5"></circle>';
+  }
+
+  // L2 轨迹视图：当前 focus 号码（≤3）独立 lane 纵向堆叠；空态提示。
+  // 纯字符串输出（便于契约测试），tap 绑定经事件委托到 .traj-hit。
+  function buildTrajectoryViewHTML(issues, kind, n) {
+    var nums = getFocusNumbers(kind);
+    if (!nums.length) {
+      return '<div class="traj-empty" data-traj-empty="1">未关注号码。<br>点击上方号码（最多同时 ' + FOCUS_MAX +
+        " 个）查看其历史出现节奏：hit 点=真实开出期，连线=两次出现之间的间隔，虚线段=当前遗漏。<br>仅为历史描述，不构成预测。</div>";
+    }
+    var head = '<div class="traj-legend"><span class="traj-lg"><i class="traj-marker m1"></i>lane 1</span>' +
+      '<span class="traj-lg"><i class="traj-marker m2"></i>lane 2</span>' +
+      '<span class="traj-lg"><i class="traj-marker m3"></i>lane 3</span>' +
+      '<span class="traj-lg"><i class="traj-seg-sample"></i>出现间隔</span>' +
+      '<span class="traj-lg"><i class="traj-omit-sample"></i>当前遗漏</span></div>';
+    var lanes = nums.map(function (num, i) {
+      return buildTrajectoryLaneHTML(buildTrajectory(issues, num, kind, n), i, kind);
+    }).join("");
+    return head + '<div class="traj-lanes" data-traj-lanes="' + kind + '">' + lanes + "</div>";
+  }
+
+  function renderTrajectoryView(container, issues, kind, n) {
+    container.innerHTML = buildTrajectoryViewHTML(issues, kind, n);
+    bindTrajectoryTap(container, kind, n);
+  }
+
+  // 轨迹 hit point 触摸的详情 sheet HTML（纯函数；复用 P1-3A detail sheet 结构，不建第二套 modal）。
+  // allIssues = 缓存的 window.__trendIssues；gap = 该 hit 前一段间隔（命中序号 1 起，序号>1 才有前段）。
+  function buildTrajectoryDetailSheet(kind, num, issue, hitOrdinal, allIssues, n) {
+    var cur = null;
+    (allIssues || []).forEach(function (it) { if (String(it.issue) === String(issue)) cur = it; });
+    var st = computeFocusStats(allIssues || [], parseInt(num, 10), kind, n);
+    var gapTxt = "—";
+    if (hitOrdinal > 1 && st.gapSequence[hitOrdinal - 2] != null) gapTxt = st.gapSequence[hitOrdinal - 2] + " 期";
+    return '<div class="tts-h">' + (kind === "front" ? "前区" : "后区") + " 号码 <strong>" + num + "</strong> · 第 " + issue +
+      " 期（" + (cur ? cur.date : "") + "）</div>" +
+      '<div class="tts-line">该期开奖：前区 ' + (cur ? cur.front.map(pad2).join(" ") : "—") + " ｜ 后区 " +
+      (cur ? cur.back.map(pad2).join(" ") : "—") + "</div>" +
+      '<div class="tts-line">距上一次出现 <strong>' + gapTxt + '</strong> · 当前遗漏 <strong>' + st.currentOmit + " 期</strong></div>" +
+      '<button type="button" class="tts-close">关闭</button>';
+  }
+
+  // 轨迹 hit point 触摸：click 事件委托到容器 → 复用 P1-3A detail sheet（不建第二套 modal）。
+  function bindTrajectoryTap(container, kind, n) {
+    if (!container || container.__trajTapBound) return;
+    container.__trajTapBound = true;
+    container.addEventListener("click", function (e) {
+      var t = e.target;
+      var g = t && t.closest ? t.closest(".traj-hit") : null;
+      if (!g) return;
+      var num = g.getAttribute("data-num");
+      var issue = g.getAttribute("data-issue");
+      var ordinal = parseInt(g.getAttribute("data-hitordinal"), 10);
+      var all = (typeof window !== "undefined" && window.__trendIssues) || [];
+      var sheet = document.getElementById("trend-detail-sheet");
+      if (!sheet) return;
+      sheet.innerHTML = buildTrajectoryDetailSheet(kind, num, issue, ordinal, all, n);
+      sheet.hidden = false;
+      var close = sheet.querySelector(".tts-close");
+      if (close) close.addEventListener("click", function () { sheet.hidden = true; sheet.innerHTML = ""; });
+    });
+  }
+
+  // P1-3B：多号 focus-card 列表（每个号码一个卡片；共享 L2 视图；多号在矩阵中同时高亮）
+  function renderFocusDetail(kind, nums, issues, n) {
+    var arr = normalizeFocus(nums || []);
+    var box = (typeof document !== "undefined" && document.getElementById) ? document.getElementById("focus-detail-" + kind) : null;
+    if (!box) return;
+    if (!arr.length) {
+      box.innerHTML = '<p class="focus-empty">点击上方号码查看其近 ' + n + " 期节奏（当前遗漏 / 出现次数 / 最大遗漏 / 间隔；最多同时 " + FOCUS_MAX + " 个）。</p>";
+      highlightMatrixFocus(kind, []);
+      return;
+    }
+    var html = arr.map(function (num) {
+      var st = computeFocusStats(issues, num, kind, n);
+      var gaps = st.gapSequence.length ? st.gapSequence.join(" → ") + "（末次至今 " + st.currentOmit + " 期未出）" : "窗口内未再次出现";
+      return '<div class="focus-card" data-focus-num="' + pad2(num) + '">' +
+        '<div class="focus-card-h"><strong>' + pad2(num) + "</strong><span>" + (kind === "front" ? "前区" : "后区") + " · 近 " + st.window + " 期</span></div>" +
+        '<div class="focus-metrics">' +
+          '<span>当前遗漏 <b>' + st.currentOmit + "</b> 期</span>" +
+          '<span>近 ' + st.window + " 期出现 <b>" + st.recentCount + "</b> 次</span>" +
+          '<span>最大遗漏 <b>' + st.maxOmission + "</b> 期</span>" +
+          '<span>平均间隔 <b>' + st.avgGap + "</b> 期</span>" +
+          (st.lastAppearIssue ? '<span>最近出现第 <b>' + st.lastAppearIssue + "</b> 期</span>" : "") +
+        "</div>" +
+        '<div class="focus-gaps">出现间隔序列：' + esc(gaps) + "</div>" +
+      "</div>";
+    }).join("");
+    box.innerHTML = html;
+    highlightMatrixFocus(kind, arr);
+  }
+
+  // 多号 focus 在 L2 紧凑矩阵的行高亮（不降权）
+  function highlightMatrixFocus(kind, nums) {
+    if (typeof document === "undefined" || !document.querySelectorAll) return;
+    var arr = normalizeFocus(nums || []).map(pad2);
+    document.querySelectorAll('[data-matrix="' + kind + '"] .cmt-row').forEach(function (row) {
+      var rn = String(row.getAttribute("data-num"));
+      var isFocus = arr.indexOf(rn) >= 0;
+      row.classList.toggle("cm-focus", isFocus);
+      row.classList.toggle("cm-dim", arr.length > 0 && !isFocus);
+    });
+  }
+
+  // L2 紧凑命中矩阵：号码为行、时间为横向；hit=实心圆+号、miss=弱化、最新期 marker、左侧号码 sticky、右侧当前遗漏数字。
+  function buildCompactMatrix(issues, period, groupRule) {
+    var w = sliceWindow(issues, period);
+    var key = groupRule.key;
+    var nums = [];
+    for (var num = groupRule.min; num <= groupRule.max; num++) {
+      var cells = [];
+      for (var i = 0; i < w.length; i++) cells.push(w[i][key].indexOf(num) >= 0);
+      var curOmit = 0;
+      for (var j = w.length - 1; j >= 0; j--) { if (cells[j]) break; curOmit++; }
+      nums.push({ number: num, cells: cells, curOmit: curOmit });
+    }
+    return { groupRule: groupRule, issues: w, numbers: nums };
+  }
+
+  function renderCompactMatrix(container, data, opts) {
+    opts = opts || {};
+    var w = data.issues;
+    var kind = data.groupRule.key;
+    var parts = ['<table class="cmt-table" data-matrix="' + kind + '" data-kind="' + kind + '"><thead><tr><th class="corner">' + (kind === "front" ? "前区" : "后区") + "</th>"];
+    for (var c = 0; c < w.length; c++) {
+      var show = (c % 5 === 0) || (c === w.length - 1);
+      var latest = (c === w.length - 1);
+      parts.push('<th class="cmt-issue' + (latest ? " is-latest" : "") + '" title="第 ' + w[c].issue + " 期 · " + w[c].date + '">' +
+        (show ? w[c].issue.slice(2) : "") + "</th>");
+    }
+    parts.push('<th class="cmt-omit-h">遗漏</th></tr></thead><tbody>');
+    data.numbers.forEach(function (row) {
+      var focusArr = normalizeFocus(focusRoot()[kind]);
+      var focus = focusArr.indexOf(row.number) >= 0;
+      parts.push('<tr class="cmt-row" data-num="' + pad2(row.number) + '"><th class="cmt-num" data-num="' + pad2(row.number) + '">' +
+        pad2(row.number) + "</th>");
+      for (var ci = 0; ci < w.length; ci++) {
+        var latest = (ci === w.length - 1);
+        if (row.cells[ci]) {
+          parts.push('<td class="cmt-cell cmt-hit' + (latest ? " is-latest" : "") + '" data-issue="' + w[ci].issue + '" data-date="' +
+            w[ci].date + '" data-num="' + pad2(row.number) + '" data-omit="' + row.curOmit + '" data-kind="' + kind + '" title="第 ' +
+            w[ci].issue + " 期 · 号码 " + pad2(row.number) + '"><span class="cmt-dot"></span><span class="cmt-n">' + pad2(row.number) + "</span></td>");
+        } else {
+          parts.push('<td class="cmt-cell cmt-miss' + (latest ? " is-latest" : "") + '"></td>');
+        }
+      }
+      parts.push('<td class="cmt-omit-v' + (row.curOmit > 0 ? " omit" : "") + '">' + row.curOmit + "</td></tr>");
+    });
+    parts.push("</tbody></table>");
+    container.innerHTML = parts.join("");
+  }
+
+  // 触摸详情：点击命中格 → 底部 sheet（非 hover 依赖）。PC hover 仍保留（bindTrendTooltip）。
+  function bindCompactTap() {
+    document.addEventListener("click", function (e) {
+      var td = e.target && e.target.closest ? e.target.closest(".cmt-cell.cmt-hit[data-issue]") : null;
+      var sheet = document.getElementById("trend-detail-sheet");
+      if (!td) return;
+      var all = window.__trendIssues || [];
+      var cur = null;
+      for (var i = 0; i < all.length; i++) if (String(all[i].issue) === td.getAttribute("data-issue")) { cur = all[i]; break; }
+      var kind = td.getAttribute("data-kind") === "front" ? "前区" : "后区";
+      if (sheet) {
+        sheet.innerHTML =
+          '<div class="tts-h">' + kind + " 号码 <strong>" + td.getAttribute("data-num") + "</strong> · 第 " + td.getAttribute("data-issue") +
+          " 期（" + (cur ? cur.date : "") + "）</div>" +
+          '<div class="tts-line">该期开奖：前区 ' + (cur ? cur.front.map(pad2).join(" ") : "—") + " ｜ 后区 " +
+          (cur ? cur.back.map(pad2).join(" ") : "—") + "</div>" +
+          '<div class="tts-line">当前遗漏 <strong>' + td.getAttribute("data-omit") + "</strong> 期 · 状态：命中</div>" +
+          '<button type="button" class="tts-close">关闭</button>';
+        sheet.hidden = false;
+        var close = sheet.querySelector(".tts-close");
+        if (close) close.addEventListener("click", function () { sheet.hidden = true; sheet.innerHTML = ""; });
+      }
+    });
+  }
+
   /* ================= 页面启动：loadJSON → calculate → render ================= */
   function init() {
-    // 期数自适应：大屏（≥760px）默认 300 期展示更完整趋势，移动端保持 100 期低密度易读
-    var period = window.innerWidth >= 760 ? 300 : DEFAULT_PERIOD;
+    // P1-3A：mobile-first。移动默认 30 期；桌面 ≥760 默认 300（L3 完整矩阵可 1000）。
+    var mobile = (window.innerWidth || 0) < 760;
+    var state = {
+      l1: mobile ? 30 : 50,
+      l2: mobile ? 30 : 50,
+      l3: mobile ? 50 : 300,
+      l2Tab: "front",
+      l3Tab: "front",
+      l3Open: false,
+      l2View: "matrix" // P1-3B：L2 视图 [命中矩阵 | 轨迹]，默认命中矩阵
+    };
+    window.__focus = window.__focus || {};
     var matrix = null;
+    var issues = [];
     var meta = { cover: "—", issueRange: "—", frontTotal: "—", backTotal: "—", sourceName: "—" };
 
-    // 📊 数据概览（动态读 JSON；分析范围随当前期数联动）
+    // 📊 数据概览（动态读 JSON；完整矩阵范围随 L3 窗口联动）
     function renderSummary() {
-      document.getElementById("sum-range").textContent = "最近 " + period + " 期";
+      document.getElementById("sum-range").textContent = "最近 " + state.l3 + " 期（完整矩阵）";
       document.getElementById("sum-cover").textContent = meta.cover;
       document.getElementById("sum-issue").textContent = meta.issueRange;
       document.getElementById("sum-front").textContent = meta.frontTotal;
@@ -663,103 +1182,149 @@
       document.getElementById("sum-source").textContent = meta.sourceName;
     }
 
-    function draw() {
-      var issues = matrix.front.issues;
+    function renderL1() {
+      var el = document.getElementById("l1-summary");
+      if (el) renderL1Summary(el, issues, state.l1);
+    }
+    function renderL2() {
+      var show = state.l2Tab;
+      // P1-3B：L2 视图 [命中矩阵 | 轨迹]。focus panel 两个视图共享。
+      var fp = document.getElementById("focus-panel-" + show);
+      if (fp) fp.hidden = false;
+      var fp2 = document.getElementById("focus-panel-" + (show === "front" ? "back" : "front"));
+      if (fp2) fp2.hidden = true;
+
+      var isMatrix = (state.l2View === "matrix");
+      var fM = document.getElementById("cb-matrix-front");
+      var bM = document.getElementById("cb-matrix-back");
+      var fT = document.getElementById("cb-trajectory-front");
+      var bT = document.getElementById("cb-trajectory-back");
+      // 命中矩阵容器
+      if (fM) fM.hidden = !(isMatrix && show === "front");
+      if (bM) bM.hidden = !(isMatrix && show === "back");
+      // 轨迹容器
+      if (fT) fT.hidden = !(!isMatrix && show === "front");
+      if (bT) bT.hidden = !(!isMatrix && show === "back");
+
+      // 渲染命中矩阵（仅当前 tab；两视图共享 focus）
+      var target = (show === "front") ? fM : bM;
+      if (target && isMatrix) {
+        renderCompactMatrix(target, buildCompactMatrix(issues, state.l2, show === "front" ? GROUP_RULES.front : GROUP_RULES.back));
+      }
+      // 渲染轨迹视图（仅当前 tab）
+      var trajTarget = (show === "front") ? fT : bT;
+      if (trajTarget && !isMatrix) {
+        renderTrajectoryView(trajTarget, issues, show, state.l2);
+      }
+      // focus 卡片（含多号统计 + 矩阵高亮，两视图共享）
+      refreshFocus(show, issues, state.l2);
+      syncL2ViewButtons(show);
+    }
+    function syncL2ViewButtons() {
+      var sw = document.getElementById("l2-view-switch");
+      if (!sw) return;
+      sw.querySelectorAll("button").forEach(function (b) {
+        var v = b.getAttribute("data-l2view");
+        b.classList.toggle("active", v === state.l2View);
+        b.setAttribute("aria-pressed", v === state.l2View ? "true" : "false");
+      });
+    }
+    function renderL3() {
+      var el = document.getElementById("l3-matrix");
+      if (!el || !state.l3Open) return;
+      var show = state.l3Tab;
+      var rule = show === "front" ? GROUP_RULES.front : GROUP_RULES.back;
+      el.innerHTML = '<h3 class="ocm-group">' + (show === "front" ? "前区（01–35）" : "后区（01–12）") + '</h3><div class="ocm-wrap"></div>';
+      renderOccurrenceMatrix(el.querySelector(".ocm-wrap"), buildOccurrenceMatrix(issues, state.l3, rule), { latest: true });
+    }
+    function renderAdvanced() {
+      if (!state.l3Open) return;
+      document.getElementById("front-hot").innerHTML = renderHotTable(calculateHot(issues, state.l3, "front"), "front");
+      document.getElementById("front-missing").innerHTML = renderMissingTable(calculateMissing(issues, state.l3, "front"), "front");
+      document.getElementById("back-hot").innerHTML = renderHotTable(calculateHot(issues, state.l3, "back"), "back");
+      var oeCur = calculateOddEven(issues, state.l3, "back");
+      renderRatioBars(document.getElementById("back-odd-even"),
+        { pct: oeCur.odd, txt: "奇数 " + oeCur.odd + "%" }, "当前(" + state.l3 + "期)奇占比",
+        [30, 50, 100, 300].map(function (p) { var r = calculateOddEven(issues, p, "back"); return { label: p + "期", pct: r.odd, txt: "奇" + r.odd + "% 偶" + r.even + "%" }; }));
+      var bsCur = calculateBigSmall(issues, state.l3, "back", BACK_BOUNDARY);
+      renderRatioBars(document.getElementById("back-big-small"),
+        { pct: bsCur.big, txt: "大 " + bsCur.big + "%" }, "当前(" + state.l3 + "期)大占比",
+        [30, 50, 100, 300].map(function (p) { var r = calculateBigSmall(issues, p, "back", BACK_BOUNDARY); return { label: p + "期", pct: r.big, txt: "小 " + r.small + "% 大 " + r.big + "%" }; }));
+      renderHeatMap(document.getElementById("hm-front"), buildHeatMap(issues, state.l3, GROUP_RULES.front), { latest: true });
+      renderHeatLegend(document.getElementById("hm-legend-front"), "front");
+      renderHeatMap(document.getElementById("hm-back"), buildHeatMap(issues, state.l3, GROUP_RULES.back), { latest: true });
+      renderHeatLegend(document.getElementById("hm-legend-back"), "back");
+      renderMissingAnalysis(issues, state.l3);
+    }
+    function renderAll() {
       window.__trendIssues = issues;
       renderSummary();
-
-      // ① 号码出现轨迹矩阵（S2：替代旧轨迹视觉；矩阵展示号码/出现/遗漏，无连线）
-      var occ = document.getElementById("occurrence-container");
-      if (occ) {
-        occ.innerHTML =
-          '<h3 class="ocm-group">前区（01–35）</h3><div class="ocm-wrap" id="ocm-front"></div>' +
-          '<h3 class="ocm-group">后区（01–12）</h3><div class="ocm-wrap" id="ocm-back"></div>';
-        renderOccurrenceMatrix(document.getElementById("ocm-front"),
-          buildOccurrenceMatrix(issues, period, GROUP_RULES.front), { latest: true });
-        renderOccurrenceMatrix(document.getElementById("ocm-back"),
-          buildOccurrenceMatrix(issues, period, GROUP_RULES.back), { latest: true });
-      }
-
-      // ③ 前区热度排行
-      document.getElementById("front-hot").innerHTML =
-        renderHotTable(calculateHot(issues, period, "front"), "front");
-
-      // ④ 前区遗漏分析
-      document.getElementById("front-missing").innerHTML =
-        renderMissingTable(calculateMissing(issues, period, "front"), "front");
-
-      // ⑤ 后区冷热分析
-      document.getElementById("back-hot").innerHTML =
-        renderHotTable(calculateHot(issues, period, "back"), "back");
-
-      // ⑥ 后区奇偶趋势（当前档 + 50/100/300/1000 对比）
-      var oeCur = calculateOddEven(issues, period, "back");
-      var oeFour = PERIODS.map(function (p) {
-        var r = calculateOddEven(issues, p, "back");
-        return { label: p + "期", pct: r.odd, txt: "奇" + r.odd + "% 偶" + r.even + "%" };
-      });
-      renderRatioBars(document.getElementById("back-odd-even"),
-        { pct: oeCur.odd, txt: "奇数 " + oeCur.odd + "%" },
-        "当前(" + period + "期)奇占比",
-        oeFour);
-
-      // ⑦ 后区大小趋势
-      var bsCur = calculateBigSmall(issues, period, "back", BACK_BOUNDARY);
-      var bsFour = PERIODS.map(function (p) {
-        var r = calculateBigSmall(issues, p, "back", BACK_BOUNDARY);
-        return { label: p + "期", pct: r.big, txt: "小" + r.small + "% 大" + r.big + "%" };
-      });
-      renderRatioBars(document.getElementById("back-big-small"),
-        { pct: bsCur.big, txt: "大 " + bsCur.big + "%" },
-        "当前(" + period + "期)大占比",
-        bsFour);
-
-      // ② 热冷矩阵（S4：前后区独立展示；联动 period）
-      renderHeatMap(document.getElementById("hm-front"),
-        buildHeatMap(issues, period, GROUP_RULES.front), { latest: true });
-      renderHeatLegend(document.getElementById("hm-legend-front"), "front");
-      renderHeatMap(document.getElementById("hm-back"),
-        buildHeatMap(issues, period, GROUP_RULES.back), { latest: true });
-      renderHeatLegend(document.getElementById("hm-legend-back"), "back");
-
-      // ⑧ S3 遗漏趋势分析（随 period 联动；复用 S2 同一 issues 数据）
-      renderMissingAnalysis(issues, period);
+      renderL1();
+      renderL2();
+      renderL3();
+      renderAdvanced();
     }
 
-    // 时间范围切换（联动）
-    document.getElementById("period-switch").addEventListener("click", function (e) {
-      var btn = e.target.closest("button");
-      if (!btn) return;
-      period = parseInt(btn.getAttribute("data-periods"), 10);
-      this.querySelectorAll("button").forEach(function (b) {
-        b.classList.toggle("active", b === btn);
+    wirePeriodSwitch(document.getElementById("l1-period-switch"), function (p) { state.l1 = p; renderL1(); });
+    wirePeriodSwitch(document.getElementById("l2-period-switch"), function (p) { state.l2 = p; renderL2(); });
+    wirePeriodSwitch(document.getElementById("l3-period-switch"), function (p) { state.l3 = p; renderL3(); renderAdvanced(); });
+    wireTab(document.getElementById("cb-tabs"), function (t) { state.l2Tab = t; renderL2(); });
+    wireTab(document.getElementById("l3-tabs"), function (t) { state.l3Tab = t; renderL3(); });
+    // P1-3B：L2 视图切换 [命中矩阵 | 轨迹]
+    var l2viewsw = document.getElementById("l2-view-switch");
+    if (l2viewsw) {
+      l2viewsw.addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-l2view]");
+        if (!btn) return;
+        state.l2View = btn.getAttribute("data-l2view");
+        renderL2();
       });
-      draw();
+    }
+
+    var l3det = document.getElementById("l3-details");
+    if (l3det) l3det.addEventListener("toggle", function () {
+      state.l3Open = l3det.open;
+      if (l3det.open) { renderL3(); renderAdvanced(); }
     });
 
-    // 页内锚点导航：平滑滚动（仅 UI，不影响渲染逻辑）
     document.querySelectorAll(".anchor-nav a").forEach(function (a) {
-      a.addEventListener("click", function (e) {
+      a.addEventListener("click", function () {
         var id = this.getAttribute("href").slice(1);
         var target = document.getElementById(id);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
-    // 趋势 2.0：hover 详情提示（事件委托，全局一次绑定）
-    bindTrendTooltip();
+    bindTrendTooltip();   // PC hover（保留）
+    bindCompactTap();     // 触摸详情（click，非 hover 依赖）
 
-    // S1：统一数据加载入口（loadData → 排序 + meta）
+    // S1：统一数据加载入口（loadData → 排序 + meta；交互不再重复 fetch）
     loadData().then(function (res) {
-      var issues = res.issues;
+      issues = res.issues;
       meta = res.meta;
       matrix = buildMatrices(issues);
-      draw();
+      renderAll();
     }).catch(function (err) {
       showError(String(err && err.message ? err.message : err));
+    });
+  }
+
+  function wirePeriodSwitch(el, onPick) {
+    if (!el) return;
+    el.addEventListener("click", function (e) {
+      var btn = e.target.closest("button");
+      if (!btn) return;
+      el.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+      onPick(parseInt(btn.getAttribute("data-periods"), 10));
+    });
+  }
+  function wireTab(el, onPick) {
+    if (!el) return;
+    el.addEventListener("click", function (e) {
+      var btn = e.target.closest("button[data-tab]");
+      if (!btn) return;
+      el.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+      onPick(btn.getAttribute("data-tab"));
     });
   }
 
@@ -776,6 +1341,32 @@
     calculateCellMissing: calculateCellMissing,
     buildOmissionProfile: buildOmissionProfile,
     buildOccurrenceMatrix: buildOccurrenceMatrix,
+    // P1-3A mobile-first
+    computeL1Summary: computeL1Summary,
+    renderL1Summary: renderL1Summary,
+    buildCompactMatrix: buildCompactMatrix,
+    renderCompactMatrix: renderCompactMatrix,
+    computeFocusStats: computeFocusStats,
+    renderFocusPanel: renderFocusPanel,
+    setFocus: setFocus,
+    refreshFocus: refreshFocus,
+    renderFocusDetail: renderFocusDetail,
+    highlightMatrixFocus: highlightMatrixFocus,
+    getFocusNumbers: getFocusNumbers,
+    focusSet: focusSet,
+    toggleFocus: toggleFocus,
+    bindCompactTap: bindCompactTap,
+    // P1-3B：L2 轨迹视图（SVG，单号/多号 lane，复用 computeFocusStats，历史描述性）
+    buildTrajectory: buildTrajectory,
+    buildTrajectorySVG: buildTrajectorySVG,
+    buildTrajectoryLaneHTML: buildTrajectoryLaneHTML,
+    buildTrajectoryViewHTML: buildTrajectoryViewHTML,
+    buildTrajectoryDetailSheet: buildTrajectoryDetailSheet,
+    renderTrajectoryView: renderTrajectoryView,
+    renderTrajectoryLane: renderTrajectoryLane,
+    bindTrajectoryTap: bindTrajectoryTap,
+    wirePeriodSwitch: wirePeriodSwitch,
+    wireTab: wireTab,
     renderTrajectoryHTML: renderTrajectoryHTML,
     renderOccurrenceMatrix: renderOccurrenceMatrix,
     renderHotTable: renderHotTable,

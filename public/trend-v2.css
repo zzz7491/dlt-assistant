@@ -590,3 +590,162 @@ section[id] { scroll-margin-top: 52px; }
 @media (max-width: 480px) {
   .long-stats { grid-template-columns: 1fr; }
 }
+
+/* =========================================================
+   P1-3A mobile-first 分层样式（L1 摘要 / L2 紧凑矩阵+Focus / L3 完整矩阵 / 触摸详情）
+   设计约束：375/390/430px 核心信息 ≥12px；可点控件 ≥44px；cell ≥28px；
+   hit=实心圆+号码+字重（非仅颜色）；selected=边框+降权；latest=边框 marker。
+   ========================================================= */
+
+/* ---- L1 趋势摘要（第一视觉层） ---- */
+#sec-l1 { order: -1; }
+.l1-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+.l1-item { border: 1px solid var(--line, #eee); border-radius: 10px; padding: 10px 12px; background: #faf9ff; }
+.l1-k { display: block; font-size: 12px; color: var(--muted, #94a3b8); margin-bottom: 6px; font-weight: 600; }
+.l1-v { display: block; font-size: 14px; color: #1f2937; line-height: 1.5; }
+.l1-chip { display: inline-flex; align-items: center; gap: 4px; min-height: 28px; padding: 2px 8px; margin: 2px 4px 2px 0;
+  border-radius: 8px; background: #fff; border: 1px solid var(--line, #eee); font-size: 14px; font-weight: 700; color: var(--front, #6d28d9); }
+.l1-chip i { font-style: normal; font-size: 12px; font-weight: 400; color: var(--muted, #94a3b8); }
+.l1-none { font-size: 13px; color: var(--muted, #94a3b8); }
+.l1-note { font-size: 12px; color: var(--muted, #94a3b8); margin: 8px 0 0; }
+
+/* ---- L2 前区/后区 Tab + Focus chips + 紧凑命中矩阵 ---- */
+.cb-tabs { display: flex; gap: 8px; margin: 10px 0; }
+.cb-tabs button { flex: 1; min-height: 44px; min-width: 44px; font-size: 15px; font-weight: 600;
+  border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: #fff; color: var(--muted, #94a3b8);
+  cursor: pointer; }
+.cb-tabs button.active { background: var(--accent, #6d28d9); color: #fff; border-color: var(--accent, #6d28d9); }
+
+.focus-panel { margin: 8px 0; }
+.focus-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.focus-chip { min-height: 44px; min-width: 44px; padding: 6px 10px; font-size: 15px; font-weight: 700;
+  border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: #fff; color: #334155; cursor: pointer; }
+.focus-chip:focus { outline: 2px solid var(--accent, #6d28d9); }
+.focus-chip[aria-pressed="true"] { background: var(--accent, #6d28d9); color: #fff; border-color: var(--accent, #6d28d9); }
+.focus-clear { border-style: dashed; color: var(--muted, #94a3b8); font-weight: 500; }
+.focus-detail { margin: 4px 0 8px; }
+.focus-empty { font-size: 13px; color: var(--muted, #94a3b8); }
+.focus-card { border: 1px solid var(--accent, #6d28d9); border-left: 4px solid var(--accent, #6d28d9);
+  border-radius: 10px; padding: 12px; background: #faf9ff; }
+.focus-card-h { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.focus-card-h strong { font-size: 22px; color: var(--accent, #6d28d9); }
+.focus-card-h span { font-size: 13px; color: var(--muted, #94a3b8); }
+.focus-metrics { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: #334155; }
+.focus-metrics b { color: var(--accent, #6d28d9); font-size: 15px; }
+.focus-gaps { font-size: 12px; color: var(--muted, #94a3b8); margin-top: 8px; }
+
+/* 紧凑命中矩阵：cell ≥28px，hit 圆+号 ≥12px，miss 弱化，最新一期 marker */
+.cm-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line, #eee); border-radius: 10px; }
+.cmt-table { border-collapse: collapse; min-width: 100%; font-size: 12px; }
+.cmt-table th, .cmt-table td { width: 30px; min-width: 30px; height: 30px; text-align: center; }
+.cmt-table th.corner { position: sticky; left: 0; z-index: 3; background: #fff; min-width: 44px; font-size: 13px; }
+.cmt-table thead th { position: sticky; top: 0; background: #fff; z-index: 2; font-size: 12px; color: var(--muted, #94a3b8); }
+.cmt-table thead th.is-latest { color: var(--accent, #6d28d9); font-weight: 700; }
+.cmt-table th.cmt-num { position: sticky; left: 0; z-index: 2; background: #fff; font-weight: 700; font-size: 13px;
+  width: 44px; min-width: 44px; border-right: 1px solid var(--line, #eee); }
+.cmt-table[data-matrix="back"] th.cmt-num { color: var(--back, #2563eb); }
+.cmt-table[data-matrix="front"] th.cmt-num { color: var(--front, #6d28d9); }
+.cmt-cell { position: relative; }
+.cmt-cell.cmt-miss { background: #f5f5fa; }          /* 弱化：极浅，非整行色深 */
+.cmt-cell.cmt-hit { background: transparent; }
+.cmt-cell.cmt-hit .cmt-dot { display: block; width: 12px; height: 12px; margin: 4px auto 2px; border-radius: 50%; }
+.cmt-table[data-matrix="front"] .cmt-hit .cmt-dot { background: var(--front, #6d28d9); }
+.cmt-table[data-matrix="back"] .cmt-hit .cmt-dot { background: var(--back, #2563eb); }
+.cmt-cell.cmt-hit .cmt-n { display: block; font-size: 12px; font-weight: 700; color: #1f2937; }  /* ≥12px 命中号 */
+.cmt-table th.cmt-omit-h, .cmt-table td.cmt-omit-v { width: 40px; min-width: 40px; font-size: 12px; color: var(--muted, #94a3b8);
+  position: sticky; right: 0; background: #fff; border-left: 1px solid var(--line, #eee); }
+.cmt-table td.cmt-omit-v.omit { color: #b45309; font-weight: 700; background: #fff7ed; }
+.cmt-cell.is-latest { box-shadow: inset 0 0 0 2px var(--accent, #6d28d9); }  /* 最新一期 marker（边框，非仅颜色） */
+/* Focus：目标号码突出 + 其他降权（边框+opacity，非仅颜色） */
+.cmt-table .cmt-row.cm-dim { opacity: 0.35; }
+.cmt-table .cmt-row.cm-focus { opacity: 1; }
+.cmt-table .cmt-row.cm-focus th.cmt-num { border: 2px solid var(--accent, #6d28d9); border-radius: 6px; }
+
+/* ---- L3 完整专业矩阵（默认折叠） ---- */
+#l3-details { margin-top: 10px; border: 1px dashed var(--line, #ddd); border-radius: 10px; padding: 10px; }
+.l3-summary { cursor: pointer; font-weight: 600; color: var(--accent, #6d28d9); min-height: 44px; display: inline-flex;
+  align-items: center; }
+#l3-details[open] .l3-summary { margin-bottom: 10px; }
+
+/* ---- 触摸详情 bottom-sheet（点击命中格，非 hover 依赖） ---- */
+.trend-detail-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  background: #fff; border-top: 3px solid var(--accent, #6d28d9); border-radius: 14px 14px 0 0;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -6px 24px rgba(0,0,0,.16); }
+.tts-h { font-size: 15px; font-weight: 600; color: var(--accent, #6d28d9); }
+.tts-line { font-size: 13px; color: #334155; margin: 6px 0; }
+.tts-close { margin-top: 8px; min-height: 44px; min-width: 44px; padding: 8px 18px; font-size: 14px;
+  border: 1px solid var(--line, #ddd); border-radius: 10px; background: #f5f5fa; cursor: pointer; }
+
+/* ---- 触控目标 / 可读性断点 ---- */
+@media (max-width: 480px) {
+  .period-switch button { min-height: 44px; font-size: 14px; }   /* 触控 ≥44px */
+  .l1-v { font-size: 14px; }
+  .cmt-table th, .cmt-table td { width: 30px; min-width: 30px; height: 30px; }  /* 保持 ≥30px，不缩到 20px */
+  .cmt-table th.cmt-num, .cmt-table th.corner { min-width: 40px; }
+}
+@media (max-width: 390px) {
+  .cmt-table th, .cmt-table td { width: 30px; min-width: 30px; }  /* 375/390：不缩核心尺寸 */
+}
+@media (min-width: 768px) {
+  .l1-grid { grid-template-columns: repeat(2, 1fr); }
+  .cmt-table th, .cmt-table td { width: 32px; min-width: 32px; height: 32px; }
+  .cmt-cell.cmt-hit .cmt-n { font-size: 13px; }
+}
+
+/* ═════════ P1-3B：L2 视图切换 + 轨迹 SVG 视图（历史描述性，非预测） ═════════ */
+
+/* L2 视图切换 [命中矩阵 | 轨迹] */
+.l2-view-switch { display: flex; gap: 8px; margin: 10px 0; }
+.l2-view-switch button { min-height: 44px; min-width: 44px; padding: 6px 16px; font-size: 14px; font-weight: 600;
+  border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: #fff; color: var(--muted, #94a3b8); cursor: pointer; }
+.l2-view-switch button.active { background: var(--accent, #6d28d9); color: #fff; border-color: var(--accent, #6d28d9); }
+.l2-view-switch button:focus { outline: 2px solid var(--accent, #6d28d9); outline-offset: 1px; }
+
+/* focus 超限提示 */
+.focus-hint { font-size: 13px; color: #b45309; background: #fff7ed; border: 1px solid #fed7aa;
+  border-radius: 8px; padding: 8px 10px; margin: 6px 0; }
+
+/* 轨迹视图容器 */
+.traj-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.traj-lanes { display: flex; flex-direction: column; gap: 12px; padding: 4px 2px; }
+.traj-lane { border: 1px solid var(--line, #eee); border-radius: 10px; padding: 8px 10px; background: #faf9ff; }
+.traj-lane-h { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+.traj-lane-num { font-size: 20px; font-weight: 800; }
+.traj-lane-meta { font-size: 12px; color: var(--muted, #94a3b8); }
+.traj-lane-gaps { font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.5; }
+
+/* SVG：responsive viewBox，宽度 100% 最大 720px；lane 高度固定 */
+.traj-svg { display: block; width: 100%; max-width: 720px; height: auto; margin: 0 auto; overflow: visible; }
+.traj-axis { stroke: #cbd5e1; stroke-width: 1; }
+.traj-tick { stroke: #cbd5e1; stroke-width: 1; }
+.traj-tick.major { stroke: #94a3b8; stroke-width: 1.5; }
+.traj-ticklabel { font-size: 9px; fill: var(--muted, #94a3b8); }
+.traj-gap { font-size: 9px; fill: #475569; font-weight: 700; }
+.traj-omitlabel { font-size: 9px; fill: #b45309; font-weight: 700; }
+.traj-hit { cursor: pointer; }
+.traj-hit:focus { outline: none; }
+.traj-hit:focus .traj-hit-halo { stroke: var(--accent, #6d28d9); stroke-width: 2; }
+.traj-hit-halo { opacity: 0.15; }
+
+/* 空态 / 图例 */
+.traj-empty { font-size: 13px; color: var(--muted, #94a3b8); line-height: 1.6; padding: 12px; background: #faf9ff;
+  border: 1px dashed var(--line, #ddd); border-radius: 10px; }
+.traj-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted, #94a3b8); margin-bottom: 10px; align-items: center; }
+.traj-lg { display: inline-flex; align-items: center; gap: 5px; }
+.traj-marker { display: inline-block; width: 10px; height: 10px; }
+.traj-marker.m1 { border-radius: 50%; background: #6d28d9; }
+.traj-marker.m2 { background: #2563eb; border-radius: 1px; }
+.traj-marker.m3 { background: #0f9d58; clip-path: polygon(50% 0,100% 100%,0 100%); }
+.traj-seg-sample { display: inline-block; width: 16px; height: 2px; background: #6d28d9; }
+.traj-omit-sample { display: inline-block; width: 16px; height: 2px;
+  background: repeating-linear-gradient(90deg,#6d28d9 0 2px,transparent 2px 5px); }
+
+/* 轨迹多号 lane 颜色（不只靠颜色：lane 有边框 + 号码 label + marker shape 区分） */
+@media (max-width: 480px) {
+  .l2-view-switch button { font-size: 13px; padding: 6px 12px; }
+  .traj-lane-meta { font-size: 11px; }
+}
+@media (min-width: 768px) {
+  .traj-lanes { gap: 14px; }
+  .traj-lane { padding: 10px 14px; }
+}
