@@ -1,5 +1,45 @@
 # 更新记录
 
+## 2026-10-01
+
+### DLT P3-3 FEATURE VALIDITY & ABLATION GATE（research only，本地 commit，未 push/deploy）
+
+**类型**: feat（评测研究）+ research
+**Gate 结论**: P3-3 = PASS
+
+**目标**: 评估当前推荐系统使用的历史统计特征是否具有严格 OOS 信息价值（非调权重）。
+
+**产物**:
+| 文件 | 说明 |
+|---|---|
+| `src/evaluation/feature_study.py` | LEVEL 1 单号特征 + 度量（AUC/Spearman/decile-lift）+ null + 冗余 + 候选特征 + inventory（生产函数驱动 + 泄漏断言） |
+| `src/evaluation/feature_ablation.py` | D 策略 9 个 one-feature-at-a-time 消融（真实 recommend()；权重 zero + 内建归一化，结果前冻结规则） |
+| `scripts/evaluate_features.py` | P3-3 runner（definition 先冻结 → dev-only → pre-holdout 冻结 → holdout 一次确认） |
+| `scripts/_p33_ablation_worker.py` | shell-level 并行消融 worker（10 进程，复用 P3-2 模式） |
+| `tests/test_p33_feature_study.py` | 34 项断言（+2 额外 = 36） |
+| `reports/evaluation/p33-feature-definition.json` | 冻结定义（含 definition_sha256） |
+| `reports/evaluation/p33-feature-selection-before-holdout.json` | holdout 前冻结假设 |
+| `reports/evaluation/p33-feature-results.json` | 全量结果 |
+| `reports/evaluation/P33-FEATURE-STUDY-REPORT.md` | 最终报告 |
+
+**核心结论**（1930 OOS；dev 1544 / holdout 386；50-seed null；Holm + BH-FDR）:
+- LEVEL 1 单号特征：前/后区全部特征 ROC-AUC ≈ 0.49–0.51、|Spearman| ≤ 0.01 → **无判别力**
+- LEVEL 2 候选特征：|Spearman| ≤ 0.03（与命中数无关联）
+- D 消融：9 个 one-feature-at-a-time 全部 Holm p = 1.0（移除任何特征都不显著改变 OOS 命中）
+- 冗余组：`cur_omit~omit_ratio`(ρ≈0.99)、`freq_ratio~avg_omit`(ρ≈0.89)
+- **SUPPORTED 特征 = 0**；FRONT/BACK frequency·omission·hot/cold·structure = 全部 UNSUPPORTED/REDUNDANT/INCONCLUSIVE
+- **结论：NO IDENTIFIABLE PREDICTIVE FEATURE**；策略为对无预测力历史的娱乐选择器，无法超过不变随机基线
+- **ML 不被证据支持**（基础特征无稳定 OOS 信号 → ML 只会扩大过拟合空间）
+
+**生产完整性**（未改）:
+- 算法 / 权重 / selector / window / 1000 cap / 26112 snapshot / frontend 全部 UNCHANGED
+- 9 个生产文件 baseline SHA 复验一致；`recent_issues=1000`；26112 hash `bea8ef87…`
+- PUSH: NO / DEPLOY: NO
+
+**回归**: `tests/test_p33_feature_study.py` 36/36 OK；dataset SHA `ba4bfb09…` 复验一致；消融 cache 与直接 `recommend()` equivalence 抽样一致。
+
+---
+
 ## 2026-09-30
 
 ### DLT 产品基线里程碑（WP0 恢复 → P0/P1 全链路 → CHECKPOINT-1 受控提交）

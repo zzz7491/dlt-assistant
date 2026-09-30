@@ -1,0 +1,97 @@
+{
+  "frozen_at": "2026-10-01T00:42:49",
+  "dev_ratio": 0.8,
+  "dev_count": 1544,
+  "holdout_count": 386,
+  "single_feature_hypotheses": {
+    "front_freq_ratio": {
+      "dev_auc": 0.491,
+      "dev_dir": "neg"
+    },
+    "front_recent_ratio": {
+      "dev_auc": 0.4911,
+      "dev_dir": "neg"
+    },
+    "front_cur_omit": {
+      "dev_auc": 0.5169,
+      "dev_dir": "pos"
+    },
+    "front_max_omit": {
+      "dev_auc": 0.4755,
+      "dev_dir": "neg"
+    },
+    "front_avg_omit": {
+      "dev_auc": 0.5102,
+      "dev_dir": "pos"
+    },
+    "front_omit_ratio": {
+      "dev_auc": 0.516,
+      "dev_dir": "pos"
+    },
+    "front_trend": {
+      "dev_auc": 0.472,
+      "dev_dir": "neg"
+    },
+    "front_hot": {
+      "dev_auc": 0.4929,
+      "dev_dir": "neg"
+    },
+    "front_in_prev": {
+      "dev_auc": 0.5014,
+      "dev_dir": "pos"
+    },
+    "front_zone": {
+      "dev_auc": 0.479,
+      "dev_dir": "neg"
+    },
+    "back_freq_ratio": {
+      "dev_auc": 0.4695,
+      "dev_dir": "neg"
+    },
+    "back_recent_ratio": {
+      "dev_auc": 0.464,
+      "dev_dir": "neg"
+    },
+    "back_cur_omit": {
+      "dev_auc": 0.5327,
+      "dev_dir": "pos"
+    },
+    "back_max_omit": {
+      "dev_auc": 0.5,
+      "dev_dir": "neg"
+    },
+    "back_avg_omit": {
+      "dev_auc": 0.5152,
+      "dev_dir": "pos"
+    },
+    "back_omit_ratio": {
+      "dev_auc": 0.53,
+      "dev_dir": "pos"
+    },
+    "back_trend": {
+      "dev_auc": 0.4536,
+      "dev_dir": "neg"
+    },
+    "back_hot": {
+      "dev_auc": 0.4952,
+      "dev_dir": "neg"
+    },
+    "back_in_prev": {
+      "dev_auc": 0.4838,
+      "dev_dir": "neg"
+    },
+    "back_zone": {
+      "dev_auc": 0.5136,
+      "dev_dir": "pos"
+    },
+    "D_ablation": {
+      "dev_full_mean": 1.0513,
+      "note": "FULL_D control; removing any feature should NOT raise OOS hits if feature has no value"
+    }
+  },
+  "note": "frozen BEFORE final holdout; holdout used once to confirm dev direction",
+  "D_ablation": {
+    "dev_full_mean": 1.0513,
+    "note": "FULL_D control; removing any feature should NOT raise OOS hits if feature has no value"
+  }
+}

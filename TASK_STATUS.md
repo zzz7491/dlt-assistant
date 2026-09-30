@@ -2,6 +2,24 @@
 
 ## 当前阶段
 
+**最新研究门禁（2026-10-01）**: DLT P3-3 FEATURE VALIDITY & ABLATION GATE = ✅ PASS（本地 commit，未 push/deploy）
+
+| 项目 | 结果 |
+|---|---|
+| 数据集 | 2930 draws，SHA `ba4bfb09…` 复验一致（frozen dataset 未变） |
+| 严格 OOS | 1930 共同目标（dev 1544 / final holdout 386），无未来泄漏（feature 只用 issues[:t]） |
+| LEVEL 1 单号特征 | 前/后区全特征 ROC-AUC ≈ 0.49–0.51、\|Spearman\| ≤ 0.01 → 无判别力 |
+| LEVEL 2 候选特征 | \|Spearman\| ≤ 0.03 → 与命中数无关联 |
+| D 消融（one-feature-at-a-time ×9） | 全部 Holm p = 1.0（移除任一特征不显著改变 OOS 命中） |
+| 冗余组 | cur_omit~omit_ratio(ρ≈0.99)、freq_ratio~avg_omit(ρ≈0.89) |
+| SUPPORTED 特征 | **0 个**；FRONT/BACK freq·omit·hot/cold·structure = 全 UNSUPPORTED/REDUNDANT/INCONCLUSIVE |
+| 结论 | NO IDENTIFIABLE PREDICTIVE FEATURE；ML 不被证据支持 |
+| 生产完整性 | 算法/权重/selector/window/1000cap/26112/frontend 全部 UNCHANGED；PUSH NO / DEPLOY NO |
+
+产物：`src/evaluation/feature_study.py`、`src/evaluation/feature_ablation.py`、`scripts/evaluate_features.py`、`scripts/_p33_ablation_worker.py`、`tests/test_p33_feature_study.py`（36/36）、`reports/evaluation/p33-feature-{definition,results}.json` + `p33-feature-selection-before-holdout.json` + `P33-FEATURE-STUDY-REPORT.md`。
+
+### Phase 17 历史阶段
+
 **Phase**: Phase 17 - 产品基线恢复与 P0/P1 全链路（WP0 → CHECKPOINT-1 → RELEASE-1）  
 **Task**: RELEASE-1 TODAY-USABLE 发布门禁  
 **Status**: ✅ 本地 5 commit 完成（`6d4170b`/`282670c`/`1fa2235`/`fb31d45`/merge `e63f552`）+ CHANGELOG/TASK_STATUS 记录已提交；⚠️ push 阻塞（环境无 github 凭据），部署与线上 smoke 待凭据到位后执行

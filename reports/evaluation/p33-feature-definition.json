@@ -1,0 +1,65 @@
+{
+  "dataset_sha256": "ba4bfb09d46aa66ab72c2ba3f72057e37ffca293ac76e1e3a21dde77f1e4dbbf",
+  "oos_targets": 1930,
+  "dev_ratio": 0.8,
+  "dev_count": 1544,
+  "holdout_count": 386,
+  "single_features": [
+    "freq_ratio",
+    "recent_ratio",
+    "cur_omit",
+    "max_omit",
+    "avg_omit",
+    "omit_ratio",
+    "trend",
+    "hot",
+    "in_prev",
+    "zone"
+  ],
+  "candidate_features": [
+    "front_sum",
+    "front_span",
+    "back_span",
+    "odd_cnt",
+    "big_cnt",
+    "front_overlap_prev",
+    "back_overlap_prev",
+    "combo_score",
+    "odd_even_match",
+    "big_small_match",
+    "zone_match",
+    "sum_span_match",
+    "inherit_match"
+  ],
+  "ablation_variants": [
+    "NO_HEAT",
+    "NO_MISSING",
+    "NO_TREND",
+    "NO_INHERIT",
+    "NO_INHERIT_MATCH",
+    "NO_ODD_EVEN",
+    "NO_BIG_SMALL",
+    "NO_ZONE",
+    "NO_SUM_SPAN",
+    "FULL"
+  ],
+  "weight_handling_rule": "ZERO-then-normalize: set removed feature's production weight key to 0.0, keep all other weights unchanged; scorer._normalize_weights renormalizes remaining to sum=1 (production builtin behavior). NO post-hoc weight retuning. Rule frozen in definition BEFORE results.",
+  "metrics": [
+    "roc_auc",
+    "spearman",
+    "top_decile",
+    "bottom_decile",
+    "lift_over_base"
+  ],
+  "null_controls": {
+    "shuffled_seeds": 50,
+    "random_seeds": 50
+  },
+  "bootstrap_n": 10000,
+  "bootstrap_seed": 20260930,
+  "multiple_comparison_method": "holm-bonferroni (primary confirm gate); benjamini-hochberg-FDR (reference)",
+  "leakage_contract": "feature(t) uses issues[:t] ONLY; target/future/post-draw excluded",
+  "frozen_at": "2026-10-01T00:40:47",
+  "note": "definition frozen BEFORE results; do NOT retune weights or redefine features after run",
+  "definition_sha256": "b9feb0dd45a017fd727accf455066f809fdf59d7bff78cc950ff2d4c840044a8"
+}
