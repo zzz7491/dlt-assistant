@@ -2,6 +2,44 @@
 
 ## 2026-10-01
 
+### DLT P3-4 SELECTOR EDGE DECOMPOSITION & ROBUSTNESS GATE（research only，本地 commit，未 push/deploy）
+
+**类型**: research（机制分解）+ docs
+**Gate 结论**: P3-4 = PASS（无 selector edge；机制已分解，NO PRODUCTION CHANGE）
+
+**唯一研究问题**: 解释 CURRENT selector 早期表观优势（P2-2 S1 vs S7 Δ=0.051, Holm p=0.102 未确认）
+究竟来自什么机制，且为何 P2-3/P3-2 final holdout 未确认。
+
+**产物**:
+| 文件 | 说明 |
+|---|---|
+| `src/evaluation/selector_decomposition.py` | 重建 CURRENT selector（真实 compute_final_scores + walk-forward OOS）+ 全部分解（candidate set / selection-conditional / 4×4 counterfactual / pairwise / margin / component / correlation / rolling+quintile / leave-era-out / freq-matched null / conditional strata null / C 100-seed / seed×era / H1-H4 confirmatory / 机制标签） |
+| `scripts/evaluate_selector_edge.py` | P3-4 runner（definition 先冻结 → consistency 校验 → 分解 → dev 假设冻结 → holdout 一次确认 → 机制标签） |
+| `tests/test_p34_selector_decomposition.py` | 34 断言（含 30+ 必需项） |
+| `reports/p34-selector-definition.json` | 冻结定义（含 definition_sha256） |
+| `reports/p34-selection-before-holdout.json` | holdout 前冻结机制假设 |
+| `reports/p34-selector-results.json` | 全量结果 |
+| `reports/P34-SELECTOR-EDGE-REPORT.md` | 最终报告 |
+
+**核心结论**（1930 OOS；dev 1544 / holdout 386；frequency-matched + conditional 1000 perm；C 100-seed；Holm）:
+- 一致性：`pick_T0`（生产 selector）== manual `compute_final_scores` on P2-3 cache，**0/900 mismatch**
+- CURRENT selector mean = **1.0544（full OOS）/ 1.0363（holdout）**，**低于** fair-random（1.0563）与 frequency-matched null（1.0616）
+- candidate set：`CURRENT − candidate mean4 = −0.0092`（selector 比随机选自家候选还差）；候选 hits 两两 pearson ≤ 0.116、pairwise 差异≈0（大量 tie）→ 候选近似可互换
+- selection-conditional：C 选中时 C 均值 0.9294 < 无条件 1.0731（uplift −0.1436）；counterfactual：C 选中期中 D/A 反而更高 → selector 在差时期追 C，非识别 C 优势
+- margin：Spearman(margin, advantage) ≈ 0（full −0.0066 / holdout +0.046）→ **SELECTOR CONFIDENCE NOT CALIBRATED**
+- confirmatory H1-H4：全部 **Holm p = 1.0**，效应量 ≈ 0
+- 机制标签：**SEED_DEPENDENT + UNCALIBRATED_SELECTOR + ERA_DEPENDENT + NOISE_COMPATIBLE**（无 ROBUST_SELECTOR_EDGE）
+- **结论：无稳定 selector edge；早期表观优势 = 候选可互换 + C 结构性偏好 + seed 偶然性 + era 波动 + 高噪声 sample noise，非真实预测能力**
+- **ML RECONSIDERATION WARRANTED: NO**（需 stable + holdout-confirmed + seed-robust + era-robust 机制，均未满足）
+
+**生产完整性**（未改）:
+- selector / 权重 / candidate / C seed / recent_issues=1000 / production dataset / 26112 snapshot / frontend 全部 UNCHANGED
+- 9 个生产文件 baseline SHA 复验一致；26112 hash `bea8ef87…`；PUSH NO / DEPLOY NO
+
+**回归**: `tests/test_p34_selector_decomposition.py` 34/34 OK；dataset SHA `ba4bfb09…` 复验一致；consistency 0/900。
+
+---
+
 ### DLT P3-3 FEATURE VALIDITY & ABLATION GATE（research only，本地 commit，未 push/deploy）
 
 **类型**: feat（评测研究）+ research

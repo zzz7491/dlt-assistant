@@ -2,7 +2,25 @@
 
 ## 当前阶段
 
-**最新研究门禁（2026-10-01）**: DLT P3-3 FEATURE VALIDITY & ABLATION GATE = ✅ PASS（本地 commit，未 push/deploy）
+**最新研究门禁（2026-10-01）**: DLT P3-4 SELECTOR EDGE DECOMPOSITION & ROBUSTNESS GATE = ✅ PASS（本地 commit，未 push/deploy）
+
+| 项目 | 结果 |
+|---|---|
+| 唯一研究问题 | 解释 CURRENT selector 早期表观优势（P2-2 S1 vs S7 Δ0.051 未确认）的机制 |
+| 一致性 | pick_T0 == manual compute_final_scores on P2-3 cache：**0/900 mismatch** |
+| CURRENT selector mean | full OOS **1.0544** / holdout **1.0363**（低于 fair-random 1.0563 与 freq-matched null 1.0616） |
+| candidate set | CURRENT − candidate mean4 = −0.0092；候选 hits 两两 pearson ≤ 0.116、pairwise ≈ 0（可互换） |
+| selection-conditional | C 选中时 C 均值 0.9294 < 无条件 1.0731；counterfactual：C 选中期中 D/A 更高 |
+| margin calibration | Spearman(margin, advantage) ≈ 0 → **SELECTOR CONFIDENCE NOT CALIBRATED** |
+| confirmatory H1-H4 | 全部 **Holm p = 1.0**，效应量 ≈ 0 |
+| 机制标签 | **SEED_DEPENDENT + UNCALIBRATED_SELECTOR + ERA_DEPENDENT + NOISE_COMPATIBLE**（无 ROBUST edge） |
+| 结论 | 无稳定 selector edge；早期表观优势 = 候选可互换 + C 偏好 + seed 偶然 + era 波动 + 高噪声 |
+| ML 门 | RECONSIDERATION WARRANTED: **NO**（无 stable/holdout-confirmed/seed-robust/era-robust 机制） |
+| 生产完整性 | selector/权重/candidate/C seed/1000cap/26112/frontend 全部 UNCHANGED；PUSH NO / DEPLOY NO |
+
+产物：`src/evaluation/selector_decomposition.py`、`scripts/evaluate_selector_edge.py`、`tests/test_p34_selector_decomposition.py`（34/34）、`reports/p34-{selector-definition,selection-before-holdout,selector-results}.json` + `reports/P34-SELECTOR-EDGE-REPORT.md`。
+
+### P3-3 研究门禁（2026-10-01）：DLT P3-3 FEATURE VALIDITY & ABLATION GATE = ✅ PASS
 
 | 项目 | 结果 |
 |---|---|

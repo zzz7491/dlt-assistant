@@ -1,0 +1,56 @@
+{
+  "evaluation_version": "p34-v1",
+  "frozen_at": "2026-10-01T01:13:57",
+  "population": {
+    "common_oos": 1930,
+    "warmup": 1000,
+    "dev": 1544,
+    "holdout": 386,
+    "note": "1930 = P3-2/P3-3 common OOS; unchanged split"
+  },
+  "selector_reconstruction": {
+    "algorithm": "compute_final_scores (production weights) + walk-forward OOS maps + structure_ctx=None + prev_draw -> is_primary",
+    "candidate_source": "P3-2 matrix cache window=1000 seed=20260930 (frozen)",
+    "oos_protocol": "walk-forward from target 1 within 1930 population; P2 proved feedback has no marginal selector effect",
+    "consistency_validation": "pick_T0 == manual compute_final_scores on P2-3 cache (must be 0 mismatch)"
+  },
+  "null_hypotheses": {
+    "H1": "CURRENT > frequency-matched null on FINAL HOLDOUT",
+    "H2": "CURRENT > conditional (margin-stratum) permutation null on FINAL HOLDOUT",
+    "H3": "selector margin positively calibrates relative advantage on FINAL HOLDOUT",
+    "H4": "selector edge directionally stable across 5 temporal eras"
+  },
+  "subgroups": [
+    "dev=1544",
+    "holdout=386",
+    "quintile eras Q1-Q5",
+    "leave-era-out 5 folds",
+    "margin quartiles + top10%",
+    "selection-conditional by A/B/C/D"
+  ],
+  "statistical_tests": [
+    "frequency-matched permutation (n=1000, seed 20260931)",
+    "conditional stratified permutation (n=1000, seed 20260932)",
+    "paired bootstrap CI vs fair-random (n=10000, seed 20260930)",
+    "Spearman margin permutation",
+    "binomial era-stability"
+  ],
+  "multiple_comparison": "holm-bonferroni on H1-H4 (primary); BH-FDR reference",
+  "seed_experiment": {
+    "n_seeds": 100,
+    "protocol": "random_combo(seed*1000000+pos); no seed chosen; production proxy seed 0; seed x 5-era rank stability",
+    "era_rank_stable_threshold": 0.7
+  },
+  "effect_size_policy": "report effect size + CI + raw p + Holm p for every comparison; tiny-effect + significant never claimed as predictive advantage",
+  "decision_labels": [
+    "ROBUST_SELECTOR_EDGE",
+    "CANDIDATE_MIX_EFFECT",
+    "SELECTION_FREQUENCY_EFFECT",
+    "ERA_DEPENDENT",
+    "SEED_DEPENDENT",
+    "UNCALIBRATED_SELECTOR",
+    "NOISE_COMPATIBLE",
+    "INCONCLUSIVE"
+  ],
+  "definition_sha256": "ea5a5d9ca181c275622ad1a7e3b43e4aba045045c714e3398284c266e0beb9c8"
+}
