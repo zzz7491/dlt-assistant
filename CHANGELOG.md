@@ -1,5 +1,44 @@
 # 更新记录
 
+## 2026-10-02
+
+### DLT P4-1 DETERMINISTIC RECOMMENDATION REPRODUCIBILITY GATE（production hardening，本地 commit，未 push/deploy）
+
+**类型**: fix（生产推荐 RNG 可复现性）+ docs + test
+**Gate 结论**: P41_CODE_GATE = PASS（所有测试 PASS；PRODUCTION_DEPLOY_AUTHORIZED = NO）
+
+**目标**: 让同一 publication context 重复执行 C candidate generation 得到完全相同结果
+（REPRODUCIBLE = YES），而非追求历史命中提升。
+
+**根因**: 生产 `config/settings.yaml` `recommend.seed: null` → `recommender.recommend()`
+`rng = random.Random(None)` → OS entropy 播种，A/B/C 每次生成不同。
+
+**修复（最小 diff）**:
+- 新增 `src/deterministic_rng.py`：`derive_deterministic_seed` / `publication_seed`，
+  基于 `hashlib.sha256`（stdlib，无新依赖）。seed = SHA-256(game_id|target_issue|strategy_id|algorithm_version) → 256-bit int。
+- `src/scheduler.py`：`seed=None`（生产默认）时注入 publication-bound deterministic seed；显式 seed 原样透传（向后兼容）；缺失 identity 分量 fail-closed（`SeedDerivationError`，绝不回退 seed=None）。
+
+**seed 契约**: 相同 identity → 永远相同 seed；不同 target_issue / algorithm_version / strategy_id → 不同 seed。
+seed 为可复现命名空间键，**不读命中率 / backtest / P2P3 best-seed**（STEP 11: SEED USES HIT PERFORMANCE = NO）。
+
+**验证**:
+| 项 | 结果 |
+|---|---|
+| RNG DEFECT CONFIRMED | YES（before：12/12 contexts × 20 repeats 产生 20 个不同 C） |
+| SAME CONTEXT REPEATABLE | YES（100 contexts × 10 repeats，unique=1，100/100） |
+| CROSS PROCESS REPEATABLE | YES（20 contexts，process A == B，20/20） |
+| EXPLICIT SEED BACKWARD COMPATIBLE | YES（seed 0/1/20260930 结果不变） |
+| PUBLICATION SEMANTIC IDEMPOTENT | YES（snapshot_hash 排除 published_at；upsert 幂等） |
+| CONCURRENT GENERATION CONSISTENT | YES（双 worker 同 payload） |
+| SEED COLLISIONS | 0（1000 synthetic identities） |
+| A / B / D / SELECTOR / WEIGHTS / 1000 CAP / 26112 / UI | 全部 UNCHANGED |
+
+**产物**: `src/deterministic_rng.py`、`src/scheduler.py`（仅 seed 注入块）、`tests/test_p41_deterministic_rng.py`（28 tests / 41 assertions）、`docs/architecture/DETERMINISTIC-RNG-CONTRACT.md`、`reports/p41-rng-{callgraph.md,before.json,after.json}`、`reports/p41-seed-contract.json`、`reports/p41-production-diff.json`、`reports/P41-DETERMINISTIC-RNG-REPORT.md`、`scripts/p41_{repro_before,determinism_after,check_26112}.py`。
+
+**完整性**: 仅 `src/scheduler.py` 为 tracked 修改；26112 快照 hash `bea8ef87f3f137238686ae52712f922956215408f0cf54187b9295d8f1ae5fad` 复核不变；无 experiment.html / UI / CSS / P4-2 内容改动；未 push、未 deploy。
+
+---
+
 ## 2026-10-01
 
 ### DLT P3-5 RESEARCH CLOSURE & PRODUCTION SIMPLIFICATION DECISION GATE（research only，本地 commit，未 push/deploy）

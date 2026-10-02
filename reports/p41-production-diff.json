@@ -1,0 +1,39 @@
+{
+  "gate": "P4-1",
+  "phase": "STEP 16 (production diff audit)",
+  "baseline_commit": "59da681b663bcd093952092a5a4e3bd56e5921b6",
+  "tracked_modifications": [
+    "src/scheduler.py"
+  ],
+  "why_changed": {
+    "src/scheduler.py": "P4-1 STEP 6 minimal patch: import publication_seed; when recommend.seed is None, inject a publication-bound deterministic seed before recommend(); explicit seed preserved (STEP 8); fail-closed (STEP 14)."
+  },
+  "new_source_files": {
+    "src/deterministic_rng.py": "P4-1 STEP 6 helper: derive_deterministic_seed / publication_seed via hashlib.sha256 (stdlib only); fail-closed SeedDerivationError."
+  },
+  "research_artifacts_untracked": [
+    "docs/architecture/DETERMINISTIC-RNG-CONTRACT.md",
+    "reports/p41-rng-callgraph.md",
+    "reports/p41-rng-before.json",
+    "reports/p41-rng-after.json",
+    "reports/p41-seed-contract.json",
+    "reports/P41-DETERMINISTIC-RNG-REPORT.md",
+    "scripts/p41_repro_before.py",
+    "scripts/p41_determinism_after.py",
+    "scripts/p41_check_26112.py",
+    "tests/test_p41_deterministic_rng.py"
+  ],
+  "unrelated_changes_detected": [],
+  "protected_files_check": {
+    "scorer.py": "unchanged",
+    "recommender.py": "unchanged",
+    "config/settings.yaml": "unchanged",
+    "experiment.html": "unchanged",
+    "public/data/published_recommendations.json": "unchanged (26112 hash bea8ef87...)",
+    "A/B/C/D algorithms": "unchanged",
+    "selector weights": "unchanged",
+    "recent_issues": "1000 unchanged",
+    "ML": "not added"
+  },
+  "UNRELATED_RNG_CHANGE_PRESENT": false
+}

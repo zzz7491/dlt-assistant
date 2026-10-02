@@ -1,0 +1,145 @@
+{
+  "gate": "P4-1",
+  "phase": "STEP 3 (before)",
+  "baseline_commit": "59da681b663bcd093952092a5a4e3bd56e5921b6",
+  "selection_method": "fixed stride by target_issue; seed=None; no hit-rate selection",
+  "repeats_per_context": 20,
+  "seed_used": null,
+  "contexts": [
+    {
+      "target_issue": "19149",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "20082",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "21031",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "21114",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "22047",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "22130",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "23063",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "23146",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "24079",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "25010",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "25093",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    },
+    {
+      "target_issue": "26026",
+      "repeats": 20,
+      "seed": null,
+      "unique_C_candidates": 20,
+      "unique_A_candidates": 20,
+      "unique_B_candidates": 20,
+      "C_front_differs": true,
+      "C_back_differs": true,
+      "reproducible_C": false
+    }
+  ],
+  "n_contexts": 12,
+  "REPRODUCIBILITY_DEFECT_CONFIRMED": true,
+  "note": "seed=None -> random.Random(None) uses OS entropy; C/A/B differ across identical inputs."
+}

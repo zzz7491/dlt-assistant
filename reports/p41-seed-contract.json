@@ -1,0 +1,40 @@
+{
+  "gate": "P4-1",
+  "phase": "STEP 4/5",
+  "seed_contract_frozen": true,
+  "derivation": "sha256(\"|\".join([game_id,target_issue,strategy_id,algorithm_version])) -> int.from_bytes(digest[:32], big)",
+  "game_id": "DLT",
+  "strategy_id": "BUNDLE",
+  "algorithm_version": "dlt-recommender-v1",
+  "seed_bits": 256,
+  "invariants": [
+    "same identity -> same seed -> same A/B/C/D bundle (cross-process)",
+    "different target_issue -> different seed",
+    "different algorithm_version -> different seed (namespace separation)",
+    "seed carries NO performance signal; it is a reproducibility namespace key"
+  ],
+  "excluded_inputs": [
+    "draw_result",
+    "future_result",
+    "hit_count",
+    "backtest_performance",
+    "best_seed_P2_P3",
+    "current_time",
+    "process_id",
+    "machine_id",
+    "system_entropy",
+    "python_hash"
+  ],
+  "explicit_seed_backward_compat": "only overrides when recommend.seed is None; explicit seed passes through unchanged",
+  "version_contract": "algorithm_version is part of seed identity; upgrade bumps version; old (version,issue) stays reproducible",
+  "failure_behavior": "missing component -> SeedDerivationError (fail-closed, never seed=None)",
+  "selecteed_using_hit_performance": "NO",
+  "example_seeds": {
+    "26112": 86158766976970817258062888504970861413061605251092553456154404231451433646421,
+    "26113": 69135908330897451670645642047498260237055818302839927625536460812924578524324,
+    "26200": 78725084427620794436507786572153480867339688411337915015748635863768098682876,
+    "26999": 32120995001507013527901570264194731600932319536786916206334298500544665585675
+  },
+  "v2_seed_example_26113": 12350506831487334528447497310203526245632443085333953414626470542898088878539,
+  "baseline_commit": "59da681b663bcd093952092a5a4e3bd56e5921b6"
+}

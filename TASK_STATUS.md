@@ -2,7 +2,36 @@
 
 ## 当前阶段
 
-**P3 RESEARCH PHASE = CLOSED**（P3-1..P3-5 全部 PASS；本地 commit，未 push/deploy；等待下一阶段正式决策）
+**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — IN PROGRESS**（P4-1 完成 CODE_GATE；本地 commit，未 push/deploy）
+
+**最新门禁（2026-10-02）**: DLT P4-1 DETERMINISTIC RECOMMENDATION REPRODUCIBILITY GATE = ✅ CODE_GATE PASS
+
+| 项目 | 结果 |
+|---|---|
+| 缺陷 | RNG DEFECT CONFIRMED = YES（生产 `recommend.seed:null` → `random.Random(None)` 非确定） |
+| 根因 | 单 `rng=random.Random(None)` 入口；seed 仅来自 `cfg["recommend"]["seed"]` |
+| 修复 | 新增 `src/deterministic_rng.py`（SHA-256 → 256-bit seed）+ `src/scheduler.py` seed=None 注入块（最小 diff） |
+| seed 契约 | SHA-256(game_id\|target_issue\|strategy_id\|algorithm_version)；相同 identity → 相同 seed；不以命中率选择 |
+| 同 context 可复现 | YES（100 contexts × 10 repeats，unique=1，100/100） |
+| 跨进程可复现 | YES（20 contexts，process A == B，20/20） |
+| 显式 seed 兼容 | YES（seed 0/1/20260930 不变） |
+| 发布语义幂等 | YES（snapshot_hash 排除 published_at；upsert created/unchanged/conflict 正确） |
+| 并发一致 | YES（双 worker 同 payload） |
+| seed 碰撞 | 0（1000 synthetic identities） |
+| 完整性 | A/B/D 算法 / SELECTOR / WEIGHTS / recent_issues=1000 / 26112 snapshot / UI / ML 全部 UNCHANGED；仅 `src/scheduler.py` tracked 修改 |
+| 26112 | hash `bea8ef87f3f137238686ae52712f922956215408f0cf54187b9295d8f1ae5fad` 复核不变 |
+| 测试 | `tests/test_p41_deterministic_rng.py`（28 tests / 41 assertions，stdlib unittest）全部 PASS |
+| 发布 | **CODE_GATE = PASS；PRODUCTION_DEPLOY_AUTHORIZED = NO；PUSH NO / DEPLOY NO** |
+
+产物：`src/deterministic_rng.py`、`src/scheduler.py`（seed 注入块）、`tests/test_p41_deterministic_rng.py`、`docs/architecture/DETERMINISTIC-RNG-CONTRACT.md`、`reports/p41-rng-callgraph.md`、`reports/p41-rng-before.json`、`reports/p41-rng-after.json`、`reports/p41-seed-contract.json`、`reports/p41-production-diff.json`、`reports/P41-DETERMINISTIC-RNG-REPORT.md`、`scripts/p41_{repro_before,determinism_after,check_26112}.py`。
+
+**下一步（未授权）**: P4-2 及任何生产 deploy 均待用户明确指令；本轮 STOP。
+
+---
+
+## P3 RESEARCH PHASE = CLOSED（前序，2026-10-01）
+
+**P3 RESEARCH PHASE = CLOSED**（P3-1..P3-5 全部 PASS；本地 commit，未 push/deploy）
 
 **最新收口门禁（2026-10-01）**: DLT P3-5 RESEARCH CLOSURE & PRODUCTION SIMPLIFICATION DECISION GATE = ✅ PASS
 

@@ -24,6 +24,7 @@ from .analyzer import (
 from .database import load
 from .recommender import recommend, STRATEGY_LABELS
 from .recommendations import build_records, next_issue, save as save_recs
+from .deterministic_rng import publication_seed
 from .reporter import build_report, write_report
 from .scraper import run as scrape_run
 
@@ -60,12 +61,24 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
         "sum_span": analyze_sum_span(issues),
         "prev_issue": issues[-1] if issues else None,
     }
+    rec_cfg = cfg["recommend"]
+
+    # P4-1 deterministic RNG (STEP 6 minimal patch):
+    # Compute target_issue up front. When the production seed is None, inject a
+    # publication-bound deterministic seed so repeated generation of the SAME
+    # publication yields the SAME A/B/C/D bundle. An explicit recommend.seed
+    # (research/tests) is preserved unchanged (STEP 8 backward compat).
+    # Fail-closed: if the latest issue is missing the exception propagates — we
+    # never silently fall back to a nondeterministic seed (STEP 14).
+    latest_issue = int(db["issues"][-1]["issue"])
+    target_issue = next_issue(latest_issue)
+    if rec_cfg.get("seed") is None:
+        rec_cfg["seed"] = publication_seed(target_issue)
+
     recommendations = recommend(analysis, cfg, stats=stats)
 
     # 3.1) 落盘推荐记录（供开奖验证模块比对），按策略分别记录
-    rec_cfg = cfg["recommend"]
-    latest_issue = int(db["issues"][-1]["issue"])
-    target_issue = next_issue(latest_issue)
+    # target_issue 已在上方 P4-1 deterministic seed 注入前计算完成，复用同值。
     rec_date = datetime.now().strftime("%Y-%m-%d")
     all_recs: list[dict[str, Any]] = []
     for key in ("A", "B", "C", "D"):
