@@ -158,12 +158,19 @@ def _build_primary_explanation(primary: dict[str, Any], history_data: Any,
 
 
 def upsert_published_snapshot(path: str, snapshot: dict[str, Any]) -> str:
-    """写不可变快照。返回状态：created / unchanged / conflict。
+    """写不可变快照。返回状态：created / unchanged / conflict / corrupt。
 
     - 该 issue 无快照 → 追加（created）
     - 已有且内容 hash 相同 → 不写盘（unchanged，幂等）
     - 已有但内容不同 → 保留原快照，不覆盖（conflict，不可变核心）
+    - P4-3 F1：目标文件已存在但不可解析为合法 published store（损坏 / 缺 items）
+      → fail-closed 返回 'corrupt'，绝不重置/清空历史快照（保护 26112/26113）。
+      只有「文件真不存在」才视为首次发布并创建新 store。
     """
+    data = _load_json(path)
+    preexists = os.path.exists(path)
+    if preexists and (not isinstance(data, dict) or not isinstance(data.get("items"), list)):
+        return "corrupt"  # 存在但损坏 → fail-closed，绝不静默重置历史快照
     store = _load_published_store(path)
     items = store.get("items", [])
     issue = str(snapshot.get("issue"))
@@ -482,11 +489,30 @@ def _now() -> str:
 
 
 def _write_json(path: str, data: Any) -> None:
+    """原子写入 JSON：先写同目录临时文件 + fsync，再 os.replace 覆盖目标。
+
+    P4-3 F2（I5）：避免「truncate-then-write」在写中途崩溃时留下半写/损坏
+    文件（此前会触发 G1 的历史快照静默重置风险）。同一文件系统上
+    os.replace 是原子操作。使用 tempfile 保证临时名唯一且与目标同目录。
+    """
+    import tempfile
     d = os.path.dirname(os.path.abspath(path))
     if d:
         os.makedirs(d, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    fd, tmp_path = tempfile.mkstemp(dir=d, prefix=".publisher.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, path)
+    except BaseException:
+        # 任何失败：清理临时文件，绝不留下半写目标
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
 
 
 def _strip_updated_at(x: Any) -> Any:
@@ -665,9 +691,10 @@ def publish(*, rec_path: str = "reports/recommendations.json",
         snap = build_snapshot(primary, published_at=_now())
         st = upsert_published_snapshot(snapshot_path, snap)
         published_status["issues"][str(primary.get("target_issue"))] = st
-        # CONFLICT = 该 issue 已有不同不可变快照。fail-closed：不得把新推荐写进
-        # recommendations.json（否则 displayed != snapshot）。保留冻结展示。
-        if st == "conflict":
+        # CONFLICT = 该 issue 已有不同不可变快照；CORRUPT = 已存在的发布 store 损坏。
+        # 两者都 fail-closed：不得把新推荐写进 recommendations.json（否则 displayed !=
+        # snapshot），保留冻结展示，绝不重置/覆盖历史快照（I3/I4/I12）。
+        if st in ("conflict", "corrupt"):
             snapshot_write_ok = False
 
     # P0-1 复盘：读不可变快照索引（含历史已发布 + 本期新写），按 issue 查询

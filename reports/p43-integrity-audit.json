@@ -1,0 +1,58 @@
+{
+  "gate": "P4-3",
+  "phase": "PHASE 9 classification",
+  "findings": [
+    {
+      "id": "G1",
+      "severity": "CRITICAL",
+      "category": "I3/I4/I12: historical snapshot loss on corrupt store",
+      "status": "CONFIRMED DEFECT",
+      "description": "upsert_published_snapshot called _load_json (returns None on parse failure) + _load_published_store (coerces None to empty store). A corrupt published_recommendations.json would be silently reset to an empty store on the next upsert, wiping all historical immutable snapshots (26112, 26113, etc.).",
+      "fix": "F1: upsert_published_snapshot now returns 'corrupt' and does NOT write when the target file exists but is not a parseable published store. Only a truly missing file triggers first-publication creation.",
+      "fixed_in": "src/publisher.py:upsert_published_snapshot",
+      "scope": "P4-3 publication integrity"
+    },
+    {
+      "id": "G2",
+      "severity": "HIGH",
+      "category": "I5: non-atomic write leaves corrupt store on mid-write crash",
+      "status": "CONFIRMED DEFECT",
+      "description": "_write_json used open(path,'w') + json.dump: the 'w' mode truncates the target file immediately. A crash/kill between truncate and dump leaves a corrupt (empty or partial) file. G2 is the root enabler of G1.",
+      "fix": "F2: _write_json now writes to a same-directory tempfile (tempfile.mkstemp), fsyncs, then atomically os.replace over the target. No truncation of the live file. On failure, temp is unlinked and the exception propagates.",
+      "fixed_in": "src/publisher.py:_write_json",
+      "scope": "P4-3 atomicity / recovery safety"
+    }
+  ],
+  "adversarial_scenarios": [
+    {"id": "A", "scenario": "same issue / same payload", "result": "PASS", "note": "existing: unchanged (no write)"},
+    {"id": "B", "scenario": "same issue / different payload", "result": "PASS", "note": "existing: conflict (original preserved)"},
+    {"id": "C", "scenario": "history lag (history 26112 < published 26113)", "result": "PASS", "note": "scheduler targets next_issue(26112)=26113; publisher upsert hits existing 26113 with different seed → conflict → I3/I12 preserved; no overwrite."},
+    {"id": "D", "scenario": "concurrent publish same issue", "result": "PASS", "note": "D1 UNIQUE + INSERT OR IGNORE makes only first write authoritative; local upsert: first creates, second conflicts or is unchanged; CI concurrency.group serializes jobs."},
+    {"id": "E", "scenario": "partial failure (local OK / D1 fail)", "result": "PASS", "note": "workflow isolates D1 write (set +e, exit 0 on fail); local JSON publish is independent; no half-publish of recommendation content."},
+    {"id": "F", "scenario": "retry after failure", "result": "PASS", "note": "publisher is pure: re-run with same inputs → same upsert status; deterministic seed (P4-1) ensures same snapshot hash."},
+    {"id": "G", "scenario": "out-of-order issue publish", "result": "PASS", "note": "upsert appends by issue key; out-of-order does not overwrite earlier issues."},
+    {"id": "H", "scenario": "malformed snapshot (missing issue/hash/numbers)", "result": "PASS", "note": "build_snapshot requires dict primary; snapshot_hash handles missing numbers via .get; malformed → None hash → conflict on next upsert (original preserved)."},
+    {"id": "I", "scenario": "hash mismatch (payload vs stored)", "result": "PASS", "note": "upsert recomputes hash; mismatch → conflict (original preserved)."},
+    {"id": "J", "scenario": "frontend authority", "result": "PASS", "note": "app.js reads static recommendations.json (publisher-written); selectPrimary reads is_primary flag; does not recompute."},
+    {"id": "K", "scenario": "deployment isolation", "result": "PASS", "note": "wrangler pages deploy public uploads static files only; no scheduler/publisher trigger; guard script does not run generation."},
+    {"id": "L", "scenario": "deterministic future generation", "result": "PASS", "note": "P4-1 publication_seed verified: same identity → same seed → same snapshot; verified in test_p41_deterministic_rng (100/100 same-process, 20/20 cross-process)."}
+  ],
+  "defense_in_depth": [
+    "CI concurrency.group experiment-ci serializes jobs",
+    "D1 INSERT OR IGNORE + UNIQUE(target_issue,strategy,idx) one-period lock",
+    "upsert conflict preserves original snapshot (existing I2/I12)",
+    "publisher fail-closed on 0/multiple primaries or conflict (existing)",
+    "--safe mode: top-level exceptions → exit 0, no crash in CI"
+  ],
+  "not_a_defect": [
+    "history lag targeting already-published issue: conflict protection handles it (no overwrite)",
+    "experiment.html wording: P4-2 closed",
+    "deterministic RNG: P4-1 closed"
+  ],
+  "out_of_scope": [
+    "recommendation algorithm / scoring / weights / analysis window / selector",
+    "regenerating historical snapshots",
+    "destructive D1 schema migration",
+    "new deployment-time recommendation generation"
+  ]
+}

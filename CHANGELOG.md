@@ -2,6 +2,34 @@
 
 ## 2026-10-02
 
+### DLT P4-3 PRODUCTION INTEGRITY / PUBLICATION LIFECYCLE HARDENING（本地 commit，未 push/deploy）
+
+**类型**: fix（publication 完整性）+ test + docs
+**目的**: 仅做 production integrity / publication lifecycle hardening（不改变 recommendation
+semantics、不动算法/scoring/weights/analysis window/RNG contract、不重生历史 publication）。
+
+**审计（只读）发现的两个 in-scope 缺陷并已修复**:
+| 缺陷 | 级别 | 根因 | 修复 |
+|---|---|---|---|
+| G1 | CRITICAL (I3/I4/I12) | 损坏的 `published_recommendations.json` 在下次 upsert 时被**静默重置为空 store**，抹掉全部历史不可变快照 | F1：`upsert_published_snapshot` 检测「文件已存在但不可解析为合法 store」→ 返回 `corrupt` 且不写盘；`publish()` 对 `corrupt` fail-closed（不写 display）。仅文件真不存在才首次创建 |
+| G2 | HIGH (I5) | `_write_json` 用 `open(path,"w")+json.dump`（先 truncate），中途崩溃留半写/损坏文件 → 是 G1 的根因触发器 | F2：改为同目录 `tempfile.mkstemp` + `fsync` + 原子 `os.replace`；失败清理 temp，不留下半写目标 |
+
+**修改（最小 diff）**: 仅 `src/publisher.py`（F1 upsert 早退 + `publish()` 的 `corrupt` 分支 + F2 原子写）。
+算法 / selector / scoring / weights / analysis window / RNG contract / 历史 snapshot 全部 UNCHANGED。
+
+**验证**:
+| 项 | 结果 |
+|---|---|
+| G1 corrupt-store | 返回 `corrupt`、文件不被改写、历史 26112/26113 保留 |
+| G2 atomic write | 无 `.tmp` 残留；失败不留半写 |
+| 对抗场景 A–L | 全部 PASS（幂等 / conflict / history-lag / 并发 / 部分失败 / 重试 / 乱序 / malformed / hash 一致性 / 前端权威 / 部署隔离 / 确定性） |
+| 全量回归 | P4-1 28 + Guard 17 + P4-2 12 + P4-3 23 + publisher 30 = **110 tests PASS** |
+| 26112 immutable | hash `bea8ef87...` 复核不变 |
+
+**产物**: `src/publisher.py`（F1/F2）、`tests/test_p43_publication_integrity.py`（23 tests）、
+`reports/p43-publication-lifecycle-baseline.md`、`reports/p43-publication-callgraph.md`、
+`reports/p43-integrity-audit.{json,md}`、`docs/architecture/P43-PUBLICATION-INTEGRITY-CONTRACT.md`。
+
 ### DLT P4-2 PRODUCTION WORDING INTEGRITY（文案与 P2/P3 研究结论对齐，本地 commit）
 
 **类型**: fix（前端文案）+ test + docs
