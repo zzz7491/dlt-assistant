@@ -111,8 +111,8 @@ def load_cfg():
 
 
 def load_issues():
-    return sorted(json.load(open(DATA, "r", encoding="utf-8"))["issues"],
-                  key=lambda x: _i(x["issue"]))
+    with open(DATA, "r", encoding="utf-8") as f:
+        return sorted(json.load(f)["issues"], key=lambda x: _i(x["issue"]))
 
 
 def build_ctx(issues, target_issue, cfg, recent_issues=1000):
@@ -351,7 +351,8 @@ class TestPublicationIdempotency(unittest.TestCase):
     """STEP 7/12: 26112 immutable + semantic payload determinism (tempfile only)."""
 
     def test_22_26112_snapshot_hash_unchanged(self):
-        store = json.load(open(SNAP, "r", encoding="utf-8"))
+        with open(SNAP, "r", encoding="utf-8") as f:
+            store = json.load(f)
         snap = next((s for s in store["items"] if str(s.get("issue")) == "26112"), None)
         self.assertIsNotNone(snap, "26112 snapshot must exist")
         self.assertEqual(snapshot_hash(snap), snap["snapshot_hash"])
@@ -427,28 +428,67 @@ class TestProductionIntegrity(unittest.TestCase):
         self.assertEqual(set(STRATEGY_LABELS.keys()), {"A", "B", "C", "D"})
 
     def test_28_only_expected_files_changed(self):
-        # Track the P4-1 touched files; assert the source patch set is minimal.
+        """P4-1 PRODUCTION CHANGE SURFACE (commit-aware, not working-tree).
+
+        Uses `git diff --name-only HEAD^..HEAD` to list every file the P4-1
+        commit touched relative to its parent. Verifies:
+          1. src/scheduler.py IS in the change surface (the minimal patch)
+          2. src/deterministic_rng.py IS in the change surface (new helper)
+          3. No unauthorized production source/config/UI/publication files
+          4. experiment.html must NOT appear
+          5. config/settings.yaml must NOT be changed
+          6. src/recommender.py must NOT be changed
+          7. scorer/selector/weights production files must NOT be changed
+          8. data/ public/ publication artifacts must NOT be changed by P4-1
+        docs/ reports/ scripts/ tests/ CHANGELOG.md TASK_STATUS.md ARE allowed
+        (research artifacts + test + changelog), so the set is NOT just 2 files.
+        """
         import subprocess as sp
-        out = sp.run(["/opt/homebrew/bin/git", "status", "--short"],
+        out = sp.run(["/opt/homebrew/bin/git", "diff", "--name-only", "HEAD^..HEAD"],
                      capture_output=True, text=True, cwd=ROOT)
-        # git status --short lines are "<XY> <path>": tracked worktree changes
-        # show as " M <path>" (leading space in the XY field).
-        modified = []
-        for ln in out.stdout.splitlines():
-            if ln.startswith("??"):
-                continue  # untracked (reports/, docs/, scripts/) — not source edits
-            if len(ln) >= 2 and ln[1] == "M":
-                modified.append(ln[3:])
-        # the tracked modification must be exactly the scheduler patch
-        self.assertIn("src/scheduler.py", modified)
-        # no accidental modification of protected files
-        protected = {"experiment.html", "src/scorer.py", "src/recommender.py",
-                     "config/settings.yaml"}
-        for f in protected:
-            self.assertNotIn(f, modified, f"protected file unexpectedly modified: {f}")
-        # only scheduler.py may be a tracked source modification in this gate
-        self.assertEqual(sorted(modified), ["src/scheduler.py"],
-                         "tracked modifications beyond the scheduler patch")
+        self.assertEqual(out.returncode, 0, f"git diff failed: {out.stderr}")
+        changed = {ln for ln in out.stdout.splitlines() if ln.strip()}
+        self.assertTrue(changed, "P4-1 commit touched no files")
+
+        # 1 & 2: required P4-1 files must be present
+        self.assertIn("src/scheduler.py", changed, "scheduler patch missing from P4-1 commit")
+        self.assertIn("src/deterministic_rng.py", changed, "deterministic_rng helper missing from P4-1 commit")
+
+        # Allowed non-production paths (research / test / docs / changelog).
+        allowed_prefixes = ("docs/", "reports/", "scripts/", "tests/")
+        allowed_exact = {"CHANGELOG.md", "TASK_STATUS.md"}
+
+        # 3/4/5/6/7/8: no unauthorized production source/config/UI/publication file
+        def is_allowed(path):
+            if path in ("src/scheduler.py", "src/deterministic_rng.py"):
+                return True
+            for pfx in allowed_prefixes:
+                if path.startswith(pfx):
+                    return True
+            return path in allowed_exact
+
+        # 5: config/settings.yaml must not be changed
+        self.assertNotIn("config/settings.yaml", changed, "config/settings.yaml modified by P4-1")
+        # 4: experiment.html must not appear
+        self.assertNotIn("experiment.html", changed, "experiment.html modified by P4-1")
+        # 6: recommender.py must not be changed
+        self.assertNotIn("src/recommender.py", changed, "src/recommender.py modified by P4-1")
+        # 7: scorer/selector/weights production files must not be changed
+        for prod in ("src/scorer.py", "src/final_score.py", "src/explanation.py",
+                     "src/backtest.py", "src/reflection.py", "src/publisher.py",
+                     "src/analyzer.py"):
+            self.assertNotIn(prod, changed, f"production source modified by P4-1: {prod}")
+        # 8: data/ public/ publication artifacts must not be changed by P4-1 commit
+        for pub in ("public/data/published_recommendations.json",
+                    "public/data/recommendations.json",
+                    "data/dlt_history.json",
+                    "data/structure_profile.json"):
+            self.assertNotIn(pub, changed, f"publication artifact modified by P4-1: {pub}")
+
+        # Every changed file must fall in the allowed surface; flag anything else.
+        for path in changed:
+            self.assertTrue(is_allowed(path),
+                            f"unauthorized P4-1 production change: {path}")
 
 
 issues_cache = {"v": None}
