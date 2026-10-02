@@ -260,6 +260,19 @@ jobs:
             git push
           fi
 
+      - name: Cloudflare Account Guard（fail-closed）
+        # P4-1 部署安全：在 wrangler pages deploy 之前验证当前 Cloudflare 账号
+        # 是 DLT 生产账号（8770e491...），不匹配则 exit 1 阻断部署。
+        # CLOUDFLARE_API_TOKEN 缺失时跳过（不部署）；存在时调用 guard 脚本。
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "未配置 CLOUDFLARE_API_TOKEN，跳过 guard + 部署"
+            exit 0
+          fi
+          python scripts/check_cloudflare_account.py
+
       - name: 部署到 Cloudflare Pages
         # 仅在仓库配置了 CLOUDFLARE_API_TOKEN secret 后执行；
         # 未配置则自动跳过，不影响每日数据分析与回写仓库。
@@ -358,6 +371,18 @@ jobs:
             git commit -m "chore: 周度实验重验证更新 $(date +'%Y-%m-%d')"
             git push
           fi
+
+      - name: Cloudflare Account Guard（fail-closed）
+        # P4-1 部署安全：wrangler 读取 CLOUDFLARE_API_TOKEN 执行只读 whoami，
+        # 校验当前 Cloudflare 账号 = DLT 生产账号；不匹配则 exit 1 阻断部署。
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "未配置 CLOUDFLARE_API_TOKEN，跳过 guard + 部署"
+            exit 0
+          fi
+          python scripts/check_cloudflare_account.py
 
       - name: 部署到 Cloudflare Pages
         env:
