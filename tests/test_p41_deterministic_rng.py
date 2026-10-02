@@ -50,6 +50,12 @@ N_CROSS = 20
 N_COLLISION = 1000
 N_D = 12
 
+# Frozen P4-1 change-contract endpoints (stable, do NOT depend on moving HEAD).
+# P4-1 production commit change surface = PRE_P41_BASELINE..P41_PRODUCTION_COMMIT.
+# STEP 5: test must FAIL (never silently pass) if either commit is missing.
+PRE_P41_BASELINE = "cf8c2bba152033e11b9b6908da2cd6cec215dc54"
+P41_PRODUCTION_COMMIT = "5a8d408876296e7a768b30ab99a115c9748e25ca"
+
 
 # ----------------------------------------------------------------- helpers
 def _i(v):
@@ -427,38 +433,56 @@ class TestProductionIntegrity(unittest.TestCase):
     def test_27_strategies_labels_unchanged(self):
         self.assertEqual(set(STRATEGY_LABELS.keys()), {"A", "B", "C", "D"})
 
-    def test_28_only_expected_files_changed(self):
-        """P4-1 PRODUCTION CHANGE SURFACE (commit-aware, not working-tree).
+    def test_28_p41_production_change_surface(self):
+        """P4-1 PRODUCTION CHANGE CONTRACT (frozen, HEAD-independent).
 
-        Uses `git diff --name-only HEAD^..HEAD` to list every file the P4-1
-        commit touched relative to its parent. Verifies:
-          1. src/scheduler.py IS in the change surface (the minimal patch)
-          2. src/deterministic_rng.py IS in the change surface (new helper)
-          3. No unauthorized production source/config/UI/publication files
-          4. experiment.html must NOT appear
-          5. config/settings.yaml must NOT be changed
-          6. src/recommender.py must NOT be changed
-          7. scorer/selector/weights production files must NOT be changed
-          8. data/ public/ publication artifacts must NOT be changed by P4-1
-        docs/ reports/ scripts/ tests/ CHANGELOG.md TASK_STATUS.md ARE allowed
-        (research artifacts + test + changelog), so the set is NOT just 2 files.
+        Verifies the P4-1 production change surface over the FROZEN commit range
+        PRE_P41_BASELINE..P41_PRODUCTION_COMMIT, NOT the moving HEAD. This keeps
+        the test correct no matter how many commits later land on top of P4-1.
+
+        STEP 5 fail-closed: the test FAILS (never silently passes) if
+          - the baseline commit is missing,
+          - the P4-1 production commit is missing,
+          - the git diff command fails,
+          - a required production file is absent from the surface.
+
+        REQUIRED production files (must be present):
+          src/scheduler.py, src/deterministic_rng.py
+        FORBIDDEN production changes (must NOT be present):
+          src/recommender.py, config/settings.yaml, public/experiment.html,
+          plus selector/scorer/weights/publication-schema/analysis-window files.
+        ALLOWED supporting files:
+          docs/ reports/ scripts/ tests/ CHANGELOG.md TASK_STATUS.md
         """
         import subprocess as sp
-        out = sp.run(["/opt/homebrew/bin/git", "diff", "--name-only", "HEAD^..HEAD"],
+
+        def git_show_exists(sha):
+            r = sp.run(["/opt/homebrew/bin/git", "cat-file", "-e", sha + "^{commit}"],
+                       capture_output=True, text=True, cwd=ROOT)
+            self.assertEqual(r.returncode, 0,
+                             f"frozen P4-1 commit {sha} is missing from this repo; "
+                             "cannot verify the change contract (fail-closed).")
+
+        # STEP 5: both frozen endpoints must exist, else fail closed.
+        git_show_exists(PRE_P41_BASELINE)
+        git_show_exists(P41_PRODUCTION_COMMIT)
+
+        rng = f"{PRE_P41_BASELINE}..{P41_PRODUCTION_COMMIT}"
+        out = sp.run(["/opt/homebrew/bin/git", "diff", "--name-only", rng],
                      capture_output=True, text=True, cwd=ROOT)
-        self.assertEqual(out.returncode, 0, f"git diff failed: {out.stderr}")
+        # STEP 5: git diff must succeed.
+        self.assertEqual(out.returncode, 0, f"git diff {rng} failed: {out.stderr}")
         changed = {ln for ln in out.stdout.splitlines() if ln.strip()}
-        self.assertTrue(changed, "P4-1 commit touched no files")
+        self.assertTrue(changed, f"frozen P4-1 range {rng} touched no files")
 
-        # 1 & 2: required P4-1 files must be present
-        self.assertIn("src/scheduler.py", changed, "scheduler patch missing from P4-1 commit")
-        self.assertIn("src/deterministic_rng.py", changed, "deterministic_rng helper missing from P4-1 commit")
+        # REQUIRED production files must be present.
+        for req in ("src/scheduler.py", "src/deterministic_rng.py"):
+            self.assertIn(req, changed, f"required P4-1 production file missing: {req}")
 
-        # Allowed non-production paths (research / test / docs / changelog).
+        # ALLOWED supporting prefixes + exact names.
         allowed_prefixes = ("docs/", "reports/", "scripts/", "tests/")
         allowed_exact = {"CHANGELOG.md", "TASK_STATUS.md"}
 
-        # 3/4/5/6/7/8: no unauthorized production source/config/UI/publication file
         def is_allowed(path):
             if path in ("src/scheduler.py", "src/deterministic_rng.py"):
                 return True
@@ -467,28 +491,32 @@ class TestProductionIntegrity(unittest.TestCase):
                     return True
             return path in allowed_exact
 
-        # 5: config/settings.yaml must not be changed
-        self.assertNotIn("config/settings.yaml", changed, "config/settings.yaml modified by P4-1")
-        # 4: experiment.html must not appear
-        self.assertNotIn("experiment.html", changed, "experiment.html modified by P4-1")
-        # 6: recommender.py must not be changed
-        self.assertNotIn("src/recommender.py", changed, "src/recommender.py modified by P4-1")
-        # 7: scorer/selector/weights production files must not be changed
-        for prod in ("src/scorer.py", "src/final_score.py", "src/explanation.py",
-                     "src/backtest.py", "src/reflection.py", "src/publisher.py",
-                     "src/analyzer.py"):
-            self.assertNotIn(prod, changed, f"production source modified by P4-1: {prod}")
-        # 8: data/ public/ publication artifacts must not be changed by P4-1 commit
-        for pub in ("public/data/published_recommendations.json",
-                    "public/data/recommendations.json",
-                    "data/dlt_history.json",
-                    "data/structure_profile.json"):
-            self.assertNotIn(pub, changed, f"publication artifact modified by P4-1: {pub}")
+        # FORBIDDEN production changes must NOT appear.
+        forbidden = {
+            "src/recommender.py": "recommender algorithm must not change",
+            "config/settings.yaml": "config/settings.yaml must not change",
+            "public/experiment.html": "experiment.html (UI) must not change",
+            "src/scorer.py": "scorer must not change",
+            "src/final_score.py": "scoring weights must not change",
+            "src/explanation.py": "explanation schema must not change",
+            "src/publisher.py": "publication schema must not change",
+            "src/backtest.py": "backtest must not change",
+            "src/reflection.py": "reflection must not change",
+            "src/analyzer.py": "analysis window/logic must not change",
+        }
+        for path, why in forbidden.items():
+            self.assertNotIn(path, changed, f"{why}: P4-1 touched {path}")
+        # data/ + public/ publication artifacts must not be touched by P4-1.
+        for path in ("data/dlt_history.json", "data/structure_profile.json",
+                     "public/data/published_recommendations.json",
+                     "public/data/recommendations.json"):
+            self.assertNotIn(path, changed, f"publication artifact must not change: {path}")
 
         # Every changed file must fall in the allowed surface; flag anything else.
-        for path in changed:
+        for path in sorted(changed):
             self.assertTrue(is_allowed(path),
-                            f"unauthorized P4-1 production change: {path}")
+                            f"unauthorized P4-1 change (outside contract surface): {path}")
+
 
 
 issues_cache = {"v": None}
