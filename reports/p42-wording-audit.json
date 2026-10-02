@@ -1,0 +1,42 @@
+{
+  "gate": "P4-2",
+  "phase": "PHASE 8 global regression",
+  "files": [
+    "public/experiment.html",
+    "public/experiment.js",
+    "public/index.html"
+  ],
+  "findings": [
+    {
+      "file": "public/experiment.html",
+      "line": 158,
+      "text": "<p class=\"exp-meta\">娱乐价值 = 非预测目标评价（小奖频率 / 空军 / 多样性 / 覆盖率），不衡量预测能力或收益；模型之间差异可能仅为随机噪声。</p>",
+      "pattern": "预测目标",
+      "qualified": true,
+      "class": "A",
+      "action": "KEEP(disclaimer/research context)"
+    },
+    {
+      "file": "public/experiment.html",
+      "line": 172,
+      "text": "<p class=\"exp-meta\">多窗口（200/500/900 期）× 多种子（1/42/123/999）验证 coverage_boost 等约束策略的长期稳定性。非预测目标实验。</p>",
+      "pattern": "预测目标",
+      "qualified": true,
+      "class": "A",
+      "action": "KEEP(disclaimer/research context)"
+    }
+  ],
+  "disclaimer_present": {
+    "public/experiment.html": true,
+    "public/experiment.js": true,
+    "public/index.html": true
+  },
+  "entertainment_framing": {
+    "public/experiment.html": true,
+    "public/experiment.js": true,
+    "public/index.html": true
+  },
+  "exactly_one_final_rec": true,
+  "result": "PASS",
+  "B_class_unqualified": []
+}

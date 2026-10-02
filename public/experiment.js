@@ -105,7 +105,7 @@
       const badge = mv === "random"
         ? '<span class="rank-badge rank-lose">基准</span>'
         : (beats
-            ? '<span class="rank-badge rank-win">胜</span>'
+            ? '<span class="rank-badge rank-win">略优</span>'
             : '<span class="rank-badge rank-lose">否</span>');
       const tr = document.createElement("tr");
       tr.innerHTML =
@@ -190,7 +190,7 @@
       return;
     }
     const distMap = (diag && diag.conclusion && diag.conclusion.distinguishable_from_random) || {};
-    const headers = ["模型", "综合评分", "平均前区命中", "ROI", "最大连续空军", "3+命中率", "命中分布可区分随机", "胜随机"];
+    const headers = ["模型", "综合评分", "平均前区命中", "ROI", "最大连续空军", "3+命中率", "命中分布可区分随机", "相对随机基线"];
     const rows = (ranking.ranking || Object.keys(ranking.models)).map((mv) => {
       const m = ranking.models[mv];
       const dist = distMap[mv];
@@ -212,7 +212,7 @@
     const note = document.createElement("p");
     note.className = "exp-meta";
     note.innerHTML = "random 为实验基准，<strong>不代表真实预测模型</strong>。" +
-      "「胜随机」基于综合评分的微小差异，而命中分布卡方检验显示各模型与 random 均不可区分，故不构成显著证据。娱乐分析，非预测。";
+      "「相对随机基线」一列基于综合评分的微小差异，而命中分布卡方检验显示各模型与 random 均不可区分，故未确认优于随机基线。娱乐分析，非预测。";
     host.appendChild(note);
   }
 

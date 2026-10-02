@@ -71,7 +71,7 @@
   <div id="error" class="error-box" hidden>
     <p>⚠️ 暂未读取到实验推荐数据。</p>
     <p class="error-detail" id="error-detail"></p>
-    <p class="error-hint">请确认每日实验预测任务已运行并生成 <code>data/experimental_recommendation.json</code>。</p>
+    <p class="error-hint">请确认每日实验任务已运行并生成 <code>data/experimental_recommendation.json</code>。</p>
   </div>
 
   <main id="content">
@@ -95,7 +95,7 @@
     <!-- ① 最新一期推荐（实时） -->
     <section class="card" id="sec-live">
       <h2>🧪 最新一期实验推荐</h2>
-      <p class="exp-meta">预测目标期号：<strong id="target-issue">—</strong> ｜ 生成时间：<strong id="gen-at">—</strong> ｜ 模型：<span id="model-ver" class="tag">v2-adaptive</span></p>
+      <p class="exp-meta">娱乐推荐目标期号：<strong id="target-issue">—</strong> ｜ 生成时间：<strong id="gen-at">—</strong> ｜ 分析策略：<span id="model-ver" class="tag">v2-adaptive</span></p>
       <div id="reco-list"></div>
     </section>
 
@@ -134,8 +134,8 @@
         <table class="rank-table" id="rank-table">
           <thead>
             <tr>
-              <th>排名</th><th>模型</th><th>预测次数</th><th>均前区命中</th><th>均后区命中</th>
-              <th>3+命中率</th><th>奖金</th><th>ROI</th><th>最大空军</th><th>稳定性</th><th>综合分</th><th>胜随机</th>
+              <th>排名</th><th>模型</th><th>回测次数</th><th>均前区命中</th><th>均后区命中</th>
+              <th>3+命中率</th><th>奖金</th><th>ROI</th><th>最大空军</th><th>稳定性</th><th>综合分</th><th>相对随机基线</th>
             </tr>
           </thead>
           <tbody id="rank-body"></tbody>

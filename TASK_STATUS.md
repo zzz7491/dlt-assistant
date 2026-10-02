@@ -2,7 +2,30 @@
 
 ## 当前阶段
 
-**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — IN PROGRESS**（P4-1 完成 CODE_GATE；本地 commit，未 push/deploy）
+**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — P4-2 PRODUCTION WORDING INTEGRITY（本地 commit；待 push/deploy）**
+
+**最新门禁（2026-10-02）**: DLT P4-2 PRODUCTION WORDING INTEGRITY = ✅ 代码 GREEN（57/57 tests PASS）
+
+| 项目 | 结果 |
+|---|---|
+| 目的 | 使生产文案与 P2/P3 结论一致：DLT = 历史数据分析 + 娱乐推荐工具，非预测系统；移除/限定暗示"当前产品可预测"的措辞 |
+| 修改面 | 仅 `public/experiment.html` + `public/experiment.js`（MINIMAL 文案，不动布局/CSS/JS 逻辑/API） |
+| 旧误导措辞 → 新 | 预测目标期号→娱乐推荐目标期号；模型→分析策略；预测次数→回测次数；胜随机(表头)→相对随机基线；"胜"badge→"略优" |
+| 保留（A 类免责） | 不构成预测 / 非预测目标 / 不衡量预测能力 / 负期望游戏 / 理性购彩 / index 本期唯一推荐·不等于中奖预测 |
+| 禁止项 | 未改 recommender/scoring/weights/analysis-window/snapshot/recommendation-algorithm；未引入"保证中奖/最可能/提高中奖率" |
+| 测试 | P4-1 28/28 + Cloudflare Guard 17/17 + P4-2 wording 12/12 = **57/57 PASS** |
+| 完整性 | 26112 hash `bea8ef87...` 复核不变；26113 未变；exactly-one-final-recommendation 语义保留 |
+| 产物 | `reports/p42-wording-audit.md` + `reports/p42-wording-audit.json` + `tests/test_p42_wording_integrity.py` |
+
+**账户守卫（P4 closeout）**: `scripts/check_cloudflare_account.py`（fail-closed，expected account `8770e491...`）已集成进 `.github/workflows/dlt-analysis.yml` 两个 `wrangler pages deploy` 前 + `scripts/deploy_production.sh`。Guard tests 17/17 PASS，live PASS。
+
+**下一步（未授权）**: P4-3 Production Integrity / publication lifecycle hardening；push/deploy 待用户确认或下一次授权。
+
+---
+
+## P4-1（前序，2026-10-02）
+
+**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — IN PROGRESS**（P4-1 完成 CODE_GATE + production deploy + smoke；本地 commit）
 
 **最新门禁（2026-10-02）**: DLT P4-1 DETERMINISTIC RECOMMENDATION REPRODUCIBILITY GATE = ✅ CODE_GATE PASS
 

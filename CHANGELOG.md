@@ -2,6 +2,29 @@
 
 ## 2026-10-02
 
+### DLT P4-2 PRODUCTION WORDING INTEGRITY（文案与 P2/P3 研究结论对齐，本地 commit）
+
+**类型**: fix（前端文案）+ test + docs
+**目的**: 使生产用户可见文案与 P2/P3 已确认的研究结论一致——大乐透是**历史数据分析 + 娱乐推荐工具**，**不是**彩票预测系统；移除/限定任何暗示"当前产品具有预测能力"的措辞。不提升预测能力，仅对齐措辞。
+
+**修改（MINIMAL，仅 public 文案，不动算法/scoring/weights/snapshot/UI 逻辑）**:
+| 文件 | 旧措辞 | 新措辞 |
+|---|---|---|
+| `public/experiment.html` | 预测目标期号： | 娱乐推荐目标期号： |
+| `public/experiment.html` | 模型：（推荐区） | 分析策略： |
+| `public/experiment.html` | 预测次数（表头） | 回测次数 |
+| `public/experiment.html` | 胜随机（表头） | 相对随机基线 |
+| `public/experiment.html` | 每日实验预测任务 | 每日实验任务 |
+| `public/experiment.js` | 表头 "胜随机" | "相对随机基线" |
+| `public/experiment.js` | 排行榜 badge "胜" | "略优"（列名已限定为相对随机基线） |
+| `public/experiment.js` | "「胜随机」…不构成显著证据" | "「相对随机基线」…未确认优于随机基线" |
+
+**允许保留（A 类：否定/免责/历史研究语境）**: "不构成…预测"、"非预测目标"、"不衡量预测能力"、"不代表真实预测模型"、"负期望游戏"、"理性购彩"、index.html "本期唯一推荐 / 娱乐推荐 / 不等于中奖预测"。
+
+**产物**: `reports/p42-wording-audit.md`（人读审计）、`reports/p42-wording-audit.json`（机器可审计 regression）、`tests/test_p42_wording_integrity.py`（12 断言回归测试）。
+
+**完整性**: recommender/scoring/weights/analysis-window/snapshot/recommendation-algorithm 全部 UNCHANGED；26112 snapshot hash `bea8ef87...` 复核不变；exactly-one-final-recommendation 语义保留；exactly-one 生产推荐与 A/B/C/D internal-only 不变。
+
 ### DLT P4-1 DETERMINISTIC RECOMMENDATION REPRODUCIBILITY GATE（production hardening，本地 commit，未 push/deploy）
 
 **类型**: fix（生产推荐 RNG 可复现性）+ docs + test
