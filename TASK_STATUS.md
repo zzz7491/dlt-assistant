@@ -2,7 +2,35 @@
 
 ## 当前阶段
 
-**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — P4-3 PUBLICATION LIFECYCLE HARDENING（本地 commit；待 push/deploy）**
+**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — P4-4 OPERATIONAL OBSERVABILITY / RECOVERY READINESS（本地 commit；待 push/deploy）**
+
+### P4-4 OPERATIONAL READINESS (2026-10-02) = ✅ 代码 GREEN（125/125 tests PASS）
+
+| 项目 | 结果 |
+|---|---|
+| 目的 | production observability / recovery readiness（非预测研究、不改 recommendation semantics） |
+| 可观测性 gap | G-OBS-1/2/3/4（无结构化 status、publish 未记 per-issue upsert+hash、无 failure class、history-lag 未记录） |
+| 恢复 gap | G-REC-1/2/3（无发布 store 备份、无恢复校验器、无 runbook） |
+| 新增工具 | `check_production_readiness.py`（只读 PASS/FAIL）、`recovery_check.py`（dry-run-first restore）、`backup_published_store.py`（append-only + hash manifest） |
+| 最小代码增强 | `src/publisher.py` main() 打印 per-issue upsert status + fail-closed（观测 only，无逻辑改动） |
+| 契约 | R1–R12 冻结于 `docs/architecture/P44-RECOVERY-READINESS-CONTRACT.md` |
+| Runbook | `docs/runbooks/DLT-PRODUCTION-RECOVERY.md`（7 类故障 symptom/diagnosis/safe-command/do-not-do/verification） |
+| 测试 | P4-1 28 + Guard 17 + P4-2 12 + P4-3 23 + P4-4 15 + publisher/p0 30 = **125/125 PASS** |
+| 完整性 | 26112 `bea8ef87...` / 26113 不变；src/ 仅 publisher.py 观测日志；无 algorithm/scoring/weights/RNG/历史 snapshot 改动 |
+| 安全 | 全部工具 fail-closed / dry-run-first；不写生产 D1；不泄露 secret；恢复需显式授权 + hash 校验 |
+
+### P4-3 / P4-2 / P4-1（前序，均 CLOSED 或代码 GREEN）
+P4-3 PUBLICATION LIFECYCLE HARDENING（G1/G2 修复 F1/F2，23/23）；P4-2 WORDING INTEGRITY（CLOSED，deploy 334b5106）；P4-1 DETERMINISTIC RNG（CLOSED）。
+
+**账户守卫**: ACTIVE / CLOSED（`scripts/check_cloudflare_account.py`，expected `8770e491...`）。
+
+**下一步（未授权）**: P4-5 Scheduled Operations / Daily Pipeline Resilience（如 P4-4 正式关闭后）。push/deploy 待授权；注意本沙箱 Cloudflare OAuth 已过期，本地 deploy 需 `wrangler login` 或 `CLOUDFLARE_API_TOKEN`。
+
+---
+
+## P4 前序门禁汇总
+
+**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY**（P4-1 完成 CODE_GATE + production deploy + smoke）
 
 ### P4-3 PUBLICATION LIFECYCLE HARDENING (2026-10-02) = ✅ 代码 GREEN（110/110 tests PASS）
 

@@ -16,3 +16,5 @@ logs/
 # 说明：data/ 与 reports/ 不再忽略，需提交回仓库以支持
 # GitHub Actions 增量更新与 Cloudflare Pages 网页展示（阶段4 持久化）。
 .npmcache/
+reports/backups/
+reports/last-run-status.json

@@ -1,0 +1,47 @@
+{
+  "gate": "P4-4",
+  "phase": "check_production_readiness",
+  "git": {
+    "head": "4a2690ded9e97fbf546d15775aab1a2eb9e73477",
+    "origin_master": "4a2690ded9e97fbf546d15775aab1a2eb9e73477",
+    "divergence": "0\t0",
+    "head_equals_origin": true,
+    "tracked_modifications": [
+      "M .gitignore",
+      " M src/publisher.py"
+    ],
+    "tracked_clean": false
+  },
+  "files": {
+    "missing": [],
+    "all_present": true
+  },
+  "published": {
+    "exists": true,
+    "parse": "OK",
+    "issues": [
+      "26112",
+      "26113"
+    ],
+    "26112_ok": true,
+    "26113_ok": true,
+    "failure_class": null
+  },
+  "cloudflare": {
+    "guard_exit": 0,
+    "account_id": "8770e4917f904aed5df91c883cf058af",
+    "expected": "8770e4917f904aed5df91c883cf058af",
+    "match": true,
+    "failure_class": null
+  },
+  "http": {
+    "skipped": true,
+    "reason": "offline mode"
+  },
+  "secret_leak": true,
+  "pass": false,
+  "failure_class": "TRACKED_MODIFICATIONS",
+  "all_failures": [
+    "TRACKED_MODIFICATIONS"
+  ]
+}

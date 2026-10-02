@@ -745,8 +745,17 @@ def main() -> None:
         result = publish(rec_path=args.rec_path, reflect_path=args.reflect_path,
                          backtest_path=args.backtest_path, current_path=args.current_path,
                          out_dir=args.out_dir, published_path=args.published_path)
+        # P4-4 G-OBS-2: structured operational log — per-issue upsert status +
+        # snapshot hash + fail-closed state (observability only; no logic change).
+        pub = result.get("published", {})
+        issues = pub.get("issues", {})
         print(f"[publisher] 输出层发布完成：推荐 {result['recommendations']['count']} 条，"
               f"复盘 empty={result['review']['empty']}，策略 {result['strategy_score']['count']} 组")
+        if issues:
+            for iss, st in issues.items():
+                print(f"[publisher]   snapshot issue={iss} status={st}")
+        if pub.get("fail_closed"):
+            print(f"[publisher]   fail-closed=True（未写 display：0/多 primary 或 conflict/corrupt）")
     except Exception as e:  # 顶层兜底（--safe 时 exit 0）
         print(f"[publisher] 发布失败：{type(e).__name__}: {e}")
         sys.exit(0 if args.safe else 1)

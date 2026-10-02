@@ -2,6 +2,40 @@
 
 ## 2026-10-02
 
+### DLT P4-4 OPERATIONAL OBSERVABILITY / RECOVERY READINESS（本地 commit，未 push/deploy）
+
+**类型**: chore（可观测性 + 恢复就绪）+ test + docs
+**目的**: production observability / recovery readiness（非预测研究、不改
+recommendation semantics、不动算法/scoring/weights/analysis window/RNG/历史 publication）。
+
+**审计（P6 可观测性 + P7 恢复就绪，A–N 故障场景）**: 识别 4 个可观测性 gap
+（无结构化 status artifact、publish 未记 per-issue upsert status+hash、无 failure
+class、history-lag 未显式记录）与 3 个恢复 gap（无发布 store 备份、无恢复校验器、
+无 runbook）。
+
+**新增工具（全部 fail-closed / dry-run-first，不写生产 D1，不泄露 secret）**:
+| 文件 | 说明 |
+|---|---|
+| `scripts/check_production_readiness.py` | 只读 PASS/FAIL + failure_class；结构化写 `reports/last-run-status.json`（可 gitignore）；绝不运行 scheduler/publisher、绝不写 D1 |
+| `scripts/recovery_check.py` | dry-run 默认（inspect/validate/list/compare/check-backup）；`--restore` 需显式 `--manifest`+`--authorize`+hash 校验（R1/R5/R9/R10） |
+| `scripts/backup_published_store.py` | 发布 store 的 append-only 备份 + SHA-256 manifest；不自动删除 |
+| `docs/runbooks/DLT-PRODUCTION-RECOVERY.md` | 7 类故障的 symptom/diagnosis/safe-command/do-not-do/verification |
+
+**最小代码增强（观测 only，无逻辑改动）**: `src/publisher.py` 的 `main()` 增打印
+per-issue upsert status + fail-closed 状态（G-OBS-2）。
+
+**契约**: `docs/architecture/P44-RECOVERY-READINESS-CONTRACT.md`（R1–R12 冻结）。
+
+**验证**:
+| 项 | 结果 |
+|---|---|
+| P4-4 测试 | 15/15 PASS |
+| 全量回归 | P4-1 28 + Guard 17 + P4-2 12 + P4-3 23 + P4-4 15 + publisher/p0 30 = **125/125 PASS** |
+| 26112 / 26113 | 复核不变 |
+| 变更面 | src/ 仅 publisher.py（观测日志）；无 algorithm/selector/scoring/weights/window/RNG/历史 snapshot 改动 |
+
+**产物**: 上述 3 scripts + runbook + contract + `reports/p44-{operational-baseline,observability-audit.json,observability-audit.md,production-readiness.json}` + `tests/test_p44_operational_readiness.py`。
+
 ### DLT P4-3 PRODUCTION INTEGRITY / PUBLICATION LIFECYCLE HARDENING（本地 commit，未 push/deploy）
 
 **类型**: fix（publication 完整性）+ test + docs

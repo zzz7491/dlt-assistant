@@ -1,0 +1,33 @@
+{
+  "gate": "P4-4",
+  "phase": "PHASE 6/7 observability + recovery audit",
+  "observability_gaps": [
+    {"id": "G-OBS-1", "severity": "MEDIUM", "desc": "No structured status artifact (per-run issue/hash/upsert-status)", "fix": "check_production_readiness.py writes last-run-status.json"},
+    {"id": "G-OBS-2", "severity": "MEDIUM", "desc": "publish() does not log per-issue upsert status + snapshot hash", "fix": "enhance publish() summary print"},
+    {"id": "G-OBS-3", "severity": "LOW", "desc": "history latest / published latest not logged", "fix": "readiness checker reports both"},
+    {"id": "G-OBS-4", "severity": "LOW", "desc": "No failure-class taxonomy", "fix": "error_class field in readiness JSON"}
+  ],
+  "recovery_gaps": [
+    {"id": "G-REC-1", "severity": "MEDIUM", "desc": "No automated backup of published store (immutable snapshot)", "fix": "backup_published_store.py with hash manifest"},
+    {"id": "G-REC-2", "severity": "MEDIUM", "desc": "No recovery verifier tool", "fix": "recovery_check.py dry-run verifier"},
+    {"id": "G-REC-3", "severity": "LOW", "desc": "No operational runbook", "fix": "docs/runbooks/DLT-PRODUCTION-RECOVERY.md"}
+  ],
+  "scenarios": {
+    "A_corrupt_json": {"safe_retry": true, "requires_restore": true, "requires_human": true, "note": "P4-3 F1 prevents overwrite; restore from Git"},
+    "B_json_missing": {"safe_retry": true, "requires_restore": true, "requires_human": true, "note": "restore from Git tracked file"},
+    "C_d1_down": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "INSERT OR IGNORE idempotent"},
+    "D_auth_mismatch": {"safe_retry": false, "requires_restore": false, "requires_human": true, "note": "fix auth first"},
+    "E_scheduler_crash": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "re-runnable"},
+    "F_crash_during_write": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "P4-3 F2 atomic write"},
+    "G_after_local_write": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "D1 retry idempotent"},
+    "H_retry_same": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "unchanged"},
+    "I_conflict": {"safe_retry": true, "requires_restore": false, "requires_human": true, "note": "original preserved; investigate"},
+    "J_history_lag": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "conflict protects published"},
+    "K_workflow_interrupted": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "re-run"},
+    "L_deploy_fail": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "re-deploy"},
+    "M_push_race": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "pull --rebase"},
+    "N_malformed_snapshot": {"safe_retry": true, "requires_restore": false, "requires_human": false, "note": "fail-closed, no write"}
+  },
+  "invariants": ["R1-R12 frozen in P44-RECOVERY-READINESS-CONTRACT.md"],
+  "result": "AUDIT_COMPLETE_6_GAPS_IDENTIFIED"
+}
