@@ -2,7 +2,31 @@
 
 ## 当前阶段
 
-**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — P4-4 OPERATIONAL OBSERVABILITY / RECOVERY READINESS（本地 commit；待 push/deploy）**
+**P4 PRODUCTION HARDENING & PRODUCT INTEGRITY — P4-5 SCHEDULED OPERATIONS / DAILY PIPELINE RESILIENCE（本地 commit；待 push；NO_DEPLOY_REQUIRED）**
+
+### P4-5 DAILY PIPELINE RESILIENCE (2026-10-02) = ✅ 代码 GREEN（149/149 tests PASS）
+
+| 项目 | 结果 |
+|---|---|
+| 目的 | 将 P4-4 readiness/backup/recovery 接入日常流水线；强化 scheduler/publisher/D1/Git/deploy 失败隔离与状态表达（非预测研究、不改 recommendation semantics） |
+| 审计 | F1–F24 故障模式（24 类）+ 7 个韧性缺口（G-5a..g） |
+| 新增工具 | `scripts/ops_status.py`（结构化状态 + failure taxonomy + secret 清洗）、`scripts/check_local_prepublish.py`（本地 pre-publish integrity gate，无需 CF auth） |
+| workflow 强化 | publisher 前 backup（D2 阻断）+ pre-publish gate（D6）；scheduler 失败 → SCHEDULER_FAILURE + exit（D5）；history-lag 显式（D4）；D1 失败 → LOCAL_PUBLISHED_D1_FAILED + D1_FAILURE（D8）；git push overlap-aware fail-closed no-force（D9/D14）；deploy 区分 ACCOUNT_MISMATCH/AUTH_EXPIRED/DEPLOY_FAILURE（D11/D12）；final ops_status dump（P17） |
+| 契约 | D1–D18 冻结于 `docs/architecture/P45-DAILY-PIPELINE-RESILIENCE-CONTRACT.md` |
+| Runbook | `docs/runbooks/DLT-DAILY-PIPELINE.md`（正常 + 12 类故障处置） |
+| 测试 | P4-1 28 + Guard 17 + P4-2 12 + P4-3 23 + P4-4 15 + P4-5 24 + publisher 16 + p0 14 = **149/149 PASS** |
+| 完整性 | 26112 `bea8ef87...` / 26113 不变（本地 + 生产只读）；变更面仅 workflow + 新 scripts/test/docs/reports；无 recommender/scoring/weights/window/RNG/历史 snapshot 改动 |
+| 部署 | **NO_DEPLOY_REQUIRED**（本阶段不改 public/functions/Pages bundle） |
+
+### 前序门禁（均 CLOSED 或代码 GREEN）
+- **P4-4 OPERATIONAL OBSERVABILITY / RECOVERY READINESS**: CLOSED（readiness PASS、backup VERIFIED、26112/26113 immutable、recovery dry-run PASS）。
+- **P4-3 PUBLICATION LIFECYCLE HARDENING**: CLOSED（G1/G2 → F1/F2）。
+- **P4-2 PRODUCTION WORDING INTEGRITY**: CLOSED（deploy 334b5106）。
+- **P4-1 DETERMINISTIC RECOMMENDATION RNG**: CLOSED。
+
+**账户守卫**: ACTIVE / CLOSED（`scripts/check_cloudflare_account.py`，expected `8770e491...`）。
+
+**下一步（未授权）**: P4-5 是否正式关闭取决于 push（本沙箱 Keychain 阻断）；NO_DEPLOY_REQUIRED。P4-6 仅在确有实质价值时提议（如：将 last-run-status.json 作为 GitHub Actions 持久 artifact + 告警 surface；或 D1 只读连接健康检查）。
 
 ### P4-4 OPERATIONAL READINESS (2026-10-02) = ✅ 代码 GREEN（125/125 tests PASS）
 

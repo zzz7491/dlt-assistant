@@ -2,6 +2,37 @@
 
 ## 2026-10-02
 
+### DLT P4-5 SCHEDULED OPERATIONS / DAILY PIPELINE RESILIENCE（本地 commit，未 push/deploy）
+
+**类型**: chore（daily pipeline 韧性）+ test + docs
+**目的**: 将 P4-4 readiness/backup/recovery 能力安全接入日常流水线，并强化
+scheduler/publisher/D1/Git/deployment 的失败隔离与状态表达。非预测研究、不改
+recommendation semantics（算法/selector/scoring/weights/window/RNG/历史 publication 全部不动）。
+
+**审计（F1–F24 故障模式，24 类）**: 识别 7 个 in-scope 韧性缺口（G-5a..g）：
+publisher 写前无 backup、无本地 pre-publish gate、history-lag 未显式化、D1 失败被吞、
+盲目 `git pull --rebase || true`、无 failure 分类/状态 artifact、deploy auth/account/api/deploy 未区分。
+
+**新增/修改（全部 safe / no semantic change）**:
+| 文件 | 说明 |
+|---|---|
+| `scripts/ops_status.py` | P12/P17 结构化 per-run 状态 + failure taxonomy（machine-readable、secret 清洗、原子写、gitignored `reports/last-run-status.json`） |
+| `scripts/check_local_prepublish.py` | P10 本地 pre-publish integrity gate（store parse + snapshot hash + 26112/26113 immutable + required files + history-lag/target-already-published 显式 + 可选 backup manifest；无需 Cloudflare auth） |
+| `.github/workflows/dlt-analysis.yml` | P9 publisher 前 backup（失败即阻断，D2）；P10 pre-publish gate（失败阻断，D6）；scheduler 失败 → SCHEDULER_FAILURE + exit 1（D5）；P11 history-lag 显式状态；P15 D1 失败 → LOCAL_PUBLISHED_D1_FAILED + D1_FAILURE；P14 git push 改为 overlap-aware fail-closed no-force；P16 deploy 区分 ACCOUNT_MISMATCH/AUTH_EXPIRED/DEPLOY_FAILURE（不自动 login）；P17 final `ops_status dump` |
+| `tests/test_p45_daily_pipeline_resilience.py` | 24 断言（status 字段/无 secret、prepublish gate、history-lag 不 skip、corrupt/26112-mismatch 阻断、workflow 静态断言 backup-before-publisher/无盲目 rebase/无 force/无 wrangler login/并发保护/D1 可见/noop、INSERT OR IGNORE 幂等、destructive restore 需授权） |
+| `docs/architecture/P45-DAILY-PIPELINE-RESILIENCE-CONTRACT.md` | D1–D18 冻结 |
+| `docs/runbooks/DLT-DAILY-PIPELINE.md` | 正常/12 类故障的 symptom/diagnosis/safe-command/do-not-do/verification |
+| `reports/p45-daily-pipeline-baseline.md` / `-callgraph.md` / `p45-failure-mode-audit.{md,json}` | 审计 |
+
+**验证**:
+| 项 | 结果 |
+|---|---|
+| P4-5 测试 | 24/24 PASS |
+| 全量回归 | P4-1 28 + Guard 17 + P4-2 12 + P4-3 23 + P4-4 15 + P4-5 24 + publisher 16 + p0 14 = **149/149 PASS** |
+| 26112 / 26113 | 本地 + 生产只读复核不变 |
+| 变更面 | 仅 `.github/workflows/dlt-analysis.yml` + 新 scripts/test/docs/reports + `.gitignore`；无 recommender/scorer/analyzer/window/RNG/历史 snapshot 改动 |
+| 部署 | NO_DEPLOY_REQUIRED（本阶段不改 public/functions/Pages bundle；P4-4 遗留的 src/publisher.py 观测日志无 Pages 影响） |
+
 ### DLT P4-4 OPERATIONAL OBSERVABILITY / RECOVERY READINESS（本地 commit，未 push/deploy）
 
 **类型**: chore（可观测性 + 恢复就绪）+ test + docs

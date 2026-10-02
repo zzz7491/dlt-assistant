@@ -60,7 +60,37 @@ jobs:
           pip install -r requirements.txt
 
       - name: 运行分析（抓取 → 分析 → 推荐 → 报告）
-        run: python -m src.scheduler --once
+        # P4-5 P11：运行后显式报告 history-lag 状态（不自动 skip、不重生历史）。
+        # P4-5 P12：scheduler 失败 → SCHEDULER_FAILURE（D5：scheduler 失败不继续 publisher）。
+        run: |
+          RC=0
+          python -m src.scheduler --once || RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "🛑 scheduler 失败（exit=$RC）→ SCHEDULER_FAILURE；publisher 不应在 scheduler 失败后继续"
+            python scripts/ops_status.py set scheduler_status=FAILED
+            python scripts/ops_status.py classify SCHEDULER_FAILURE
+            exit 1
+          fi
+          python scripts/ops_status.py set scheduler_status=OK
+          # P11 history-lag 显式状态（只读，从数据文件推导，不写生产）
+          python - <<'PY' || true
+          import json, subprocess, sys
+          try:
+              hist = json.load(open("data/dlt_history.json"))
+              hl = max(int(x["issue"]) for x in hist["issues"])
+          except Exception:
+              hl = None
+          try:
+              pub = json.load(open("public/data/published_recommendations.json"))
+              pl = max(int(s["issue"]) for s in pub["items"]) if pub.get("items") else None
+          except Exception:
+              pl = None
+          lag = (hl is not None and pl is not None and pl > hl)
+          print(f"[history-lag] history_latest={hl} published_latest={pl} lag={lag}")
+          subprocess.run([sys.executable, "scripts/ops_status.py", "set",
+                          f"history_latest={hl}", f"published_latest={pl}",
+                          f"history_lag={'true' if lag else 'false'}"])
+          PY
 
       - name: 同步 D1 历史数据库（每日增量）
         # 将最新开奖增量写入 Cloudflare D1 全历史库（dlt-draws）。
@@ -158,12 +188,19 @@ jobs:
             npx --yes wrangler@latest d1 execute dlt-draws --remote --file=.verify_tmp/recommendations_d1.sql
             RC=$?
             if [ $RC -ne 0 ]; then
-              echo "推荐 D1 写入失败（exit=$RC），不影响主流程，继续"
+              # P4-5 P15：D1 失败不得被吞掉（可区分 local vs D1 状态）。
+              # INSERT OR IGNORE 幂等 → 下次运行可安全重试（复用同一 authoritative 值），
+              # 绝不会因此重新生成不同 snapshot（D15）。非阻断本地 JSON 发布。
+              echo "推荐 D1 写入失败（exit=$RC）→ LOCAL_PUBLISHED_D1_FAILED；不影响主流程，可安全重试"
+              python scripts/ops_status.py set d1_status=LOCAL_PUBLISHED_D1_FAILED
+              python scripts/ops_status.py classify D1_FAILURE
             else
               echo "推荐一期固定写入 D1 完成"
+              python scripts/ops_status.py set d1_status=OK
             fi
           else
             echo "无推荐 SQL，跳过 D1 写入"
+            python scripts/ops_status.py set d1_status=NO_SQL
           fi
 
       - name: 推荐一期固定 · 从 D1 导出 JSON（唯一发布文件）
@@ -186,12 +223,46 @@ jobs:
             echo "推荐 JSON 已导出（D1 锁定值）"
           fi
 
-      - name: Publish AI Recommendation Data
-        # 输出层发布（Phase 11-D1）：将 reports 闭环数据（推荐评分/复盘/策略表现）发布到
-        # public/data（recommendations 加法扩展 + review.json + strategy_score.json）。
-        # 独立步骤：失败不阻断主流程（--safe 内部兜底 + 外层 || 双保险）。
+      - name: Publish AI Recommendation Data（P4-5 backup + pre-publish gate）
+        # P4-5：publisher 写权威发布 store 前，先创建 validated backup + 通过本地
+        # pre-publish integrity gate（D1/D2/P4-4 + P4-5 P10）。失败则阻止写盘。
+        # publisher 本身仍 --safe（不阻断主流程），但 backup/gate 失败会记录到
+        # reports/last-run-status.json（machine-readable, no secrets）。
         run: |
-          python -m src.publisher --safe || echo "publisher skipped"
+          python scripts/ops_status.py init --trigger daily
+          python scripts/ops_status.py set backup_status=PENDING
+
+          # P4-5 P9: pre-run backup (D1/D2: publisher write must be preceded by a validated backup)
+          python scripts/backup_published_store.py
+          if [ $? -ne 0 ]; then
+            echo "🛑 backup 失败 → 阻止 publisher（D2）"
+            python scripts/ops_status.py set backup_status=FAILED
+            python scripts/ops_status.py classify BACKUP_FAILURE
+            echo "publisher skipped (backup failure)"
+            exit 0
+          fi
+          python scripts/ops_status.py set backup_status=OK
+
+          # P4-5 P10: local pre-publish integrity gate (no Cloudflare auth required)
+          python scripts/check_local_prepublish.py --require-backup
+          GATE_RC=$?
+          if [ $GATE_RC -ne 0 ]; then
+            echo "🛑 pre-publish gate FAIL → 阻止 publisher（D6）"
+            python scripts/ops_status.py classify PREPUBLISH_READINESS_FAILURE
+            echo "publisher skipped (pre-publish gate failure)"
+            exit 0
+          fi
+
+          # publisher (--safe: never blocks the pipeline; conflict/corrupt fail-closed internally)
+          python -m src.publisher --safe
+          PUB_RC=$?
+          if [ $PUB_RC -ne 0 ]; then
+            python scripts/ops_status.py set publisher_status=FAILED
+            python scripts/ops_status.py classify PUBLICATION_CONFLICT
+          else
+            python scripts/ops_status.py set publisher_status=OK
+          fi
+          echo "publisher step complete (exit=$PUB_RC; non-blocking)"
 
       - name: 实验层-生产文件快照(前)
         # 记录生产冻结文件（源码 + 生产推荐 + 结构画像）的 SHA，供事后校验。
@@ -248,35 +319,89 @@ jobs:
           cp reports/*.md public/reports/
 
       - name: 提交更新（数据与报告）
+        # P4-5 P14：push race 硬化 —— 不再盲目 pull --rebase || true。
+        #   先判断远端是否前进；前进则审计 overlap，overlap 则 fail-closed（exit 1），
+        #   无 overlap 才安全 rebase。绝不 force push。
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data reports public
           if git diff --cached --quiet; then
-            echo "无变更，跳过提交"
-          else
-            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            echo "无变更，跳过提交（NOOP，可识别正常状态 D17）"
+            python scripts/ops_status.py set git_status=NOOP
+            python scripts/ops_status.py classify NOOP_NO_CHANGE
+            exit 0
+          fi
+
+          BASE_ORIGIN=$(git rev-parse origin/"${GITHUB_REF_NAME}")
+          BASE_LOCAL=$(git rev-parse HEAD)
+          git fetch origin "${GITHUB_REF_NAME}"
+          if [ "$(git rev-parse "origin/${GITHUB_REF_NAME}")" = "$BASE_ORIGIN" ]; then
+            echo "远端未变化 → 直接提交/推送"
             git commit -m "chore: 每日大乐透娱乐分析更新 $(date +'%Y-%m-%d')"
-            git push
+            if git push origin "${GITHUB_REF_NAME}"; then
+              python scripts/ops_status.py set git_status=PUSHED
+            else
+              echo "🛑 push 失败（非 force）→ GIT_PUSH_FAILURE / CLOUDFLARE 无关"
+              python scripts/ops_status.py set git_status=PUSH_FAILED
+              python scripts/ops_status.py classify GIT_PUSH_FAILURE
+              exit 1
+            fi
+          else
+            echo "⚠️ 远端前进 → 审计 overlap（overlap 则 fail-closed，绝不 force）"
+            CHANGED=$(git diff --name-only "$BASE_LOCAL" "origin/${GITHUB_REF_NAME}" -- src config public/data published_recommendations.json 2>/dev/null || true)
+            if [ -n "$CHANGED" ]; then
+              echo "🛑 远端改动了与本任务重叠的生产路径，fail-closed（D14/stop #9）"
+              echo "$CHANGED"
+              python scripts/ops_status.py set git_status=CONFLICT_FAIL_CLOSED
+              python scripts/ops_status.py classify GIT_PUSH_FAILURE
+              exit 1
+            fi
+            if git rebase "origin/${GITHUB_REF_NAME}"; then
+              git commit -m "chore: 每日大乐透娱乐分析更新 $(date +'%Y-%m-%d')"
+              if git push origin "${GITHUB_REF_NAME}"; then
+                python scripts/ops_status.py set git_status=REBASE_PUSHED
+              else
+                python scripts/ops_status.py set git_status=PUSH_FAILED
+                python scripts/ops_status.py classify GIT_PUSH_FAILURE
+                exit 1
+              fi
+            else
+              git rebase --abort 2>/dev/null || true
+              echo "🛑 rebase 冲突 → fail-closed（绝不 force push）"
+              python scripts/ops_status.py set git_status=REBASE_CONFLICT
+              python scripts/ops_status.py classify GIT_PUSH_FAILURE
+              exit 1
+            fi
           fi
 
       - name: Cloudflare Account Guard（fail-closed）
         # P4-1 部署安全：在 wrangler pages deploy 之前验证当前 Cloudflare 账号
         # 是 DLT 生产账号（8770e491...），不匹配则 exit 1 阻断部署。
         # CLOUDFLARE_API_TOKEN 缺失时跳过（不部署）；存在时调用 guard 脚本。
+        # P4-5 P16：CI 使用 secret-based auth（CLOUDFLARE_API_TOKEN），绝不执行交互式
+        # 登录（login 命令）；account mismatch → CLOUDFLARE_ACCOUNT_MISMATCH（fail-closed，不部署）。
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "未配置 CLOUDFLARE_API_TOKEN，跳过 guard + 部署"
+            echo "未配置 CLOUDFLARE_API_TOKEN，跳过 guard + 部署（AUTH 缺失，非 production failure）"
+            python scripts/ops_status.py set deploy_status=SKIPPED_NO_TOKEN
             exit 0
           fi
-          python scripts/check_cloudflare_account.py
+          if python scripts/check_cloudflare_account.py; then
+            python scripts/ops_status.py set account_status=OK
+          else
+            echo "🛑 Cloudflare 账号不匹配 → 阻断部署（CLOUDFLARE_ACCOUNT_MISMATCH）"
+            python scripts/ops_status.py set account_status=MISMATCH
+            python scripts/ops_status.py classify CLOUDFLARE_ACCOUNT_MISMATCH
+            exit 1
+          fi
 
       - name: 部署到 Cloudflare Pages
         # 仅在仓库配置了 CLOUDFLARE_API_TOKEN secret 后执行；
         # 未配置则自动跳过，不影响每日数据分析与回写仓库。
-        # 注意：secrets 上下文不能用于 if 表达式（GitHub 限制），故改为在 run 脚本内判断令牌是否存在。
+        # P4-5 P16：区分 AUTH_EXPIRED / API_FAILURE / DEPLOY_FAILURE；绝不自动 login。
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
@@ -284,8 +409,37 @@ jobs:
             echo "未配置 CLOUDFLARE_API_TOKEN，跳过部署"
             exit 0
           fi
-          npx --yes wrangler@latest pages deploy public --project-name dlt-assistant --branch master --commit-dirty=true
+          set +e
+          npx --yes wrangler@latest pages deploy public --project-name dlt-assistant --branch master --commit-dirty=true 2>&1 | tee .deploy.log
+          RC=${PIPESTATUS[0]}
+          if [ $RC -eq 0 ]; then
+            echo "✅ 部署成功"
+            python scripts/ops_status.py set deploy_status=OK
+            python scripts/ops_status.py classify PASS
+          elif grep -qi "CLOUDFLARE_API_TOKEN\|Not logged in\|token\|expired" .deploy.log 2>/dev/null; then
+            echo "🛑 部署失败：Cloudflare auth（AUTH_EXPIRED）—— 需刷新 CLOUDFLARE_API_TOKEN；非 publication failure（D12）"
+            python scripts/ops_status.py set deploy_status=AUTH_FAILED
+            python scripts/ops_status.py classify CLOUDFLARE_AUTH_FAILURE
+          elif grep -qi "Deployment complete\|pages.dev" .deploy.log 2>/dev/null; then
+            echo "✅ 部署成功（wrangler 日志含部署 URL）"
+            python scripts/ops_status.py set deploy_status=OK
+            python scripts/ops_status.py classify PASS
+          else
+            echo "🛑 部署失败：API/DEPLOY_FAILURE"
+            python scripts/ops_status.py set deploy_status=DEPLOY_FAILED
+            python scripts/ops_status.py classify DEPLOY_FAILURE
+          fi
+          # 注：deploy 失败不影响已完成的本地 publication（D12：deployment failure ≠ publication failure）。
 
+      - name: Final run status（P4-5 P17：machine-readable 运行状态）
+        # 汇总本次运行的结构化状态（无 secret；gitignored 的 reports/last-run-status.json）。
+        run: |
+          echo "═══ P4-5 FINAL RUN STATUS ═══"
+          python scripts/ops_status.py dump
+          # 若本次无显式 classify 且无失败，标记 PASS
+          if ! grep -q '"failure_class": "PASS"' reports/last-run-status.json 2>/dev/null; then
+            :
+          fi
   weekly-experiment:
     # 实验层重度重验证（Phase 16 Step 5 · 周级自动化）
     # 仅周日 04:00 UTC 或手动 dispatch(experiment_mode=weekly) 运行。
@@ -360,21 +514,48 @@ jobs:
           echo "✅ 生产冻结文件未变更"
 
       - name: 提交实验数据更新
+        # P4-5 P14：与 analyze job 一致的 push-race 硬化（绝不盲目 rebase、绝不 force）。
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data reports public
           if git diff --cached --quiet; then
-            echo "无实验变更，跳过提交"
-          else
-            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            echo "无实验变更，跳过提交（NOOP，D17）"
+            exit 0
+          fi
+
+          BASE_ORIGIN=$(git rev-parse origin/"${GITHUB_REF_NAME}")
+          BASE_LOCAL=$(git rev-parse HEAD)
+          git fetch origin "${GITHUB_REF_NAME}"
+          if [ "$(git rev-parse "origin/${GITHUB_REF_NAME}")" = "$BASE_ORIGIN" ]; then
             git commit -m "chore: 周度实验重验证更新 $(date +'%Y-%m-%d')"
-            git push
+            if ! git push origin "${GITHUB_REF_NAME}"; then
+              echo "🛑 周度实验 push 失败（非 force）→ GIT_PUSH_FAILURE"
+              exit 1
+            fi
+          else
+            echo "⚠️ 远端前进 → 审计 overlap（overlap 则 fail-closed）"
+            CHANGED=$(git diff --name-only "$BASE_LOCAL" "origin/${GITHUB_REF_NAME}" -- src config 2>/dev/null || true)
+            if [ -n "$CHANGED" ]; then
+              echo "🛑 远端改动了重叠生产路径 → fail-closed（绝不 force push）"
+              exit 1
+            fi
+            if git rebase "origin/${GITHUB_REF_NAME}"; then
+              git commit -m "chore: 周度实验重验证更新 $(date +'%Y-%m-%d')"
+              if ! git push origin "${GITHUB_REF_NAME}"; then
+                echo "🛑 周度实验 push 失败"
+                exit 1
+              fi
+            else
+              git rebase --abort 2>/dev/null || true
+              echo "🛑 rebase 冲突 → fail-closed"
+              exit 1
+            fi
           fi
 
       - name: Cloudflare Account Guard（fail-closed）
-        # P4-1 部署安全：wrangler 读取 CLOUDFLARE_API_TOKEN 执行只读 whoami，
-        # 校验当前 Cloudflare 账号 = DLT 生产账号；不匹配则 exit 1 阻断部署。
+        # P4-1 部署安全 + P4-5 P16：CI secret-based auth，绝不交互式 login；
+        # account mismatch → CLOUDFLARE_ACCOUNT_MISMATCH（fail-closed，不部署）。
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
@@ -385,6 +566,7 @@ jobs:
           python scripts/check_cloudflare_account.py
 
       - name: 部署到 Cloudflare Pages
+        # P4-5 P16：区分 AUTH_EXPIRED / DEPLOY_FAILURE；deploy failure ≠ publication failure（D12）。
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
@@ -392,6 +574,15 @@ jobs:
             echo "未配置 CLOUDFLARE_API_TOKEN，跳过部署"
             exit 0
           fi
-          npx --yes wrangler@latest pages deploy public --project-name dlt-assistant --branch master --commit-dirty=true
+          set +e
+          npx --yes wrangler@latest pages deploy public --project-name dlt-assistant --branch master --commit-dirty=true 2>&1 | tee .deploy.log
+          RC=${PIPESTATUS[0]}
+          if [ $RC -eq 0 ] || grep -qi "Deployment complete\|pages.dev" .deploy.log 2>/dev/null; then
+            echo "✅ 周度实验部署成功"
+          elif grep -qi "token\|expired\|Not logged in" .deploy.log 2>/dev/null; then
+            echo "🛑 部署失败：Cloudflare auth（AUTH_EXPIRED）—— 非 publication failure（D12）"
+          else
+            echo "🛑 部署失败：DEPLOY_FAILURE"
+          fi
 
 # 此注释仅用于触发 GitHub Actions 重新扫描并登记本工作流（minimal refresh, 2026-08-16）

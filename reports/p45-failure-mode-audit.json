@@ -1,0 +1,40 @@
+{
+  "gate": "P4-5",
+  "phase": "PHASE 7 failure-mode audit",
+  "modes": [
+    {"id": "F1", "mode": "github_checkout_fail", "detection": "step exit!=0", "current": "job fails early", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "surface exit"},
+    {"id": "F2", "mode": "dependency_install_fail", "detection": "pip exit!=0", "current": "job fails before scheduler", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "surface exit"},
+    {"id": "F3", "mode": "history_source_unavailable", "detection": "scheduler scrape error SystemExit(1)", "current": "job stops", "data_risk": "history not updated", "safe_retry": true, "auto_retry": false, "human": "check source", "p45_desired": "HISTORY_SOURCE_FAILURE"},
+    {"id": "F4", "mode": "malformed_history", "detection": "validator/parse error", "current": "validator skip or scheduler fail", "data_risk": "corrupt history possible", "safe_retry": true, "auto_retry": false, "human": "inspect", "p45_desired": "HISTORY_VALIDATION_FAILURE"},
+    {"id": "F5", "mode": "history_unchanged", "detection": "no new issues", "current": "no-op", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "NOOP_NO_CHANGE"},
+    {"id": "F6", "mode": "history_lag", "detection": "published_latest>history_latest", "current": "scheduler targets already-published issue -> conflict/unchanged", "data_risk": "none (conflict protects)", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "explicit HISTORY_LAG + target_already_published (no auto-skip)"},
+    {"id": "F7", "mode": "scheduler_exception", "detection": "SystemExit(1)", "current": "job stops before publisher", "data_risk": "partial reports", "safe_retry": true, "auto_retry": false, "human": "fix crash", "p45_desired": "SCHEDULER_FAILURE + exit 1 (D5)"},
+    {"id": "F8", "mode": "scheduler_partial_artifact", "detection": "incomplete reports", "current": "publisher --safe reads D1-locked values", "data_risk": "low", "safe_retry": true, "auto_retry": false, "human": "inspect", "p45_desired": "publisher uses D1-locked values not raw partial"},
+    {"id": "F9", "mode": "publisher_corrupt_store", "detection": "upsert -> corrupt", "current": "fail-closed no write (P4-3 F1)", "data_risk": "none", "safe_retry": true, "auto_retry": false, "human": "restore via backup/Git", "p45_desired": "PUBLICATION_CORRUPT classified"},
+    {"id": "F10", "mode": "publisher_conflict", "detection": "upsert -> conflict", "current": "original preserved", "data_risk": "none", "safe_retry": true, "auto_retry": false, "human": "investigate", "p45_desired": "PUBLICATION_CONFLICT classified"},
+    {"id": "F11", "mode": "publisher_unchanged_retry", "detection": "upsert -> unchanged", "current": "no write", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "D7 legitimate idempotent result"},
+    {"id": "F12", "mode": "d1_unavailable", "detection": "wrangler d1 execute exit!=0", "current": "set +e continue (previously silent)", "data_risk": "D1 stale (local JSON fine)", "safe_retry": true, "auto_retry": true, "human": "check CF/D1", "p45_desired": "LOCAL_PUBLISHED_D1_FAILED + D1_FAILURE visible"},
+    {"id": "F13", "mode": "d1_duplicate_lock", "detection": "INSERT OR IGNORE no-op", "current": "expected one-period lock", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "D13/D15 reuse authoritative value"},
+    {"id": "F14", "mode": "backup_failure", "detection": "backup script exit!=0", "current": "N/A pre-P4-5", "data_risk": "publish without safety net", "safe_retry": true, "auto_retry": false, "human": "none", "p45_desired": "P9 backup-failure blocks publisher (D2)"},
+    {"id": "F15", "mode": "git_noop_commit", "detection": "git diff --cached --quiet", "current": "skip commit", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "NOOP recognized as normal (D17)"},
+    {"id": "F16", "mode": "git_push_race", "detection": "push rejected non-fast-forward", "current": "old blind pull --rebase || true", "data_risk": "low", "safe_retry": true, "auto_retry": false, "human": "audit overlap", "p45_desired": "P14 overlap-aware rebase, fail-closed on overlap, never force"},
+    {"id": "F17", "mode": "git_push_auth_failure", "detection": "push exit!=0", "current": "hard-fail step", "data_risk": "none", "safe_retry": true, "auto_retry": false, "human": "credentials", "p45_desired": "GIT_PUSH_FAILURE classified"},
+    {"id": "F18", "mode": "cloudflare_account_mismatch", "detection": "guard exit 1", "current": "blocks deploy", "data_risk": "wrong-account deploy prevented", "safe_retry": false, "auto_retry": false, "human": "switch identity", "p45_desired": "CLOUDFLARE_ACCOUNT_MISMATCH"},
+    {"id": "F19", "mode": "cloudflare_oauth_token_failure", "detection": "wrangler whoami/deploy fail", "current": "ambiguous pre-P4-5", "data_risk": "none (deploy only)", "safe_retry": false, "auto_retry": false, "human": "refresh token", "p45_desired": "CLOUDFLARE_AUTH_FAILURE, != publication failure (D12)"},
+    {"id": "F20", "mode": "pages_deploy_failure", "detection": "wrangler pages deploy exit!=0", "current": "deploy step fails", "data_risk": "Pages stale (data fine)", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "DEPLOY_FAILURE, != publication failure (D12)"},
+    {"id": "F21", "mode": "workflow_cancelled_midrun", "detection": "GitHub cancel", "current": "partial run", "data_risk": "partial artifacts", "safe_retry": true, "auto_retry": false, "human": "rerun", "p45_desired": "concurrency group ensures no overlapping writer"},
+    {"id": "F22", "mode": "concurrent_scheduled_manual", "detection": "two jobs same window", "current": "concurrency.group experiment-ci + cancel-in-progress false serialize", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "D14 lock-protected"},
+    {"id": "F23", "mode": "retry_after_partial_failure", "detection": "manual rerun", "current": "deterministic P4-1 + D1 INSERT OR IGNORE + upsert unchanged/conflict", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "D15 reuse authoritative snapshot"},
+    {"id": "F24", "mode": "next_scheduled_after_previous", "detection": "cron catches up", "current": "idempotent path", "data_risk": "none", "safe_retry": true, "auto_retry": true, "human": "none", "p45_desired": "same authoritative snapshot, no new one"}
+  ],
+  "gaps_fixed": [
+    {"id": "G-5a", "desc": "no pre-run backup before publisher write", "fix": "P9 backup step", "contract": "D1/D2"},
+    {"id": "G-5b", "desc": "no local pre-publish integrity gate", "fix": "P10 check_local_prepublish.py", "contract": "D6"},
+    {"id": "G-5c", "desc": "history-lag not surfaced", "fix": "P11 history_lag + target_already_published", "contract": "D4"},
+    {"id": "G-5d", "desc": "D1 failure swallowed", "fix": "P15 LOCAL_PUBLISHED_D1_FAILED + D1_FAILURE", "contract": "D8"},
+    {"id": "G-5e", "desc": "blind git pull --rebase || true", "fix": "P14 overlap-aware fail-closed no-force", "contract": "D9/D14"},
+    {"id": "G-5f", "desc": "no failure taxonomy / status artifact", "fix": "P12/P17 ops_status.py + last-run-status.json", "contract": "D16"},
+    {"id": "G-5g", "desc": "deploy auth/account/api/deploy not distinguished", "fix": "P16 classification", "contract": "D11/D12"}
+  ],
+  "result": "AUDIT_COMPLETE_24_MODES_7_GAPS_FIXED"
+}
