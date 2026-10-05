@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-09-30 18:34:06",
+  "updated_at": "2026-10-05 21:24:16",
   "empty": false,
-  "issue": "26112",
+  "issue": "26113",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "bea8ef87f3f137238686ae52712f922956215408f0cf54187b9295d8f1ae5fad",
+  "snapshot_hash": "40232f05865bd857b54dbc6488d7e2ce0af2711141d0cfa02abab14c08b02378",
   "recommendation": {
     "strategy": "C-纯随机娱乐型",
     "front": [
-      5,
-      12,
-      17,
-      28,
-      31
+      6,
+      7,
+      20,
+      25,
+      35
     ],
     "back": [
       4,
-      7
+      5
     ],
-    "score_total": 43.66,
+    "score_total": 43.2,
     "model_version": null
   },
   "reason": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
@@ -26,7 +26,7 @@
     "explanation_version": "1.1",
     "strategy_type": "random_baseline",
     "strategy": "C-纯随机娱乐型",
-    "target_issue": "26112",
+    "target_issue": "26113",
     "summary": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
     "factors": [
       {
@@ -40,18 +40,18 @@
       {
         "type": "structure",
         "label": "结构分布（仅描述）",
-        "detail": "前区 奇偶比 3:2、大小比 2:3、和值 93、跨度 26。",
+        "detail": "前区 奇偶比 3:2、大小比 3:2、和值 93、跨度 29。",
         "evidence": {
           "front_odd_even": [
             3,
             2
           ],
           "front_big_small": [
-            2,
-            3
+            3,
+            2
           ],
           "front_sum": 93,
-          "front_span": 26
+          "front_span": 29
         }
       }
     ],
@@ -62,19 +62,19 @@
     ],
     "reason_status": "ok",
     "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
-    "explanation_hash": "e89fc0c7ebafa6bc"
+    "explanation_hash": "f24f179c1f9044b4"
   },
   "actual_result": {
     "front": [
-      1,
-      3,
-      5,
+      2,
+      4,
+      6,
       10,
-      22
+      11
     ],
     "back": [
-      3,
-      9
+      1,
+      10
     ]
   },
   "hit_count": {
@@ -84,14 +84,14 @@
     "level": 1
   },
   "analysis": {
-    "sum_diff": 52,
+    "sum_diff": 60,
     "factor_review": {}
   },
   "next_adjustment": [
     {
       "type": "reduce",
       "text": "收缩和值区间",
-      "reason": "上期和值偏差较大（差 52）"
+      "reason": "上期和值偏差较大（差 60）"
     }
   ],
   "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖"
