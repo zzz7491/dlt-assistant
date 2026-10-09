@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import re
+import time
 from datetime import datetime
 from typing import Any
 
@@ -82,9 +83,18 @@ def _fetch_range(base_url: str, start: str, end: str, timeout: int, user_agent: 
     """按 5 位期号范围（start~end）抓取并解析，返回降序排列的期号列表。"""
     url = _build_url(base_url, start, end)
     headers = {"User-Agent": user_agent}
-    resp = requests.get(url, headers=headers, timeout=timeout)
+    # The upstream history site occasionally times out in CI. Retry only
+    # transport errors; do not hide HTTP failures or invalid/changed HTML.
+    for attempt in range(3):
+        try:
+            resp = requests.get(url, headers=headers, timeout=timeout)
+            resp.raise_for_status()
+            break
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+            if attempt == 2:
+                raise
+            time.sleep(attempt + 1)
     resp.encoding = resp.apparent_encoding or "utf-8"
-    resp.raise_for_status()
     issues = _parse_rows(resp.text)
     if not issues:
         raise RuntimeError("解析到 0 条记录，请检查数据源可用性")
