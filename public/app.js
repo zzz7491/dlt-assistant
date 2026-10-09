@@ -390,18 +390,22 @@
       select.hidden = true;
       return;
     }
-    select.innerHTML = valid.map(function (x) {
-      return '<option value="' + esc(x.issue) + '">' + esc(x.issue) + '期 · ' + esc(x.date) + '</option>';
-    }).join("");
-    if (valid.some(function (x) { return String(x.issue) === String(latestIssue); })) {
-      select.value = String(latestIssue);
-    }
+    var latestVerified = valid.some(function (x) { return String(x.issue) === String(latestIssue); });
+    select.innerHTML = (latestVerified ? "" :
+      '<option value="pending">' + esc(latestIssue) + '期 · 奖金待官方核验</option>') +
+      valid.map(function (x) {
+        return '<option value="' + esc(x.issue) + '">' + esc(x.issue) + '期 · ' + esc(x.date) + '</option>';
+      }).join("");
+    select.value = latestVerified ? String(latestIssue) : "pending";
     var fmt = function (x) {
       return typeof x === "number" && Number.isFinite(x) ? x.toLocaleString("zh-CN") : "—";
     };
     var show = function () {
       var draw = valid.find(function (x) { return String(x.issue) === select.value; });
-      if (!draw) return;
+      if (!draw) {
+        container.textContent = "该期开奖奖金详情尚未完成官方核验；历史号码与推荐信息不受影响。";
+        return;
+      }
       var tiers = ["一", "二", "三", "四", "五", "六", "七"];
       var prizeRows = [];
       tiers.forEach(function (n) {
