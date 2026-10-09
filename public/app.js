@@ -458,14 +458,12 @@
     loadJSON("./data/dlt_history.json"),
     loadJSON("./data/recommendations.json").catch(function () { return []; }),
     loadJSON("./data/review.json").catch(function () { return null; }),
-    loadJSON("./data/strategy_score.json").catch(function () { return null; }),
-    loadJSON("./data/draw_details.json").catch(function () { return null; })
+    loadJSON("./data/strategy_score.json").catch(function () { return null; })
   ]).then(function (res) {
     var history = res[0];
     var recs = res[1] || [];
     var review = res[2];
     var strategyScore = res[3];
-    var drawDetails = res[4];
     try {
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
@@ -494,8 +492,12 @@
         "。纯历史统计，不构成预测。";
     }
 
-    renderDrawDetails(document.getElementById('draw-details-content'),
-      document.getElementById('draw-details-issue'), drawDetails, lastIssue.issue);
+    // 奖金详情独立加载：官方数据慢或失败时不阻塞原有开奖和推荐。
+    loadJSON("./data/draw_details.json").catch(function () { return null; })
+      .then(function (details) {
+        renderDrawDetails(document.getElementById('draw-details-content'),
+          document.getElementById('draw-details-issue'), details, lastIssue.issue);
+      });
 
     // P1-1：普通用户仅见唯一推荐卡。不再渲染 A/B/C/D 折叠网格（#recommendations），
     // 不再渲染策略诊断（renderStrategyHint / #strategy-hint）。
