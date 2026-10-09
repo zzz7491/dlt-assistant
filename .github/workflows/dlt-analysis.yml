@@ -125,6 +125,9 @@ jobs:
             echo "无新增期，D1 无需更新"
           fi
 
+      - name: 体彩机构开奖详情增量采集（独立于号码推荐）
+        run: python scripts/official_details.py || echo '开奖奖金详情暂不可用；保留原有已核验资料，不阻断号码更新'
+
       - name: 轨 B 服务端分析写入（Python → D1）
         # 将 Python 分析结果（指标缓存 dlt_analysis + 评分缓存 dlt_scores）写入 D1。
         # 输入为 step 4 已更新的 data/dlt_history.json；必须在 dlt_draws 增量（step 5）之后执行。
@@ -266,6 +269,9 @@ jobs:
             python scripts/ops_status.py set publisher_status=OK
           fi
           echo "publisher step complete (exit=$PUB_RC; non-blocking)"
+
+      - name: 发布后快照完整性复核
+        run: python scripts/check_local_prepublish.py --require-backup
 
       - name: 实验层-生产文件快照(前)
         # 记录生产冻结文件（源码 + 生产推荐 + 结构画像）的 SHA，供事后校验。
