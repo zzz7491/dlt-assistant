@@ -1,22 +1,17 @@
 {
   "status": "degraded",
-  "generated_at": "2026-10-05 21:24:16",
+  "generated_at": "2026-10-09 11:24:08",
   "source": "/home/runner/work/dlt-assistant/dlt-assistant/data/dlt_history.json",
   "fatal_error": null,
   "notes": [
     "期号缺口需人工确认：大乐透存在春节加开期（特殊编号期），相邻期号差 > 1 不必然表示数据缺失，此处仅作完整性提醒，不代表采集失败。"
   ],
   "issues_count": 1000,
-  "latest_issue": 26113,
+  "latest_issue": 26114,
   "empty": false,
   "monotonic": true,
   "duplicates": [],
   "gaps": [
-    {
-      "prev": 19150,
-      "next": 20001,
-      "diff": 851
-    },
     {
       "prev": 20134,
       "next": 21001,
