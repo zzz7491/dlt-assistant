@@ -7,6 +7,9 @@ name: 大乐透AI娱乐分析
 # ============================================================
 
 on:
+  push:
+    branches: [master]
+    paths: [.github/workflows/dlt-analysis.yml]
   schedule:
     # 每日北京时间 10:00 运行（兜底）
     # GitHub Actions 的 cron 使用 UTC，北京时间 = UTC+8，故 02:00 UTC = 10:00 CST
