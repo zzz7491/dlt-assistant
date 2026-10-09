@@ -125,6 +125,7 @@ jobs:
             echo "无新增期，D1 无需更新"
           fi
 
+      # 号码源瞬时超时由 scraper 有界重试；奖金详情单独核验。
       - name: 体彩机构开奖详情增量采集（独立于号码推荐）
         run: python scripts/official_details.py || echo '开奖奖金详情暂不可用；保留原有已核验资料，不阻断号码更新'
 
