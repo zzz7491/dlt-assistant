@@ -378,6 +378,69 @@
     return renderReason(p && p.reason);
   }
 
+  function renderDrawDetails(container, select, details, latestIssue) {
+    if (!container || !select) return;
+    var rows = details && Array.isArray(details.issues) ? details.issues.slice().reverse() : [];
+    var valid = rows.filter(function (x) {
+      return x && /^\\d{5}$/.test(String(x.issue)) && Array.isArray(x.front) &&
+        Array.isArray(x.back) && x.front.length === 5 && x.back.length === 2;
+    });
+    if (!valid.length) {
+      container.textContent = "开奖奖金详情暂未取得或尚未核验，请稍后查看。";
+      select.hidden = true;
+      return;
+    }
+    var latestVerified = valid.some(function (x) { return String(x.issue) === String(latestIssue); });
+    select.innerHTML = (latestVerified ? "" :
+      '<option value="pending">' + esc(latestIssue) + '期 · 奖金待官方核验</option>') +
+      valid.map(function (x) {
+        return '<option value="' + esc(x.issue) + '">' + esc(x.issue) + '期 · ' + esc(x.date) + '</option>';
+      }).join("");
+    select.value = latestVerified ? String(latestIssue) : "pending";
+    var fmt = function (x) {
+      return typeof x === "number" && Number.isFinite(x) ? x.toLocaleString("zh-CN") : "—";
+    };
+    var show = function () {
+      var draw = valid.find(function (x) { return String(x.issue) === select.value; });
+      if (!draw) {
+        container.textContent = "该期开奖奖金详情尚未完成官方核验；历史号码与推荐信息不受影响。";
+        return;
+      }
+      var tiers = ["一", "二", "三", "四", "五", "六", "七"];
+      var prizeRows = [];
+      tiers.forEach(function (n) {
+        var tier = draw.prizes && draw.prizes[n + "等奖"];
+        if (!tier) return;
+        var variants = (n === "一" || n === "二") ?
+          [["基本", tier.basic], ["追加", tier.additional]] : [["", tier]];
+        variants.forEach(function (pair) {
+          if (!pair[1]) return;
+          prizeRows.push("<tr><th scope='row'>" + n + "等奖" + (pair[0] ? " · " + pair[0] : "") +
+            "</th><td>" + fmt(pair[1].winners) + "注</td><td>" +
+            (pair[1].per_ticket_yuan == null ? "—" : fmt(pair[1].per_ticket_yuan) + "元") +
+            "</td></tr>");
+        });
+      });
+      var pool = /^\\d[\\d,]*(?:\\.\\d{1,2})?$/.test(String(draw.jackpot_yuan)) ?
+        draw.jackpot_yuan + "元" : "—";
+      var source = /^https:\/\/www\\.js-lottery\\.com\/cms\/post-\\d+\\.html$/.test(draw.source_url || "") ?
+        '<a href="' + esc(draw.source_url) + '" target="_blank" rel="noopener noreferrer">体彩机构原始公告</a>' : "";
+      container.innerHTML =
+        '<p><strong>' + esc(draw.issue) + '期</strong> · ' + esc(draw.date) +
+        '　前区 ' + esc(draw.front.map(pad2).join(" ")) + ' + 后区 ' +
+        esc(draw.back.map(pad2).join(" ")) + '</p>' +
+        '<p>全国销售额：<strong>' + fmt(draw.sales_yuan) + '元</strong>　滚入下期奖池：<strong>' +
+        esc(pool) + '</strong></p>' +
+        '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;text-align:left">' +
+        '<thead><tr><th>奖级</th><th>中奖注数</th><th>每注奖金</th></tr></thead><tbody>' +
+        prizeRows.join("") + '</tbody></table></div>' +
+        '<p style="font-size:12px;margin-top:10px">兑奖截止：' +
+        esc(draw.claim_deadline || "以官方公告为准") + '　' + source + '</p>';
+    };
+    select.addEventListener("change", show);
+    show();
+  }
+
   /* ---------- 启动 ---------- */
   function showError(msg) {
     document.getElementById("content").hidden = true;
@@ -395,12 +458,14 @@
     loadJSON("./data/dlt_history.json"),
     loadJSON("./data/recommendations.json").catch(function () { return []; }),
     loadJSON("./data/review.json").catch(function () { return null; }),
-    loadJSON("./data/strategy_score.json").catch(function () { return null; })
+    loadJSON("./data/strategy_score.json").catch(function () { return null; }),
+    loadJSON("./data/draw_details.json").catch(function () { return null; })
   ]).then(function (res) {
     var history = res[0];
     var recs = res[1] || [];
     var review = res[2];
     var strategyScore = res[3];
+    var drawDetails = res[4];
     try {
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
@@ -428,6 +493,9 @@
         "；连号 " + (consecCnt > 0 ? "有 " + consecCnt + " 对" : "无") +
         "。纯历史统计，不构成预测。";
     }
+
+    renderDrawDetails(document.getElementById('draw-details-content'),
+      document.getElementById('draw-details-issue'), drawDetails, lastIssue.issue);
 
     // P1-1：普通用户仅见唯一推荐卡。不再渲染 A/B/C/D 折叠网格（#recommendations），
     // 不再渲染策略诊断（renderStrategyHint / #strategy-hint）。
