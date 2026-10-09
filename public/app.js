@@ -382,7 +382,7 @@
     if (!container || !select) return;
     var rows = details && Array.isArray(details.issues) ? details.issues.slice().reverse() : [];
     var valid = rows.filter(function (x) {
-      return x && /^\\d{5}$/.test(String(x.issue)) && Array.isArray(x.front) &&
+      return x && /^\d{5}$/.test(String(x.issue)) && Array.isArray(x.front) &&
         Array.isArray(x.back) && x.front.length === 5 && x.back.length === 2;
     });
     if (!valid.length) {
@@ -421,9 +421,9 @@
             "</td></tr>");
         });
       });
-      var pool = /^\\d[\\d,]*(?:\\.\\d{1,2})?$/.test(String(draw.jackpot_yuan)) ?
+      var pool = /^\d[\d,]*(?:\.\d{1,2})?$/.test(String(draw.jackpot_yuan)) ?
         draw.jackpot_yuan + "元" : "—";
-      var source = /^https:\/\/www\\.js-lottery\\.com\/cms\/post-\\d+\\.html$/.test(draw.source_url || "") ?
+      var source = /^https:\/\/www\.js-lottery\.com\/cms\/post-\d+\.html$/.test(draw.source_url || "") ?
         '<a href="' + esc(draw.source_url) + '" target="_blank" rel="noopener noreferrer">体彩机构原始公告</a>' : "";
       container.innerHTML =
         '<p><strong>' + esc(draw.issue) + '期</strong> · ' + esc(draw.date) +
