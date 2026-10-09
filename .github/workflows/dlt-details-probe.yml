@@ -18,3 +18,14 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python scripts/official_details.py
       - run: python -c "import json; p=json.load(open('public/data/draw_details.json')); assert any(x['issue']=='26114' for x in p['issues'])"
+      - run: |
+          python - <<'PY'
+          import json
+          data=json.load(open('public/data/draw_details.json'))
+          for draw in data['issues']:
+              for tier in draw['prizes'].values():
+                  for item in (tier.values() if 'basic' in tier else [tier]):
+                      if item['per_ticket_yuan'] is not None:
+                          assert item['winners']*item['per_ticket_yuan']==item['total_yuan'], draw['issue']
+          print(json.dumps(next(x for x in data['issues'] if x['issue']=='26114'),ensure_ascii=False))
+          PY
