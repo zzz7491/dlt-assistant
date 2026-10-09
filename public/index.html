@@ -66,6 +66,14 @@
       <p class="latest-analysis" id="latest-analysis">—</p>
     </section>
 
+    <section class="card" aria-labelledby="draw-details-title">
+      <h2 id="draw-details-title">💰 开奖详情与奖池</h2>
+      <p class="hint">体彩机构开奖公告：销售额、各奖级中奖注数和单注奖金、滚入下期奖池。未核验的数据会明确标记。</p>
+      <label for="draw-details-issue">查看期号</label>
+      <select id="draw-details-issue" aria-label="开奖详情期号"></select>
+      <div id="draw-details-content" aria-live="polite">正在加载开奖公告…</div>
+    </section>
+
     <!-- ② 本期唯一推荐（P1-1：普通用户仅见一条正式推荐；A/B/C/D 为后台候选，不在此呈现，
          用户无需在 A/B/C/D 之间做选择） -->
     <section class="card">
@@ -111,6 +119,6 @@
     </footer>
   </main>
 
-  <script src="./app.js?v=008a440" defer></script>
+  <script src="./app.js?v=draw-details-1" defer></script>
 </body>
 </html>
