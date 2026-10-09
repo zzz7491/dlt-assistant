@@ -1,0 +1,20 @@
+name: DLT official details probe
+on:
+  push:
+    branches: [feature/official-draw-details]
+    paths:
+      - scripts/official_details.py
+      - .github/workflows/dlt-details-probe.yml
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt
+      - run: python scripts/official_details.py
+      - run: python -c "import json; p=json.load(open('public/data/draw_details.json')); assert any(x['issue']=='26114' for x in p['issues'])"
