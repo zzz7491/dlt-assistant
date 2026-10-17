@@ -192,7 +192,7 @@ def append_pl5_updates(out_path: str) -> None:
                 from src.lottery.notice500 import fetch_notice
 
                 _latest_num = int(history[-1]["issue"])
-                _notices = fetch_notice(GAME_KEY, _latest_num - 11, _latest_num)
+                _notices = fetch_notice(GAME_KEY, _latest_num - 29, _latest_num)
                 _notice_status = {"ok": True, "issues": len(_notices)}
             except Exception as exc:
                 _notice_status = {"ok": False, "error": f"{type(exc).__name__}: {str(exc)[:140]}"}
