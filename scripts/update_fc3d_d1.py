@@ -267,11 +267,11 @@ def append_fc3d_updates(out_path: str) -> None:
         _notice_status: dict = {"ok": False, "error": "not attempted"}
         if history:
             try:
-                from src.lottery.notice500 import fetch_notice
+                from src.lottery.notice500 import fetch_notice_with_meta
 
                 _latest_num = int(history[-1]["issue"])
-                _notices = fetch_notice("fc3d", _latest_num - 29, _latest_num)
-                _notice_status = {"ok": True, "issues": len(_notices)}
+                _notices, _meta = fetch_notice_with_meta("fc3d", _latest_num - 29, _latest_num)
+                _notice_status = {"ok": True, "issues": len(_notices), **_meta}
             except Exception as exc:
                 _notice_status = {"ok": False, "error": f"{type(exc).__name__}: {str(exc)[:140]}"}
                 print(f"notice_status: {_notice_status}")
