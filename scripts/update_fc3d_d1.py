@@ -86,12 +86,13 @@ def _load_repo_history() -> list[dict]:
         return []
 
 
-def _write_repo_history(rows: list[dict]) -> None:
+def _write_repo_history(rows: list[dict], notice_status: dict | None = None) -> None:
     payload = {
         "updated_at": datetime.datetime.now(BJ).isoformat(),
         "source": "500彩票网福彩3D历史开奖（与官方开奖同步）",
         "count": len(rows),
         "issues": rows,
+        "notice_status": notice_status,
     }
     for path in (DATA_JSON, PUBLIC_JSON):
         os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -199,7 +200,7 @@ def _cwl_fc3d_details() -> dict[str, dict]:
         return {}
 
 
-def _notice_sql(history: list[dict]) -> list[str]:
+def _notice_sql(history: list[dict], notices: dict) -> list[str]:
     """Enrich recent fc3d_details with announcement figures.
 
     Merges the 500 datachart notice (sales; counts when published)
@@ -207,13 +208,7 @@ def _notice_sql(history: list[dict]) -> list[str]:
     the feed's trycode. REPLACE so enrichment can land after the
     draw row itself was first written.
     """
-    try:
-        from src.lottery.notice500 import fetch_notice
-
-        latest = int(history[-1]["issue"])
-        notices = fetch_notice("fc3d", latest - 11, latest)
-    except Exception as exc:
-        print(f"fc3d_notice_skipped: {type(exc).__name__}: {str(exc)[:120]}")
+    if not notices:
         return []
     counts = _cwl_fc3d_details()
     trycode = {r["issue"]: r.get("trycode") for r in history}
@@ -268,12 +263,24 @@ def append_fc3d_updates(out_path: str) -> None:
         for row in rows:
             merged[row["issue"]] = row
         history = [merged[key] for key in sorted(merged, key=int)][-1000:]
-        if rows or not os.path.exists(DATA_JSON):
-            _write_repo_history(history)
+        _notices: dict = {}
+        _notice_status: dict = {"ok": False, "error": "not attempted"}
+        if history:
+            try:
+                from src.lottery.notice500 import fetch_notice
+
+                _latest_num = int(history[-1]["issue"])
+                _notices = fetch_notice("fc3d", _latest_num - 11, _latest_num)
+                _notice_status = {"ok": True, "issues": len(_notices)}
+            except Exception as exc:
+                _notice_status = {"ok": False, "error": f"{type(exc).__name__}: {str(exc)[:140]}"}
+                print(f"notice_status: {_notice_status}")
+        if rows or _notices or not os.path.exists(DATA_JSON):
+            _write_repo_history(history, _notice_status)
         lines = list(SCHEMA)
         lines.extend(_draw_sql(rows))
         lines.extend(_details_sql(rows))
-        lines.extend(_notice_sql(history))
+        lines.extend(_notice_sql(history, _notices))
         # One-time trycode backfill for the existing history (the feed
         # is fetched whole every run, so this costs nothing extra).
         try:
