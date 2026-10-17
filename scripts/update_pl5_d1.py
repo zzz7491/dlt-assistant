@@ -47,9 +47,9 @@ SCHEMA = [
     "target_date TEXT NOT NULL, kind TEXT NOT NULL, payload TEXT NOT NULL, "
     "date TEXT NOT NULL, UNIQUE(target_issue, kind));",
     "CREATE TABLE IF NOT EXISTS pl5_analysis ("
-    "CREATE TABLE IF NOT EXISTS pl5_details (" "issue TEXT PRIMARY KEY, payload TEXT);",
     "target_issue TEXT NOT NULL UNIQUE, payload TEXT NOT NULL, "
     "date TEXT NOT NULL);",
+    "CREATE TABLE IF NOT EXISTS pl5_details (issue TEXT PRIMARY KEY, payload TEXT);",
 ]
 
 
