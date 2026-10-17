@@ -35,7 +35,13 @@ export const onRequestGet = async ({ env, request }: { env: Env; request: Reques
         big_count: digits.filter(d => d >= 5).length,
       };
 
-      const detail: unknown = null;
+      let detail: unknown = null;
+      try {
+        const row = await env.DB.prepare(
+          "SELECT payload FROM pl5_details WHERE issue = ?",
+        ).bind(issueParam).first<{ payload: string }>();
+        if (row) detail = JSON.parse(row.payload);
+      } catch { /* details table may not exist */ }
       let recommendations: unknown = null;
       try {
         const recs = await env.DB.prepare(
