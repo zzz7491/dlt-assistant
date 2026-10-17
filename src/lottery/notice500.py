@@ -89,6 +89,40 @@ def _parse(game: str, html: str) -> dict[str, dict[str, Any]]:
     return notices
 
 
+def fetch_notice_with_meta(
+    game: str, start_issue: int, end_issue: int, timeout: int = 30
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Like fetch_notice, plus response metadata for observability."""
+    url = _URLS[game]
+    last_error: Exception | None = None
+    for attempt in range(3):
+        try:
+            resp = requests.get(
+                url,
+                params={
+                    "start": start_issue,
+                    "end": end_issue,
+                    "_t": int(time.time() * 1000),
+                },
+                headers={"User-Agent": USER_AGENT},
+                timeout=timeout,
+            )
+            resp.raise_for_status()
+            notices = _parse(game, resp.content.decode("gb18030", errors="replace"))
+            meta = {
+                "max_issue": max(notices) if notices else None,
+                "resp_date": resp.headers.get("Date"),
+                "age": resp.headers.get("Age"),
+                "via": resp.headers.get("Via"),
+            }
+            return notices, meta
+        except Exception as exc:
+            last_error = exc
+            if attempt < 2:
+                time.sleep(2 * (attempt + 1))
+    raise RuntimeError(f"notice fetch failed for {game}: {last_error}")
+
+
 def fetch_notice(
     game: str, start_issue: int, end_issue: int, timeout: int = 30
 ) -> dict[str, dict[str, Any]]:
