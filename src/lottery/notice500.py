@@ -99,7 +99,14 @@ def fetch_notice(
         try:
             resp = requests.get(
                 url,
-                params={"start": start_issue, "end": end_issue},
+                params={
+                    "start": start_issue,
+                    "end": end_issue,
+                    # The datachart pages are CDN-cached and can lag one
+                    # issue behind on some edges; a unique query value
+                    # forces a fresh origin copy.
+                    "_t": int(time.time() * 1000),
+                },
                 headers={"User-Agent": USER_AGENT},
                 timeout=timeout,
             )
