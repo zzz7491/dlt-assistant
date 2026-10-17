@@ -34,6 +34,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_JSON = os.path.join(ROOT, "data", "pl3_history.json")
 PUBLIC_JSON = os.path.join(ROOT, "public", "data", "pl3_history.json")
 BJ = datetime.timezone(datetime.timedelta(hours=8))
+GAME_KEY = "pl3"
 
 SCHEMA = [
     "CREATE TABLE IF NOT EXISTS pl3_draws ("
@@ -91,12 +92,13 @@ def _load_repo_history() -> list[dict]:
         return []
 
 
-def _write_repo_history(rows: list[dict]) -> None:
+def _write_repo_history(rows: list[dict], notice_status: dict | None = None) -> None:
     payload = {
         "updated_at": datetime.datetime.now(BJ).isoformat(),
         "source": "500彩票网排列三历史开奖（与官方开奖同步）",
         "count": len(rows),
         "issues": rows,
+        "notice_status": notice_status,
     }
     for path in (DATA_JSON, PUBLIC_JSON):
         os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -143,16 +145,8 @@ def _plans_analysis_sql(history: list[dict]) -> list[str]:
 
 
 
-def _details_sql(history: list[dict]) -> list[str]:
+def _details_sql(notices: dict) -> list[str]:
     """Announcement details for the newest issues (REPLACE)."""
-    try:
-        from src.lottery.notice500 import fetch_notice
-
-        latest = int(history[-1]["issue"])
-        notices = fetch_notice("pl3", latest - 11, latest)
-    except Exception as exc:
-        print(f"pl3_notice_skipped: {type(exc).__name__}: {str(exc)[:120]}")
-        return []
     return [
         "INSERT OR REPLACE INTO pl3_details (issue, payload) VALUES ("
         f"{_sql_text(issue)}, {_sql_text(payload)});"
@@ -202,11 +196,23 @@ def append_pl3_updates(out_path: str) -> None:
         for row in rows:
             merged[row["issue"]] = row
         history = [merged[key] for key in sorted(merged, key=int)][-1000:]
-        if rows or not os.path.exists(DATA_JSON):
-            _write_repo_history(history)
+        _notices: dict = {}
+        _notice_status: dict = {"ok": False, "error": "not attempted"}
+        if history:
+            try:
+                from src.lottery.notice500 import fetch_notice
+
+                _latest_num = int(history[-1]["issue"])
+                _notices = fetch_notice(GAME_KEY, _latest_num - 11, _latest_num)
+                _notice_status = {"ok": True, "issues": len(_notices)}
+            except Exception as exc:
+                _notice_status = {"ok": False, "error": f"{type(exc).__name__}: {str(exc)[:140]}"}
+                print(f"notice_status: {_notice_status}")
+        if rows or _notices or not os.path.exists(DATA_JSON):
+            _write_repo_history(history, _notice_status)
         lines = list(SCHEMA)
         lines.extend(_draw_sql(rows))
-        lines.extend(_details_sql(history))
+        lines.extend(_details_sql(_notices))
         if len(history) >= 100:
             lines.extend(_recommendation_sql(history))
             lines.extend(_plans_analysis_sql(history))
