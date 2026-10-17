@@ -1,4 +1,4 @@
-/* dlt-assistant front-end (build 2026-10-17h) */
+/* dlt-assistant front-end (build 2026-10-17i) */
 /* 纯静态前端：读取 data/dlt_history.json 与 data/recommendations.json，
    在浏览器内复算分析指标并渲染页面。无后端、无构建步骤。 */
 (function () {

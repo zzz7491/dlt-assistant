@@ -68,9 +68,25 @@ SNAPSHOT_SCHEMA_VERSION = "1.1"  # P1-2：快照新增冻结的 structured expla
 SNAPSHOT_DEFAULT_PATH = "public/data/published_recommendations.json"
 
 
+def _normalize_keys(obj: Any) -> Any:
+    """递归把 dict 键统一为 str。
+
+    快照哈希在内存 dict 上计算，而完整性复核在 JSON 回读后的 dict 上重算：
+    内存中的 int 键（如 explanation 里的号码频率表 {5: .., 12: ..}）经 JSON
+    往返会变成 str 键，json.dumps(sort_keys=True) 对 int 键按数值序、对 str
+    键按字典序排序，两者顺序不同会让同一内容算出不同哈希（26119 首现）。
+    先统一为 str 键，内存态与回读态的规范序列化即完全一致。已落盘快照的键
+    本就是 str，此归一化对其哈希无影响。"""
+    if isinstance(obj, dict):
+        return {str(k): _normalize_keys(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_normalize_keys(v) for v in obj]
+    return obj
+
+
 def _canonical_json(obj: Any) -> str:
     """确定性序列化：稳定键序 + 固定分隔符 + 非 ASCII 原样，保证同内容同字符串。"""
-    return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return json.dumps(_normalize_keys(obj), sort_keys=True, ensure_ascii=False, separators=(",", ":"))
 
 
 def snapshot_hash(snapshot: Any) -> str | None:
