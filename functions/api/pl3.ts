@@ -49,7 +49,7 @@ export const onRequestGet = async ({ env, request }: { env: Env; request: Reques
         ).bind(issueParam).all<{ strategy: string; digits: string }>();
         if (recs.results.length) {
           recommendations = recs.results.map(r => {
-            const rec = r.digits.split(",").map(Number);
+            const rec = (() => { try { return JSON.parse(r.digits) as number[]; } catch { return r.digits.split(",").map(Number); } })();
             return {
               strategy: r.strategy, digits: rec,
               position_hits: rec.filter((d, i) => d === digits[i]).length,
