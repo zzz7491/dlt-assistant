@@ -59,14 +59,15 @@ jobs:
           npx --yes wrangler@latest d1 execute dlt-draws --remote --file=.verify_tmp/football_current_d1.sql
       - name: 提交本期公开结果
         run: |
-          if git diff --quiet -- public/data/football/current.json data/football/archive.json data/ssq_history.json data/fc3d_history.json data/pl3_history.json data/pl5_history.json; then
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- public data
+          if git diff --cached --quiet; then
             echo "足彩公开结果没有变化"
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/football/current.json data/football/archive.json data/ssq_history.json data/fc3d_history.json data/pl3_history.json data/pl5_history.json
           git commit -m "chore: 更新足彩AI分析"
+          git status --porcelain
           git pull --rebase origin master
           git push origin HEAD:master
       - name: Cloudflare生产账号检查
