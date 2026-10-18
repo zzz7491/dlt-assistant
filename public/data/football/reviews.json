@@ -1,0 +1,505 @@
+{
+  "reviews": [
+    {
+      "issue": "26144",
+      "draw_date": "2026-10-18",
+      "sfc_hits": 10,
+      "ren9_hits": 5,
+      "matches": [
+        {
+          "order": 1,
+          "home": "布伦特福德",
+          "away": "利物浦",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 2,
+          "home": "富勒姆",
+          "away": "赫尔城",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 3,
+          "home": "曼城",
+          "away": "伊普斯维奇",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 4,
+          "home": "纽卡斯尔",
+          "away": "阿斯顿维拉",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 5,
+          "home": "汉堡",
+          "away": "斯图加特",
+          "result": "3",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 6,
+          "home": "沙尔克",
+          "away": "美因茨",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 7,
+          "home": "柏林联合",
+          "away": "多特蒙德",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 8,
+          "home": "艾禾斯堡",
+          "away": "奥格斯堡",
+          "result": "3",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 9,
+          "home": "拜仁",
+          "away": "莱比锡",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 10,
+          "home": "博洛尼",
+          "away": "国际米兰",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 11,
+          "home": "罗马",
+          "away": "热那亚",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 12,
+          "home": "比利亚雷亚尔",
+          "away": "埃尔切",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 13,
+          "home": "贝蒂斯",
+          "away": "巴萨",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 14,
+          "home": "巴伦西亚",
+          "away": "毕尔巴鄂竞技",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        }
+      ]
+    },
+    {
+      "issue": "26143",
+      "draw_date": "2026-10-17",
+      "sfc_hits": 10,
+      "ren9_hits": 5,
+      "matches": [
+        {
+          "order": 1,
+          "home": "伯恩利",
+          "away": "伍尔弗汉普顿",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 2,
+          "home": "法兰克福",
+          "away": "科隆",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 3,
+          "home": "科特布斯",
+          "away": "纽伦堡",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 4,
+          "home": "基尔",
+          "away": "柏林赫塔",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 5,
+          "home": "弗洛西诺内",
+          "away": "萨索洛",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 6,
+          "home": "拉科鲁尼亚",
+          "away": "莱万特",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 7,
+          "home": "勒芒",
+          "away": "图卢兹",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 8,
+          "home": "阿纳西",
+          "away": "南锡",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 9,
+          "home": "甘冈",
+          "away": "波城FC",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 10,
+          "home": "拉瓦勒",
+          "away": "克莱蒙",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 11,
+          "home": "兰斯",
+          "away": "第戎",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 12,
+          "home": "格勒诺布尔",
+          "away": "布洛涅",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 13,
+          "home": "海伦芬",
+          "away": "SBV精英",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 14,
+          "home": "布鲁马波卡纳",
+          "away": "佐加顿斯",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        }
+      ]
+    },
+    {
+      "issue": "26142",
+      "draw_date": "2026-10-16",
+      "sfc_hits": 11,
+      "ren9_hits": 8,
+      "matches": [
+        {
+          "order": 1,
+          "home": "波兹南",
+          "away": "勒沃库森",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 2,
+          "home": "里昂",
+          "away": "水晶宫",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 3,
+          "home": "萨茨堡",
+          "away": "AC米兰",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 4,
+          "home": "布拉格斯巴达",
+          "away": "利勒斯特罗姆",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 5,
+          "home": "特温特",
+          "away": "桑德兰",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 6,
+          "home": "圣吉罗斯",
+          "away": "皇家社会",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 7,
+          "home": "本菲卡",
+          "away": "凯尔特人",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 8,
+          "home": "伯恩茅斯",
+          "away": "格拉茨风暴",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 9,
+          "home": "塞尔塔",
+          "away": "尤文图斯",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 10,
+          "home": "萨格勒布迪纳摩",
+          "away": "安德莱赫特",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 11,
+          "home": "霍芬海姆",
+          "away": "贝西克塔斯",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 12,
+          "home": "马赛",
+          "away": "奥林匹亚科斯",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 13,
+          "home": "奈梅亨",
+          "away": "索菲亚列夫斯基",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 14,
+          "home": "雷恩",
+          "away": "克里特",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        }
+      ]
+    }
+  ]
+}
