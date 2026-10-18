@@ -18,6 +18,8 @@ on:
     # 每日北京时间 09:15、17:15、21:45 更新；与大乐透任务完全隔离。
     - cron: "15 1,9 * * *"
     - cron: "45 13 * * *"
+    # 22:35 保底轮次：500 开奖 XML 约 21:31 才发布，21:45 轮次若因 GitHub 定时漂移提前执行会抓空（fc3d/pl3/pl5 新增 0 期且不报错）；本轮在数据发布一小时后再收一遍，保证开奖当晚入库。
+    - cron: "35 14 * * *"
 
 permissions:
   contents: write
@@ -90,4 +92,3 @@ jobs:
           npx --yes wrangler@latest pages deploy public --project-name dlt-assistant --branch master --commit-dirty=true
       - name: 正式站足彩与大乐透隔离验收
         run: python scripts/check_football_production.py
-
