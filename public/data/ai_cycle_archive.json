@@ -178,6 +178,186 @@
       "editorial_policy": "grounded-editorial-v1",
       "editorial_removed_clauses": 6,
       "reviewed_at": "2026-10-15T01:35:25.023620+00:00"
+    },
+    {
+      "status": "completed",
+      "model": "dots-studio/dots-3-note-preview:free",
+      "route": "openrouter/free",
+      "prompt_version": "dlt-ai-cycle-v5",
+      "generated_at": "2026-10-18T07:08:32.393346+00:00",
+      "input_hash": "d97019f3bd17001f5551afc45a7b94313d67058e3e616d8e617696820c905a5d",
+      "sections": {
+        "compound_reason": {
+          "evidence_ids": [
+            "compound_front_10",
+            "compound_front_26",
+            "compound_structure",
+            "compound_budget",
+            "compound_identity"
+          ],
+          "text": "复式前区包含高频号10与26，均在近50期出现13次且当前遗漏分别为5期与0期，体现对近期活跃号码的覆盖意图；结构上奇偶比3:7、和值163、跨度31，偏向偶数集中与大跨度组合。该结构在扩大覆盖范围的同时，也导致奇数分布偏弱，可能影响命中分布的均衡性。预算层面，10+3复式展开756注，基础投入1512元，追加后达2268元，成本较高，需权衡覆盖率与投入效率之间的取舍。"
+        },
+        "next_focus": {
+          "evidence_ids": [
+            "previous_review",
+            "single_structure",
+            "compound_structure",
+            "history_window"
+          ],
+          "text": "结合上期复盘建议，下期应关注奇偶分布的对称性调整，当前单注奇偶比2:3、复式为3:7，均存在偶数偏多倾向。可评估在保持跨度覆盖的前提下，适度引入奇数冷号以优化结构平衡，同时结合遗漏值变化评估追加策略的必要性。需验证结构特征是否真正提升命中分布层次，而非仅满足表层数学指标。"
+        },
+        "overview": {
+          "evidence_ids": [
+            "single_front_8",
+            "single_front_34",
+            "single_structure",
+            "candidate_comparison",
+            "history_window",
+            "compound_structure"
+          ],
+          "text": "样本覆盖近50期数据，目标为26119期，候选方案已由算法冻结，AI负责评审其结构合理性与指标表现。正式单注前区[8,9,24,31,34]奇偶比2:3，和值106，跨度26，综合评分41.25居候选首位，反映策略基础与近期表现的加权优势。候选2与4评分接近，分别体现不同结构偏好，显示评分体系对多维度特征的敏感性。分析需基于已固化组合，不引入随机构造或未验证趋势。"
+        },
+        "risk": {
+          "evidence_ids": [
+            "uncertainty",
+            "single_front_31",
+            "compound_front_31",
+            "single_back_12",
+            "history_window"
+          ],
+          "text": "每期开奖独立，历史频率与评分不构成中奖概率保证。单注中前区31近50期仅出现3次，属冷号，其入选可能基于结构补缺而非热度支撑；后区12虽当前遗漏0期，但高频率不等于持续活跃。复式方案虽扩大覆盖，但未改变独立事件本质，投入增加不提升中奖概率，仅影响注数分布广度。"
+        },
+        "single_reason": {
+          "evidence_ids": [
+            "single_front_8",
+            "single_front_24",
+            "single_structure",
+            "single_selection",
+            "single_identity"
+          ],
+          "text": "正式单注综合评分41.25，排名候选第一，体现策略基础与近期表现的协同作用。前区08遗漏4期、24遗漏8期，均属中等回补区间，搭配遗漏1期的31与遗漏9期的34，形成冷热交错布局。结构上奇偶比2:3、和值106、跨度26，偏向中等和值与适中跨度，符合算法对平衡性的偏好。但34遗漏9期偏长，其入选更多依赖结构补位而非趋势支撑，存在回补不确定风险。"
+        }
+      },
+      "model_evidence_ids": {
+        "overview": [
+          "single_front_8",
+          "single_front_34",
+          "single_structure",
+          "candidate_comparison"
+        ],
+        "single_reason": [
+          "single_front_8",
+          "single_front_24",
+          "single_structure",
+          "single_selection"
+        ],
+        "compound_reason": [
+          "compound_front_10",
+          "compound_front_26",
+          "compound_structure",
+          "compound_budget"
+        ],
+        "risk": [
+          "uncertainty",
+          "single_front_31",
+          "compound_front_31",
+          "single_back_12"
+        ],
+        "next_focus": [
+          "previous_review",
+          "single_structure",
+          "compound_structure"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "analysis",
+      "issue": "26119",
+      "identity": {
+        "target_issue": "26119",
+        "single": {
+          "front": [
+            8,
+            9,
+            24,
+            31,
+            34
+          ],
+          "back": [
+            10,
+            12
+          ]
+        },
+        "compound": {
+          "format": "10+3",
+          "front": [
+            3,
+            4,
+            8,
+            9,
+            10,
+            14,
+            24,
+            26,
+            31,
+            34
+          ],
+          "back": [
+            9,
+            10,
+            12
+          ]
+        }
+      },
+      "history_cutoff": "26118",
+      "evidence": {
+        "history_window": "样本50期，截止26118期，目标26119期。",
+        "selection_role": "号码由现有算法构造并已冻结；本次AI负责综合分析、候选评审和解释，不重新选号，不把候选的随机构造冒称为AI选号。",
+        "uncertainty": "每期开奖相互独立；历史频率和评分不是中奖概率；不保证任何组合中奖。",
+        "single_identity": "已冻结正式单注：前区[8, 9, 24, 31, 34]，后区[10, 12]。",
+        "compound_identity": "已冻结复式：前区[3, 4, 8, 9, 10, 14, 24, 26, 31, 34]，后区[9, 10, 12]。",
+        "single_front_8": "前区 08：近50期出现6次，当前遗漏4期。",
+        "single_front_9": "前区 09：近50期出现7次，当前遗漏0期。",
+        "single_front_24": "前区 24：近50期出现7次，当前遗漏8期。",
+        "single_front_31": "前区 31：近50期出现3次，当前遗漏1期。",
+        "single_front_34": "前区 34：近50期出现4次，当前遗漏9期。",
+        "single_back_10": "后区 10：近50期出现7次，当前遗漏2期。",
+        "single_back_12": "后区 12：近50期出现11次，当前遗漏0期。",
+        "single_structure": "前区奇数2个、偶数3个，和值106，跨度26。",
+        "compound_front_3": "前区 03：近50期出现9次，当前遗漏6期。",
+        "compound_front_4": "前区 04：近50期出现9次，当前遗漏1期。",
+        "compound_front_8": "前区 08：近50期出现6次，当前遗漏4期。",
+        "compound_front_9": "前区 09：近50期出现7次，当前遗漏0期。",
+        "compound_front_10": "前区 10：近50期出现13次，当前遗漏5期。",
+        "compound_front_14": "前区 14：近50期出现12次，当前遗漏9期。",
+        "compound_front_24": "前区 24：近50期出现7次，当前遗漏8期。",
+        "compound_front_26": "前区 26：近50期出现13次，当前遗漏0期。",
+        "compound_front_31": "前区 31：近50期出现3次，当前遗漏1期。",
+        "compound_front_34": "前区 34：近50期出现4次，当前遗漏9期。",
+        "compound_back_9": "后区 09：近50期出现14次，当前遗漏4期。",
+        "compound_back_10": "后区 10：近50期出现7次，当前遗漏2期。",
+        "compound_back_12": "后区 12：近50期出现11次，当前遗漏0期。",
+        "compound_structure": "前区奇数3个、偶数7个，和值163，跨度31。",
+        "single_selection": "正式单注综合分41.25，候选排名1；策略基础64.0、历史表现15.39、近期表现17.14、结构贴合50.0。分数不是概率。",
+        "candidate_comparison": "候选1：前区[8, 9, 24, 31, 34]、后区[10, 12]，综合分41.25，排名1；候选2：前区[5, 11, 15, 22, 24]、后区[6, 7]，综合分34.48，排名3；候选3：前区[2, 3, 4, 10, 11]、后区[2, 7]，综合分28.61，排名4；候选4：前区[14, 7, 23, 27, 16]、后区[4, 8]，综合分39.86，排名2",
+        "compound_budget": "复式10+3，展开756注，基本投注1512元，全部追加合计2268元。",
+        "previous_review": "上期AI复盘26118的关注点：下期应关注奇偶分布均衡性与跨度覆盖的可解释性，避免单一维度（如高频或偶数集中）主导选择；结合遗漏值变化动态调整追加策略，评估引入奇数号以优化结构对称性；需验证结构特征（如和值、奇偶比）是否真提升命中分布层次，而不仅是表层贴合。这只是分析参考，不是已实施的权重变更。"
+      },
+      "previous_review": {
+        "issue": "26118",
+        "record_hash": "d4adac53302682f48e2e2f3f6cf9e6d6a02486ad4e767fe64e9d1d7dade62fa4",
+        "next_focus": {
+          "text": "下期应关注奇偶分布均衡性与跨度覆盖的可解释性，避免单一维度（如高频或偶数集中）主导选择；结合遗漏值变化动态调整追加策略，评估引入奇数号以优化结构对称性；需验证结构特征（如和值、奇偶比）是否真提升命中分布层次，而不仅是表层贴合。",
+          "evidence_ids": [
+            "prior_analysis"
+          ]
+        }
+      },
+      "created_before_draw": true,
+      "historical_data_hash": "3bca8928d94f51293f4b32b8b3c9625ba1c13dd76bda9b09d40c6bc974c3d571",
+      "raw_source_hash": "a91765c42f2a54ed6904f8ce80ca0973816b4a590b2f9ccaf005be1de9e8ef07",
+      "editorial_policy": "grounded-editorial-v1",
+      "editorial_removed_clauses": 0,
+      "reviewed_at": "2026-10-18T07:08:32.395785+00:00"
     }
   ],
   "reviews": [
@@ -896,6 +1076,182 @@
       },
       "has_pre_draw_ai": true,
       "prior_analysis_hash": "94e46f434deeb7511b8676168767a4f4c1e04b905fbf3a5d76c9c4d0ee21ca6a"
+    },
+    "a91765c42f2a54ed6904f8ce80ca0973816b4a590b2f9ccaf005be1de9e8ef07": {
+      "status": "completed",
+      "model": "dots-studio/dots-3-note-preview:free",
+      "route": "openrouter/free",
+      "prompt_version": "dlt-ai-cycle-v5",
+      "generated_at": "2026-10-18T07:08:32.393346+00:00",
+      "input_hash": "d97019f3bd17001f5551afc45a7b94313d67058e3e616d8e617696820c905a5d",
+      "sections": {
+        "compound_reason": {
+          "evidence_ids": [
+            "compound_front_10",
+            "compound_front_26",
+            "compound_structure",
+            "compound_budget",
+            "compound_identity"
+          ],
+          "text": "复式前区包含高频号10与26，均在近50期出现13次且当前遗漏分别为5期与0期，体现对近期活跃号码的覆盖意图；结构上奇偶比3:7、和值163、跨度31，偏向偶数集中与大跨度组合。该结构在扩大覆盖范围的同时，也导致奇数分布偏弱，可能影响命中分布的均衡性。预算层面，10+3复式展开756注，基础投入1512元，追加后达2268元，成本较高，需权衡覆盖率与投入效率之间的取舍。"
+        },
+        "next_focus": {
+          "evidence_ids": [
+            "previous_review",
+            "single_structure",
+            "compound_structure",
+            "history_window"
+          ],
+          "text": "结合上期复盘建议，下期应关注奇偶分布的对称性调整，当前单注奇偶比2:3、复式为3:7，均存在偶数偏多倾向。可评估在保持跨度覆盖的前提下，适度引入奇数冷号以优化结构平衡，同时结合遗漏值变化评估追加策略的必要性。需验证结构特征是否真正提升命中分布层次，而非仅满足表层数学指标。"
+        },
+        "overview": {
+          "evidence_ids": [
+            "single_front_8",
+            "single_front_34",
+            "single_structure",
+            "candidate_comparison",
+            "history_window",
+            "compound_structure"
+          ],
+          "text": "样本覆盖近50期数据，目标为26119期，候选方案已由算法冻结，AI负责评审其结构合理性与指标表现。正式单注前区[8,9,24,31,34]奇偶比2:3，和值106，跨度26，综合评分41.25居候选首位，反映策略基础与近期表现的加权优势。候选2与4评分接近，分别体现不同结构偏好，显示评分体系对多维度特征的敏感性。分析需基于已固化组合，不引入随机构造或未验证趋势。"
+        },
+        "risk": {
+          "evidence_ids": [
+            "uncertainty",
+            "single_front_31",
+            "compound_front_31",
+            "single_back_12",
+            "history_window"
+          ],
+          "text": "每期开奖独立，历史频率与评分不构成中奖概率保证。单注中前区31近50期仅出现3次，属冷号，其入选可能基于结构补缺而非热度支撑；后区12虽当前遗漏0期，但高频率不等于持续活跃。复式方案虽扩大覆盖，但未改变独立事件本质，投入增加不提升中奖概率，仅影响注数分布广度。"
+        },
+        "single_reason": {
+          "evidence_ids": [
+            "single_front_8",
+            "single_front_24",
+            "single_structure",
+            "single_selection",
+            "single_identity"
+          ],
+          "text": "正式单注综合评分41.25，排名候选第一，体现策略基础与近期表现的协同作用。前区08遗漏4期、24遗漏8期，均属中等回补区间，搭配遗漏1期的31与遗漏9期的34，形成冷热交错布局。结构上奇偶比2:3、和值106、跨度26，偏向中等和值与适中跨度，符合算法对平衡性的偏好。但34遗漏9期偏长，其入选更多依赖结构补位而非趋势支撑，存在回补不确定风险。"
+        }
+      },
+      "model_evidence_ids": {
+        "overview": [
+          "single_front_8",
+          "single_front_34",
+          "single_structure",
+          "candidate_comparison"
+        ],
+        "single_reason": [
+          "single_front_8",
+          "single_front_24",
+          "single_structure",
+          "single_selection"
+        ],
+        "compound_reason": [
+          "compound_front_10",
+          "compound_front_26",
+          "compound_structure",
+          "compound_budget"
+        ],
+        "risk": [
+          "uncertainty",
+          "single_front_31",
+          "compound_front_31",
+          "single_back_12"
+        ],
+        "next_focus": [
+          "previous_review",
+          "single_structure",
+          "compound_structure"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "analysis",
+      "issue": "26119",
+      "identity": {
+        "target_issue": "26119",
+        "single": {
+          "front": [
+            8,
+            9,
+            24,
+            31,
+            34
+          ],
+          "back": [
+            10,
+            12
+          ]
+        },
+        "compound": {
+          "format": "10+3",
+          "front": [
+            3,
+            4,
+            8,
+            9,
+            10,
+            14,
+            24,
+            26,
+            31,
+            34
+          ],
+          "back": [
+            9,
+            10,
+            12
+          ]
+        }
+      },
+      "history_cutoff": "26118",
+      "evidence": {
+        "history_window": "样本50期，截止26118期，目标26119期。",
+        "selection_role": "号码由现有算法构造并已冻结；本次AI负责综合分析、候选评审和解释，不重新选号，不把候选的随机构造冒称为AI选号。",
+        "uncertainty": "每期开奖相互独立；历史频率和评分不是中奖概率；不保证任何组合中奖。",
+        "single_identity": "已冻结正式单注：前区[8, 9, 24, 31, 34]，后区[10, 12]。",
+        "compound_identity": "已冻结复式：前区[3, 4, 8, 9, 10, 14, 24, 26, 31, 34]，后区[9, 10, 12]。",
+        "single_front_8": "前区 08：近50期出现6次，当前遗漏4期。",
+        "single_front_9": "前区 09：近50期出现7次，当前遗漏0期。",
+        "single_front_24": "前区 24：近50期出现7次，当前遗漏8期。",
+        "single_front_31": "前区 31：近50期出现3次，当前遗漏1期。",
+        "single_front_34": "前区 34：近50期出现4次，当前遗漏9期。",
+        "single_back_10": "后区 10：近50期出现7次，当前遗漏2期。",
+        "single_back_12": "后区 12：近50期出现11次，当前遗漏0期。",
+        "single_structure": "前区奇数2个、偶数3个，和值106，跨度26。",
+        "compound_front_3": "前区 03：近50期出现9次，当前遗漏6期。",
+        "compound_front_4": "前区 04：近50期出现9次，当前遗漏1期。",
+        "compound_front_8": "前区 08：近50期出现6次，当前遗漏4期。",
+        "compound_front_9": "前区 09：近50期出现7次，当前遗漏0期。",
+        "compound_front_10": "前区 10：近50期出现13次，当前遗漏5期。",
+        "compound_front_14": "前区 14：近50期出现12次，当前遗漏9期。",
+        "compound_front_24": "前区 24：近50期出现7次，当前遗漏8期。",
+        "compound_front_26": "前区 26：近50期出现13次，当前遗漏0期。",
+        "compound_front_31": "前区 31：近50期出现3次，当前遗漏1期。",
+        "compound_front_34": "前区 34：近50期出现4次，当前遗漏9期。",
+        "compound_back_9": "后区 09：近50期出现14次，当前遗漏4期。",
+        "compound_back_10": "后区 10：近50期出现7次，当前遗漏2期。",
+        "compound_back_12": "后区 12：近50期出现11次，当前遗漏0期。",
+        "compound_structure": "前区奇数3个、偶数7个，和值163，跨度31。",
+        "single_selection": "正式单注综合分41.25，候选排名1；策略基础64.0、历史表现15.39、近期表现17.14、结构贴合50.0。分数不是概率。",
+        "candidate_comparison": "候选1：前区[8, 9, 24, 31, 34]、后区[10, 12]，综合分41.25，排名1；候选2：前区[5, 11, 15, 22, 24]、后区[6, 7]，综合分34.48，排名3；候选3：前区[2, 3, 4, 10, 11]、后区[2, 7]，综合分28.61，排名4；候选4：前区[14, 7, 23, 27, 16]、后区[4, 8]，综合分39.86，排名2",
+        "compound_budget": "复式10+3，展开756注，基本投注1512元，全部追加合计2268元。",
+        "previous_review": "上期AI复盘26118的关注点：下期应关注奇偶分布均衡性与跨度覆盖的可解释性，避免单一维度（如高频或偶数集中）主导选择；结合遗漏值变化动态调整追加策略，评估引入奇数号以优化结构对称性；需验证结构特征（如和值、奇偶比）是否真提升命中分布层次，而不仅是表层贴合。。这只是分析参考，不是已实施的权重变更。"
+      },
+      "previous_review": {
+        "issue": "26118",
+        "record_hash": "d4adac53302682f48e2e2f3f6cf9e6d6a02486ad4e767fe64e9d1d7dade62fa4",
+        "next_focus": {
+          "text": "下期应关注奇偶分布均衡性与跨度覆盖的可解释性，避免单一维度（如高频或偶数集中）主导选择；结合遗漏值变化动态调整追加策略，评估引入奇数号以优化结构对称性；需验证结构特征（如和值、奇偶比）是否真提升命中分布层次，而不仅是表层贴合。",
+          "evidence_ids": [
+            "prior_analysis"
+          ]
+        }
+      },
+      "created_before_draw": true,
+      "historical_data_hash": "3bca8928d94f51293f4b32b8b3c9625ba1c13dd76bda9b09d40c6bc974c3d571"
     }
   }
 }
