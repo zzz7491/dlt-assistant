@@ -1,130 +1,82 @@
-# 大乐透 AI 娱乐分析助手
+# 多彩种 AI 综合分析平台
 
-> 基于历史开奖数据的**统计娱乐分析**工具 · **不预测、不保证中奖**
+> 基于历史开奖数据的**统计娱乐分析**平台 · 覆盖五大数字彩种与足球赛事 · **不预测、不保证中奖**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub Actions](https://github.com/zzz7491/dlt-assistant/actions/workflows/dlt-analysis.yml/badge.svg)](https://github.com/zzz7491/dlt-assistant/actions/workflows/dlt-analysis.yml)
-[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare%20Pages-已上线-blue)](https://dlt-assistant.pages.dev)
+[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare%20Pages-已上线-blue)](https://dlt.mootlsv.com)
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB)](https://www.python.org)
-[![DataSource](https://img.shields.io/badge/DataSource-500%E5%BD%A9%E7%A5%A8%E7%BD%91-orange)](https://datachart.500.com/dlt/history/newinc/history.php)
+[![DataSource](https://img.shields.io/badge/DataSource-500彩票网%20·%20澳客-orange)](https://dlt.mootlsv.com)
 
-一个**完全开源、零运维、可复现**的「大乐透历史数据娱乐分析」项目：每日由 GitHub Actions 自动抓取中国体育彩票超级大乐透的历史开奖数据，做多维度统计娱乐分析，并生成可供公开访问的静态网页报告。**所有「推荐号码」均为算法随机产物，仅供娱乐与技术演示，不构成任何购彩建议。**
+一个**完全开源、自动化运行**的多彩种数据分析平台：每日由 GitHub Actions 自动采集开奖与赛事数据，存入 Cloudflare D1 数据库，做多维度统计分析、生成每期推荐并在开奖后自动复盘，网页由 Cloudflare Pages + Functions 实时呈现。**所有「推荐」均为统计与算法产物，仅供娱乐与技术演示，不构成任何购彩建议。**
 
----
-
-## 项目简介
-
-本项目把「大乐透分析」做成了无需自建服务器的自动化管道：
-
-- 数据源为公开的 500 彩票网历史开奖页面；
-- 分析逻辑全部用 Python 实现，口径透明、代码可查；
-- 调度由 GitHub Actions 托管，定时 + 手动均可触发；
-- 展示由 Cloudflare Pages 托管，纯静态、全球 CDN、免运维。
-
-> 🎯 **定位**：这是一个「历史数据的娱乐分析项目」，**不是、也不可能是彩票预测器**。任何历史统计都不能推导未来开奖结果。
+> 🎯 **定位**：这是「历史数据的娱乐分析项目」，**不是、也不可能是彩票预测器**。任何历史统计都不能推导未来开奖结果。
 
 ---
 
 ## 在线体验
 
-🌐 **https://dlt-assistant.pages.dev**
+🌐 **主站：https://dlt.mootlsv.com**（备用：https://dlt-assistant.pages.dev）
 
-网页每日 **10:00（北京时间）** 随 GitHub Actions 自动更新，包含热门号码、冷号遗漏、奇偶 / 大小 / 连号走势，以及 A / B / C 三套娱乐推荐。
+| 板块 | 地址 | 说明 |
+|------|------|------|
+| 大乐透 | `/` | AI 解读 + 统计分析 + 唯一推荐与复盘 |
+| 足彩（胜负彩 14 场 / 任选九） | `/football` | 多因素分析预测、球队档案、期号自动轮换 |
+| 竞彩足球 | `/jingcai` | 每日在售场次胜平负 / 让球推荐、稳健 2 串 1 / 进取 3 串 1 |
+| 双色球 | `/ssq` | 全量历史自 2003 年首期起 |
+| 福彩 3D | `/fc3d` | 含试机号，全量历史自 2004 年起 |
+| 排列三 | `/pl3` | 全量历史自 2004 年起 |
+| 排列五 | `/pl5` | 全量历史自 2004 年起 |
 
 ---
 
-## 项目特点
+## 每个彩种有什么
 
-- 🔄 **自动采集历史数据**：GitHub Actions 每日定时抓取 500 彩票网最近 1000 期开奖结果，支持增量更新。
-- 📊 **多维度统计分析**：号码频率、热号 / 冷号、遗漏、奇偶、大小、连号、区间分布一站式统计。
-- ⚙️ **GitHub Actions 自动运行**：定时（北京时间 10:00）+ 手动触发，无需服务器、无需值守。
-- 🌐 **Cloudflare Pages 发布**：纯静态站点，全球 CDN 加速，构建命令留空、Output 目录为 `public`。
+数字彩种（大乐透 / 双色球 / 福彩 3D / 排列三 / 排列五）页面结构一致，包含：
+
+- **开奖详情**：当期销售额、奖池、各奖级中奖注数与单注奖金（福彩 3D 另含试机号）；
+- **综合分析**：基于全量历史的统计解读（大乐透为 LLM AI 解读，其余彩种为确定性统计引擎，页面均有标注）；
+- **唯一推荐**：A 均衡统计 / B 冷热组合 / C 纯随机三组策略，发布后以哈希锁定的不可变快照保存，开奖前不再更改；
+- **组合推荐**：单式之外的组合覆盖方案（复式 / 胆拖 / 分位候选池等，按彩种规则生成）；
+- **上期复盘**：中奖等级与奖金、未中原因归因、下期改进方向，三段齐全；
+- **深度统计**：近 100 期与全量两套口径的频率、遗漏、和值、形态全表；
+- **历史开奖**：可按期查看任意一期的开奖、详情与当期推荐对照。
+
+足球板块：
+
+- **足彩**：自动发现当前在售期号并切换，14 场逐场多因素分析与胜平负预测，任选九从 14 场中圈定 9 场；球队档案长期存档（双方近 10 场战绩、历史交锋、休息天数，每期抓取最新动态）；
+- **竞彩**：每日在售场次逐场推荐，让球数跟随官方盘口，开赛后按场次冻结，赛后逐场结算复盘。
 
 ---
 
-## 功能展示
+## 数据与更新节奏
 
-| 功能 | 说明 |
-|------|------|
-| 历史数据分析 | 抓取并维护最近 1000 期 JSON 数据库，按期号去重、封顶 1000 期 |
-| 热冷号统计 | 前区 Top10 / 后区 Top5 热号，前区 Top8 / 后区 Top4 当前遗漏（冷号） |
-| 奇偶分析 | 前区奇偶组合分布统计 |
-| 大小分析 | 以前区分界值 18 统计大小组合分布 |
-| 连号分析 | 含连号期占比与平均每期连号对数 |
-| 多策略推荐 | A 均衡型 / B 冷热型 / C 纯随机型，均明确标注「非预测」 |
-| 自动生成报告 | 每日 Markdown 分析报告 + 开奖验证报告，随仓库提交 |
-| 网页展示 | 移动优先的纯静态页面，由 Cloudflare Pages 公开托管 |
+- **全量历史入库**：双色球 3,500+ 期（2003 年至今）、福彩 3D / 排列三 / 排列五各 7,700+ 期（2004 年至今），存于 Cloudflare D1 并每日增量累积；大乐透站点展示近 1000 期。
+- **开奖当晚更新**：所有彩种开奖后当晚完成入库、详情补齐与上期复盘，不隔夜。
+- **运行节奏**（北京时间）：足彩 + 竞彩每日 09:15 / 17:15 / 21:45 三轮；大乐透链路每日 10:00 兜底，大乐透开奖日（周一、三、六）另加 21:45 一轮；双色球与数字彩随大乐透工作流的钩子链一并更新。
 
 ---
 
 ## 技术架构
 
 ```
-        500彩票网历史数据页 (公开)
+   500 彩票网（开奖 / 公告） · 澳客（足彩 / 竞彩赛事与球队动态）
               │  HTTP 抓取（增量更新）
               ▼
-┌─────────────────────────────────────────────┐
-│  GitHub Actions（每日 02:00 UTC / 手动触发）    │
-│  Python 3.13 分析流水线：                     │
-│    scraper      抓取 / 增量更新               │
-│    → database   写入 data/dlt_history.json    │
-│    → analyzer   频率/热冷/遗漏/奇偶/大小/连号   │
-│    → recommender A/B/C 娱乐推荐               │
-│    → validator  推荐 vs 真实开奖（仅统计命中） │
-│    → reporter   生成 Markdown 报告            │
-│    → scheduler  串联全流程（--once）          │
-│    → 自动 git commit 回仓库                    │
-└─────────────────────────────────────────────┘
-              │  同步 public/data + public/reports
+┌──────────────────────────────────────────────┐
+│  GitHub Actions（多轮次定时 + 代码推送触发）      │
+│  Python 3.13 流水线：抓取 → 统计 → 推荐锁定     │
+│  → 快照哈希校验 → 开奖后复盘 → 数据写入 D1       │
+└──────────────────────────────────────────────┘
+              │
               ▼
-   public/ 静态站点（index.html + data/*.json）
-              │  (可选) wrangler pages deploy
+   Cloudflare：Pages（静态页） + Functions（/api/* 接口）
+              + D1 数据库（开奖 / 推荐 / 球队档案）
               ▼
-    Cloudflare Pages → 公开访问 https://dlt-assistant.pages.dev
+        公开访问 https://dlt.mootlsv.com
 ```
 
-**技术栈**：Python 3.13 · GitHub Actions · Cloudflare Pages · HTML / CSS / JavaScript（纯前端复算，无框架、无构建步骤）。
-
-> 💡 项目**无需任何密钥或环境变量即可运行**：数据源为公开页面，所有阈值均在 `config/settings.yaml` 配置；飞书通知等扩展功能仅在开启时才需填写对应 webhook。
-
----
-
-## 自动运行流程
-
-- **触发**：`cron: 0 2 * * *`（UTC）= 北京时间 10:00；亦支持 `workflow_dispatch` 手动触发。
-- **步骤**：
-  1. 检出代码（`actions/checkout@v4`）
-  2. 配置 Python 3.13（`actions/setup-python@v5`）
-  3. 安装依赖（`pip install -r requirements.txt`）
-  4. 运行分析（`python -m src.scheduler --once`）
-  5. 同步网页数据（`public/data`）+ 历史报告（`public/reports`）
-  6. 自动提交回仓库（有变更才提交，避免空提交）
-  7. （可选）配置 `CLOUDFLARE_API_TOKEN` 后自动 `wrangler pages deploy`
-
-> 工作流文件：`.github/workflows/dlt-analysis.yml`，权限仅 `contents: write`。
-
----
-
-## 部署方法
-
-### 方式一：GitHub + Cloudflare Pages（推荐）
-
-1. 将本项目推送到 GitHub 仓库。
-2. Cloudflare Dashboard → `Workers & Pages` → `Create application` → `Pages` → `Connect to Git`。
-3. 选择本项目对应的 GitHub 仓库。
-4. 构建设置：**Framework preset = None**，**Build command 留空**，**Build output directory = `public`**。
-5. 部署完成后，Cloudflare 分配公开网址即可访问。
-
-### 方式二：CI 自动部署（可选）
-
-在 GitHub 仓库 `Settings → Secrets → Actions` 添加 `CLOUDFLARE_API_TOKEN`（Cloudflare API Token，授予 Pages 编辑权限）。此后每次工作流运行，末步会自动 `wrangler pages deploy`，无需手动重新部署。
-
-### 本地预览
-
-```bash
-python -m http.server --directory public 8080
-# 浏览器打开 http://127.0.0.1:8080/
-```
+**技术栈**：Python 3.13 · TypeScript（Pages Functions）· GitHub Actions · Cloudflare Pages / Functions / D1 · 纯前端页面（无框架、无构建步骤）。大乐透 AI 解读经 OpenRouter 调用 LLM（密钥由仓库 Secrets 注入）；发布前有快照完整性门禁校验，校验不过不发布。
 
 ---
 
@@ -132,43 +84,44 @@ python -m http.server --directory public 8080
 
 ```
 dlt-assistant/
-├── .github/workflows/dlt-analysis.yml  # GitHub Actions：每日自动运行 + 手动触发
-├── requirements.txt                    # Python 依赖（核心三项）
-├── config/settings.yaml                # 全部配置（期数/分析口径/扩展开关）
-├── src/
-│   ├── scraper.py        # 抓取最近 1000 期（支持增量更新）
-│   ├── database.py       # JSON 数据库读写（去重、封顶 1000 期）
-│   ├── analyzer.py       # 频率/热冷/遗漏/奇偶/大小/连号/区间
-│   ├── recommender.py    # 娱乐推荐（A 均衡 / B 冷热 / C 随机）
-│   ├── recommendations.py# 推荐记录落盘（供开奖验证比对）
-│   ├── validator.py      # 开奖验证（推荐 vs 真实开奖，仅统计命中）
-│   ├── reporter.py       # Markdown 报告生成
-│   ├── scheduler.py      # 编排入口（串联全流程）
-│   └── notifier/         # 通知接口（飞书已实现，默认关闭）
-├── charts/generate.py    # 图表生成（扩展，默认关闭）
-├── data/                 # JSON 数据库（运行生成，提交回仓库以支持增量）
-├── reports/              # 每日 Markdown 报告 + 推荐记录 + 验证报告
-└── public/               # 静态网页（Cloudflare Pages 直接部署）
-    ├── index.html        # 移动端优先的分析主页（含 SEO / Open Graph）
-    ├── style.css
-    ├── app.js            # 纯 JS 复算分析（与 analyzer.py 口径一致）
-    └── data/             # dlt_history.json + recommendations.json（站点数据）
+├── .github/workflows/   # 大乐透 / 足彩两条自动运行工作流
+├── src/                 # Python 分析流水线（抓取、统计、推荐、发布、复盘）
+├── scripts/             # 各彩种数据更新脚本（D1 写入与钩子链）
+├── functions/api/       # Pages Functions 接口（各彩种 /api/*）
+├── migrations/          # D1 数据库结构迁移
+├── public/              # 静态站点（各彩种页面 + 数据文件）
+├── data/                # 仓库内历史数据文件
+├── config/              # 分析口径与阈值配置
+└── tests/               # 流水线校验与门禁脚本
 ```
+
+---
+
+## 本地预览
+
+```bash
+python -m http.server --directory public 8080
+# 浏览器打开 http://127.0.0.1:8080/
+```
+
+（本地预览为静态数据快照；线上数据以 D1 + 接口为准。）
 
 ---
 
 ## 数据来源
 
-数据来自 **[500 彩票网历史数据页](https://datachart.500.com/dlt/history/newinc/history.php)**（500.com），为公开的历史开奖信息，仅用于统计分析与技术演示。本项目不采集、不存储任何个人隐私数据。
+- 数字彩种开奖与开奖公告：**500 彩票网**公开页面；
+- 足彩、竞彩赛事与球队数据：**澳客**公开页面；
+- 均为公开信息，仅用于统计分析与技术演示；本项目不采集、不存储任何个人隐私数据。
 
 ---
 
 ## 风险声明
 
-> ⚠️ **郑重声明**：本项目仅用于历史开奖数据的**娱乐性统计分析**，**不预测、不保证、不暗示任何中奖可能**。
+> ⚠️ **郑重声明**：本项目仅用于历史数据的**娱乐性统计分析**，**不预测、不保证、不暗示任何中奖可能**。
 >
-> - 彩票开奖为独立随机事件，任何历史规律都不能推导未来结果；
-> - 所有「推荐号码」均为基于历史统计的随机娱乐产物，**不等于中奖预测**；
+> - 彩票开奖与足球比赛结果均具随机性，任何历史规律都不能推导未来结果；
+> - 所有「推荐」均为基于历史统计的娱乐产物，**不等于中奖预测**；
 > - 本项目所有输出仅作技术娱乐演示，**不构成任何购彩建议**；
 > - 请理性购彩、量力而行、切勿沉迷。
 
