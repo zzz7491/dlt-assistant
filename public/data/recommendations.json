@@ -1,28 +1,187 @@
 [
   {
-    "date": "2026-10-17",
-    "target_issue": "26119",
+    "date": "2026-10-19",
+    "target_issue": "26120",
     "strategy": "A-均衡统计型",
     "idx": 0,
     "front": [
-      8,
-      9,
-      24,
-      31,
-      34
+      3,
+      6,
+      23,
+      25,
+      26
     ],
     "back": [
-      10,
+      7,
+      8
+    ],
+    "score": null,
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 41.67,
+    "final_breakdown": {
+      "base": 64.0,
+      "history": 15.34,
+      "recent": 20.0,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.4,
+        "history": 0.2,
+        "recent": 0.15,
+        "structure": 0.2
+      },
+      "degraded": false,
+      "stage": "stable",
+      "effective_sample": 27
+    },
+    "final_rank": 2
+  },
+  {
+    "date": "2026-10-19",
+    "target_issue": "26120",
+    "strategy": "B-冷热组合型",
+    "idx": 0,
+    "front": [
+      1,
+      6,
+      9,
+      22,
+      24
+    ],
+    "back": [
+      2,
       12
     ],
     "score": null,
-    "reason": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 0 个、冷号 2 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 106、跨度 26。",
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 35.49,
+    "final_breakdown": {
+      "base": 56.0,
+      "history": 9.0,
+      "recent": 8.57,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.4,
+        "history": 0.2,
+        "recent": 0.15,
+        "structure": 0.2
+      },
+      "degraded": false,
+      "stage": "stable",
+      "effective_sample": 27
+    },
+    "final_rank": 4
+  },
+  {
+    "date": "2026-10-19",
+    "target_issue": "26120",
+    "strategy": "C-纯随机娱乐型",
+    "idx": 0,
+    "front": [
+      5,
+      6,
+      14,
+      21,
+      24
+    ],
+    "back": [
+      1,
+      5
+    ],
+    "score": null,
+    "reason": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
     "is_primary": true,
     "source": "reports/recommendations.json",
-    "final_score": 41.25,
+    "final_score": 44.12,
     "final_breakdown": {
-      "base": 64.0,
-      "history": 15.39,
+      "base": 68.0,
+      "history": 17.46,
+      "recent": 22.86,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.4,
+        "history": 0.2,
+        "recent": 0.15,
+        "structure": 0.2
+      },
+      "degraded": false,
+      "stage": "stable",
+      "effective_sample": 27
+    },
+    "final_rank": 1,
+    "explanation": {
+      "explanation_version": "1.1",
+      "strategy_type": "random_baseline",
+      "strategy": "C-纯随机娱乐型",
+      "target_issue": "26120",
+      "summary": "本期候选由随机基线策略在合法规则下随机生成，作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。",
+      "factors": [
+        {
+          "type": "random",
+          "label": "随机基线",
+          "detail": "该组合为合法规则内随机抽取，非基于热冷/遗漏/趋势的统计构造。",
+          "evidence": {
+            "is_random": true
+          }
+        },
+        {
+          "type": "structure",
+          "label": "结构分布（仅描述）",
+          "detail": "前区 奇偶比 2:3、大小比 2:3、和值 70、跨度 19。",
+          "evidence": {
+            "front_odd_even": [
+              2,
+              3
+            ],
+            "front_big_small": [
+              2,
+              3
+            ],
+            "front_sum": 70,
+            "front_span": 19
+          }
+        }
+      ],
+      "generated_from": [
+        "dlt_history.json",
+        "window=50",
+        "strategy_type=random_baseline"
+      ],
+      "reason_status": "ok",
+      "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
+      "explanation_hash": "f9edcb8a160027b7"
+    }
+  },
+  {
+    "date": "2026-10-19",
+    "target_issue": "26120",
+    "strategy": "D-综合评分型",
+    "idx": 0,
+    "front": [
+      14,
+      17,
+      11,
+      7,
+      28
+    ],
+    "back": [
+      8,
+      5
+    ],
+    "score": 41.44,
+    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 39.43,
+    "final_breakdown": {
+      "base": 60.0,
+      "history": 14.29,
       "recent": 17.14,
       "structure": 50.0,
       "risk": 0.0,
@@ -34,193 +193,8 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 26
-    },
-    "final_rank": 1,
-    "explanation": {
-      "explanation_version": "1.1",
-      "strategy_type": "balanced_statistical",
-      "strategy": "A-均衡统计型",
-      "target_issue": "26119",
-      "summary": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 0 个、冷号 2 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 106、跨度 26。",
-      "factors": [
-        {
-          "type": "hot_cold",
-          "label": "热冷混合",
-          "detail": "前区落在当前窗口热号集合 0 个、冷号集合 2 个。",
-          "evidence": {
-            "front_hot": [],
-            "front_cold": [
-              24,
-              34
-            ],
-            "window": 50
-          }
-        },
-        {
-          "type": "frequency",
-          "label": "频率依据",
-          "detail": "前区号码取自近期基础频率与近期频率加权（0.5/0.5）的候选池。",
-          "evidence": {
-            "front_freq": {
-              "8": 6,
-              "9": 7,
-              "24": 7,
-              "31": 3,
-              "34": 4
-            }
-          }
-        },
-        {
-          "type": "balance",
-          "label": "奇偶/大小均衡",
-          "detail": "前区奇偶比 2:3、大小比 3:2（算法强制均衡到 2~3）。",
-          "evidence": {
-            "front_odd_even": [
-              2,
-              3
-            ],
-            "front_big_small": [
-              3,
-              2
-            ]
-          }
-        },
-        {
-          "type": "structure",
-          "label": "结构分布",
-          "detail": "前区和值 106、跨度 26。",
-          "evidence": {
-            "front_sum": 106,
-            "front_span": 26
-          }
-        }
-      ],
-      "generated_from": [
-        "dlt_history.json",
-        "window=50",
-        "strategy_type=balanced_statistical"
-      ],
-      "reason_status": "ok",
-      "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
-      "explanation_hash": "4509b0dce7398a0c"
-    }
-  },
-  {
-    "date": "2026-10-17",
-    "target_issue": "26119",
-    "strategy": "B-冷热组合型",
-    "idx": 0,
-    "front": [
-      5,
-      11,
-      15,
-      22,
-      24
-    ],
-    "back": [
-      6,
-      7
-    ],
-    "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 34.48,
-    "final_breakdown": {
-      "base": 56.0,
-      "history": 8.24,
-      "recent": 2.86,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 26
+      "effective_sample": 27
     },
     "final_rank": 3
-  },
-  {
-    "date": "2026-10-17",
-    "target_issue": "26119",
-    "strategy": "C-纯随机娱乐型",
-    "idx": 0,
-    "front": [
-      2,
-      3,
-      4,
-      10,
-      11
-    ],
-    "back": [
-      2,
-      7
-    ],
-    "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 28.61,
-    "final_breakdown": {
-      "base": 68.0,
-      "history": 17.03,
-      "recent": 20.0,
-      "structure": 50.0,
-      "risk": -15.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 26
-    },
-    "final_rank": 4
-  },
-  {
-    "date": "2026-10-17",
-    "target_issue": "26119",
-    "strategy": "D-综合评分型",
-    "idx": 0,
-    "front": [
-      14,
-      7,
-      23,
-      27,
-      16
-    ],
-    "back": [
-      4,
-      8
-    ],
-    "score": 41.61,
-    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 39.86,
-    "final_breakdown": {
-      "base": 60.0,
-      "history": 14.29,
-      "recent": 20.0,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 26
-    },
-    "final_rank": 2
   }
 ]
