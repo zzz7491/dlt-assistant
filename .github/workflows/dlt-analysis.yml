@@ -104,6 +104,16 @@ jobs:
                           f"history_lag={'true' if lag else 'false'}"])
           PY
 
+      - name: 一次性清理随机C推荐（临时）
+        continue-on-error: true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          DLT_AI_API_KEY: ${{ secrets.DLT_AI_API_KEY }}
+          DLT_AI_BASE_URL: ${{ secrets.DLT_AI_BASE_URL }}
+          DLT_AI_MODEL: ${{ secrets.DLT_AI_MODEL }}
+        run: |
+          python scripts/oneoff_purge_random_c.py --apply || echo "PURGE_STEP_FAILED_SEE_LOG"
+
       - name: 同步 D1 历史数据库（每日增量）
         # 将最新开奖增量写入 Cloudflare D1 全历史库（dlt-draws）。
         # 依赖 CLOUDFLARE_API_TOKEN（需含 D1:Edit 权限）；未配置则跳过。
@@ -531,10 +541,10 @@ jobs:
 
       - name: 实验层-运行状态监控（后置汇总，非阻断）
         # Phase 16 Step 6：聚合本周运行记录；失败仅写 error 状态，不阻断。
-        run: python -m src.experiment_monitor || echo "experiment_monitor 失败（已隔离，不阻断）"
+        run: python -m src.experiment_monitor || echo "experiment_monitor 失败（已隔离，不阻断生产）"
 
       - name: 实验层-刷新展示数据（含监控/质量，非阻断）
-        run: python -m scripts.build_experiment_display_data || echo "build 展示数据失败（已隔离，不阻断）"
+        run: python -m scripts.build_experiment_display_data || echo "build 展示数据失败（已隔离，不阻断生产）"
 
       - name: 实验层-生产文件校验(后)
         run: |
