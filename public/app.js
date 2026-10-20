@@ -179,6 +179,33 @@
   }
 
   // 上期推荐复盘：review.json → 首页③模块动态渲染
+  // 策略长期命中统计（公开复盘）：累计期数 / 平均每期命中 / 最近 10 期逐期明细。
+  // 历史「C-纯随机娱乐型」记录已按用户指令删除，后端不再返回，无需特殊处理。
+  function renderStrategyReviewsDLT(container, sr) {
+    if (!container) return;
+    if (!sr || !sr.strategies || !sr.strategies.length) {
+      container.innerHTML = "<p class=\"hint\">长期命中统计积累中。</p>";
+      return;
+    }
+    var hl = sr.hit_labels || {};
+    var html = "";
+    for (var i = 0; i < sr.strategies.length; i++) {
+      var st = sr.strategies[i];
+      var chips = "";
+      for (var j = 0; j < st.recent.length; j++) {
+        var r = st.recent[j];
+        chips += "<span class=\"plan-chip\">" + esc(String(r.issue).slice(-3)) + ":" + r.hits + "</span>";
+      }
+      html += "<div class=\"match-meta\"><strong>" + esc(st.strategy) + "</strong>" +
+        (st.sample_warning ? " <span class=\"hint\">（样本不足 10 期，仅供参考）</span>" : "") + "</div>" +
+        "<div class=\"match-meta\">累计复盘 " + st.periods + " 期 · 平均" + esc(hl.main || "命中") +
+        " " + st.avg_hits + "/期 · 平均" + esc(hl.sub || "次命中") + " " + st.avg_hits_sub + "/期</div>" +
+        "<div class=\"match-meta\">最近 " + st.recent.length + " 期逐期主命中：" + (chips || "—") + "</div>";
+    }
+    html += "<p class=\"hint\">" + esc(sr.disclaimer || "命中统计仅为历史娱乐回顾，不代表任何预测依据。") + "</p>";
+    container.innerHTML = html;
+  }
+
   function renderReview(container, review) {
     if (!container) return;
     if (!review || review.empty === true || !review.issue) {
@@ -411,12 +438,14 @@
     loadJSON("./data/dlt_history.json"),
     loadJSON("./data/recommendations.json").catch(function () { return []; }),
     loadJSON("./data/review.json").catch(function () { return null; }),
-    loadJSON("./data/strategy_score.json").catch(function () { return null; })
+    loadJSON("./data/strategy_score.json").catch(function () { return null; }),
+    loadJSON("./data/strategy_reviews.json").catch(function () { return null; })
   ]).then(function (res) {
     var history = res[0];
     var recs = res[1] || [];
     var review = res[2];
     var strategyScore = res[3];
+    var strategyReviews = res[4];
     try {
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
@@ -455,6 +484,7 @@
 
     /* ③ 上期推荐复盘：review.json 动态渲染（缺失/empty → 降级占位） */
     renderReview(document.getElementById("review-placeholder"), review);
+    renderStrategyReviewsDLT(document.getElementById("strategy-reviews"), strategyReviews);
 
     /* ③ 下一期模型调整方向（D2.2）：review 缺失/空 → 暂无建议 */
     var naBody = document.getElementById("next-adjustment-body");
