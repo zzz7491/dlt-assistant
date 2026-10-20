@@ -25,7 +25,7 @@ def _build_report(results: list[dict[str, Any]], summary: dict[str, Any]) -> str
     parts.append("\n## ⚠️ 免责声明\n")
     parts.append(
         "本验证仅统计娱乐推荐与真实开奖的**号码重合个数**，"
-        "**不代表任何中奖预测或中奖概率**。彩票开奖为独立随机事件。\n"
+        "**不代表任何中奖预测或中奖概率**。彩票每期开奖相互独立。\n"
     )
 
     if not results:

@@ -93,7 +93,7 @@ function contains(h, s) { return String(h).indexOf(s) >= 0; }
   const l3btns = (TREND_HTML.match(/id="l3-period-switch"[\s\S]*?<\/div>/) || [""])[0];
   assert(contains(l3btns, 'data-periods="50"') && contains(l3btns, 'data-periods="100"') && contains(l3btns, 'data-periods="300"') && contains(l3btns, 'data-periods="1000"'), "(11) L3 period buttons 50/100/300/1000");
   // 12. no recommendation algorithm imports/dependencies
-  const recDeps = TREND_JS.match(/recommender|scorer|final_score|explanation|publisher|snapshot|A-均衡|B-冷热|C-纯随机|D-综合/i);
+  const recDeps = TREND_JS.match(/recommender|scorer|final_score|explanation|publisher|snapshot|A-均衡|B-冷热|C-AI智能|D-综合/i);
   assert(!recDeps, "(12) trend-v2.js has NO recommendation algorithm imports/deps: " + (recDeps ? recDeps[0] : "clean"));
   const recHtmlDeps = TREND_HTML.match(/recommendation|final_score|is_primary/i);
   assert(!recHtmlDeps, "(12b) trend-v2.html has NO recommendation data deps");

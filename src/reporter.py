@@ -42,7 +42,7 @@ def build_report(meta: dict[str, Any], analysis: dict[str, Any], recommendations
     parts.append("## ⚠️ 免责声明\n")
     parts.append(
         "**本工具仅用于历史数据分析和娱乐，不具有预测彩票结果能力。**\n"
-        "彩票开奖为独立随机事件，任何历史规律均不构成未来结果的依据。\n"
+        "彩票每期开奖相互独立，任何历史规律均不构成未来结果的依据。\n"
         "请理性购彩，量力而行，切勿沉迷。\n"
     )
 
@@ -92,7 +92,7 @@ def build_report(meta: dict[str, Any], analysis: dict[str, Any], recommendations
 
     # 推荐（A/B/C 三策略）
     parts.append("## 八、娱乐推荐号码（仅供参考，非预测）\n")
-    parts.append("以下 A/B/C 三策略均基于历史统计或随机生成，**仅供娱乐讨论，不等于中奖预测**：\n")
+    parts.append("以下 A/B/C 三策略均由历史统计分析或 AI 生成，**仅供娱乐讨论，不等于中奖预测**：\n")
     for key in ("A", "B", "C"):
         combos = recommendations.get(key, [])
         parts.append(f"**推荐 {key}（{STRATEGY_LABELS.get(key, key)}）：**")
@@ -101,7 +101,7 @@ def build_report(meta: dict[str, Any], analysis: dict[str, Any], recommendations
             back = " ".join(f"{x:02d}" for x in c["back"])
             parts.append(f"- 前区：**{front}** 　后区：**{back}**")
         parts.append("")
-    parts.append("> 再次提醒：以上号码为算法随机娱乐产物，不等于中奖预测。\n")
+    parts.append("> 再次提醒：以上号码为统计分析与 AI 生成的娱乐内容，不等于中奖预测。\n")
 
     # 历史验证统计（娱乐回顾，仅统计号码重合，不计算中獎）
     val = meta.get("validation")

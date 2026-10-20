@@ -2,7 +2,7 @@
 
 覆盖契约：
   - A/B/C/D 各策略正常输入都能生成真实、可追溯 explanation（summary/factors 非空）
-  - C（random_baseline）诚实披露随机性，不出现伪造的统计依据
+  - C（ai_pick）如实说明 AI 基于历史统计摘要出号，不虚构模型推理过程
   - D 使用真实 basis/factors
   - explanation 确定性（同输入同输出）
   - 不含 banned 占位词（建设中/开发中/待完善/TODO/coming soon）
@@ -34,7 +34,7 @@ ISSUES = [{"issue": i, "front": [1, 2, 3, 4, 5], "back": [6, 7]} for i in range(
 CASES = [
     ("A-均衡统计型", [3, 5, 9, 24, 26], [3, 9], None, None, "balanced_statistical"),
     ("B-冷热组合型", [4, 8, 24, 26, 35], [5, 7], None, None, "hot_cold_mix"),
-    ("C-纯随机娱乐型", [9, 10, 11, 22, 34], [1, 9], None, None, "random_baseline"),
+    ("C-AI智能型", [9, 10, 11, 22, 34], [1, 9], None, None, "ai_pick"),
     ("D-综合评分型", [13, 23, 21, 18, 28], [11, 6],
      {"heat": 72, "missing": 66, "trend": 58, "inherit": 30,
       "structure": {"sum_span_match": 88, "zone_match": 70}},
@@ -75,15 +75,17 @@ class TestStrategyExplanations(unittest.TestCase):
             text = e["summary"] + json.dumps(e["factors"], ensure_ascii=False)
             self.assertIsNone(BANNED.search(text), f"banned word in {CASES[i][0]}")
 
-    def test_05_random_C_honest(self):
+    def test_05_ai_C_honest(self):
         e, _ = self._build(2)  # C
-        self.assertEqual(e["strategy_type"], "random_baseline")
+        self.assertEqual(e["strategy_type"], "ai_pick")
         joined = json.dumps(e, ensure_ascii=False)
         # 不得出现伪造的统计优势措辞
         for fake in ("较大概率", "必出", "应该出", "值得关注", "高概率号码"):
             self.assertNotIn(fake, joined)
-        # 随机基线应标注
-        self.assertTrue(any(f.get("type") == "random" for f in e["factors"]))
+        # 不得出现"随机"字样（用户指令：除机选外删除全部随机字样）
+        self.assertNotIn("随机", joined)
+        # AI 分支应标注统计输入
+        self.assertTrue(any(f.get("type") == "ai_input" for f in e["factors"]))
 
     def test_06_d_uses_real_basis(self):
         e, _ = self._build(3)  # D

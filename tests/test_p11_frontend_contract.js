@@ -21,7 +21,7 @@ const HISTORY = {
 
 // 构造一份带 A/B/C/D 四策略、仅指定 primaryStrat(前缀 A/B/C/D) 标记 is_primary 的推荐数据
 function recsFixture(primaryStrat, opts) {
-  const LABEL = { A: "均衡统计型", B: "冷热组合型", C: "纯随机娱乐型", D: "综合评分型" };
+  const LABEL = { A: "均衡统计型", B: "冷热组合型", C: "AI智能型", D: "综合评分型" };
   const FRONT = { A: [3, 5, 9, 24, 26], B: [4, 8, 24, 26, 35], C: [9, 10, 11, 22, 34], D: [13, 23, 21, 18, 28] };
   const BACK = { A: [3, 9], B: [5, 7], C: [1, 9], D: [11, 6] };
   const SCORE = { A: 49.3, B: 39.9, C: 45.6, D: 43.5 };

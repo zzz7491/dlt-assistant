@@ -11,7 +11,7 @@ INSERT OR IGNORE (first write wins, exactly like dlt_recommendations):
 - B-冷热组合型： hot numbers mixed with high-omission cold numbers.
 - C-AI智能型： LLM 直接出号，统计摘要与 A/B 同口径
   （frequency(rows, 100) + omission(rows)）；无密钥或调用失败则跳过
-  该策略，绝不回退随机（用户 2026-10-20：取消纯随机推荐）。
+  该策略，失败则跳过该策略（用户 2026-10-20：C 改为 AI 出号）。
 """
 from __future__ import annotations
 
@@ -87,7 +87,7 @@ def generate_c_ai(target_issue: str, rows: list[dict]) -> dict | None:
 
     统计口径（与 generate_picks 的 A/B 完全一致）：
     frequency(rows, 100) + omission(rows) —— 近100期频率 + 全量遗漏。
-    无密钥或调用失败 → None（调用方跳过 C，绝不回退随机）。
+    无密钥或调用失败 → None（调用方跳过 C，失败则跳过该策略）。
     """
     from src.common import ai_pick  # 延迟导入，避免循环依赖
 

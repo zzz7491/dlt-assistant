@@ -8,8 +8,8 @@ lotteries and are locked with INSERT OR IGNORE:
 - A-均衡统计型： per-position balanced score (freq100 + omission bonus).
 - B-冷热组合型： hottest digit, coldest digit, balanced digit by position.
 - C-AI智能型： LLM 基于近100期分位频率+遗漏统计摘要直接出号
-  （与 A/B 同口径）；无密钥或调用失败则跳过该策略，绝不回退随机
-  （用户 2026-10-20：取消纯随机推荐）。
+  （与 A/B 同口径）；无密钥或调用失败则跳过该策略，失败则跳过该策略
+  （用户 2026-10-20：C 改为 AI 出号）。
 """
 from __future__ import annotations
 
@@ -85,7 +85,7 @@ def generate_c_ai(target_issue: str, rows: list[dict]) -> dict | None:
 
     统计口径：frequency(rows, 100) + omission(rows) —— 近100期分位频率
     + 全量遗漏，与 generate_picks 的 A/B 完全一致。
-    无密钥或调用失败 → None（调用方跳过 C，绝不回退随机）。
+    无密钥或调用失败 → None（调用方跳过 C，失败则跳过该策略）。
     """
     from src.common import ai_pick  # 延迟导入，避免循环依赖
 
