@@ -41,7 +41,7 @@ def _recs_4(issue="26098"):
     return [
         {"target_issue": issue, "strategy": "A-均衡统计型", "front": [3, 5, 9, 24, 26], "back": [3, 9], "idx": 0, "is_primary": False},
         {"target_issue": issue, "strategy": "B-冷热组合型", "front": [4, 8, 24, 26, 35], "back": [5, 7], "idx": 0, "is_primary": False},
-        {"target_issue": issue, "strategy": "C-纯随机娱乐型", "front": [9, 10, 11, 22, 34], "back": [1, 9], "idx": 0, "is_primary": False},
+        {"target_issue": issue, "strategy": "C-AI智能型", "front": [9, 10, 11, 22, 34], "back": [1, 9], "idx": 0, "is_primary": False},
         {"target_issue": issue, "strategy": "D-综合评分型", "front": [13, 23, 21, 18, 28], "back": [11, 6], "idx": 0, "is_primary": True,
          "score_total": 41.46, "basis": {"missing": 85, "structure": {"sum_span_match": 90, "zone_match": 70}}},
     ]
@@ -170,7 +170,7 @@ class TestReviewContract(unittest.TestCase):
         cases = [
             ("26094", "A-均衡统计型", [3, 5, 9, 24, 26], [3, 9]),
             ("26095", "B-冷热组合型", [4, 8, 24, 26, 35], [5, 7]),
-            ("26096", "C-纯随机娱乐型", [9, 10, 11, 22, 34], [1, 9]),
+            ("26096", "C-AI智能型", [9, 10, 11, 22, 34], [1, 9]),
             ("26097", "D-综合评分型", [13, 23, 21, 18, 28], [11, 6]),
         ]
         for issue, strat, front, back in cases:

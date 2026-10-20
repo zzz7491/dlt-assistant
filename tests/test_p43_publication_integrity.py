@@ -41,7 +41,7 @@ def _load(path):
         return json.load(f)
 
 
-def _snap(issue, front=None, back=None, strategy="C-纯随机娱乐型", **kw):
+def _snap(issue, front=None, back=None, strategy="C-AI智能型", **kw):
     primary = {
         "target_issue": issue,
         "strategy": strategy,

@@ -521,6 +521,9 @@ def build_strategy_score(backtest: Any) -> dict[str, Any]:
         s = strategies.get(key)
         if not isinstance(s, dict):
             continue
+        if key == "C":
+            # C 的回测统计源于已按用户指令删除的旧基线；C-AI 尚无回测历史，暂不展示
+            continue
         count = s.get("count", 0)
         avg_hit = s.get("avg_total_hit", 0.0)
         rows.append({

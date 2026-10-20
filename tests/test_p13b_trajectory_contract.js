@@ -252,7 +252,7 @@ function hitCount(svg) { return cnt(svg, 'class="traj-hit"'); }
   assert(has(TREND_HTML, 'id="cb-tabs"') && has(TREND_HTML, 'data-tab="front" class="active"'), "(19b) 前/后区 Tab 结构保留(默认前区)");
 
   // ============ (20) recommendation pipeline untouched ============
-  const recDeps = TREND_JS.match(/recommender|final_score|is_primary|publisher|snapshot|explanation|A-均衡|B-冷热|C-纯随机|D-综合/i);
+  const recDeps = TREND_JS.match(/recommender|final_score|is_primary|publisher|snapshot|explanation|A-均衡|B-冷热|C-AI智能|D-综合/i);
   assert(!recDeps, "(20) 轨迹代码无推荐管线依赖：" + (recDeps ? recDeps[0] : "clean"));
   const chartDeps = CHART_LIBS.filter((l) => new RegExp("(\\b|\\.)" + l, "i").test(TREND_JS + TREND_HTML));
   assert(chartDeps.length === 0, "(20b) 无第三方 chart 库（原生 SVG）：" + (chartDeps.length ? chartDeps.join(",") : "clean"));
