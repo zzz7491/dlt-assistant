@@ -9,5 +9,6 @@ jobs:
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 8770e4917f904aed5df91c883cf058af
           workingDirectory: ingestion-worker
           command: deploy
