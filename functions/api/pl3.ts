@@ -9,6 +9,42 @@ interface D1PreparedStatement {
 interface DrawRow { issue: string; date: string; d1: number; d2: number; d3: number; }
 interface RecRow { target_issue: string; target_date: string; strategy: string; digits: string; }
 
+// 策略长期命中统计（公开复盘）：按 strategy 分组聚合累计命中。
+// 历史「C-纯随机娱乐型」记录已按用户指令（2026-10-20）删除；此处对 strategy
+// 含「纯随机」的残留行做防御性跳过，绝不展示。
+interface ReviewAggInput { strategy: string; target_issue: string; main: number; sub: number; }
+function aggregateStrategyReviews(
+  rows: ReviewAggInput[],
+  mainLabel: string, subLabel: string, mainMax: number,
+): unknown {
+  const groups = new Map<string, ReviewAggInput[]>();
+  for (const r of rows) {
+    if (!r.strategy || r.strategy.includes("纯随机")) continue;
+    if (!groups.has(r.strategy)) groups.set(r.strategy, []);
+    groups.get(r.strategy)!.push(r);
+  }
+  const strategies = [...groups.entries()].map(([strategy, list]) => {
+    const periods = list.length;
+    const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / (xs.length || 1);
+    const avgMain = Math.round(mean(list.map(p => p.main)) * 100) / 100;
+    const avgSub = Math.round(mean(list.map(p => p.sub)) * 100) / 100;
+    const dist: Record<string, number> = {};
+    for (const p of list) dist[String(p.main)] = (dist[String(p.main)] ?? 0) + 1;
+    const recent = list.slice(-10).reverse()
+      .map(p => ({ issue: p.target_issue, hits: p.main, hits_sub: p.sub }));
+    return {
+      strategy, periods, avg_hits: avgMain, avg_hits_sub: avgSub, dist, recent,
+      sample_warning: periods < 10,
+    };
+  });
+  strategies.sort((a, b) => b.avg_hits - a.avg_hits || a.strategy.localeCompare(b.strategy));
+  return {
+    strategies,
+    hit_labels: { main: mainLabel, sub: subLabel, main_max: mainMax },
+    disclaimer: "命中统计仅为历史娱乐回顾；彩票开奖为独立随机事件，不代表任何预测依据。",
+  };
+}
+
 export const onRequestGet = async ({ env, request }: { env: Env; request: Request }): Promise<Response> => {
   try {
     // Single-issue detail (?issue=...): draw + computed shape + that
@@ -222,6 +258,32 @@ export const onRequestGet = async ({ env, request }: { env: Env; request: Reques
       }
     } catch { /* ignore */ }
 
+    // 策略长期命中统计（公开复盘）：recommendations × draws 按 target_issue=issue 关联，
+    // 逐策略聚合（按位命中为主指标，非按位命中为次指标）。
+    let strategy_reviews: unknown = null;
+    try {
+      const joined = await env.DB.prepare(
+        `SELECT r.strategy, r.target_issue, r.digits AS rec_digits,
+                d.d1, d.d2, d.d3
+         FROM pl3_recommendations r JOIN pl3_draws d ON d.issue = r.target_issue
+         ORDER BY r.target_issue ASC`,
+      ).all<{ strategy: string; target_issue: string; rec_digits: string;
+        d1: number; d2: number; d3: number; }>();
+      const inputs: ReviewAggInput[] = joined.results.map(r => {
+        const digits = JSON.parse(r.rec_digits) as number[];
+        const draw = [r.d1, r.d2, r.d3];
+        const positional = digits.filter((dgt, i) => dgt === draw[i]).length;
+        const rest = draw.slice();
+        let nonPositional = 0;
+        for (const dgt of digits) {
+          const k = rest.indexOf(dgt);
+          if (k >= 0) { nonPositional += 1; rest.splice(k, 1); }
+        }
+        return { strategy: r.strategy, target_issue: r.target_issue, main: positional, sub: nonPositional };
+      });
+      strategy_reviews = aggregateStrategyReviews(inputs, "按位命中", "非按位命中", 3);
+    } catch { /* ignore */ }
+
     return json({
       latest: draws[0],
       draws: draws.slice(0, 100),
@@ -231,6 +293,7 @@ export const onRequestGet = async ({ env, request }: { env: Env; request: Reques
       plans,
       analysis,
       review,
+      strategy_reviews,
       source: {
         name: "500彩票网排列三历史开奖（与官方同步，全量历史存入本站数据库）",
         url: "https://kaijiang.500.com/pls.shtml",
