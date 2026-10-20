@@ -51,6 +51,11 @@ jobs:
       - name: 当前期足彩写入D1
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # C-AI智能型出号需要 LLM 通道：write_football_d1.py 的四彩种钩子
+          #（_append_lottery_updates）会调 ai_pick。复用现有 secrets，无需新建。
+          DLT_AI_API_KEY: ${{ secrets.DLT_AI_API_KEY }}
+          DLT_AI_BASE_URL: ${{ secrets.DLT_AI_BASE_URL }}
+          DLT_AI_MODEL: ${{ secrets.DLT_AI_MODEL }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
             echo "未配置Cloudflare密钥，保留静态文件降级路径"
