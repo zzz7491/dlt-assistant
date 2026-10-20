@@ -146,7 +146,7 @@
       "stage": "stable",
       "effective_sample": 27
     },
-    "final_rank": 4
+    "final_rank": 3
   },
   {
     "date": "2026-10-20",
@@ -168,11 +168,11 @@
     "reason": null,
     "is_primary": false,
     "source": "reports/recommendations.json",
-    "final_score": 25.92,
+    "final_score": 36.5,
     "final_breakdown": {
       "base": 60.0,
-      "history": 17.46,
-      "recent": 22.86,
+      "history": 50.0,
+      "recent": 50.0,
       "structure": 50.0,
       "risk": -15.0,
       "weights": {
@@ -185,46 +185,7 @@
       "stage": "stable",
       "effective_sample": 27
     },
-    "final_rank": 5
-  },
-  {
-    "date": "2026-10-19",
-    "target_issue": "26120",
-    "strategy": "C-纯随机娱乐型",
-    "idx": 0,
-    "front": [
-      5,
-      6,
-      14,
-      21,
-      24
-    ],
-    "back": [
-      1,
-      5
-    ],
-    "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 40.92,
-    "final_breakdown": {
-      "base": 60.0,
-      "history": 17.46,
-      "recent": 22.86,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 27
-    },
-    "final_rank": 3
+    "final_rank": 4
   },
   {
     "date": "2026-10-19",

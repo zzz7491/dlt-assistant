@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-10-20 02:00:26",
+  "update_time": "2026-10-20 05:08:12",
   "periods": [
     {
       "issue": "26093",
@@ -78,44 +78,6 @@
       "factor_review": {}
     },
     {
-      "issue": "26093",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          11,
-          16,
-          25,
-          29,
-          30
-        ],
-        "back": [
-          2,
-          5
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          8,
-          10,
-          22,
-          26,
-          29
-        ],
-        "back": [
-          3,
-          10
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 0,
-        "total_hit": 1,
-        "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
       "issue": "26094",
       "strategy": "A-均衡统计型",
       "recommend": {
@@ -188,44 +150,6 @@
         "back_hit": 0,
         "total_hit": 1,
         "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26094",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          16,
-          26,
-          28,
-          29,
-          35
-        ],
-        "back": [
-          10,
-          11
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          5,
-          14,
-          15,
-          17,
-          33
-        ],
-        "back": [
-          1,
-          7
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 0,
-        "total_hit": 0,
-        "distance_score": 7
       },
       "factor_review": {}
     },
@@ -371,44 +295,6 @@
     },
     {
       "issue": "26095",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          6,
-          7,
-          13,
-          16,
-          27
-        ],
-        "back": [
-          2,
-          10
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          4,
-          6,
-          8,
-          10,
-          14
-        ],
-        "back": [
-          4,
-          5
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 0,
-        "total_hit": 1,
-        "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26095",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -522,44 +408,6 @@
         ],
         "back": [
           2,
-          11
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          8,
-          9,
-          10,
-          11,
-          25
-        ],
-        "back": [
-          4,
-          12
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 0,
-        "total_hit": 0,
-        "distance_score": 7
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26096",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          1,
-          13,
-          16,
-          28,
-          33
-        ],
-        "back": [
-          6,
           11
         ],
         "score_total": null
@@ -727,44 +575,6 @@
     },
     {
       "issue": "26097",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          3,
-          11,
-          16,
-          18,
-          21
-        ],
-        "back": [
-          5,
-          9
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          3,
-          10,
-          12,
-          20,
-          25
-        ],
-        "back": [
-          1,
-          9
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 1,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26097",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -905,44 +715,6 @@
     },
     {
       "issue": "26098",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          6,
-          25,
-          26,
-          32,
-          35
-        ],
-        "back": [
-          6,
-          12
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          7,
-          9,
-          18,
-          19,
-          21
-        ],
-        "back": [
-          2,
-          9
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 0,
-        "total_hit": 0,
-        "distance_score": 7
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26098",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -1076,44 +848,6 @@
       "result": {
         "front_hit": 1,
         "back_hit": 1,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26099",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          3,
-          8,
-          20,
-          32,
-          33
-        ],
-        "back": [
-          3,
-          10
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          2,
-          17,
-          20,
-          29,
-          33
-        ],
-        "back": [
-          8,
-          9
-        ]
-      },
-      "result": {
-        "front_hit": 2,
-        "back_hit": 0,
         "total_hit": 2,
         "distance_score": 5
       },
@@ -1261,44 +995,6 @@
     },
     {
       "issue": "26100",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          1,
-          4,
-          9,
-          12,
-          31
-        ],
-        "back": [
-          6,
-          9
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          2,
-          6,
-          11,
-          15,
-          31
-        ],
-        "back": [
-          7,
-          8
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 0,
-        "total_hit": 1,
-        "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26100",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -1434,44 +1130,6 @@
         "back_hit": 0,
         "total_hit": 0,
         "distance_score": 7
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26101",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          4,
-          5,
-          17,
-          26,
-          32
-        ],
-        "back": [
-          8,
-          12
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          9,
-          11,
-          18,
-          26,
-          33
-        ],
-        "back": [
-          9,
-          11
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 0,
-        "total_hit": 1,
-        "distance_score": 6
       },
       "factor_review": {}
     },
@@ -1617,44 +1275,6 @@
     },
     {
       "issue": "26102",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          3,
-          8,
-          16,
-          18,
-          29
-        ],
-        "back": [
-          6,
-          7
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          1,
-          3,
-          7,
-          27,
-          28
-        ],
-        "back": [
-          6,
-          7
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 2,
-        "total_hit": 3,
-        "distance_score": 4
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26102",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -1788,44 +1408,6 @@
       "result": {
         "front_hit": 2,
         "back_hit": 0,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26103",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          9,
-          21,
-          24,
-          32,
-          33
-        ],
-        "back": [
-          2,
-          8
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          3,
-          16,
-          17,
-          32,
-          35
-        ],
-        "back": [
-          2,
-          12
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 1,
         "total_hit": 2,
         "distance_score": 5
       },
@@ -1973,44 +1555,6 @@
     },
     {
       "issue": "26104",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          2,
-          4,
-          7,
-          11,
-          29
-        ],
-        "back": [
-          8,
-          9
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          1,
-          6,
-          14,
-          15,
-          26
-        ],
-        "back": [
-          8,
-          9
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 2,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26104",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -2146,44 +1690,6 @@
         "back_hit": 1,
         "total_hit": 1,
         "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26105",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          11,
-          16,
-          23,
-          24,
-          28
-        ],
-        "back": [
-          4,
-          10
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          10,
-          14,
-          30,
-          33,
-          34
-        ],
-        "back": [
-          9,
-          12
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 0,
-        "total_hit": 0,
-        "distance_score": 7
       },
       "factor_review": {}
     },
@@ -2329,44 +1835,6 @@
     },
     {
       "issue": "26106",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          6,
-          12,
-          18,
-          26,
-          29
-        ],
-        "back": [
-          4,
-          5
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          14,
-          17,
-          21,
-          25,
-          28
-        ],
-        "back": [
-          4,
-          6
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 1,
-        "total_hit": 1,
-        "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26106",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -2481,44 +1949,6 @@
         "back": [
           3,
           9
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          2,
-          5,
-          7,
-          14,
-          22
-        ],
-        "back": [
-          4,
-          10
-        ]
-      },
-      "result": {
-        "front_hit": 2,
-        "back_hit": 0,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26107",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          4,
-          5,
-          7,
-          9,
-          25
-        ],
-        "back": [
-          2,
-          7
         ],
         "score_total": null
       },
@@ -2685,44 +2115,6 @@
     },
     {
       "issue": "26108",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          1,
-          9,
-          15,
-          23,
-          33
-        ],
-        "back": [
-          1,
-          4
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          1,
-          5,
-          7,
-          21,
-          35
-        ],
-        "back": [
-          1,
-          4
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 2,
-        "total_hit": 3,
-        "distance_score": 4
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26108",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -2858,44 +2250,6 @@
         "back_hit": 0,
         "total_hit": 1,
         "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26109",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          9,
-          13,
-          17,
-          32,
-          33
-        ],
-        "back": [
-          5,
-          12
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          12,
-          14,
-          16,
-          27,
-          34
-        ],
-        "back": [
-          4,
-          8
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 0,
-        "total_hit": 0,
-        "distance_score": 7
       },
       "factor_review": {}
     },
@@ -3041,44 +2395,6 @@
     },
     {
       "issue": "26110",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          2,
-          10,
-          18,
-          21,
-          26
-        ],
-        "back": [
-          3,
-          7
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          3,
-          24,
-          25,
-          26,
-          35
-        ],
-        "back": [
-          7,
-          9
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 1,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26110",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -3193,44 +2509,6 @@
         "back": [
           4,
           6
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          10,
-          11,
-          17,
-          26,
-          29
-        ],
-        "back": [
-          1,
-          3
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 0,
-        "total_hit": 0,
-        "distance_score": 7
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26111",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          1,
-          15,
-          20,
-          31,
-          34
-        ],
-        "back": [
-          2,
-          9
         ],
         "score_total": null
       },
@@ -3397,44 +2675,6 @@
     },
     {
       "issue": "26112",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          3,
-          7,
-          15,
-          16,
-          20
-        ],
-        "back": [
-          7,
-          11
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          1,
-          3,
-          5,
-          10,
-          22
-        ],
-        "back": [
-          3,
-          9
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 0,
-        "total_hit": 1,
-        "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26112",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -3570,44 +2810,6 @@
         "back_hit": 1,
         "total_hit": 1,
         "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26113",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          5,
-          22,
-          27,
-          31,
-          33
-        ],
-        "back": [
-          7,
-          12
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          2,
-          4,
-          6,
-          10,
-          11
-        ],
-        "back": [
-          1,
-          10
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 0,
-        "total_hit": 0,
-        "distance_score": 7
       },
       "factor_review": {}
     },
@@ -3753,44 +2955,6 @@
     },
     {
       "issue": "26114",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          16,
-          24,
-          26,
-          27,
-          35
-        ],
-        "back": [
-          5,
-          9
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          8,
-          12,
-          15,
-          29,
-          30
-        ],
-        "back": [
-          9,
-          12
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 1,
-        "total_hit": 1,
-        "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26114",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -3931,44 +3095,6 @@
     },
     {
       "issue": "26115",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          14,
-          28,
-          31,
-          32,
-          34
-        ],
-        "back": [
-          7,
-          12
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          12,
-          20,
-          32,
-          33,
-          35
-        ],
-        "back": [
-          6,
-          7
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 1,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26115",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -4083,44 +3209,6 @@
         "back": [
           1,
           3
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          9,
-          18,
-          22,
-          25,
-          35
-        ],
-        "back": [
-          1,
-          10
-        ]
-      },
-      "result": {
-        "front_hit": 0,
-        "back_hit": 1,
-        "total_hit": 1,
-        "distance_score": 6
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26116",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          1,
-          2,
-          28,
-          29,
-          30
-        ],
-        "back": [
-          2,
-          10
         ],
         "score_total": null
       },
@@ -4287,44 +3375,6 @@
     },
     {
       "issue": "26117",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          1,
-          11,
-          19,
-          26,
-          33
-        ],
-        "back": [
-          9,
-          12
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          4,
-          13,
-          19,
-          29,
-          31
-        ],
-        "back": [
-          2,
-          12
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 1,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26117",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -4460,44 +3510,6 @@
         "back_hit": 0,
         "total_hit": 0,
         "distance_score": 7
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26118",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          4,
-          16,
-          29,
-          32,
-          35
-        ],
-        "back": [
-          1,
-          3
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          2,
-          9,
-          21,
-          26,
-          32
-        ],
-        "back": [
-          6,
-          12
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 0,
-        "total_hit": 1,
-        "distance_score": 6
       },
       "factor_review": {}
     },
@@ -4643,44 +3655,6 @@
     },
     {
       "issue": "26119",
-      "strategy": "C-纯随机娱乐型",
-      "recommend": {
-        "front": [
-          2,
-          3,
-          4,
-          10,
-          11
-        ],
-        "back": [
-          2,
-          7
-        ],
-        "score_total": null
-      },
-      "actual": {
-        "front": [
-          3,
-          6,
-          20,
-          24,
-          32
-        ],
-        "back": [
-          4,
-          7
-        ]
-      },
-      "result": {
-        "front_hit": 1,
-        "back_hit": 1,
-        "total_hit": 2,
-        "distance_score": 5
-      },
-      "factor_review": {}
-    },
-    {
-      "issue": "26119",
       "strategy": "D-综合评分型",
       "recommend": {
         "front": [
@@ -4795,10 +3769,10 @@
       "factor_score": 0.492
     },
     "C": {
-      "avg_hit": 1.222,
-      "best_hit": 3,
-      "total_distance": 156,
-      "factor_score": 0.492
+      "avg_hit": 0,
+      "best_hit": 0,
+      "total_distance": 0,
+      "factor_score": 0.0
     },
     "D": {
       "avg_hit": 1.0,

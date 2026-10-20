@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-10-20 02:00:26",
+  "update_time": "2026-10-20 05:08:12",
   "total_periods": 27,
   "strategies": {
     "A": {
@@ -48,27 +48,7 @@
       }
     },
     "C": {
-      "count": 27,
-      "avg_front_hit": 0.667,
-      "avg_back_hit": 0.556,
-      "avg_total_hit": 1.222,
-      "max_total_hit": 3,
-      "avg_distance_score": 5.78,
-      "hit_level_dist": {
-        "1": 18,
-        "0": 7,
-        "2": 2
-      },
-      "front_hit_dist": {
-        "1": 14,
-        "0": 11,
-        "2": 2
-      },
-      "back_hit_dist": {
-        "0": 15,
-        "1": 9,
-        "2": 3
-      }
+      "count": 0
     },
     "D": {
       "count": 26,
@@ -112,16 +92,16 @@
     }
   },
   "recommendation_quality": {
-    "total_groups": 107,
+    "total_groups": 80,
     "validated_periods": 27,
-    "avg_front_hit": 0.607,
-    "avg_back_hit": 0.374,
-    "avg_total_hit": 0.981,
+    "avg_front_hit": 0.588,
+    "avg_back_hit": 0.312,
+    "avg_total_hit": 0.9,
     "best": {
-      "issue": "26102",
-      "strategy": "C-纯随机娱乐型",
-      "front_hit": 1,
-      "back_hit": 2,
+      "issue": "26110",
+      "strategy": "A-均衡统计型",
+      "front_hit": 3,
+      "back_hit": 0,
       "total_hit": 3,
       "distance_score": 4
     }
