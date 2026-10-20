@@ -2,7 +2,7 @@
 
 策略 A 均衡统计型：热号 + 冷号混合抽样，并强制奇偶平衡与大小平衡。
 策略 B 冷热组合型：前区约 60% 热号 + 40% 冷号。
-策略 C AI智能型：LLM 基于与 A/B 相同的统计口径直接出号（无密钥或调用失败则跳过该策略，绝不回退随机；用户 2026-10-20 取消纯随机推荐）。
+策略 C AI智能型：LLM 基于与 A/B 相同的统计口径直接出号（无密钥或调用失败则跳过该策略，不出号；用户 2026-10-20 指令：推荐必须全部是分析产出）。
 
 重要：本模块仅基于历史统计做娱乐性组合，绝不声称可以预测中奖。
 """
@@ -27,7 +27,7 @@ def _norm(d: dict[int, float]) -> dict[int, float]:
 
 
 def _weighted_unique(pool: list[int], weights: dict[int, float], n: int, rng: random.Random) -> set[int]:
-    """按权重无放回抽取 n 个（权重为 0 时退回纯随机），返回集合。"""
+    """按权重无放回抽取 n 个（权重全部为 0 时退化为均匀抽样），返回集合。"""
     chosen: set[int] = set()
     guard = 0
     while len(chosen) < n and guard < 1000:
@@ -130,7 +130,7 @@ def _strategy_ai(analysis: dict[str, Any], cfg: dict[str, Any],
     统计口径与 _strategy_balanced/_strategy_hotcold 同源：
     analyzer.analyze() 的 hot/cold + *_recent_freq
     （config/settings.yaml recent_window: 50，即近50期）+ 遗漏。
-    无密钥或调用失败 → None（调用方跳过 C，绝不回退随机）。
+    无密钥或调用失败 → None（调用方跳过 C，不出号）。
     """
     from .common import ai_pick
 
@@ -209,9 +209,8 @@ def _strategy_scored(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.
 
     front_top = pool_scores(1, 35, "front")[:top_front]
     back_top = pool_scores(1, 12, "back")[:top_back]
-    if not front_top or not back_top:  # 防御：统计缺失时回退纯随机（合法规则内）
-        return {"front": sorted(rng.sample(range(1, 36), 5)),
-                "back": sorted(rng.sample(range(1, 13), 2))}
+    if not front_top or not back_top:  # 防御：统计缺失时不出号（调用方跳过该策略）
+        return None
 
     fnums = [s["number"] for s in front_top]
     bnums = [s["number"] for s in back_top]
@@ -284,5 +283,6 @@ def recommend(analysis: dict[str, Any], cfg: dict[str, Any],
                             target_issue=target_issue)
     out["C"] = [ai_combo] if ai_combo else []
     if stats is not None:
-        out["D"] = [_STRATEGY_FUNCS["D"](analysis, cfg, rng, stats) for _ in range(per)]
+        d_combo = _STRATEGY_FUNCS["D"](analysis, cfg, rng, stats)
+        out["D"] = [d_combo] if d_combo else []  # 统计缺失时 D 不出号，调用方跳过
     return out

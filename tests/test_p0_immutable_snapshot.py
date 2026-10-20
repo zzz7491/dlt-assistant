@@ -112,7 +112,7 @@ class TestSnapshotLifecycle(unittest.TestCase):
         self.assertIsNotNone(snapshot_hash(s1))
         self.assertEqual(len(snapshot_hash(s1)), 64)  # sha256 hex
         # 内容变 → hash 变
-        s3 = _snap("26098", "C-纯随机娱乐型", [9, 10, 11, 22, 34], [1, 9])
+        s3 = _snap("26098", "C-AI智能型", [9, 10, 11, 22, 34], [1, 9])
         self.assertNotEqual(snapshot_hash(s1), snapshot_hash(s3))
 
 
@@ -141,7 +141,7 @@ class TestReviewReadsSnapshot(unittest.TestCase):
 
     # 6) 复盘命中计算使用冻结号码（非 reflection 的旧号码）
     def test_06_review_hit_uses_frozen_numbers(self):
-        snap = _snap("26097", "C-纯随机娱乐型", [1, 2, 3, 4, 5], [6, 7])
+        snap = _snap("26097", "C-AI智能型", [1, 2, 3, 4, 5], [6, 7])
         refl = _reflection("26097", actual_front=[1, 2, 99, 100, 101], actual_back=[6, 99])
         review = build_review(refl, {"26097": snap})
         # 冻结前区 [1,2,3,4,5] vs 实际 [1,2,99,100,101] → 命中 2；后区 [6,7] vs [6,99] → 命中 1
@@ -163,7 +163,7 @@ class TestReviewReadsSnapshot(unittest.TestCase):
         for strat, front, back in [
             ("A-均衡统计型", [3, 5, 9, 24, 26], [3, 9]),
             ("B-冷热组合型", [4, 8, 24, 26, 35], [5, 7]),
-            ("C-纯随机娱乐型", [9, 10, 11, 22, 34], [1, 9]),
+            ("C-AI智能型", [9, 10, 11, 22, 34], [1, 9]),
             ("D-综合评分型", [13, 23, 21, 18, 28], [11, 6]),
         ]:
             snap = _snap("26096", strat, front, back)
@@ -195,7 +195,7 @@ class TestPickPrimary(unittest.TestCase):
     # pick_primary：只读 is_primary 权威标记；无标记（0 个）→ None（不再 score 回退，P0-2 契约）
     def test_pick_primary_no_marker_fail_closed(self):
         recs = [
-            {"strategy": "C-纯随机娱乐型", "front": [1], "back": [1], "score": 30.0},
+            {"strategy": "C-AI智能型", "front": [1], "back": [1], "score": 30.0},
             {"strategy": "A-均衡统计型", "front": [2], "back": [2], "score": 45.0},
         ]
         # 无任何 is_primary 标记 → 不猜、不 score 重排、不回退 D → None

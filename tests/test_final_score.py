@@ -27,7 +27,7 @@ def _recs():
     return [
         {"strategy": "A-均衡统计型", "front": [2, 7, 20, 24, 31], "back": [4, 10]},
         {"strategy": "B-冷热组合型", "front": [4, 11, 19, 20, 24], "back": [5, 8]},
-        {"strategy": "C-纯随机娱乐型", "front": [4, 5, 7, 14, 26], "back": [6, 12]},
+        {"strategy": "C-AI智能型", "front": [4, 5, 7, 14, 26], "back": [6, 12]},
         {"strategy": "D-综合评分型", "front": [13, 18, 21, 23, 28], "back": [6, 12]},
     ]
 

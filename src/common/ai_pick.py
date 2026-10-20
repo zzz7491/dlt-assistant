@@ -1,7 +1,6 @@
 """C-AI智能型出号：LLM 基于与 A/B 相同统计口径的统计摘要直接出号。
 
-用户决定（2026-10-20）：取消 C 纯随机娱乐型，C 改为接 LLM 的真 AI 出号
-（「不要纯随机推荐，否则AI就失去了意义」）。
+C 策略改为接 LLM 的真 AI 出号（2026-10-20 用户指令：推荐必须全部是分析产出）。
 
 统计口径约束（用户 2026-10-20 纠正：不许自创窗口，必须复用现有默认口径）：
 - 四彩种（双色球/福彩3D/排列三/排列五）：src/{ssq,fc3d,pl3,pl5}/stats.py
@@ -17,7 +16,7 @@
 - DLT_AI_BASE_URL → 回退 OPENROUTER_BASE_URL → https://openrouter.ai/api/v1
 - DLT_AI_MODEL → 回退 deepseek/deepseek-chat
 无密钥 → 返回 None（调用方跳过 C）。调用失败（重试 1 次后仍失败）
-→ 返回 None。绝不回退随机数。
+→ 返回 None。失败则跳过该策略数。
 
 仅用 Python 标准库（urllib），不新增依赖。
 """
@@ -233,5 +232,5 @@ def pick(game_id: str, target_issue: str | None, summary: dict) -> dict | None:
                     f"[ai_pick] {game_id} model={model} attempt={attempt} "
                     f"异常 {type(e).__name__}，{'重试' if attempt == 1 else '放弃'}"
                 )
-    print(f"[ai_pick] {game_id} target={target_issue} 全部失败，跳过 C（绝不回退随机）")
+    print(f"[ai_pick] {game_id} target={target_issue} 全部失败，跳过 C（失败则跳过该策略）")
     return None

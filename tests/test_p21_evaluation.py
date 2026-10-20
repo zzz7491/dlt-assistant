@@ -292,14 +292,18 @@ class TestWalkForward(unittest.TestCase):
 class TestProductionIntegrity(unittest.TestCase):
     """25: production files unchanged."""
 
-    def test_26112_snapshot_unchanged(self):
+    def test_random_snapshots_removed(self):
+        # 用户 2026-10-20 指令：删除全部随机推荐。原 26112 期（C-纯随机娱乐型）
+        # 的发布快照已删除；存量条目不得再出现"随机"字样。
         root = pathlib.Path(__file__).resolve().parent.parent
         pub = json.loads((root / "public" / "data" / "published_recommendations.json").read_text())
-        item = next(x for x in pub["items"] if x["issue"] == "26112")
-        self.assertEqual(item["primary_strategy"], "C-纯随机娱乐型")
-        self.assertEqual(item["numbers"]["front"], [5, 12, 17, 28, 31])
-        self.assertEqual(item["numbers"]["back"], [4, 7])
-        self.assertTrue(item.get("explanation"))
+        issues = [x["issue"] for x in pub["items"]]
+        self.assertNotIn("26112", issues)
+        for x in pub["items"]:
+            self.assertNotIn("随机", json.dumps(x, ensure_ascii=False))
+        # 非随机的历史发布（如 A 策略）保留且哈希完整
+        item = next(x for x in pub["items"] if x["issue"] == "26114")
+        self.assertEqual(item["primary_strategy"], "A-均衡统计型")
         self.assertEqual(len(item["snapshot_hash"]), 64)
 
     def test_algorithm_files_not_in_evaluation_pkg(self):

@@ -3,7 +3,7 @@
 设计约束：
   - 只用 Python 标准库 + 当期真实数据（dlt_history.json + 推荐记录已有字段）。
   - 确定性：同一输入（numbers + history + window + 记录字段）→ 同一 explanation。
-    不使用 LLM / 外部 API / 随机 / 时间戳。
+    不使用 LLM / 外部 API / 时间戳。
   - 描述「算法为何构造出这组候选」，绝不描述「这些号码会中奖」。
     不暗示预测确定性，不出现 建设中/开发中/待完善/TODO/coming soon。
   - 按策略真实逻辑分类：
@@ -31,7 +31,6 @@ SIZE_BOUNDARY = 18
 _STRATEGY_TYPE = {
     "A": "balanced_statistical",
     "B": "hot_cold_mix",
-    "C": "random_baseline",
     "D": "scored",
 }
 
@@ -53,7 +52,7 @@ def _observed(issues: list[dict[str, Any]], numbers: list[int], kind: str,
                window: int) -> dict[str, Any]:
     """给定一组号码，返回其可追溯的观测统计（频率/遗漏/热冷归属/奇偶大小/和值/跨度/连号）。
 
-    全部为 history 的纯函数，无时间、无随机 → 确定性。
+    全部为 history 的纯函数，无时间戳输入 → 确定性。
     """
     win = issues[-window:] if window and len(issues) > window else list(issues)
     pool = range(FRONT_MIN, FRONT_MAX + 1) if kind == "front" else range(BACK_MIN, BACK_MAX + 1)
@@ -132,7 +131,7 @@ def build_explanation(*, strategy: Any, front: list[int], back: list[int],
     """
     stype = _STRATEGY_TYPE.get(_strategy_prefix(strategy), "unknown")
     if _strategy_prefix(strategy) == "C" and ("AI" in str(strategy) or "智能" in str(strategy)):
-        # C-AI智能型：与旧的 random_baseline 区分，走独立解释分支
+        # C-AI智能型：走独立解释分支
         stype = "ai_pick"
     front = [int(x) for x in (front or []) if isinstance(x, int)]
     back = [int(x) for x in (back or []) if isinstance(x, int)]
@@ -159,24 +158,9 @@ def build_explanation(*, strategy: Any, front: list[int], back: list[int],
     obs_f = _observed(issues, front, "front", recent_window)
     obs_b = _observed(issues, back, "back", recent_window)
 
-    if stype == "random_baseline":
-        # 诚实：随机基线，不伪造热冷/遗漏/趋势依据
-        result["summary"] = (
-            "本期候选由随机基线策略在合法规则下随机生成，"
-            "作为与统计型策略对比的对照候选，不代表任何统计倾向或走势判断。"
-        )
-        result["factors"] = [
-            _factor("random", "随机基线",
-                    "该组合为合法规则内随机抽取，非基于热冷/遗漏/趋势的统计构造。",
-                    {"is_random": True}),
-            _factor("structure", "结构分布（仅描述）",
-                    f"前区 {_summarize_structure(obs_f, 'front')}。",
-                    {"front_odd_even": obs_f["odd_even"], "front_big_small": obs_f["big_small"],
-                     "front_sum": obs_f["sum"], "front_span": obs_f["span"]}),
-        ]
-    elif stype == "ai_pick":
+    if stype == "ai_pick":
         # C-AI智能型：如实说明 AI 基于历史统计摘要直接出号，
-        # 不虚构模型内部的推理过程；历史遗留的 random_baseline 分支保留不动。
+        # 不虚构模型内部的推理过程。
         result["summary"] = (
             f"AI智能型：AI 模型基于近 {obs_f['window']} 期历史统计摘要直接出号"
             "（与 A/B 策略相同的统计口径：近50期频率、热冷与遗漏）；"
