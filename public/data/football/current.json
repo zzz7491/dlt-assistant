@@ -12,16 +12,16 @@
       "away": "比利亚雷亚尔",
       "kickoff": "2026-10-21T03:00:00+08:00",
       "odds": {
-        "3": 1.52,
+        "3": 1.51,
         "1": 4.58,
-        "0": 5.56
+        "0": 5.66
       },
       "home_rank": 5,
       "away_rank": 12,
       "probabilities": {
-        "3": 0.5907,
-        "1": 0.244,
-        "0": 0.1653
+        "3": 0.5928,
+        "1": 0.2439,
+        "0": 0.1633
       },
       "factors": {
         "available": [
@@ -35,12 +35,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.6533,
+        "uncertainty": 0.6511,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.3467,
+      "confidence": 0.3489,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -86,16 +86,16 @@
       "away": "雅典",
       "kickoff": "2026-10-21T03:00:00+08:00",
       "odds": {
-        "3": 1.09,
-        "1": 10.53,
-        "0": 22.83
+        "3": 1.1,
+        "1": 10.23,
+        "0": 21.96
       },
       "home_rank": 1,
       "away_rank": 4,
       "probabilities": {
-        "3": 0.7048,
-        "1": 0.1673,
-        "0": 0.1279
+        "3": 0.7018,
+        "1": 0.1692,
+        "0": 0.129
       },
       "factors": {
         "available": [
@@ -109,12 +109,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.4625,
+        "uncertainty": 0.4674,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.5375,
+      "confidence": 0.5326,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -155,16 +155,16 @@
       "away": "博德",
       "kickoff": "2026-10-21T03:00:00+08:00",
       "odds": {
-        "3": 1.6,
-        "1": 4.36,
-        "0": 4.87
+        "3": 1.62,
+        "1": 4.34,
+        "0": 4.82
       },
       "home_rank": 9,
       "away_rank": 1,
       "probabilities": {
-        "3": 0.4257,
-        "1": 0.2472,
-        "0": 0.3271
+        "3": 0.4227,
+        "1": 0.2485,
+        "0": 0.3288
       },
       "factors": {
         "available": [
@@ -178,12 +178,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.9014,
+        "uncertainty": 0.9061,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.0986,
+      "confidence": 0.0939,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -225,16 +225,16 @@
       "away": "埃因霍",
       "kickoff": "2026-10-21T03:00:00+08:00",
       "odds": {
-        "3": 1.56,
-        "1": 4.48,
-        "0": 5.16
+        "3": 1.55,
+        "1": 4.52,
+        "0": 5.27
       },
       "home_rank": 1,
       "away_rank": 3,
       "probabilities": {
-        "3": 0.5424,
-        "1": 0.2438,
-        "0": 0.2138
+        "3": 0.5455,
+        "1": 0.2428,
+        "0": 0.2117
       },
       "factors": {
         "available": [
@@ -248,12 +248,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.7014,
+        "uncertainty": 0.6973,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.2986,
+      "confidence": 0.3027,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -299,16 +299,16 @@
       "away": "巴萨",
       "kickoff": "2026-10-21T03:00:00+08:00",
       "odds": {
-        "3": 2.42,
-        "1": 4.37,
-        "0": 2.42
+        "3": 2.41,
+        "1": 4.35,
+        "0": 2.43
       },
       "home_rank": 2,
       "away_rank": 1,
       "probabilities": {
-        "3": 0.3271,
-        "1": 0.2501,
-        "0": 0.4228
+        "3": 0.3278,
+        "1": 0.2506,
+        "0": 0.4216
       },
       "factors": {
         "available": [
@@ -322,12 +322,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.9243,
+        "uncertainty": 0.9262,
         "data_completeness": 0.8571
       },
       "primary": "0",
       "secondary": "3",
-      "confidence": 0.0957,
+      "confidence": 0.0938,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -375,15 +375,15 @@
       "kickoff": "2026-10-21T03:00:00+08:00",
       "odds": {
         "3": 1.14,
-        "1": 8.44,
+        "1": 8.56,
         "0": 16.51
       },
       "home_rank": 3,
       "away_rank": 4,
       "probabilities": {
-        "3": 0.7014,
-        "1": 0.1814,
-        "0": 0.1172
+        "3": 0.7022,
+        "1": 0.1805,
+        "0": 0.1173
       },
       "factors": {
         "available": [
@@ -397,12 +397,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.5,
+        "uncertainty": 0.4983,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.52,
+      "confidence": 0.5217,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -448,16 +448,16 @@
       "away": "马竞技",
       "kickoff": "2026-10-21T03:00:00+08:00",
       "odds": {
-        "3": 3.16,
+        "3": 3.17,
         "1": 3.78,
-        "0": 2.1
+        "0": 2.09
       },
       "home_rank": 13,
       "away_rank": 2,
       "probabilities": {
-        "3": 0.2625,
-        "1": 0.2686,
-        "0": 0.4689
+        "3": 0.2617,
+        "1": 0.2684,
+        "0": 0.4699
       },
       "factors": {
         "available": [
@@ -471,12 +471,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.7997,
+        "uncertainty": 0.7985,
         "data_completeness": 0.7143
       },
       "primary": "0",
       "secondary": "1",
-      "confidence": 0.2003,
+      "confidence": 0.2015,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -524,33 +524,62 @@
       "odds": {
         "3": 2.27,
         "1": 3.66,
-        "0": 2.89
+        "0": 2.9
       },
       "home_rank": 5,
       "away_rank": 13,
       "probabilities": {
-        "3": 0.4411,
-        "1": 0.2683,
-        "0": 0.2906
+        "3": 0.4579,
+        "1": 0.2735,
+        "0": 0.2686
       },
       "factors": {
         "available": [
           "market",
           "home_away",
-          "ranking"
+          "ranking",
+          "recent_form",
+          "rest_days"
         ],
         "unavailable": [
-          "recent_form",
           "injuries",
-          "rest_days",
           "head_to_head"
         ],
-        "uncertainty": 0.8495,
-        "data_completeness": 0.4286
+        "uncertainty": 0.8156,
+        "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.1505,
+      "confidence": 0.1844,
+      "dynamics": {
+        "home": {
+          "form_last10": {
+            "played": 10,
+            "w": 5,
+            "d": 2,
+            "l": 3,
+            "points": 17,
+            "gf": 18,
+            "ga": 13
+          },
+          "rest_days": 4,
+          "last_match_date": "2026-10-18"
+        },
+        "away": {
+          "form_last10": {
+            "played": 10,
+            "w": 2,
+            "d": 4,
+            "l": 4,
+            "points": 10,
+            "gf": 16,
+            "ga": 15
+          },
+          "rest_days": 4,
+          "last_match_date": "2026-10-18"
+        },
+        "head_to_head": null
+      },
       "sfc_choices": [
         "3",
         "0"
@@ -565,14 +594,14 @@
       "odds": {
         "3": 2.16,
         "1": 3.64,
-        "0": 3.11
+        "0": 3.12
       },
       "home_rank": 4,
       "away_rank": 1,
       "probabilities": {
-        "3": 0.3747,
-        "1": 0.2743,
-        "0": 0.351
+        "3": 0.375,
+        "1": 0.2745,
+        "0": 0.3505
       },
       "factors": {
         "available": [
@@ -586,12 +615,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.9763,
+        "uncertainty": 0.9755,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.0237,
+      "confidence": 0.0245,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -634,34 +663,63 @@
       "kickoff": "2026-10-22T03:00:00+08:00",
       "odds": {
         "3": 1.23,
-        "1": 6.53,
-        "0": 10.85
+        "1": 6.58,
+        "0": 10.91
       },
       "home_rank": 12,
       "away_rank": 2,
       "probabilities": {
-        "3": 0.6169,
-        "1": 0.1835,
-        "0": 0.1996
+        "3": 0.5585,
+        "1": 0.2014,
+        "0": 0.2401
       },
       "factors": {
         "available": [
           "market",
           "home_away",
-          "ranking"
+          "ranking",
+          "recent_form",
+          "rest_days"
         ],
         "unavailable": [
-          "recent_form",
           "injuries",
-          "rest_days",
           "head_to_head"
         ],
-        "uncertainty": 0.5827,
-        "data_completeness": 0.4286
+        "uncertainty": 0.6816,
+        "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.4173,
+      "confidence": 0.3184,
+      "dynamics": {
+        "home": {
+          "form_last10": {
+            "played": 10,
+            "w": 6,
+            "d": 2,
+            "l": 2,
+            "points": 20,
+            "gf": 22,
+            "ga": 11
+          },
+          "rest_days": 4,
+          "last_match_date": "2026-10-18"
+        },
+        "away": {
+          "form_last10": {
+            "played": 10,
+            "w": 7,
+            "d": 2,
+            "l": 1,
+            "points": 23,
+            "gf": 29,
+            "ga": 13
+          },
+          "rest_days": 4,
+          "last_match_date": "2026-10-18"
+        },
+        "head_to_head": null
+      },
       "sfc_choices": [
         "3"
       ]
@@ -674,15 +732,15 @@
       "kickoff": "2026-10-22T03:00:00+08:00",
       "odds": {
         "3": 2.05,
-        "1": 3.77,
-        "0": 3.26
+        "1": 3.78,
+        "0": 3.28
       },
       "home_rank": 1,
       "away_rank": 2,
       "probabilities": {
-        "3": 0.4291,
-        "1": 0.2702,
-        "0": 0.3007
+        "3": 0.4298,
+        "1": 0.2701,
+        "0": 0.3001
       },
       "factors": {
         "available": [
@@ -696,12 +754,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.8716,
+        "uncertainty": 0.8703,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.1284,
+      "confidence": 0.1297,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -748,64 +806,35 @@
       "away": "朗斯",
       "kickoff": "2026-10-22T03:00:00+08:00",
       "odds": {
-        "3": 2.03,
+        "3": 2.04,
         "1": 3.89,
-        "0": 3.23
+        "0": 3.22
       },
       "home_rank": 2,
       "away_rank": 8,
       "probabilities": {
-        "3": 0.4892,
-        "1": 0.2638,
-        "0": 0.247
+        "3": 0.4684,
+        "1": 0.2572,
+        "0": 0.2744
       },
       "factors": {
         "available": [
           "market",
           "home_away",
-          "ranking",
-          "recent_form",
-          "rest_days"
+          "ranking"
         ],
         "unavailable": [
+          "recent_form",
           "injuries",
+          "rest_days",
           "head_to_head"
         ],
-        "uncertainty": 0.7746,
-        "data_completeness": 0.7143
+        "uncertainty": 0.806,
+        "data_completeness": 0.4286
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.2254,
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 8,
-            "d": 0,
-            "l": 2,
-            "points": 24,
-            "gf": 23,
-            "ga": 10
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-18"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 1,
-            "l": 4,
-            "points": 16,
-            "gf": 18,
-            "ga": 15
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-18"
-        },
-        "head_to_head": null
-      },
+      "confidence": 0.194,
       "sfc_choices": [
         "3"
       ]
@@ -818,15 +847,15 @@
       "kickoff": "2026-10-22T03:00:00+08:00",
       "odds": {
         "3": 1.55,
-        "1": 4.66,
-        "0": 5.01
+        "1": 4.64,
+        "0": 5.0
       },
       "home_rank": 4,
       "away_rank": 1,
       "probabilities": {
-        "3": 0.4786,
-        "1": 0.2385,
-        "0": 0.2829
+        "3": 0.4781,
+        "1": 0.2388,
+        "0": 0.2831
       },
       "factors": {
         "available": [
@@ -840,12 +869,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.8043,
+        "uncertainty": 0.805,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.1957,
+      "confidence": 0.195,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -892,15 +921,15 @@
       "kickoff": "2026-10-22T03:00:00+08:00",
       "odds": {
         "3": 1.24,
-        "1": 6.87,
-        "0": 9.43
+        "1": 6.86,
+        "0": 9.39
       },
       "home_rank": 3,
       "away_rank": 7,
       "probabilities": {
-        "3": 0.6584,
+        "3": 0.6581,
         "1": 0.2026,
-        "0": 0.139
+        "0": 0.1393
       },
       "factors": {
         "available": [
@@ -914,12 +943,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.5642,
+        "uncertainty": 0.5645,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.4558,
+      "confidence": 0.4555,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -994,10 +1023,10 @@
     "status": "completed",
     "title": "AI 综合分析",
     "sections": {
-      "overview": "本期第26146期足彩14场与任选九分析基于市场相对概率、联赛排名差、主客场因素、近期状态、休息天数及交锋记录等多维度数据综合评估，覆盖12/14场有效信息，伤停因缺乏结构化可靠来源未纳入计算。整体方案在控制风险的前提下，对分歧较大的5场实施双选策略，其余9场采取单选，共生成32注，基本金额64元，符合传统足彩投注规则。",
-      "r9_reason": "任选九场次选取标准为相对置信度较高、数据支撑较完整的场次，具体为第1、2、4、6、7、10、12、13、14场，排除分歧较大或数据不足的场次（如第3、5、8、9、11场），以提升整体方案稳定性。",
-      "risk": "足球比赛结果受阵容变动、临场状态、战术调整及突发因素影响较大，市场指数亦会随时间波动。本分析仅为基于现有数据的辅助判断，不构成中奖承诺。建议投注前复核官方公告，确认场次调整、停售时间（2026-10-20T22:00:00+08:00）及最新伤停信息，理性投注，量力而行。",
-      "sfc_reason": "14场方案中，对分歧最大的5场（第3场那不勒vs博德、第5场日尔曼vs巴萨、第8场科莫vs曼联、第9场里尔vs加拉塔、第11场拜仁vs阿森纳）采用双选策略，以覆盖更多可能性；其余9场因数据一致性较高、市场分歧较小，采用单选。该策略旨在平衡覆盖率与成本，控制在32注、64元范围内，兼顾风险与收益。"
+      "overview": "本期足彩14场覆盖多场欧洲主流联赛与欧冠关键战，市场数据、排名、主客场、状态与交锋记录参与评估，但无可靠伤停信息，故不纳入计算。整体采用保守先验结合分歧度分析，对不确定性较高的场次实施双选保护，确保方案稳健。任选九则聚焦置信度更高的9场，规避高风险对决，提升整体容错能力。",
+      "r9_reason": "任选九选择1、2、4、6、7、10、12、13、14场，主要基于这些场次在市场概率、排名对比、主客场优势及近期状态上呈现更清晰的倾向性，分歧较小，数据支持更充分，适合构建高把握组合。",
+      "risk": "足球比赛结果受临场阵容、战术调整、天气、心理等多重不可控因素影响，指数动态变化亦可能反映市场情绪波动。任何分析均为辅助参考，不能替代实际赛果，投注需理性，切勿盲目追高。",
+      "sfc_reason": "14场方案对分歧最大的5场（那不勒vs博德、巴黎vs巴萨、科莫vs曼联、里尔vs加拉塔、拜仁vs阿森纳）实施双选，因其市场预期分散、实力接近或战意存疑，单选风险过高；其余9场趋势明确，单选即可覆盖主要可能。该策略在控制成本的同时，有效提升中奖概率。"
     }
   },
   "review": {

@@ -1212,11 +1212,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            3
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一004": {
           "code": "周一004",
@@ -1230,11 +1233,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            3
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一005": {
           "code": "周一005",
@@ -1248,11 +1254,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            3,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一006": {
           "code": "周一006",
@@ -1266,11 +1275,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            1,
+            1
+          ],
+          "spf_result": "1",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周一007": {
           "code": "周一007",
@@ -1284,11 +1296,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            1,
+            2
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周一008": {
           "code": "周一008",
@@ -1935,11 +1950,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            3
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一004": {
           "code": "周一004",
@@ -1953,11 +1971,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            3
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一005": {
           "code": "周一005",
@@ -1971,11 +1992,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            3,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一006": {
           "code": "周一006",
@@ -1989,11 +2013,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            1,
+            1
+          ],
+          "spf_result": "1",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周一007": {
           "code": "周一007",
@@ -2007,11 +2034,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            1,
+            2
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周一008": {
           "code": "周一008",
@@ -2049,7 +2079,7 @@
               "pick_label": "主胜"
             }
           ],
-          "hit": null
+          "hit": true
         },
         {
           "name": "进取3串1",
@@ -2072,7 +2102,7 @@
               "pick_label": "主胜"
             }
           ],
-          "hit": null
+          "hit": false
         }
       ]
     },
@@ -2133,11 +2163,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            3
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一004": {
           "code": "周一004",
@@ -2151,11 +2184,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            3
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一005": {
           "code": "周一005",
@@ -2169,11 +2205,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            3,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周一006": {
           "code": "周一006",
@@ -2187,11 +2226,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            1,
+            1
+          ],
+          "spf_result": "1",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周一007": {
           "code": "周一007",
@@ -2205,11 +2247,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            1,
+            2
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周一008": {
           "code": "周一008",
@@ -2409,7 +2454,7 @@
               "pick_label": "主胜"
             }
           ],
-          "hit": null
+          "hit": false
         },
         {
           "name": "进取3串1",
