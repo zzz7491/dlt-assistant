@@ -654,7 +654,7 @@
   }
 
   /* ================= P1-3A：mobile-first 分层（L1 摘要 / L2 紧凑矩阵+Focus / 触摸详情） ================= */
-  // 以下全部为纯函数：只读 dlt_history.json（排序后 issues），确定性、无随机、无后端 API。
+  // 以下全部为纯函数：只读 dlt_history.json（排序后 issues），确定性、无后端 API。
 
   // L1 趋势摘要：仅描述历史事实（近 N 期窗口），不做预测性文案。
   function computeL1Summary(issues, n) {
