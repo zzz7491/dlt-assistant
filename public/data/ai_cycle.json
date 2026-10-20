@@ -1,11 +1,186 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-10-20T05:52:41.184940+00:00",
+  "updated_at": "2026-10-20T06:56:35.032210+00:00",
   "analysis": null,
-  "review": null,
+  "review": {
+    "status": "completed",
+    "model": "dots-studio/dots-3-note-preview:free",
+    "route": "openrouter/free",
+    "prompt_version": "dlt-ai-cycle-v5",
+    "generated_at": "2026-10-20T06:57:16.322275+00:00",
+    "input_hash": "cdf8008b4a54e96d30accd30b25e920748661bc1c2117c1e3fddc280113cd779",
+    "sections": {
+      "limitations": {
+        "evidence_ids": [
+          "single_frozen",
+          "uncertainty",
+          "draw",
+          "original_statistical_basis"
+        ],
+        "text": "本评审基于冻结单注与历史50期统计特征展开，样本窗口有限，仅反映短期频率与遗漏分布，无法代表长期概率结构。单注中31属冷号，其入选依赖算法补位逻辑而非热度支撑，回补时点不可控；复式方案虽扩大覆盖，但未改变独立事件本质，投入增加不提升中奖概率。所有指标仅用于评估结构合理性，不能作为中奖能力或趋势延续的依据。"
+      },
+      "next_focus": {
+        "evidence_ids": [
+          "prior_analysis",
+          "structure_comparison",
+          "compound_outcome",
+          "draw"
+        ],
+        "text": "下期应关注前区奇偶分布的调整空间，当前单注奇偶比2:3、复式为3:7，均存在偶数偏多倾向。可评估在保持跨度覆盖的前提下，适度引入奇数冷号以优化结构平衡，同时结合遗漏值变化评估追加策略的必要性。需验证结构特征是否真正提升命中分布层次，而非仅满足表层数学指标。"
+      },
+      "reason_check": {
+        "evidence_ids": [
+          "single_frozen",
+          "single_outcome",
+          "draw",
+          "structure_comparison"
+        ],
+        "text": "事前AI理由指出单注评分41.25居候选首位，强调冷热交错布局与结构平衡性偏好。事后核验显示，实际开奖前区和值85与推荐106偏差21，奇数仅1个低于推荐2个，结构贴合未转化为号码命中。单注实际命中1+0，未中奖，验证了结构合理性不等于结果有效性，AI评审聚焦于取舍逻辑而非预测准确性。"
+      },
+      "summary": {
+        "evidence_ids": [
+          "single_outcome",
+          "compound_outcome",
+          "single_frozen",
+          "draw"
+        ],
+        "text": "单注展开1注，命中前区1个、后区0个，基本成本2元，奖金0元；复式展开756注，命中分布为0+0共168注、1+0共420注、2+0共168注，基本成本1512元，奖金0元。实际开奖前区[3,6,20,24,32]，后区[4,7]，与冻结单注前区[8,9,24,31,34]、后区[10,12]存在部分重合但未形成有效中奖组合。模拟回报为零，反映结构设计虽覆盖多维特征，但未在当期实现命中转化，需结合多期表现评估策略有效性。"
+      }
+    },
+    "model_evidence_ids": {
+      "summary": [
+        "single_outcome",
+        "compound_outcome",
+        "single_frozen",
+        "draw"
+      ],
+      "reason_check": [
+        "single_frozen",
+        "single_outcome",
+        "draw",
+        "structure_comparison"
+      ],
+      "limitations": [
+        "single_frozen",
+        "uncertainty",
+        "draw",
+        "original_statistical_basis"
+      ],
+      "next_focus": [
+        "prior_analysis",
+        "structure_comparison",
+        "compound_outcome",
+        "draw"
+      ]
+    },
+    "evidence_policy": "model-plus-canonical-v1",
+    "kind": "review",
+    "issue": "26119",
+    "identity": {
+      "issue": "26119",
+      "single": {
+        "front": [
+          8,
+          9,
+          24,
+          31,
+          34
+        ],
+        "back": [
+          10,
+          12
+        ]
+      },
+      "actual": {
+        "front": [
+          3,
+          6,
+          20,
+          24,
+          32
+        ],
+        "back": [
+          4,
+          7
+        ]
+      },
+      "snapshot_hash": "85f49d063c91acb65b2a14ede3e3d705d7c8f6ef81c66f4a57ee0a67bb9eed68",
+      "compound": {
+        "format": "10+3",
+        "front": [
+          3,
+          4,
+          8,
+          9,
+          10,
+          14,
+          24,
+          26,
+          31,
+          34
+        ],
+        "back": [
+          9,
+          10,
+          12
+        ]
+      }
+    },
+    "evidence": {
+      "single_outcome": "展开1注，命中分布（前区+后区）：1+0命中1注；奖级：未中奖；基本成本2元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+      "draw": "实际开奖前区[3, 6, 20, 24, 32]，后区[4, 7]；期号26119，日期2026-10-19。",
+      "single_frozen": "当期冻结单注前区[8, 9, 24, 31, 34]，后区[10, 12]；当时评分41.25；当期冻结记录完整性已校验。",
+      "uncertainty": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。",
+      "original_statistical_basis": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 0 个、冷号 2 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 106、跨度 26。",
+      "structure_comparison": "推荐前区和值106、实际和值85，绝对偏差21；推荐前区奇数2个，实际前区奇数1个。结构贴合不等于号码命中。",
+      "compound_outcome": "展开756注，命中分布（前区+后区）：0+0命中168注、1+0命中420注、2+0命中168注；奖级：未中奖；基本成本1512元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+      "prior_analysis": "compound_reason：复式前区包含高频号10与26，均在近50期出现13次且当前遗漏分别为5期与0期，体现对近期活跃号码的覆盖意图；结构上奇偶比3:7、和值163、跨度31，偏向偶数集中与大跨度组合。该结构在扩大覆盖范围的同时，也导致奇数分布偏弱，可能影响命中分布的均衡性。预算层面，10+3复式展开756注，基础投入1512元，追加后达2268元，成本较高，需权衡覆盖率与投入效率之间的取舍。；next_focus：结合上期复盘建议，下期应关注奇偶分布的对称性调整，当前单注奇偶比2:3、复式为3:7，均存在偶数偏多倾向。可评估在保持跨度覆盖的前提下，适度引入奇数冷号以优化结构平衡，同时结合遗漏值变化评估追加策略的必要性。需验证结构特征是否真正提升命中分布层次，而非仅满足表层数学指标。；overview：样本覆盖近50期数据，目标为26119期，候选方案已由算法冻结，AI负责评审其结构合理性与指标表现。正式单注前区[8,9,24,31,34]奇偶比2:3，和值106，跨度26，综合评分41.25居候选首位，反映策略基础与近期表现的加权优势。候选2与4评分接近，分别体现不同结构偏好，显示评分体系对多维度特征的敏感性。分析需基于已固化组合，不引入无依据的号码构造或未验证趋势。；risk：每期开奖独立，历史频率与评分不构成中奖概率保证。单注中前区31近50期仅出现3次，属冷号，其入选可能基于结构补缺而非热度支撑；后区12虽当前遗漏0期，但高频率不等于持续活跃。复式方案虽扩大覆盖，但未改变独立事件本质，投入增加不提升中奖概率，仅影响注数分布广度。；single_reason：正式单注综合评分41.25，排名候选第一，体现策略基础与近期表现的协同作用。前区08遗漏4期、24遗漏8期，均属中等回补区间，搭配遗漏1期的31与遗漏9期的34，形成冷热交错布局。结构上奇偶比2:3、和值106、跨度26，偏向中等和值与适中跨度，符合算法对平衡性的偏好。但34遗漏9期偏长，其入选更多依赖结构补位而非趋势支撑，存在回补不确定风险。",
+      "reason_audit": "必须对照上述真实事前AI理由逐项核验；区分可观察的结构是否满足和未被证实的未来倾向，不得用事后走势编新理由。"
+    },
+    "settlement": {
+      "single": {
+        "matches": {
+          "1+0": 1
+        },
+        "prizes": [],
+        "tickets": 1,
+        "basic_cost_yuan": 2,
+        "basic_payout_yuan": "0",
+        "all_additional_cost_yuan": 3,
+        "all_additional_payout_yuan": "0",
+        "payout_status": "verified",
+        "rule_version": "26014-seven-tiers",
+        "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+        "simulation": true
+      },
+      "compound": {
+        "matches": {
+          "0+0": 168,
+          "1+0": 420,
+          "2+0": 168
+        },
+        "prizes": [],
+        "tickets": 756,
+        "basic_cost_yuan": 1512,
+        "basic_payout_yuan": "0",
+        "all_additional_cost_yuan": 2268,
+        "all_additional_payout_yuan": "0",
+        "payout_status": "verified",
+        "rule_version": "26014-seven-tiers",
+        "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+        "simulation": true
+      }
+    },
+    "has_pre_draw_ai": true,
+    "prior_analysis_hash": "db0b7be3621a2377c1fd3401dbceb8690e093eb0444887c68544a7a55ac2c004",
+    "raw_source_hash": "44894ab3263a8b11d5a96539fcdab651fd572b95ff419583a50b014930a75aaa",
+    "editorial_policy": "grounded-editorial-v1",
+    "editorial_removed_clauses": 0,
+    "reviewed_at": "2026-10-20T06:57:16.324521+00:00"
+  },
   "statuses": {
-    "review": "invalid_response",
-    "analysis": "awaiting_review"
+    "review": "completed",
+    "analysis": "invalid_context"
   }
 }
