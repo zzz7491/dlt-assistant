@@ -83,8 +83,14 @@ def build_analysis(rows: list[dict], picks: list[dict], target: dict) -> dict:
         "按近100期频率叠加遗漏加分的均衡评分、三区各取2个最高分；"
         f"B-冷热组合型选 {_fmt(pick_b['red'])} + {pick_b['blue']:02d}："
         "3 个热号 + 2 个高遗漏冷号 + 1 个均衡分最高号；"
-        "C 为按目标期号做种子的纯随机娱乐组合。"
+        + (
+            "C-AI智能型由 AI 模型基于近100期统计摘要直接出号"
+            "（与 A/B 同口径）。"
+            if len(picks) >= 3
+            else "C-AI智能型本期未生成（AI 通道不可用，绝不回退随机）。"
+        )
     )
+
 
     risk = (
         "以上分析全部来自历史开奖的统计事实。彩票每期独立随机，"

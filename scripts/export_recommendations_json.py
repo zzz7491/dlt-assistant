@@ -239,7 +239,7 @@ def check() -> int:
              "strategy": "B-冷热组合型", "idx": 0,
              "front": [3, 5, 11, 13, 24], "back": [8, 12]},
             {"date": "2026-08-16", "target_issue": "26093",
-             "strategy": "C-纯随机娱乐型", "idx": 0,
+             "strategy": "C-AI智能型", "idx": 0,
              "front": [1, 2, 9, 29, 30], "back": [1, 10]},
         ]
 

@@ -75,7 +75,15 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
     if rec_cfg.get("seed") is None:
         rec_cfg["seed"] = publication_seed(target_issue)
 
-    recommendations = recommend(analysis, cfg, stats=stats)
+    recommendations = recommend(
+        analysis, cfg, stats=stats,
+        # C-AI智能型需要最近10期开奖（与 A/B 相同的统计输入口径）
+        recent_issues=[
+            {"issue": it.get("issue"), "front": it.get("front"), "back": it.get("back")}
+            for it in db["issues"][-10:]
+        ],
+        target_issue=str(target_issue),
+    )
 
     # 3.1) 落盘推荐记录（供开奖验证模块比对），按策略分别记录
     # target_issue 已在上方 P4-1 deterministic seed 注入前计算完成，复用同值。
@@ -95,7 +103,8 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
                 r["basis"] = c0.get("basis")
         all_recs.extend(recs)
     save_recs(rec_cfg["log_path"], all_recs)
-    print(f"[scheduler] 已记录推荐 {len(all_recs)} 组（A/B/C/D），目标期号 {target_issue}")
+    done_keys = "/".join(k for k in ("A", "B", "C", "D") if recommendations.get(k))
+    print(f"[scheduler] 已记录推荐 {len(all_recs)} 组（{done_keys}），目标期号 {target_issue}")
 
     # 4) 开奖验证（比对历史推荐 vs 真实开奖），在生成报告前取得汇总
     val_cfg = cfg.get("validate", {})

@@ -29,7 +29,7 @@ from typing import Any
 LABELS: dict[str, str] = {
     "A": "均衡统计型",
     "B": "冷热组合型",
-    "C": "纯随机娱乐型",
+    "C": "AI智能型",
     "D": "综合评分型",
 }
 

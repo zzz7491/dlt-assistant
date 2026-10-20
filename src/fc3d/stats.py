@@ -2,17 +2,18 @@
 
 3D is a positional game: statistics are per position （百/十/个位） —
 frequency and omission for digits 0-9 — plus the sum （和值）
-distribution. Picks follow the same three deterministic strategies
-as the other lotteries and are locked with INSERT OR IGNORE:
+distribution. Picks follow the same three strategies as the other
+lotteries and are locked with INSERT OR IGNORE:
 
 - A-均衡统计型： per-position balanced score (freq100 + omission bonus).
 - B-冷热组合型： hottest digit, coldest digit, balanced digit by position.
-- C-纯随机娱乐型： seeded RNG (seed = target issue).
+- C-AI智能型： LLM 基于近100期分位频率+遗漏统计摘要直接出号
+  （与 A/B 同口径）；无密钥或调用失败则跳过该策略，绝不回退随机
+  （用户 2026-10-20：取消纯随机推荐）。
 """
 from __future__ import annotations
 
 import datetime
-import random
 
 DIGITS = range(10)
 POSITIONS = 3
@@ -79,8 +80,51 @@ def next_target(latest: dict) -> dict:
     return {"issue": issue, "date": day.isoformat()}
 
 
+def generate_c_ai(target_issue: str, rows: list[dict]) -> dict | None:
+    """C-AI智能型：LLM 基于与 A/B 相同的统计口径直接出号。
+
+    统计口径：frequency(rows, 100) + omission(rows) —— 近100期分位频率
+    + 全量遗漏，与 generate_picks 的 A/B 完全一致。
+    无密钥或调用失败 → None（调用方跳过 C，绝不回退随机）。
+    """
+    from src.common import ai_pick  # 延迟导入，避免循环依赖
+
+    freq_100 = frequency(rows, 100)
+    omit = omission(rows)
+    positions = []
+    for pos in range(POSITIONS):
+        hot = max(DIGITS, key=lambda d: (freq_100["per_position"][pos][d], -d))
+        cold = max(DIGITS, key=lambda d: (omit[pos][d], -d))
+        top5 = sorted(
+            DIGITS, key=lambda d: (-freq_100["per_position"][pos][d], d)
+        )[:5]
+        positions.append(
+            {
+                "pos": pos,
+                "frequency_100_top5": {d: freq_100["per_position"][pos][d] for d in top5},
+                "hot": hot,
+                "cold": cold,
+                "omission_top5": {
+                    d: omit[pos][d]
+                    for d in sorted(DIGITS, key=lambda d: (-omit[pos][d], d))[:5]
+                },
+            }
+        )
+    summary = {
+        "game": "fc3d",
+        "positions": positions,
+        "last_10": [
+            {"issue": r.get("issue"), "digits": r["digits"]} for r in rows[-10:]
+        ],
+    }
+    numbers = ai_pick.pick("fc3d", target_issue, summary)
+    if numbers is None:
+        return None
+    return {"strategy": "C-AI智能型", "digits": numbers["digits"]}
+
+
 def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
-    """Three deterministic strategy picks for ``target_issue``."""
+    """A/B 统计策略 + C-AI智能型（无密钥/失败时跳过 C）。"""
     if len(rows) < 100:
         raise ValueError("need at least 100 draws for statistics picks")
     freq_100 = frequency(rows, 100)
@@ -103,13 +147,14 @@ def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
 
     picks_a = [balanced(pos) for pos in range(POSITIONS)]
     picks_b = [hottest(0), coldest(1), balanced(2)]
-    rng = random.Random(f"fc3d-{target_issue}")
-    picks_c = [rng.choice(list(DIGITS)) for _ in range(POSITIONS)]
-    return [
+    picks = [
         {"strategy": "A-均衡统计型", "digits": picks_a},
         {"strategy": "B-冷热组合型", "digits": picks_b},
-        {"strategy": "C-纯随机娱乐型", "digits": picks_c},
     ]
+    pick_c = generate_c_ai(target_issue, rows)
+    if pick_c is not None:
+        picks.append(pick_c)
+    return picks
 
 
 def position_scores(rows: list[dict]) -> list[dict]:

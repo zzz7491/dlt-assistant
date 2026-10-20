@@ -9,12 +9,13 @@ INSERT OR IGNORE (first write wins, exactly like dlt_recommendations):
 - A-均衡统计型： balanced scores (last-100 frequency + moderate omission)
   spread across the three red zones.
 - B-冷热组合型： hot numbers mixed with high-omission cold numbers.
-- C-纯随机娱乐型： seeded RNG sample (seed = target issue).
+- C-AI智能型： LLM 直接出号，统计摘要与 A/B 同口径
+  （frequency(rows, 100) + omission(rows)）；无密钥或调用失败则跳过
+  该策略，绝不回退随机（用户 2026-10-20：取消纯随机推荐）。
 """
 from __future__ import annotations
 
 import datetime
-import random
 
 RED_RANGE = range(1, 34)
 BLUE_RANGE = range(1, 17)
@@ -81,8 +82,48 @@ def _zone(number: int) -> int:
     return 0 if number <= 11 else (1 if number <= 22 else 2)
 
 
+def generate_c_ai(target_issue: str, rows: list[dict]) -> dict | None:
+    """C-AI智能型：LLM 基于与 A/B 相同的统计口径直接出号。
+
+    统计口径（与 generate_picks 的 A/B 完全一致）：
+    frequency(rows, 100) + omission(rows) —— 近100期频率 + 全量遗漏。
+    无密钥或调用失败 → None（调用方跳过 C，绝不回退随机）。
+    """
+    from src.common import ai_pick  # 延迟导入，避免循环依赖
+
+    freq_100 = frequency(rows, 100)
+    omit = omission(rows)
+    hot_red = sorted(RED_RANGE, key=lambda n: (-freq_100["red"][n], n))[:6]
+    cold_red = sorted(RED_RANGE, key=lambda n: (-omit["red"][n], n))[:6]
+    hot_blue = sorted(BLUE_RANGE, key=lambda n: (-freq_100["blue"][n], n))[:3]
+    cold_blue = sorted(BLUE_RANGE, key=lambda n: (-omit["blue"][n], n))[:3]
+    summary = {
+        "game": "ssq",
+        "frequency_100_top_red": {n: freq_100["red"][n] for n in hot_red},
+        "frequency_100_top_blue": {n: freq_100["blue"][n] for n in hot_blue},
+        "hot_red": hot_red,
+        "cold_red": cold_red,
+        "hot_blue": hot_blue,
+        "cold_blue": cold_blue,
+        "omission_top_red": {n: omit["red"][n] for n in cold_red},
+        "omission_top_blue": {n: omit["blue"][n] for n in cold_blue},
+        "last_10": [
+            {
+                "issue": r.get("issue"),
+                "red": r["red"],
+                "blue": r["blue"],
+            }
+            for r in rows[-10:]
+        ],
+    }
+    numbers = ai_pick.pick("ssq", target_issue, summary)
+    if numbers is None:
+        return None
+    return {"strategy": "C-AI智能型", "red": numbers["red"], "blue": numbers["blue"]}
+
+
 def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
-    """Three deterministic strategy picks for ``target_issue``."""
+    """A/B 统计策略 + C-AI智能型（无密钥/失败时跳过 C）。"""
     if len(rows) < 100:
         raise ValueError("need at least 100 draws for statistics picks")
     freq_100 = frequency(rows, 100)
@@ -117,16 +158,14 @@ def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
         key=lambda n: (omit["blue"][n], -n),
     )
 
-    # C-纯随机娱乐型： seeded by target issue (reproducible).
-    rng = random.Random(f"ssq-{target_issue}")
-    reds_c = sorted(rng.sample(list(RED_RANGE), 6))
-    blue_c = rng.choice(list(BLUE_RANGE))
-
-    return [
+    picks = [
         {"strategy": "A-均衡统计型", "red": sorted(reds_a), "blue": blue_a},
         {"strategy": "B-冷热组合型", "red": sorted(reds_b), "blue": blue_b},
-        {"strategy": "C-纯随机娱乐型", "red": reds_c, "blue": blue_c},
     ]
+    pick_c = generate_c_ai(target_issue, rows)
+    if pick_c is not None:
+        picks.append(pick_c)
+    return picks
 
 
 def number_scores(rows: list[dict]) -> tuple[dict, dict]:

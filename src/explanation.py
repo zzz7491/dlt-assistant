@@ -9,7 +9,7 @@
   - 按策略真实逻辑分类：
       A balanced_statistical（热冷混合 + 奇偶/大小均衡）
       B hot_cold_mix（热冷组合）
-      C random_baseline（纯随机基线——诚实标注，不伪造统计依据）
+      C ai_pick（AI 基于历史统计摘要直接出号——如实标注其统计输入，不虚构模型推理过程）
       D scored（综合评分——基于记录自带的 basis/factors）
 
 strategy_type 由记录 strategy 前缀（A/B/C/D）决定，与 recommender.STRATEGY_LABELS 一致。
@@ -131,6 +131,9 @@ def build_explanation(*, strategy: Any, front: list[int], back: list[int],
     正常路径 → reason_status="ok"，summary + 2~5 个可追溯 factors。
     """
     stype = _STRATEGY_TYPE.get(_strategy_prefix(strategy), "unknown")
+    if _strategy_prefix(strategy) == "C" and ("AI" in str(strategy) or "智能" in str(strategy)):
+        # C-AI智能型：与旧的 random_baseline 区分，走独立解释分支
+        stype = "ai_pick"
     front = [int(x) for x in (front or []) if isinstance(x, int)]
     back = [int(x) for x in (back or []) if isinstance(x, int)]
     issues = [i for i in (history or []) if isinstance(i, dict)]
@@ -166,6 +169,24 @@ def build_explanation(*, strategy: Any, front: list[int], back: list[int],
             _factor("random", "随机基线",
                     "该组合为合法规则内随机抽取，非基于热冷/遗漏/趋势的统计构造。",
                     {"is_random": True}),
+            _factor("structure", "结构分布（仅描述）",
+                    f"前区 {_summarize_structure(obs_f, 'front')}。",
+                    {"front_odd_even": obs_f["odd_even"], "front_big_small": obs_f["big_small"],
+                     "front_sum": obs_f["sum"], "front_span": obs_f["span"]}),
+        ]
+    elif stype == "ai_pick":
+        # C-AI智能型：如实说明 AI 基于历史统计摘要直接出号，
+        # 不虚构模型内部的推理过程；历史遗留的 random_baseline 分支保留不动。
+        result["summary"] = (
+            f"AI智能型：AI 模型基于近 {obs_f['window']} 期历史统计摘要直接出号"
+            "（与 A/B 策略相同的统计口径：近50期频率、热冷与遗漏）；"
+            "模型内部的推理过程不可追溯，以下仅描述输入的统计事实。"
+        )
+        result["factors"] = [
+            _factor("ai_input", "AI 输入的统计摘要",
+                    f"近 {obs_f['window']} 期频率/热冷/遗漏摘要（与 A/B 同口径）。",
+                    {"window": obs_f["window"], "front_hot": obs_f["in_hot"],
+                     "front_cold": obs_f["in_cold"]}),
             _factor("structure", "结构分布（仅描述）",
                     f"前区 {_summarize_structure(obs_f, 'front')}。",
                     {"front_odd_even": obs_f["odd_even"], "front_big_small": obs_f["big_small"],

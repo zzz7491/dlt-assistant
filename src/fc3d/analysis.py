@@ -63,9 +63,15 @@ def build_analysis(rows: list[dict], picks: list[dict], target: dict) -> dict:
         f"A-均衡统计型选 {''.join(map(str, pick_a['digits']))}：各位按"
         "近100期频率叠加遗漏加分取最高分；"
         f"B-冷热组合型选 {''.join(map(str, pick_b['digits']))}：百位取热号、"
-        "十位取遗漏最久的冷号、个位取均衡分最高；C 为按目标期号做种子的"
-        "纯随机娱乐组合。"
+        "十位取遗漏最久的冷号、个位取均衡分最高；"
+        + (
+            "C-AI智能型由 AI 模型基于近100期统计摘要直接出号"
+            "（与 A/B 同口径）。"
+            if len(picks) >= 3
+            else "C-AI智能型本期未生成（AI 通道不可用，绝不回退随机）。"
+        )
     )
+
 
     risk = (
         "以上分析全部来自历史开奖的统计事实。福彩3D 每位独立随机，"

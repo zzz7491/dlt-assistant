@@ -2,7 +2,7 @@
 
 策略 A 均衡统计型：热号 + 冷号混合抽样，并强制奇偶平衡与大小平衡。
 策略 B 冷热组合型：前区约 60% 热号 + 40% 冷号。
-策略 C 纯随机娱乐型：合法规则下纯随机生成。
+策略 C AI智能型：LLM 基于与 A/B 相同的统计口径直接出号（无密钥或调用失败则跳过该策略，绝不回退随机；用户 2026-10-20 取消纯随机推荐）。
 
 重要：本模块仅基于历史统计做娱乐性组合，绝不声称可以预测中奖。
 """
@@ -16,7 +16,7 @@ from typing import Any
 STRATEGY_LABELS: dict[str, str] = {
     "A": "均衡统计型",
     "B": "冷热组合型",
-    "C": "纯随机娱乐型",
+    "C": "AI智能型",
     "D": "综合评分型",
 }
 
@@ -114,14 +114,49 @@ def _strategy_hotcold(analysis: dict[str, Any], cfg: dict[str, Any], rng: random
     return {"front": sorted(front), "back": _weighted_back(analysis, rng)}
 
 
-def _strategy_random(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.Random) -> dict[str, Any]:
-    """C 纯随机娱乐型：合法规则下纯随机生成。"""
-    fmin, fmax = analysis["front_min"], analysis["front_max"]
-    bmin, bmax = analysis["back_min"], analysis["back_max"]
-    return {
-        "front": sorted(rng.sample(range(fmin, fmax + 1), 5)),
-        "back": sorted(rng.sample(range(bmin, bmax + 1), 2)),
+def _top_items(d: dict, n: int) -> list[dict[str, Any]]:
+    items = [(k, v) for k, v in (d or {}).items() if isinstance(k, int)]
+    return [
+        {"number": k, "value": v}
+        for k, v in sorted(items, key=lambda kv: (-kv[1], kv[0]))[:n]
+    ]
+
+
+def _strategy_ai(analysis: dict[str, Any], cfg: dict[str, Any],
+                 recent_issues: list[dict[str, Any]] | None = None,
+                 target_issue: str | None = None) -> dict[str, Any] | None:
+    """C AI智能型：LLM 基于与 A/B 相同的统计口径直接出号。
+
+    统计口径与 _strategy_balanced/_strategy_hotcold 同源：
+    analyzer.analyze() 的 hot/cold + *_recent_freq
+    （config/settings.yaml recent_window: 50，即近50期）+ 遗漏。
+    无密钥或调用失败 → None（调用方跳过 C，绝不回退随机）。
+    """
+    from .common import ai_pick
+
+    summary = {
+        "game": "dlt",
+        "front_hot": [k for k, _ in analysis.get("front_hot", [])][:10],
+        "front_cold": [k for k, _ in analysis.get("front_cold", [])][:8],
+        "back_hot": [k for k, _ in analysis.get("back_hot", [])][:5],
+        "back_cold": [k for k, _ in analysis.get("back_cold", [])][:4],
+        "front_recent_freq_top10": _top_items(analysis.get("front_recent_freq"), 10),
+        "back_recent_freq_top5": _top_items(analysis.get("back_recent_freq"), 5),
+        "front_omit_top10": _top_items(analysis.get("front_cur_omit"), 10),
+        "back_omit_top5": _top_items(analysis.get("back_cur_omit"), 5),
+        "last_10": [
+            {
+                "issue": str(it.get("issue")),
+                "front": list(it.get("front") or []),
+                "back": list(it.get("back") or []),
+            }
+            for it in (recent_issues or [])[-10:]
+        ],
     }
+    numbers = ai_pick.pick("dlt", target_issue, summary)
+    if numbers is None:
+        return None
+    return {"front": numbers["front"], "back": numbers["back"]}
 
 
 def _strategy_scored(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.Random,
@@ -222,25 +257,32 @@ def _strategy_scored(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.
 _STRATEGY_FUNCS = {
     "A": _strategy_balanced,
     "B": _strategy_hotcold,
-    "C": _strategy_random,
     "D": _strategy_scored,
 }
 
 
 def recommend(analysis: dict[str, Any], cfg: dict[str, Any],
-              stats: dict[str, Any] | None = None) -> dict[str, list[dict[str, Any]]]:
+              stats: dict[str, Any] | None = None,
+              recent_issues: list[dict[str, Any]] | None = None,
+              target_issue: str | None = None) -> dict[str, list[dict[str, Any]]]:
     """生成 A/B/C(/D) 策略的娱乐推荐，返回 {策略键: [组合, ...]}。
 
     stats（C-1 四因素统计 + prev_issue）非空时追加 D 综合评分策略；
     为 None 时行为与旧版完全一致（A/B/C），向后兼容。
+
+    C 为 AI智能型：LLM 出号。无密钥或调用失败时该键返回空列表，
+    调用方 scheduler.py 已做 `if not combos: continue` 跳过。
     """
     per = cfg["recommend"].get("combos_per_strategy", 1)
     seed = cfg["recommend"].get("seed")
     rng = random.Random(seed)
     out: dict[str, list[dict[str, Any]]] = {}
-    for key in ("A", "B", "C"):
+    for key in ("A", "B"):
         combos = [_STRATEGY_FUNCS[key](analysis, cfg, rng) for _ in range(per)]
         out[key] = combos
+    ai_combo = _strategy_ai(analysis, cfg, recent_issues=recent_issues,
+                            target_issue=target_issue)
+    out["C"] = [ai_combo] if ai_combo else []
     if stats is not None:
         out["D"] = [_STRATEGY_FUNCS["D"](analysis, cfg, rng, stats) for _ in range(per)]
     return out
