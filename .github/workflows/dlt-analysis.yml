@@ -244,6 +244,23 @@ jobs:
             echo "推荐 JSON 已导出（D1 锁定值）"
           fi
 
+      - name: 导出策略命中复盘（大乐透）
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "未配置 CLOUDFLARE_API_TOKEN，跳过策略复盘导出"
+            exit 0
+          fi
+          set +e
+          python scripts/export_strategy_reviews.py
+          RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "策略复盘导出失败（exit=$RC），继续"
+          else
+            echo "策略复盘已导出"
+          fi
+
       - name: Publish AI Recommendation Data（P4-5 backup + pre-publish gate）
         # P4-5：publisher 写权威发布 store 前，先创建 validated backup + 通过本地
         # pre-publish integrity gate（D1/D2/P4-4 + P4-5 P10）。失败则阻止写盘。
