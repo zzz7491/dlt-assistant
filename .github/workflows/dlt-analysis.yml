@@ -110,6 +110,11 @@ jobs:
         # 失败仅记录日志，绝不阻断原 JSON 分析与部署流程（双写容错）。
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # C-AI智能型出号需要 LLM 通道：复用大乐透 AI 现有 secrets，无需新建。
+          # ai_pick 内部另有 OPENROUTER_API_KEY 回退；无密钥时自动跳过 C，不阻断流水线。
+          DLT_AI_API_KEY: ${{ secrets.DLT_AI_API_KEY }}
+          DLT_AI_BASE_URL: ${{ secrets.DLT_AI_BASE_URL }}
+          DLT_AI_MODEL: ${{ secrets.DLT_AI_MODEL }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
             echo "⚠️ 未配置 CLOUDFLARE_API_TOKEN，跳过 D1 增量同步"
