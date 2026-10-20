@@ -3,14 +3,6 @@
   "empty": false,
   "strategies": [
     {
-      "strategy": "C",
-      "label": "纯随机娱乐型",
-      "total_count": 27,
-      "hit_rate": 0.175,
-      "recent_score": 1.222,
-      "rank": 1
-    },
-    {
       "strategy": "A",
       "label": "均衡统计型",
       "total_count": 27,
