@@ -7,6 +7,22 @@
   const POS = ['百位', '十位', '个位'];
   const TITLES = { trend: '走势解读', hot_cold: '冷热研判', structure: '结构分析', basis: '推荐依据', risk: '风险提示' };
 
+  // 策略长期命中统计渲染：每策略一张小卡（累计期数 / 平均命中 / 最近 10 期逐期明细）。
+  // 历史「C-纯随机娱乐型」记录已按用户指令删除，后端不再返回，无需特殊处理。
+  function renderStrategyReviews(sr) {
+    const hl = sr.hit_labels || {};
+    const card = st => {
+      const chips = st.recent.map(r =>
+        `<span class="plan-chip">${safe(String(r.issue).slice(-3))}:${r.hits}</span>`).join('');
+      return `<div class="match-meta"><strong>${safe(st.strategy)}</strong>` +
+        (st.sample_warning ? ' <span class="hint">（样本不足 10 期，仅供参考）</span>' : '') + `</div>` +
+        `<div class="match-meta">累计复盘 ${st.periods} 期 · 平均${safe(hl.main || '命中')} ${st.avg_hits}/期 · 平均${safe(hl.sub || '次命中')} ${st.avg_hits_sub}/期</div>` +
+        `<div class="match-meta">最近 ${st.recent.length} 期逐期主命中：${chips || '—'}</div>`;
+    };
+    return sr.strategies.map(card).join('') +
+      `<p class="hint">${safe(sr.disclaimer || '命中统计仅为历史娱乐回顾，不代表任何预测依据。')}</p>`;
+  }
+
   function render(data) {
     const latest = data.latest;
     $('pl3-latest').innerHTML = `<div class="match-meta">第 ${safe(latest.issue)} 期 · ${safe(latest.date)} · 和值 ${latest.digits.reduce((a, b) => a + b, 0)}</div>${balls(latest.digits)}`;
@@ -57,6 +73,12 @@
           (r.notes && r.notes.length ? `<div class="match-meta">归因：${r.notes.map(safe).join('；')}</div>` : '')).join('') +
         (rv.improvement ? `<div class="match-meta"><strong>下期改进（统计复盘）</strong>：${rv.improvement.map(safe).join('；')}</div>` : '')
       : '<p class="hint">暂无可复盘的上期推荐（推荐自本期起锁定，下一期开奖后生成复盘）。</p>';
+
+    // 策略长期命中统计（公开复盘）
+    const sr = data.strategy_reviews;
+    $('pl3-strategy-reviews').innerHTML = sr && Array.isArray(sr.strategies) && sr.strategies.length
+      ? renderStrategyReviews(sr)
+      : '<p class="hint">长期命中统计积累中（复盘期数达到 10 期后更具参考性）。</p>';
 
     const s = data.stats;
     if (s) {
