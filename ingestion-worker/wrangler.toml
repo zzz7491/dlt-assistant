@@ -1,0 +1,14 @@
+name = "dlt-ingestion-worker"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[triggers]
+crons = ["0 2 * * *", "45 13 * * *", "35 14 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dlt-draws"
+database_id = "d99a8443-f8f3-4baa-8b21-a061e28757e0"
+
+[vars]
+MODE = "shadow"
