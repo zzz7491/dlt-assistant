@@ -172,18 +172,10 @@ def main() -> None:
                 print(f"jingcai {payload['sale_date']}: D1 current snapshot SQL ready")
         except Exception as exc:  # jingcai must never break football D1
             print(f"jingcai_d1_skipped: {type(exc).__name__}: {str(exc)[:120]}")
-        if os.environ.get("CI"):
-            # The jingcai payload was consumed above; restore the
-            # checked-out bytes so the workflow's bot-commit step
-            # (git pull --rebase) does not trip over a dirty tree.
-            # The committed copy is only the static fallback — D1,
-            # written from the fresh payload, is the primary channel.
-            try:
-                committed = _committed_bytes(JINGCAI_SOURCE)
-                if committed is not None and JINGCAI_SOURCE.read_bytes() != committed:
-                    JINGCAI_SOURCE.write_bytes(committed)
-            except Exception:
-                pass
+        # The regenerated jingcai file stays in the workspace so the
+        # bot-commit step publishes it: it is the page's static
+        # fallback when the D1 API is unavailable, so it must carry
+        # the same fresh payload, not a stale launch-day copy.
     if JINGCAI_ARCHIVE_SOURCE.exists():
         try:
             archive = json.loads(JINGCAI_ARCHIVE_SOURCE.read_text(encoding="utf-8"))
