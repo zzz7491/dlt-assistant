@@ -23,27 +23,33 @@ def _rounded_probabilities(values: dict[str, float]) -> dict[str, float]:
     return result
 
 
-def _ranking_probabilities(home_rank: int, away_rank: int) -> dict[str, float]:
-    """Convert same-league table positions to a deliberately conservative prior."""
+def _ranking_probabilities(home_rank: int, away_rank: int, draw: float) -> dict[str, float]:
+    """Convert same-league table positions to a deliberately conservative prior.
+
+    The draw component is anchored to the market's draw probability for
+    this fixture instead of a flat 0.30: a constant draw rate in every
+    prior made "1" structurally unable to top the blend, so neither the
+    football plan nor the jingcai SPF pick could ever select a draw.
+    """
     rank_edge = max(-18, min(18, away_rank - home_rank))
     home_share = 1 / (1 + math.exp(-rank_edge / 6))
-    return _rounded_probabilities({"3": 0.70 * home_share, "1": 0.30, "0": 0.70 * (1 - home_share)})
+    return _rounded_probabilities({"3": (1 - draw) * home_share, "1": draw, "0": (1 - draw) * (1 - home_share)})
 
 
-def _form_probabilities(home_form: dict, away_form: dict) -> dict[str, float]:
+def _form_probabilities(home_form: dict, away_form: dict, draw: float) -> dict[str, float]:
     """Convert last-10 form (all competitions) into a conservative prior."""
     home_edge = (home_form["points"] - away_form["points"]) + 0.3 * (
         (home_form["gf"] - home_form["ga"]) - (away_form["gf"] - away_form["ga"])
     )
     home_edge = max(-15.0, min(15.0, home_edge))
     home_share = 1 / (1 + math.exp(-home_edge / 6))
-    return _rounded_probabilities({"3": 0.70 * home_share, "1": 0.30, "0": 0.70 * (1 - home_share)})
+    return _rounded_probabilities({"3": (1 - draw) * home_share, "1": draw, "0": (1 - draw) * (1 - home_share)})
 
 
-def _head_to_head_probabilities(h2h: dict) -> dict[str, float]:
+def _head_to_head_probabilities(h2h: dict, draw: float) -> dict[str, float]:
     meetings = h2h["meetings"]
     home_share = (h2h["home_wins"] + 0.5 * h2h["draws"]) / meetings
-    return _rounded_probabilities({"3": 0.70 * home_share, "1": 0.30, "0": 0.70 * (1 - home_share)})
+    return _rounded_probabilities({"3": (1 - draw) * home_share, "1": draw, "0": (1 - draw) * (1 - home_share)})
 
 
 def _multi_factor_probabilities(match: dict) -> tuple[dict[str, float], dict]:
@@ -52,12 +58,18 @@ def _multi_factor_probabilities(match: dict) -> tuple[dict[str, float], dict]:
     unavailable = ["recent_form", "injuries", "rest_days", "head_to_head"]
     components = {
         "market": market,
-        "home_away": {"3": 0.37, "1": 0.30, "0": 0.33},
+        # Home/away prior keeps its 37:33 side ratio but takes the
+        # fixture's market draw probability instead of a flat 0.30.
+        "home_away": {
+            "3": (1 - market["1"]) * 37 / 70,
+            "1": market["1"],
+            "0": (1 - market["1"]) * 33 / 70,
+        },
     }
     weights = {"market": FACTOR_WEIGHTS["market"], "home_away": FACTOR_WEIGHTS["home_away"]}
     if isinstance(match.get("home_rank"), int) and isinstance(match.get("away_rank"), int):
         available.append("ranking")
-        components["ranking"] = _ranking_probabilities(match["home_rank"], match["away_rank"])
+        components["ranking"] = _ranking_probabilities(match["home_rank"], match["away_rank"], market["1"])
         weights["ranking"] = FACTOR_WEIGHTS["ranking"]
     else:
         unavailable.append("ranking")
@@ -69,7 +81,7 @@ def _multi_factor_probabilities(match: dict) -> tuple[dict[str, float], dict]:
         available.append("recent_form")
         unavailable.remove("recent_form")
         components["recent_form"] = _form_probabilities(
-            home_dyn["form_last10"], away_dyn["form_last10"]
+            home_dyn["form_last10"], away_dyn["form_last10"], market["1"]
         )
         # With real form evidence, the market prior yields some weight.
         weights = {
@@ -83,7 +95,7 @@ def _multi_factor_probabilities(match: dict) -> tuple[dict[str, float], dict]:
         if h2h.get("meetings", 0) >= 3:
             available.append("head_to_head")
             unavailable.remove("head_to_head")
-            components["head_to_head"] = _head_to_head_probabilities(h2h)
+            components["head_to_head"] = _head_to_head_probabilities(h2h, market["1"])
             weights["head_to_head"] = 0.05
     rest_known = (
         isinstance(home_dyn.get("rest_days"), int)
@@ -190,20 +202,20 @@ def build_plan(issue: dict) -> dict:
             }
 
     # Five matches receive a second outcome; cost stays explicit and
-    # bounded. The doubles first insure the largest live draw threats
+    # bounded. The doubles first insure the largest draw threats
     # (primary + "1"): draws are roughly a quarter of real results, and
-    # the previous rule — doubles only for the closest win/loss matches,
+    # the original rule — doubles only for the closest win/loss matches,
     # always paired win+loss — structurally never covered a draw
     # (0 of 84 matches across six issues, while 11 of 56 settled
-    # matches were draws). Remaining slots go to the closest matches.
+    # matches were draws). A threat is any non-draw primary whose model
+    # draw probability reaches 0.24; ranking is by that probability
+    # alone. Remaining slots go to the closest matches.
     chosen: dict[int, list[str]] = {}
     draw_threats = []
     for row in rows:
         if row["primary"] == "1":
             continue
-        probs = row["probabilities"]
-        other_side = "0" if row["primary"] == "3" else "3"
-        if probs["1"] >= 0.24 and probs["1"] >= probs[other_side] - 0.05:
+        if row["probabilities"]["1"] >= 0.24:
             draw_threats.append(row)
     draw_threats.sort(key=lambda row: (-row["probabilities"]["1"], row["order"]))
     for row in draw_threats[:5]:
