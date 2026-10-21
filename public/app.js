@@ -439,13 +439,15 @@
     loadJSON("./data/recommendations.json").catch(function () { return []; }),
     loadJSON("./data/review.json").catch(function () { return null; }),
     loadJSON("./data/strategy_score.json").catch(function () { return null; }),
-    loadJSON("./data/strategy_reviews.json").catch(function () { return null; })
+    loadJSON("./data/strategy_reviews.json").catch(function () { return null; }),
+    loadJSON("./data/draw_details.json").catch(function () { return null; })
   ]).then(function (res) {
     var history = res[0];
     var recs = res[1] || [];
     var review = res[2];
     var strategyScore = res[3];
     var strategyReviews = res[4];
+    var drawDetails = res[5];
     try {
     var issues = history.issues || [];
     if (!issues.length) { showError("历史数据为空"); return; }
@@ -477,17 +479,67 @@
     // P1-1：普通用户仅见唯一推荐卡。不再渲染 A/B/C/D 折叠网格（#recommendations），
     // 不再渲染策略诊断（renderStrategyHint / #strategy-hint）。
     // recs 为空 / 0 个或多个 is_primary → renderPrimaryRecommendation 走 fail-closed 异常态。
-    /* ①b 历史开奖记录：最近 30 期（最新在前），数据与最新开奖同源 */
+    /* ①b 历史开奖记录：最近 30 期，默认只显示 5 期，「查看更多」展开；
+       点任意一期展开该期详细开奖公告（销售额/奖池/各奖级注数与奖金，
+       数据来自官方核验的 draw_details.json，核验口径与详细开奖公告区一致） */
     var dhEl = document.getElementById("draw-history-body");
     if (dhEl) {
+      var detailByIssue = {};
+      ((drawDetails && drawDetails.issues) || []).forEach(function (r) {
+        var h = null;
+        for (var i = 0; i < issues.length; i++) {
+          if (String(issues[i].issue) === String(r.issue)) { h = issues[i]; break; }
+        }
+        if (h && h.date === r.date &&
+            JSON.stringify(h.front) === JSON.stringify(r.front) &&
+            JSON.stringify(h.back) === JSON.stringify(r.back)) {
+          detailByIssue[String(r.issue)] = r;
+        }
+      });
+      var moneyY = function (n) {
+        return n == null ? "待官方公布" : Number(String(n).replace(/,/g, "")).toLocaleString("zh-CN", { maximumFractionDigits: 2 }) + " 元";
+      };
+      var detailHtml = function (r) {
+        if (!r) return '<p class="hint" style="margin:6px 0">本期开奖奖金详情待官方核验（历史缺期持续补录中）；号码见上行。</p>';
+        var rows = "";
+        Object.keys(r.prizes || {}).forEach(function (level) {
+          var tier = r.prizes[level];
+          var variants = tier.basic ? [["基本", tier.basic], ["追加", tier.additional]] : [["基本", tier]];
+          variants.forEach(function (v) {
+            if (!v[1]) return;
+            rows += "<tr><td>" + esc(level) + " · " + v[0] + "</td><td>" + esc(v[1].winners) + "</td><td>" + esc(moneyY(v[1].per_ticket_yuan)) + "</td><td>" + esc(moneyY(v[1].total_yuan)) + "</td></tr>";
+          });
+        });
+        return '<p style="margin:6px 0">全国销售额：<strong>' + esc(moneyY(r.sales_yuan)) + "</strong> · 滚入下期奖池：<strong>" + esc(moneyY(r.jackpot_yuan)) + "</strong><br>兑奖截止：" + esc(r.claim_deadline) + "</p>" +
+          '<div style="overflow-x:auto"><table style="width:100%;min-width:480px;text-align:left"><thead><tr><th>奖级</th><th>中奖注数</th><th>每注奖金</th><th>奖金合计</th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
+          '<p class="hint" style="margin:4px 0">追加行仅为追加部分奖金。</p>';
+      };
       var recent = issues.slice(-30).reverse();
-      dhEl.innerHTML = recent.map(function (it) {
-        return '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:7px 0;border-bottom:1px solid var(--accent-line,#e4d8fb)">' +
+      var rowHtml = function (it) {
+        var r = detailByIssue[String(it.issue)];
+        return '<details style="border-bottom:1px solid var(--accent-line,#e4d8fb)">' +
+          '<summary style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:7px 0;cursor:pointer">' +
           '<span style="font-weight:600">' + it.issue + '期</span>' +
           '<span style="color:var(--muted,#94a3b8);font-size:12px">' + it.date + '</span>' +
           '<span>' + balls(it.front, "front") + '</span>' +
-          '<span>' + balls(it.back, "back") + '</span></div>';
-      }).join("");
+          '<span>' + balls(it.back, "back") + '</span>' +
+          '<span style="font-size:12px;color:var(--accent,#7c3aed)">' + (r ? "奖金详情 ▾" : "详情 ▾") + '</span></summary>' +
+          '<div style="padding:2px 0 8px">' + detailHtml(r) + "</div></details>";
+      };
+      var firstHtml = recent.slice(0, 5).map(rowHtml).join("");
+      var restHtml = recent.slice(5).map(rowHtml).join("");
+      dhEl.innerHTML = firstHtml +
+        (restHtml ? '<div id="draw-history-more" hidden>' + restHtml + "</div>" +
+          '<button id="draw-history-toggle" type="button" style="margin-top:10px;padding:8px 18px;border-radius:8px;border:1px solid var(--accent-line,#e4d8fb);background:transparent;cursor:pointer;font-size:14px">查看更多（还有 ' + (recent.length - 5) + ' 期）</button>' : "");
+      var toggleBtn = document.getElementById("draw-history-toggle");
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", function () {
+          var more = document.getElementById("draw-history-more");
+          var open = more.hidden;
+          more.hidden = !open;
+          toggleBtn.textContent = open ? "收起" : "查看更多（还有 " + (recent.length - 5) + " 期）";
+        });
+      }
     }
 
     var recTargetEl = document.getElementById("rec-target");
