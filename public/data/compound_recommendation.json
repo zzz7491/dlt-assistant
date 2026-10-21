@@ -3,21 +3,21 @@
   "game_id": "dlt",
   "algorithm_version": "dlt-compound-v1",
   "target_issue": "26120",
-  "primary_fingerprint": "150b51c455152465076b3bdcbe140f4ab82eabba4d0aeb478600cfa045259ee6",
+  "primary_fingerprint": "afe5d513a37985bbb63c2a2ea934af2dee745345a5b059d93bf14e15c180e732",
   "primary": {
     "front": [
-      5,
+      3,
       6,
-      14,
-      21,
-      24
+      23,
+      25,
+      26
     ],
     "back": [
-      1,
-      5
+      7,
+      8
     ]
   },
-  "generated_at": "2026-10-19T15:51:51.642436+00:00",
+  "generated_at": "2026-10-21T11:00:41.187626+00:00",
   "history_cutoff": "26119",
   "window": 50,
   "evidence": {
@@ -78,19 +78,19 @@
       "format": "8+4",
       "front": [
         3,
-        5,
+        4,
         6,
         10,
         14,
-        21,
-        24,
+        23,
+        25,
         26
       ],
       "back": [
-        1,
-        5,
         7,
-        9
+        8,
+        9,
+        12
       ],
       "tickets": 336,
       "basic_yuan": 672,
@@ -105,14 +105,14 @@
         6,
         10,
         14,
-        21,
-        24,
+        23,
+        25,
         26,
         32
       ],
       "back": [
-        1,
-        5,
+        7,
+        8,
         9
       ],
       "tickets": 756,
@@ -120,19 +120,9 @@
       "additional_yuan": 2268
     }
   ],
-  "selected_format": "10+3",
+  "selected_format": "8+4",
   "ai": {
-    "status": "completed",
-    "model": "openrouter/free",
-    "factor_refs": [
-      "front:10",
-      "front:26",
-      "front:14",
-      "front:3",
-      "back:9",
-      "back:1"
-    ],
-    "role": "candidate_selection_and_evidence_review"
+    "status": "unavailable"
   },
   "frozen": true
 }

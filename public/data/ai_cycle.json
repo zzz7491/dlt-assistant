@@ -1,8 +1,189 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-10-21T10:28:02.172919+00:00",
-  "analysis": null,
+  "updated_at": "2026-10-21T11:01:42.905565+00:00",
+  "analysis": {
+    "status": "completed",
+    "model": "dots-studio/dots-3-note-preview:free",
+    "route": "openrouter/free",
+    "prompt_version": "dlt-ai-cycle-v5",
+    "generated_at": "2026-10-21T11:02:10.893729+00:00",
+    "input_hash": "a4c6029ff3eed79fa182033fc27bd06ec8cd41d6117cec2669e874523388f460",
+    "sections": {
+      "compound_reason": {
+        "evidence_ids": [
+          "compound_front_3",
+          "compound_front_23",
+          "compound_structure",
+          "compound_budget",
+          "compound_identity"
+        ],
+        "text": "复式方案覆盖前区8个号码、后区4个号码，展开336注，基本投注672元，全部追加合计1008元。结构上奇偶比为3:7，偶数占优，与上期复盘建议的‘适度引入奇数冷号’存在偏离。前区03遗漏0期、近50期出现10次，属热号；而23遗漏36期、仅出现5次，为长期冷号，其纳入虽扩大跨度覆盖，但冷热失衡可能影响短期命中效率。结构贴合度需在广度与聚焦间权衡。"
+      },
+      "next_focus": {
+        "evidence_ids": [
+          "previous_review",
+          "compound_front_23",
+          "single_front_23",
+          "single_structure",
+          "history_window"
+        ],
+        "text": "结合上期复盘建议，下期应重点关注前区奇偶分布调整。当前单注奇偶比为3:2，结构较平衡；复式为3:7，偶数明显偏多。前区23为遗漏36期的冷号，其纳入虽提升跨度覆盖，但可能拉低短期响应能力。建议在保持跨度覆盖前提下，评估是否替换部分偶数为奇数冷号，优化结构分布，同时结合遗漏值变化评估追加策略的实际必要性。"
+      },
+      "overview": {
+        "evidence_ids": [
+          "single_selection",
+          "candidate_comparison",
+          "compound_structure",
+          "single_structure",
+          "history_window"
+        ],
+        "text": "本方案基于50期历史样本构建，单注综合分43.27，候选排名1，结构为前区奇数3个、偶数2个，和值83，跨度23。复式结构为前区奇数3个、偶数5个，和值111，跨度23。候选比较显示其他组合综合分在36.5至41.03之间，本方案评分领先。结构集中度体现为奇偶分布与跨度控制，反映算法在平衡性上的取舍，但评分排名不等于中奖概率。"
+      },
+      "risk": {
+        "evidence_ids": [
+          "uncertainty",
+          "single_front_23",
+          "compound_front_23",
+          "single_back_8",
+          "history_window"
+        ],
+        "text": "每期开奖相互独立，历史频率和评分不构成中奖概率保证。前区23遗漏36期，属极端冷号，其出现具有高度不确定性；后区08遗漏10期，同样存在回补不确定。复式虽扩大覆盖，但冷号占比高可能降低短期命中效率。结构特征如奇偶比、跨度等仅反映构造偏好，不能预测结果。任何组合均面临同等随机风险。"
+      },
+      "single_reason": {
+        "evidence_ids": [
+          "single_selection",
+          "single_front_26",
+          "single_back_7",
+          "single_structure",
+          "single_identity"
+        ],
+        "text": "正式单注综合分43.27，候选排名1，策略基础68.0、历史表现15.34、近期表现20.0、结构贴合50.0。前区26近50期出现13次，遗漏1期，属热号；后区07出现11次，遗漏0期，为当前热号。结构上奇偶比3:2，和值83，跨度23，体现对平衡与覆盖的兼顾。但结构贴合度高不等于命中概率提升，评分仅反映算法偏好，不具预测效力。"
+      }
+    },
+    "model_evidence_ids": {
+      "overview": [
+        "single_selection",
+        "candidate_comparison",
+        "compound_structure",
+        "single_structure"
+      ],
+      "single_reason": [
+        "single_selection",
+        "single_front_26",
+        "single_back_7",
+        "single_structure"
+      ],
+      "compound_reason": [
+        "compound_front_3",
+        "compound_front_23",
+        "compound_structure",
+        "compound_budget"
+      ],
+      "risk": [
+        "uncertainty",
+        "single_front_23",
+        "compound_front_23",
+        "single_back_8"
+      ],
+      "next_focus": [
+        "previous_review",
+        "compound_front_23",
+        "single_front_23",
+        "single_structure"
+      ]
+    },
+    "evidence_policy": "model-plus-canonical-v1",
+    "kind": "analysis",
+    "issue": "26120",
+    "identity": {
+      "target_issue": "26120",
+      "single": {
+        "front": [
+          3,
+          6,
+          23,
+          25,
+          26
+        ],
+        "back": [
+          7,
+          8
+        ]
+      },
+      "compound": {
+        "format": "8+4",
+        "front": [
+          3,
+          4,
+          6,
+          10,
+          14,
+          23,
+          25,
+          26
+        ],
+        "back": [
+          7,
+          8,
+          9,
+          12
+        ]
+      }
+    },
+    "history_cutoff": "26119",
+    "evidence": {
+      "history_window": "样本50期，截止26119期，目标26120期。",
+      "selection_role": "号码由现有算法构造并已冻结；本次AI负责综合分析、候选评审和解释，不重新选号，不把候选的随机构造冒称为AI选号。",
+      "uncertainty": "每期开奖相互独立；历史频率和评分不是中奖概率；不保证任何组合中奖。",
+      "single_identity": "已冻结正式单注：前区[3, 6, 23, 25, 26]，后区[7, 8]。",
+      "compound_identity": "已冻结复式：前区[3, 4, 6, 10, 14, 23, 25, 26]，后区[7, 8, 9, 12]。",
+      "single_front_3": "前区 03：近50期出现10次，当前遗漏0期。",
+      "single_front_6": "前区 06：近50期出现7次，当前遗漏0期。",
+      "single_front_23": "前区 23：近50期出现5次，当前遗漏36期。",
+      "single_front_25": "前区 25：近50期出现8次，当前遗漏3期。",
+      "single_front_26": "前区 26：近50期出现13次，当前遗漏1期。",
+      "single_back_7": "后区 07：近50期出现11次，当前遗漏0期。",
+      "single_back_8": "后区 08：近50期出现6次，当前遗漏10期。",
+      "single_structure": "前区奇数3个、偶数2个，和值83，跨度23。",
+      "compound_front_3": "前区 03：近50期出现10次，当前遗漏0期。",
+      "compound_front_4": "前区 04：近50期出现9次，当前遗漏2期。",
+      "compound_front_6": "前区 06：近50期出现7次，当前遗漏0期。",
+      "compound_front_10": "前区 10：近50期出现13次，当前遗漏6期。",
+      "compound_front_14": "前区 14：近50期出现12次，当前遗漏10期。",
+      "compound_front_23": "前区 23：近50期出现5次，当前遗漏36期。",
+      "compound_front_25": "前区 25：近50期出现8次，当前遗漏3期。",
+      "compound_front_26": "前区 26：近50期出现13次，当前遗漏1期。",
+      "compound_back_7": "后区 07：近50期出现11次，当前遗漏0期。",
+      "compound_back_8": "后区 08：近50期出现6次，当前遗漏10期。",
+      "compound_back_9": "后区 09：近50期出现14次，当前遗漏5期。",
+      "compound_back_12": "后区 12：近50期出现11次，当前遗漏1期。",
+      "compound_structure": "前区奇数3个、偶数5个，和值111，跨度23。",
+      "single_selection": "正式单注综合分43.27，候选排名1；策略基础68.0、历史表现15.34、近期表现20.0、结构贴合50.0。分数不是概率。",
+      "candidate_comparison": "候选1：前区[3, 6, 23, 25, 26]、后区[7, 8]，综合分43.27，排名1；候选2：前区[1, 6, 9, 22, 24]、后区[2, 12]，综合分37.09，排名3；候选3：前区[20, 22, 26, 32, 35]、后区[2, 9]，综合分36.5，排名4；候选4：前区[14, 17, 11, 7, 28]、后区[8, 5]，综合分41.03，排名2",
+      "compound_budget": "复式8+4，展开336注，基本投注672元，全部追加合计1008元。",
+      "previous_review": "上期AI复盘26119的关注点：下期应关注前区奇偶分布的调整空间，当前单注奇偶比2:3、复式为3:7，均存在偶数偏多倾向。可评估在保持跨度覆盖的前提下，适度引入奇数冷号以优化结构平衡，同时结合遗漏值变化评估追加策略的必要性。需验证结构特征是否真正提升命中分布层次，而非仅满足表层数学指标。这只是分析参考，不是已实施的权重变更。"
+    },
+    "previous_review": {
+      "issue": "26119",
+      "record_hash": "574586e20354f5006583e0de5d46c94f47da5b668bb413ca8594889f276e1495",
+      "next_focus": {
+        "evidence_ids": [
+          "prior_analysis",
+          "structure_comparison",
+          "compound_outcome",
+          "draw"
+        ],
+        "text": "下期应关注前区奇偶分布的调整空间，当前单注奇偶比2:3、复式为3:7，均存在偶数偏多倾向。可评估在保持跨度覆盖的前提下，适度引入奇数冷号以优化结构平衡，同时结合遗漏值变化评估追加策略的必要性。需验证结构特征是否真正提升命中分布层次，而非仅满足表层数学指标。"
+      }
+    },
+    "created_before_draw": true,
+    "historical_data_hash": "367f1eded6044944388cb869111d2ede02c1b39e42cf01faf4d555989da9ebfd",
+    "raw_source_hash": "0434901478d66004263adc39f22d613b48ce0c19d21be0cd7cced87476ee1e24",
+    "editorial_policy": "grounded-editorial-v1",
+    "editorial_removed_clauses": 0,
+    "reviewed_at": "2026-10-21T11:02:10.895388+00:00"
+  },
   "review": {
     "status": "completed",
     "model": "dots-studio/dots-3-note-preview:free",
@@ -181,6 +362,6 @@
   },
   "statuses": {
     "review": "completed",
-    "analysis": "invalid_context"
+    "analysis": "completed"
   }
 }
