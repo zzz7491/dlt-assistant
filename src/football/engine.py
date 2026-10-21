@@ -189,10 +189,37 @@ def build_plan(issue: dict) -> dict:
                 "head_to_head": dynamics.get("head_to_head"),
             }
 
-    # Five closest matches receive a second outcome. Cost stays explicit and bounded.
-    uncertain = {row["order"] for row in sorted(rows, key=lambda row: (row["confidence"], row["order"]))[:5]}
+    # Five matches receive a second outcome; cost stays explicit and
+    # bounded. The doubles first insure the largest live draw threats
+    # (primary + "1"): draws are roughly a quarter of real results, and
+    # the previous rule — doubles only for the closest win/loss matches,
+    # always paired win+loss — structurally never covered a draw
+    # (0 of 84 matches across six issues, while 11 of 56 settled
+    # matches were draws). Remaining slots go to the closest matches.
+    chosen: dict[int, list[str]] = {}
+    draw_threats = []
     for row in rows:
-        row["sfc_choices"] = [row["primary"], row["secondary"]] if row["order"] in uncertain else [row["primary"]]
+        if row["primary"] == "1":
+            continue
+        probs = row["probabilities"]
+        other_side = "0" if row["primary"] == "3" else "3"
+        if probs["1"] >= 0.24 and probs["1"] >= probs[other_side] - 0.05:
+            draw_threats.append(row)
+    draw_threats.sort(key=lambda row: (-row["probabilities"]["1"], row["order"]))
+    for row in draw_threats[:5]:
+        chosen[row["order"]] = [row["primary"], "1"]
+    if len(chosen) < 5:
+        rest = [row for row in rows if row["order"] not in chosen]
+        rest.sort(key=lambda row: (row["confidence"], row["order"]))
+        for row in rest[: 5 - len(chosen)]:
+            pair = [row["primary"], row["secondary"]]
+            if "1" not in pair and row["primary"] != "1" and (
+                row["probabilities"]["1"] >= row["probabilities"][row["secondary"]] - 0.02
+            ):
+                pair = [row["primary"], "1"]
+            chosen[row["order"]] = pair
+    for row in rows:
+        row["sfc_choices"] = chosen.get(row["order"], [row["primary"]])
 
     r9_orders = {
         row["order"] for row in sorted(rows, key=lambda row: (-row["confidence"], row["order"]))[:9]
