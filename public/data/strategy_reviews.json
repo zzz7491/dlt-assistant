@@ -1,16 +1,38 @@
 {
   "strategies": [
     {
-      "strategy": "D-综合评分型",
-      "periods": 26,
-      "avg_hits": 0.69,
-      "avg_hits_sub": 0.31,
+      "strategy": "C-AI智能型",
+      "periods": 1,
+      "avg_hits": 1.0,
+      "avg_hits_sub": 0.0,
       "dist": {
-        "0": 11,
+        "1": 1
+      },
+      "recent": [
+        {
+          "issue": "26120",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        }
+      ],
+      "sample_warning": true
+    },
+    {
+      "strategy": "D-综合评分型",
+      "periods": 27,
+      "avg_hits": 0.67,
+      "avg_hits_sub": 0.3,
+      "dist": {
+        "0": 12,
         "1": 12,
         "2": 3
       },
       "recent": [
+        {
+          "issue": "26120",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26119",
           "hits": 0.0,
@@ -55,26 +77,26 @@
           "issue": "26111",
           "hits": 2.0,
           "hits_sub": 0.0
-        },
-        {
-          "issue": "26110",
-          "hits": 0.0,
-          "hits_sub": 1.0
         }
       ],
       "sample_warning": false
     },
     {
       "strategy": "A-均衡统计型",
-      "periods": 27,
-      "avg_hits": 0.59,
-      "avg_hits_sub": 0.37,
+      "periods": 28,
+      "avg_hits": 0.61,
+      "avg_hits_sub": 0.36,
       "dist": {
         "0": 14,
-        "1": 10,
+        "1": 11,
         "2": 3
       },
       "recent": [
+        {
+          "issue": "26120",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26119",
           "hits": 1.0,
@@ -118,11 +140,6 @@
         {
           "issue": "26111",
           "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26110",
-          "hits": 2.0,
           "hits_sub": 0.0
         }
       ],
@@ -130,15 +147,20 @@
     },
     {
       "strategy": "B-冷热组合型",
-      "periods": 27,
-      "avg_hits": 0.52,
-      "avg_hits_sub": 0.3,
+      "periods": 28,
+      "avg_hits": 0.57,
+      "avg_hits_sub": 0.29,
       "dist": {
         "0": 16,
         "1": 8,
-        "2": 3
+        "2": 4
       },
       "recent": [
+        {
+          "issue": "26120",
+          "hits": 2.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26119",
           "hits": 1.0,
@@ -182,11 +204,6 @@
         {
           "issue": "26111",
           "hits": 0.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26110",
-          "hits": 1.0,
           "hits_sub": 1.0
         }
       ],
@@ -199,5 +216,5 @@
     "main_max": 5
   },
   "disclaimer": "命中统计仅为历史娱乐回顾；彩票开奖为独立随机事件，不代表任何预测依据。",
-  "updated_at": "2026-10-21 11:29:04"
+  "updated_at": "2026-10-21 15:01:08"
 }
