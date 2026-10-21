@@ -477,6 +477,19 @@
     // P1-1：普通用户仅见唯一推荐卡。不再渲染 A/B/C/D 折叠网格（#recommendations），
     // 不再渲染策略诊断（renderStrategyHint / #strategy-hint）。
     // recs 为空 / 0 个或多个 is_primary → renderPrimaryRecommendation 走 fail-closed 异常态。
+    /* ①b 历史开奖记录：最近 30 期（最新在前），数据与最新开奖同源 */
+    var dhEl = document.getElementById("draw-history-body");
+    if (dhEl) {
+      var recent = issues.slice(-30).reverse();
+      dhEl.innerHTML = recent.map(function (it) {
+        return '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:7px 0;border-bottom:1px solid var(--accent-line,#e4d8fb)">' +
+          '<span style="font-weight:600">' + it.issue + '期</span>' +
+          '<span style="color:var(--muted,#94a3b8);font-size:12px">' + it.date + '</span>' +
+          '<span>' + balls(it.front, "front") + '</span>' +
+          '<span>' + balls(it.back, "back") + '</span></div>';
+      }).join("");
+    }
+
     var recTargetEl = document.getElementById("rec-target");
     var authPrimary = selectPrimary(recs);
     if (recTargetEl) recTargetEl.textContent = (authPrimary && authPrimary.target_issue) ? authPrimary.target_issue : "—";
