@@ -77,10 +77,10 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
 
     recommendations = recommend(
         analysis, cfg, stats=stats,
-        # C-AI智能型用最近10期（其内部自行截取）；E-走势AI型看最近30期走势图
+        # C-AI智能型用最近10期（其内部自行截取）；E-走势AI型看最近300期走势图
         recent_issues=[
             {"issue": it.get("issue"), "front": it.get("front"), "back": it.get("back")}
-            for it in db["issues"][-30:]
+            for it in db["issues"][-300:]
         ],
         target_issue=str(target_issue),
     )

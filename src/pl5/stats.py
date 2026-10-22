@@ -120,7 +120,7 @@ def generate_c_ai(target_issue: str, rows: list[dict]) -> dict | None:
 
 
 def generate_trend_ai(target_issue: str, rows: list[dict]) -> dict | None:
-    """D-走势AI型：AI 看最近30期走势图数据直接研判出号（2026-10-22 用户指令）。
+    """D-走势AI型：AI 看最近300期走势图数据直接研判出号（2026-10-22 用户指令）。
 
     输入为 src/common/trend_data.digit_trend 的走势图文本形态（逐期开奖、
     和值/跨度曲线、各数位出号条），不用频率/遗漏统计口径。

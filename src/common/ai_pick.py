@@ -106,7 +106,7 @@ def _build_trend_prompt(game_id: str, target_issue: str, trend: dict) -> str:
     trend_text = json.dumps(trend, ensure_ascii=False, separators=(",", ":"))
     return (
         f"你是一位在彩票店看走势图的资深彩民，擅长看走势图研判号码。"
-        f"下面是{RULES[game_id]['label']}最近 {trend.get('window', 30)} 期的走势图数据："
+        f"下面是{RULES[game_id]['label']}最近 {trend.get('window', 300)} 期的走势图数据："
         f"逐期开奖（旧→新）、和值与跨度逐期序列（即和值/跨度曲线）、"
         f"以及每个号码的出号条（逐期 1=开出、0=未开出，按时间从旧到新，末尾是最新一期；"
         f"数字型为每个数位上每个数字的出号条）。\n"

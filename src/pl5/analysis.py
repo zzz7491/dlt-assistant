@@ -63,7 +63,7 @@ def build_analysis(rows: list[dict], picks: list[dict], target: dict) -> dict:
         )
         + (
             f"D-走势AI型选 {''.join(map(str, pick_t['digits']))}："
-            "AI 看近30期走势图（逐期开奖、和值/跨度曲线、各数位出号条）研判出号。"
+            "AI 看近300期走势图（逐期开奖、和值/跨度曲线、各数位出号条）研判出号。"
             if pick_t is not None
             else "D-走势AI型本期未生成（AI 通道不可用）。"
         )
