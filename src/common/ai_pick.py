@@ -147,17 +147,27 @@ def _extract_json(text: str) -> dict | None:
         text = text.strip("`").strip()
         if text.lower().startswith("json"):
             text = text[4:].strip()
-    try:
-        obj = json.loads(text)
-    except Exception:
+    def _loads(t: str):
+        try:
+            return json.loads(t)
+        except Exception:
+            return None
+
+    obj = _loads(text)
+    if obj is None:
         # 尝试截取第一个 {...} 块
         start, end = text.find("{"), text.rfind("}")
         if start < 0 or end <= start:
             return None
-        try:
-            obj = json.loads(text[start : end + 1])
-        except Exception:
-            return None
+        chunk = text[start : end + 1]
+        obj = _loads(chunk)
+        if obj is None:
+            # 模型常学提示词里的补零写法输出 [03, 05] 这类非法 JSON 数字：
+            # 去掉数组/对象值位置数字的前导零后重试（2026-10-22 实测修复）。
+            import re as _re
+
+            cleaned = _re.sub(r"(?<=[\[,\s])0+(\d)", r"\1", chunk)
+            obj = _loads(cleaned)
     return obj if isinstance(obj, dict) else None
 
 
@@ -251,20 +261,18 @@ def _chat_text(key: str, base: str, models: list, prompt: str, max_tokens: int =
     for model in models:
         for _attempt in (1, 2):
             try:
-                body = _post_json(
-                    url,
-                    _headers(key),
-                    {
-                        "model": model,
-                        "temperature": 0.3,
-                        "max_tokens": max_tokens,
-                        "messages": [
-                            {"role": "system", "content": "你只输出研判要点文本，不输出其他内容。"},
-                            {"role": "user", "content": prompt},
-                        ],
-                    },
-                    timeout=100,
-                )
+                _pl = {
+                    "model": model,
+                    "temperature": 0.3,
+                    "max_tokens": max_tokens,
+                    "messages": [
+                        {"role": "system", "content": "你只输出研判要点文本，不输出其他内容。"},
+                        {"role": "user", "content": prompt},
+                    ],
+                }
+                if _is_local_base(base):
+                    _pl["reasoning_effort"] = "none"
+                body = _post_json(url, _headers(key), _pl, timeout=100)
                 choices = body.get("choices") or []
                 text = ((choices[0].get("message") or {}).get("content") or "").strip() if choices else ""
                 if text:
@@ -421,20 +429,25 @@ def _call(game_id: str, target_issue: str | None, prompt: str, tag: str, local: 
     for model in models:
         for attempt in (1, 2):
             try:
+                _payload = {
+                    "model": model,
+                    "temperature": 0.2,
+                    # 本地推理模型（gemma4）会先烧隐藏思考 token，300 必饿死正文
+                    "max_tokens": 1200 if chan == "local" else 300,
+                    "messages": [
+                        {"role": "system", "content": "你只输出严格 JSON，不输出任何解释。"},
+                        {"role": "user", "content": prompt},
+                    ],
+                }
+                if chan == "local":
+                    # 关隐藏思考：复杂提示词下 gemma4 的 reasoning 能烧光全部
+                    # token 使正文为空（#179 synth 九连败实测）；关掉后秒出 JSON
+                    _payload["reasoning_effort"] = "none"
                 body = _post_json(
                     url,
                     headers,
                     timeout=100 if chan == "local" else TIMEOUT_SECS,
-                    payload={
-                        "model": model,
-                        "temperature": 0.2,
-                        # 本地推理模型（gemma4）会先烧隐藏思考 token，300 必饿死正文
-                        "max_tokens": 1200 if chan == "local" else 300,
-                        "messages": [
-                            {"role": "system", "content": "你只输出严格 JSON，不输出任何解释。"},
-                            {"role": "user", "content": prompt},
-                        ],
-                    },
+                    payload=_payload,
                 )
                 choices = body.get("choices") or []
                 text = (choices[0].get("message") or {}).get("content") if choices else ""
