@@ -139,6 +139,20 @@ def generate_trend_ai(target_issue: str, rows: list[dict]) -> dict | None:
     return {"strategy": "D-走势AI型", "digits": numbers["digits"]}
 
 
+
+def generate_synth_ai(target_issue: str, picks: list[dict]) -> dict | None:
+    """F-综合AI型：各策略号码喂 AI 合成唯一一注（2026-10-22 用户定版）。
+
+    策略退居幕后，页面唯一推荐即此注。失败或可用策略不足 → None
+    （调用方跳过，展示层回退既有兜底），绝不照抄任一路冒充综合。
+    """
+    from src.common import ai_pick  # 延迟导入，避免循环依赖
+
+    numbers = ai_pick.synthesize("fc3d", target_issue, picks)
+    if numbers is None:
+        return None
+    return {"strategy": "F-综合AI型", "digits": numbers["digits"]}
+
 def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
     """A/B 统计策略 + C-AI智能型（无密钥/失败时跳过 C）。"""
     if len(rows) < 100:
@@ -173,6 +187,9 @@ def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
     pick_t = generate_trend_ai(target_issue, rows)
     if pick_t is not None:
         picks.append(pick_t)
+    pick_f = generate_synth_ai(target_issue, picks)
+    if pick_f is not None:
+        picks.append(pick_f)
     return picks
 
 
@@ -200,15 +217,18 @@ def generate_plans(target_issue: str, rows: list[dict], picks: list[dict]) -> li
     freq_100 = frequency(rows, 100)
     omit = omission(rows)
     pick_a = picks[0]
+    # 唯一推荐 = F-综合AI型（在场时）；缺席回退 A（2026-10-22 用户定版）。
+    pick_main = next((p for p in picks if str(p.get("strategy", "")).startswith("F-")), pick_a)
     single = {
-        "digits": pick_a["digits"],
+        "strategy": pick_main["strategy"],
+        "digits": pick_main["digits"],
         "basis": [
             {
                 "position": pos,
-                "digit": pick_a["digits"][pos],
-                "freq100": freq_100["per_position"][pos][pick_a["digits"][pos]],
-                "omission": omit[pos][pick_a["digits"][pos]],
-                "score": round(scores[pos][pick_a["digits"][pos]], 1),
+                "digit": pick_main["digits"][pos],
+                "freq100": freq_100["per_position"][pos][pick_main["digits"][pos]],
+                "omission": omit[pos][pick_main["digits"][pos]],
+                "score": round(scores[pos][pick_main["digits"][pos]], 1),
             }
             for pos in range(POSITIONS)
         ],

@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS dlt_recommendations (
 DEFAULT_OUT = "public/data/recommendations.json"
 EXISTING = "public/data/recommendations.json"   # 结构对比基准（当前线上 JSON）
 STRATEGY_PREFIXES = ("A", "B", "C", "D", "E")
+# F-综合AI型（2026-10-22）：AI 合成注，允许出现但不强制每期都有（失败可缺席）
+ALLOWED_PREFIXES = STRATEGY_PREFIXES + ("F",)
 
 
 def _run_wrangler(cmd: str) -> str:
@@ -166,7 +168,7 @@ def _validate_structure(recs: list[dict], seed: list[dict]) -> bool:
         if not (isinstance(r["target_issue"], str) and re.fullmatch(r"\d{5}", r["target_issue"])):
             print(f"  ❌ 记录[{i}].target_issue 非 5 位字符串")
             ok = False
-        if not isinstance(r["strategy"], str) or r["strategy"].split("-")[0] not in STRATEGY_PREFIXES:
+        if not isinstance(r["strategy"], str) or r["strategy"].split("-")[0] not in ALLOWED_PREFIXES:
             print(f"  ❌ 记录[{i}].strategy 前缀非 A/B/C")
             ok = False
     print(f"[check] 字段完整性 / 类型 / front[5] / back[2] / target_issue[5位] / strategy[A-B-C]= "
@@ -174,7 +176,7 @@ def _validate_structure(recs: list[dict], seed: list[dict]) -> bool:
 
     # ② strategy 集合应为 A/B/C 三策略齐全
     prefixes = {r["strategy"].split("-")[0] for r in recs}
-    if prefixes == set(STRATEGY_PREFIXES):
+    if set(STRATEGY_PREFIXES) <= prefixes <= set(ALLOWED_PREFIXES):
         print(f"[check] 策略集合 = {sorted(prefixes)}（A/B/C 齐全）✅")
     else:
         print(f"  ❌ 策略集合缺失：{prefixes}")

@@ -300,9 +300,14 @@ def _pick_trend_segmented(game_id: str, target_issue: str, trend: dict) -> dict 
         return _call(game_id, target_issue, _build_trend_prompt(game_id, target_issue, trend), "走势AI型")
     total = (n + SEGMENT_SIZE - 1) // SEGMENT_SIZE
     digests = []
+    # 分段要点走非推理模型直出文本：推理模型会把 token 预算烧在隐藏思考上、
+    # 正文为空（2026-10-22 #177 实测全灭）。可用 DLT_AI_DIGEST_MODEL 覆盖。
+    digest_models = models
+    if _is_local_base(base):
+        digest_models = [os.environ.get("DLT_AI_DIGEST_MODEL") or "gemma3:27b"]
     for i in range(total):
         seg = _trend_segment(trend, i * SEGMENT_SIZE, min(n, (i + 1) * SEGMENT_SIZE))
-        text = _chat_text(key, base, models, _segment_prompt(game_id, i, total, seg))
+        text = _chat_text(key, base, digest_models, _segment_prompt(game_id, i, total, seg))
         if not text:
             print(f"[ai_pick] {game_id} 走势分段 {i + 1}/{total} 失败，跳过 走势AI型")
             return None
@@ -326,6 +331,63 @@ def _pick_trend_segmented(game_id: str, target_issue: str, trend: dict) -> dict 
     )
     return _call(game_id, target_issue, prompt, "走势AI型")
 
+
+
+# ---------------------------------------------------------------------------
+# AI 综合（F-综合AI型）：五家号码喂 AI 合成唯一一注（mo 2026-10-22 定版）。
+# 策略退居幕后，页面只展示这一注。合成失败 → 返回 None（该期无 F，
+# 展示层回退既有兜底），绝不照抄任一路冒充综合。
+# ---------------------------------------------------------------------------
+
+_METHOD_NOTES = {
+    "A": "统计均衡型：频率与遗漏平衡",
+    "B": "冷热组合型：热号打底、冷号点缀",
+    "C": "AI智能型：AI 依据近期开奖与统计证据研判",
+    "D": "评分/走势型：多维评分模型（数字彩为 AI 看近300期走势图研判）",
+    "E": "走势AI型：AI 看近300期走势图研判",
+}
+
+
+def _pick_text(pick: dict) -> str:
+    if pick.get("digits") is not None:
+        return "".join(str(d) for d in pick["digits"])
+    if pick.get("red") is not None:
+        reds = " ".join(f"{int(n):02d}" for n in pick["red"])
+        return f"红 {reds} + 蓝 {int(pick['blue']):02d}"
+    front = " ".join(f"{int(n):02d}" for n in pick.get("front") or [])
+    back = " ".join(f"{int(n):02d}" for n in pick.get("back") or [])
+    return f"前区 {front} + 后区 {back}"
+
+
+def synthesize(game_id: str, target_issue: str, picks: list[dict]) -> dict | None:
+    """把各策略本期号码喂给 AI，合成唯一一注。成功返回校验后的号码 dict。"""
+    usable = [p for p in (picks or []) if isinstance(p, dict) and p.get("strategy")]
+    if len(usable) < 2:
+        print(f"[ai_pick] {game_id} target={target_issue} synth skipped: "
+              f"only {len(usable)} strategies available")
+        return None
+    lines = []
+    for p in usable:
+        label = str(p["strategy"])
+        note = _METHOD_NOTES.get(label.split("-")[0].strip().upper(), "")
+        lines.append(f"- {label}（{note}）：{_pick_text(p)}")
+    rule = RULES[game_id]
+    prompt = (
+        "你是一名彩票娱乐分析合成师。下面是本期各策略 independently 给出的号码，"
+        "它们的方法各不相同：\n"
+        + "\n".join(lines)
+        + f"\n\n请综合研判，合成唯一一注{rule['label']}号码作为本期唯一推荐："
+        "权衡各路方法的可靠程度与号码之间的呼应（多路共同看好的号码权重更高），"
+        "同时保持结构均衡（和值、跨度、奇偶、区间分布合理）。"
+        "不要整注照抄任何一路，也不要机械多数投票，要做出独立取舍。"
+        f"目标期号 {target_issue}。只输出严格 JSON，格式为 " + rule["schema"] + "，不要输出任何解释、前后缀或 markdown 代码块。"
+    )
+    result = _call(game_id, target_issue, prompt, "综合AI型")
+    if result is not None:
+        result["strategy"] = "F-综合AI型"
+    else:
+        print(f"[ai_pick] {game_id} target={target_issue} synth FAILED (skipped)")
+    return result
 
 def pick_trend(game_id: str, target_issue: str | None, trend: dict) -> dict | None:
     """走势AI型出号：AI 看走势图数据（src/common/trend_data 构造）直接研判出号。
@@ -366,7 +428,8 @@ def _call(game_id: str, target_issue: str | None, prompt: str, tag: str, local: 
                     payload={
                         "model": model,
                         "temperature": 0.2,
-                        "max_tokens": 300,
+                        # 本地推理模型（gemma4）会先烧隐藏思考 token，300 必饿死正文
+                        "max_tokens": 1200 if chan == "local" else 300,
                         "messages": [
                             {"role": "system", "content": "你只输出严格 JSON，不输出任何解释。"},
                             {"role": "user", "content": prompt},

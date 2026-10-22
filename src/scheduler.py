@@ -89,7 +89,7 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
     # target_issue 已在上方 P4-1 deterministic seed 注入前计算完成，复用同值。
     rec_date = datetime.now().strftime("%Y-%m-%d")
     all_recs: list[dict[str, Any]] = []
-    for key in ("A", "B", "C", "D", "E"):
+    for key in ("A", "B", "C", "D", "E", "F"):
         label = f"{key}-{STRATEGY_LABELS[key]}"
         combos = recommendations.get(key, [])
         if not combos:
@@ -103,7 +103,7 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
                 r["basis"] = c0.get("basis")
         all_recs.extend(recs)
     save_recs(rec_cfg["log_path"], all_recs)
-    done_keys = "/".join(k for k in ("A", "B", "C", "D", "E") if recommendations.get(k))
+    done_keys = "/".join(k for k in ("A", "B", "C", "D", "E", "F") if recommendations.get(k))
     print(f"[scheduler] 已记录推荐 {len(all_recs)} 组（{done_keys}），目标期号 {target_issue}")
 
     # 4) 开奖验证（比对历史推荐 vs 真实开奖），在生成报告前取得汇总

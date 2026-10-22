@@ -140,6 +140,20 @@ def generate_trend_ai(target_issue: str, rows: list[dict]) -> dict | None:
     return {"strategy": "D-走势AI型", "red": numbers["red"], "blue": numbers["blue"]}
 
 
+
+def generate_synth_ai(target_issue: str, picks: list[dict]) -> dict | None:
+    """F-综合AI型：各策略号码喂 AI 合成唯一一注（2026-10-22 用户定版）。
+
+    策略退居幕后，页面唯一推荐即此注。失败或可用策略不足 → None
+    （调用方跳过，展示层回退既有兜底），绝不照抄任一路冒充综合。
+    """
+    from src.common import ai_pick  # 延迟导入，避免循环依赖
+
+    numbers = ai_pick.synthesize("ssq", target_issue, picks)
+    if numbers is None:
+        return None
+    return {"strategy": "F-综合AI型", "red": numbers["red"], "blue": numbers["blue"]}
+
 def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
     """A/B 统计策略 + C-AI智能型（无密钥/失败时跳过 C）。"""
     if len(rows) < 100:
@@ -186,6 +200,9 @@ def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
     pick_t = generate_trend_ai(target_issue, rows)
     if pick_t is not None:
         picks.append(pick_t)
+    pick_f = generate_synth_ai(target_issue, picks)
+    if pick_f is not None:
+        picks.append(pick_f)
     return picks
 
 
@@ -215,9 +232,12 @@ def generate_plans(target_issue: str, rows: list[dict], picks: list[dict]) -> li
     freq_100 = frequency(rows, 100)
     omit = omission(rows)
     pick_a = picks[0]
+    # 唯一推荐 = F-综合AI型（在场时）；缺席回退 A（2026-10-22 用户定版）。
+    pick_main = next((p for p in picks if str(p.get("strategy", "")).startswith("F-")), pick_a)
     single = {
-        "red": pick_a["red"],
-        "blue": pick_a["blue"],
+        "strategy": pick_main["strategy"],
+        "red": pick_main["red"],
+        "blue": pick_main["blue"],
         "basis": [
             {
                 "number": n,
@@ -225,12 +245,12 @@ def generate_plans(target_issue: str, rows: list[dict], picks: list[dict]) -> li
                 "omission": omit["red"][n],
                 "score": round(red_scores[n], 1),
             }
-            for n in pick_a["red"]
+            for n in pick_main["red"]
         ],
         "blue_basis": {
-            "number": pick_a["blue"],
-            "freq100": freq_100["blue"][pick_a["blue"]],
-            "omission": omit["blue"][pick_a["blue"]],
+            "number": pick_main["blue"],
+            "freq100": freq_100["blue"][pick_main["blue"]],
+            "omission": omit["blue"][pick_main["blue"]],
         },
     }
     ranked_red = sorted(RED_RANGE, key=lambda n: (-red_scores[n], n))

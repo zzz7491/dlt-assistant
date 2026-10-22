@@ -46,7 +46,7 @@
 
     const plans = data.plans;
     $('ssq-single').innerHTML = plans && plans.single
-      ? `<div class="match-meta">目标第 ${safe(plans.target_issue)} 期 · ${safe(plans.target_date)} · 均衡评分最高的一注（已锁定）</div>${balls(plans.single.red, plans.single.blue)}` +
+      ? `<div class="match-meta">目标第 ${safe(plans.target_issue)} 期 · ${safe(plans.target_date)} · ${safe(plans.single.strategy || '')} · 本期唯一推荐（已锁定）</div>${balls(plans.single.red, plans.single.blue)}` +
         `<div class="match-meta">评分依据（红球：近100期频次 / 当前遗漏 / 均衡分）：${plans.single.basis.map(b => `${pad(b.number)}(${b.freq100}/${b.omission}/${b.score})`).join('、')}</div>`
       : '<p class="hint">唯一推荐生成中。</p>';
     $('ssq-combo').innerHTML = plans && plans.combo
@@ -55,7 +55,7 @@
       : '<p class="hint">组合推荐生成中。</p>';
 
     const rec = data.recommendations;
-    $('ssq-picks').innerHTML = rec
+    const pkEl = $('ssq-picks'); if (pkEl) pkEl.innerHTML = rec
       ? `<div class="match-meta">目标第 ${safe(rec.target_issue)} 期 · ${safe(rec.target_date)} 开奖</div>` +
         rec.picks.map(p => `<div class="match-meta"><strong>${safe(p.strategy)}</strong></div>${balls(p.red, p.blue)}`).join('')
       : '<p class="hint">本期推荐生成中，请稍后再看。</p>';

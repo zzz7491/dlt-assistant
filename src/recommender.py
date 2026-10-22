@@ -19,6 +19,7 @@ STRATEGY_LABELS: dict[str, str] = {
     "C": "AI智能型",
     "D": "综合评分型",
     "E": "走势AI型",
+    "F": "综合AI型",
 }
 
 
@@ -311,4 +312,21 @@ def recommend(analysis: dict[str, Any], cfg: dict[str, Any],
     if stats is not None:
         d_combo = _STRATEGY_FUNCS["D"](analysis, cfg, rng, stats)
         out["D"] = [d_combo] if d_combo else []  # 统计缺失时 D 不出号，调用方跳过
+    # F-综合AI型（2026-10-22 用户定版）：五家号码喂 AI 合成唯一一注，
+    # 它即本期唯一推荐（publisher 侧强制 primary）。失败 → 空（回退融合主推荐）。
+    views = [
+        {"strategy": f"{k}-{STRATEGY_LABELS[k]}", "front": c["front"], "back": c["back"]}
+        for k in ("A", "B", "C", "D", "E")
+        for c in (out.get(k) or [])
+    ]
+    synth = None
+    if len(views) >= 2:
+        try:
+            from .common import ai_pick as _ai_pick
+            r = _ai_pick.synthesize("dlt", str(target_issue or ""), views)
+            if r:
+                synth = {"front": r["front"], "back": r["back"]}
+        except Exception:
+            synth = None
+    out["F"] = [synth] if synth else []
     return out

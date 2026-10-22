@@ -51,7 +51,7 @@
 
     const plans = data.plans;
     $('pl3-single').innerHTML = plans && plans.single
-      ? `<div class="match-meta">目标第 ${safe(plans.target_issue)} 期 · ${safe(plans.target_date)} · 均衡评分最高的一注直选（已锁定）</div>${balls(plans.single.digits)}` +
+      ? `<div class="match-meta">目标第 ${safe(plans.target_issue)} 期 · ${safe(plans.target_date)} · ${safe(plans.single.strategy || '')} · 本期唯一推荐（已锁定）</div>${balls(plans.single.digits)}` +
         `<div class="match-meta">评分依据：${plans.single.basis.map(b => `${POS[b.position]} ${b.digit}（频次${b.freq100}/遗漏${b.omission}/分${b.score}）`).join('、')}</div>`
       : '<p class="hint">唯一推荐生成中。</p>';
     $('pl3-combo').innerHTML = plans && plans.combo
@@ -61,7 +61,7 @@
       : '<p class="hint">组合推荐生成中。</p>';
 
     const rec = data.recommendations;
-    $('pl3-picks').innerHTML = rec
+    const pkEl = $('pl3-picks'); if (pkEl) pkEl.innerHTML = rec
       ? `<div class="match-meta">目标第 ${safe(rec.target_issue)} 期 · ${safe(rec.target_date)} 开奖</div>` +
         rec.picks.map(pk => `<div class="match-meta"><strong>${safe(pk.strategy)}</strong></div>${balls(pk.digits)}`).join('')
       : '<p class="hint">本期推荐生成中，请稍后再看。</p>';

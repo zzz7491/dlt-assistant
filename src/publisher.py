@@ -53,7 +53,7 @@ def _strategy_group(strategy: Any) -> str:
     if not strategy:
         return "other"
     head = str(strategy).split("-")[0].strip().upper()
-    return head if head in ("A", "B", "C", "D") else "other"
+    return head if head in ("A", "B", "C", "D", "F") else "other"  # F-综合AI型（2026-10-22）需被识别以强制 primary；E 维持历史行为
 
 
 # ---------------------------------------------------------------- P0-1 不可变发布快照
@@ -741,6 +741,16 @@ def publish(*, rec_path: str = "reports/recommendations.json",
     # + is_primary 由融合结果重算；任何异常 → 原样返回（保留 D 硬编码兜底，行为与 D3.1 前一致）
     recs = _apply_final_scores(recs, backtest, strategy_score, reflection, None,
                                weights=_load_final_score_config())
+
+    # F-综合AI型在场 → 它就是唯一推荐（mo 2026-10-22 定版：五家号码喂 AI
+    # 合成一注，策略退居幕后）。融合分照常计算（统计口径不变），仅
+    # is_primary 强制归 F；F 的 final_rank 置 1 与其展示地位一致。
+    if any(_strategy_group(r.get("strategy")) == "F" for r in recs if isinstance(r, dict)):
+        for r in recs:
+            if isinstance(r, dict):
+                r["is_primary"] = (_strategy_group(r.get("strategy")) == "F")
+                if r["is_primary"]:
+                    r["final_rank"] = 1
 
     # P0 唯一权威 primary + 不可变发布快照：在「恰好一个 is_primary」确定之后写快照。
     # 快照必须使用与前端展示一致的同一 primary（pick_primary 与 selectPrimary 同契约：只读 is_primary）。
