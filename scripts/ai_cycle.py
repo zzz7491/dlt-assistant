@@ -261,9 +261,14 @@ def validate_response(raw,context):
 def request_analysis(context):
     key=os.getenv('DLT_AI_API_KEY','').strip();url=os.getenv('DLT_AI_BASE_URL','').strip();route=os.getenv('DLT_AI_MODEL','').strip()
     if not all([key,url,route]):raise RuntimeError('not_configured')
-    # This feature is explicitly authorized for free online models only.
-    if url!='https://openrouter.ai/api/v1' or not (route=='openrouter/free' or route.endswith(':free')):
-        raise RuntimeError('free_route_required')
+    # Route policy (owner decision, 2026-10-22): the configured route
+    # decides, free or paid. Free endpoints proved unreliable for this
+    # strict-schema feature (multi-day 404 / invalid responses), so the
+    # owner switched DLT_AI_MODEL to the paid deepseek route that the
+    # C-AI picker already uses. Only the base URL stays pinned, so the
+    # key is never sent to an arbitrary endpoint.
+    if url!='https://openrouter.ai/api/v1':
+        raise RuntimeError('openrouter_base_required')
     schema={k:{'text':'中文解释引用指标的意义、取舍及局限；具体数字由页面自动展示，不要重新计算或复述。','evidence_ids':['现有证据ID']} for k in SECTIONS[context['kind']]}
     prompt=('你是大乐透专业数据分析助手。只返回JSON，字段严格匹配给定模板。依据evidence作具体分析，每段中文五十至一百五十字；'
             '不得使用随机生成、随机基线充当理由，不得说号码无重合。禁止使用证据中没有的走势、预算合理、市场环境、表现均衡或可接受范围等笼统评价。每段选择两三项引用指标，明确解释这些指标怎样影响本方案的评审和取舍；不要重新计算数值，不复述具体数字、整组号码、百分比或中文数量，程序会直接展示本段引用的具体数据。禁止自算回报率或新比率。不要只写概括性空话；例如说明评分排名与结构集中度体现何种取舍，而不是声称有效预测。不要写随机生成或随机基线作为理由；AI负责评审既定方案，解释真实结构与取舍。不得暗示遗漏必回补、奇偶必回归、冷热带来稳定性；不作无证据趋势或预测推断。不得说号码无重合；实际命中以程序结算为准。不编造事实、不承诺中奖或提高中奖概率，具体数值通过evidence_ids引用。'

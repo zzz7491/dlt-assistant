@@ -151,11 +151,18 @@ class AICycleTests(unittest.TestCase):
         self.assertEqual(m.audit_record(edited,archive),before)
         self.assertEqual(edited['identity'],original['identity'])
 
-    def test_free_route_only(self):
-        env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'paid/model'}
+    def test_route_base_must_be_openrouter(self):
+        env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://example.com/v1','DLT_AI_MODEL':'deepseek/deepseek-chat'}
         with patch.dict('os.environ',env),patch.object(m.requests,'post') as post:
             with self.assertRaises(RuntimeError):m.request_analysis(self.context())
             post.assert_not_called()
+
+    def test_paid_route_is_accepted(self):
+        ctx=self.context();raw=fake_response(ctx)['sections'];response=Mock(ok=True)
+        response.json.return_value={'model':'deepseek/deepseek-chat','choices':[{'message':{'content':json.dumps(raw)}}]}
+        env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'deepseek/deepseek-chat'}
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',return_value=response):
+            self.assertEqual(m.request_analysis(ctx)['status'],'completed')
 
     def test_actual_model_retained_and_http_failure_is_sanitized(self):
         ctx=self.context();raw=fake_response(ctx)['sections'];response=Mock(ok=True)
