@@ -8,7 +8,7 @@
     $('issue-summary').innerHTML = `<div class="issue-meta"><div class="metric"><small>期号</small><strong>第${safe(data.issue)}期</strong></div><div class="metric"><small>停售时间</small><strong>${safe(time(data.sale_end))}</strong></div><div class="metric"><small>开奖日期</small><strong>${safe(data.draw_date)}</strong></div><div class="metric"><small>玩法</small><strong>14场 + 任选九</strong></div></div>`;
     const ai = data.ai || {};
     const sections = ai.sections || {};
-    $('ai-summary').innerHTML = `<span class="ai-state">${ai.status === 'completed' ? 'AI 已完成本期分析' : 'AI 分析更新中'}</span><h3>${safe(ai.title || 'AI 综合分析')}</h3>${[['overview','综合研判'],['sfc_reason','14场取舍'],['r9_reason','任选九取舍'],['risk','风险说明']].map(([key,label]) => `<div class="ai-section"><strong>${label}</strong>${safe(sections[key] || '等待更新')}</div>`).join('')}`;
+    $('ai-summary').innerHTML = `<span class="ai-state">${ai.status === 'completed' ? 'AI 已完成本期分析' : 'AI 分析更新中'}</span><h3>${safe(ai.title || 'AI 综合分析')}</h3><div class="ai-section"><strong>综合研判</strong>${safe(sections.overview || '等待更新')}</div><details class="ai-more"><summary>查看详细分析（14场取舍 / 任选九取舍 / 风险说明）</summary>${[['sfc_reason','14场取舍'],['r9_reason','任选九取舍'],['risk','风险说明']].map(([key,label]) => `<div class="ai-section"><strong>${label}</strong>${safe(sections[key] || '等待更新')}</div>`).join('')}</details>`;
     $('sfc-summary').innerHTML = `<div class="plan-strip"><span class="plan-chip">${safe(data.plans.sfc14.lines)} 注</span><span class="plan-chip">基本金额 ${safe(data.plans.sfc14.cost_yuan)} 元</span></div>`;
     const dynText = row => {
       const dyn = row.dynamics;

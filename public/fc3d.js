@@ -45,8 +45,8 @@
     const an = data.analysis;
     $('fc3d-analysis').innerHTML = an
       ? `<div class="match-meta">目标第 ${safe(an.target_issue)} 期 · ${safe(an.target_date)} 开奖 · 统计引擎（全部结论可溯源到历史数据）</div>` +
-        Object.keys(TITLES).filter(k => an.sections[k]).map(k =>
-          `<div class="ai-section"><strong>${TITLES[k]}</strong><span>${safe(an.sections[k])}</span></div>`).join('')
+        (an.sections.trend ? `<div class="ai-section"><strong>${TITLES.trend}</strong><span>${safe(an.sections.trend)}</span></div>` : '') +
+        (() => { const rest = Object.keys(TITLES).filter(k => k !== 'trend' && an.sections[k]); return rest.length ? `<details class="ai-more"><summary>查看详细分析（${rest.map(k => TITLES[k]).join(' / ')}）</summary>` + rest.map(k => `<div class="ai-section"><strong>${TITLES[k]}</strong><span>${safe(an.sections[k])}</span></div>`).join('') + '</details>' : ''; })()
       : '<p class="hint">综合分析生成中，请稍后再看。</p>';
 
     const plans = data.plans;
@@ -69,9 +69,8 @@
     const rv = data.review;
     $('fc3d-review').innerHTML = rv
       ? `<div class="match-meta">第 ${safe(rv.issue)} 期实际开奖 ${rv.actual.digits.join(' ')}，当期锁定推荐的命中情况：</div>` +
-        rv.results.map(r => `<div class="match-meta"><strong>${safe(r.strategy)}</strong>（${r.digits.join(' ')}）：同位命中 ${r.position_hits}/${r.digits.length}${r.direct_hit ? ' · 直选全中 ✔' : ''}${r.group_hit ? ' · 组选命中 ✔' : ''}${r.prize && r.prize.tier ? ' · 中' + safe(r.prize.tier) + ' ' + money(r.prize.amount) : ''}</div>` +
-          (r.notes && r.notes.length ? `<div class="match-meta">归因：${r.notes.map(safe).join('；')}</div>` : '')).join('') +
-        (rv.improvement ? `<div class="match-meta"><strong>下期改进（统计复盘）</strong>：${rv.improvement.map(safe).join('；')}</div>` : '')
+        rv.results.map(r => `<div class="match-meta"><strong>${safe(r.strategy)}</strong>（${r.digits.join(' ')}）：同位命中 ${r.position_hits}/${r.digits.length}${r.direct_hit ? ' · 直选全中 ✔' : ''}${r.group_hit ? ' · 组选命中 ✔' : ''}${r.prize && r.prize.tier ? ' · 中' + safe(r.prize.tier) + ' ' + money(r.prize.amount) : ''}</div>`).join('') +
+        (() => { const noted = rv.results.filter(r => r.notes && r.notes.length); return (noted.length || rv.improvement) ? `<details class="ai-more"><summary>查看复盘详情（归因与下期改进）</summary>` + noted.map(r => `<div class="match-meta"><strong>${safe(r.strategy)}</strong> 归因：${r.notes.map(safe).join('；')}</div>`).join('') + (rv.improvement ? `<div class="match-meta"><strong>下期改进（统计复盘）</strong>：${rv.improvement.map(safe).join('；')}</div>` : '') + '</details>' : ''; })()
       : '<p class="hint">暂无可复盘的上期推荐（推荐自本期起锁定，下一期开奖后生成复盘）。</p>';
 
     // 策略长期命中统计（公开复盘）

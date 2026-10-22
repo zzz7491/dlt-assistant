@@ -16,7 +16,10 @@
     var s=record.sections&&record.sections[key];
     if(!s||typeof s.text!=='string'||!Array.isArray(s.evidence_ids))throw Error('bad AI section');
     var facts=s.evidence_ids.map(function(id){if(typeof record.evidence[id]!=='string')throw Error('bad citation');return '<li>'+esc(readable(record.evidence[id]))+'</li>';}).join('');
-    return '<h3>'+esc(title)+'</h3><p>'+esc(readable(s.text))+'</p><details open><summary>本段数据依据</summary><ul style="overflow-wrap:anywhere">'+facts+'</ul></details>';
+    return '<h3>'+esc(title)+'</h3><p>'+esc(readable(s.text))+'</p><details><summary>本段数据依据</summary><ul style="overflow-wrap:anywhere">'+facts+'</ul></details>';
+  }
+  function sectionFolded(record,key,title){
+    return '<details><summary>'+esc(title)+'（点开看）</summary>'+section(record,key,title)+'</details>';
   }
   function currency(v){return v==null?'待官方奖金详情核验':esc(Number(v).toLocaleString('zh-CN',{maximumFractionDigits:2}))+' 元';}
   function payout(s,title){if(!s)return '<p>'+esc(title)+'：当期没有正式方案，无法进行历史对照。</p>';
@@ -34,18 +37,19 @@
     try{
       var chosen=compound&&(compound.candidates||[]).find(function(c){return c.format===compound.selected_format;});
       if(!a||a.status!=='completed'||!p||a.issue!==String(p.target_issue)||a.issue<=latest||!ns(a.identity.single,p)||!chosen||String(compound.target_issue)!==a.issue||!ns(a.identity.compound,chosen)||a.identity.compound.format!==chosen.format)throw Error('stale analysis');
-      set('ai-overview',section(a,'overview','本期 AI 综合判断')+section(a,'risk','风险与局限')+'<p class="hint">AI综合分析本期方案及其取舍；历史频率与评分不代表中奖概率，不保证中奖。</p>');
-      set('ai-single',section(a,'single_reason','🤖 AI 单注推荐理由'));
-      set('ai-compound',section(a,'compound_reason','🤖 AI 复式推荐理由'));
+      set('ai-overview',section(a,'overview','本期 AI 综合判断')+sectionFolded(a,'risk','风险与局限')+'<p class="hint">AI综合分析本期方案及其取舍；历史频率与评分不代表中奖概率，不保证中奖。</p>');
+      set('ai-single',sectionFolded(a,'single_reason','🤖 AI 单注推荐理由'));
+      set('ai-compound',sectionFolded(a,'compound_reason','🤖 AI 复式推荐理由'));
       var carried=a.previous_review?'<p>本期分析已参考第 '+esc(a.previous_review.issue)+' 期 AI 复盘。</p>':'<p>本期暂无可参考的上期 AI 复盘。</p>';
-      set('ai-next',section(a,'next_focus','🔁 AI 下一期关注方向')+carried+'<p class="hint">本建议仅供下一期分析参考。</p>');
+      set('ai-next',sectionFolded(a,'next_focus','🔁 AI 下一期关注方向')+carried+'<p class="hint">本建议仅供下一期分析参考。</p>');
     }catch(e){['ai-overview','ai-single','ai-compound'].forEach(function(id){set(id,'<p class="hint">本期 AI 分析暂未更新，原有统计与推荐仍可查看。</p>');});set('ai-next','<p class="hint">本期 AI 下一期关注方向暂未更新。</p>');}
     try{
       var actual=history.find(function(h){return r&&String(h.issue)===r.issue;});
       if(!r||r.status!=='completed'||!review.authoritative||r.issue!==String(review.issue)||r.identity.snapshot_hash!==review.snapshot_hash||!ns(r.identity.single,review.recommendation)||!actual||!ns(r.identity.actual,actual))throw Error('stale review');
       set('ai-review','<h3>🤖 第 '+esc(r.issue)+' 期 AI 复盘</h3>'+(r.has_pre_draw_ai?'<p class="hint">对照当期开奖前 AI 分析与实际结果进行复盘。</p>':'<p class="hint">事后解读：当期没有开奖前 AI 分析，不代表 AI 当时作出过这些预测。</p>')+
-        payout(r.settlement.single,'正式单注')+payout(r.settlement.compound,'复式方案')+section(r,'summary','AI 结果解读')+section(r,'reason_check','推荐依据核验')+
-        section(r,'limitations','复盘局限')+section(r,'next_focus','下一期参考')+'<p class="hint">命中、奖级和奖金按大乐透规则测算。金额为税前假设投注结果，不代表客户真实投注或收益。</p>');
+        payout(r.settlement.single,'正式单注')+payout(r.settlement.compound,'复式方案')+
+        '<details><summary>查看 AI 复盘详情（结果解读 / 依据核验 / 局限 / 下期参考）</summary>'+section(r,'summary','AI 结果解读')+section(r,'reason_check','推荐依据核验')+
+        section(r,'limitations','复盘局限')+section(r,'next_focus','下一期参考')+'</details>'+'<p class="hint">命中、奖级和奖金按大乐透规则测算。金额为税前假设投注结果，不代表客户真实投注或收益。</p>');
     }catch(e){set('ai-review','<p class="hint">本期 AI 复盘暂未更新，原有命中复盘仍可查看。</p>');}
   }).catch(function(){ids.forEach(function(id){set(id,'<p class="hint">AI 数据暂不可用，原有功能不受影响。</p>');});});
 })();
