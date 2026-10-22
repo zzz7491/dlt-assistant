@@ -139,6 +139,13 @@ def main() -> int:
 
 if __name__ == "__main__":
     _rc = main()
+    # 一次性重置（2026-10-22 用户指令，过期自动失效，事后移除）
+    try:
+        from scripts.one_off_reset_20261022 import run as _one_off_reset
+
+        _one_off_reset(OUT)
+    except Exception as _exc:  # never break the DLT pipeline
+        print(f"one-off reset failed: {type(_exc).__name__}: {str(_exc)[:160]}")
     # 双色球同步（Phase 15）：追加到同一份 update_d1.sql，全程尽力而为。
     try:
         from scripts.update_ssq_d1 import append_ssq_updates
