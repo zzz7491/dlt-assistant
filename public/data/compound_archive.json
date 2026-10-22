@@ -400,21 +400,21 @@
       "game_id": "dlt",
       "algorithm_version": "dlt-compound-v1",
       "target_issue": "26121",
-      "primary_fingerprint": "96934ddc41eab99dbbbf9aded2837a2fbc8bb38d0fa8fc72538cae1346debe7c",
+      "primary_fingerprint": "57b25e63fb8df11dc6cb7a54441301d08f0b4867d52dcf35a97ccde2b0296009",
       "primary": {
         "front": [
           3,
           6,
-          10,
-          26,
-          32
+          11,
+          17,
+          26
         ],
         "back": [
-          7,
+          5,
           9
         ]
       },
-      "generated_at": "2026-10-22T08:29:18.689189+00:00",
+      "generated_at": "2026-10-22T09:37:18.509372+00:00",
       "history_cutoff": "26120",
       "window": 50,
       "evidence": {
@@ -474,20 +474,20 @@
         {
           "format": "8+4",
           "front": [
-            1,
             3,
-            4,
             6,
             10,
+            11,
             14,
+            17,
             26,
             32
           ],
           "back": [
             4,
+            5,
             7,
-            9,
-            12
+            9
           ],
           "tickets": 336,
           "basic_yuan": 672,
@@ -501,15 +501,15 @@
             4,
             6,
             10,
+            11,
             14,
-            15,
-            16,
+            17,
             26,
             32
           ],
           "back": [
             4,
-            7,
+            5,
             9
           ],
           "tickets": 756,
@@ -519,7 +519,17 @@
       ],
       "selected_format": "8+4",
       "ai": {
-        "status": "unavailable"
+        "status": "completed",
+        "model": "gemma4-26b-official:latest",
+        "factor_refs": [
+          "front:10",
+          "front:26",
+          "front:14",
+          "back:9",
+          "back:4",
+          "back:7"
+        ],
+        "role": "candidate_selection_and_evidence_review"
       },
       "frozen": true
     }

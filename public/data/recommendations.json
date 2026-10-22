@@ -36,7 +36,7 @@
       "stage": "stable",
       "effective_sample": 28
     },
-    "final_rank": 3
+    "final_rank": 4
   },
   {
     "date": "2026-10-22",
@@ -75,7 +75,7 @@
       "stage": "stable",
       "effective_sample": 28
     },
-    "final_rank": 5
+    "final_rank": 6
   },
   {
     "date": "2026-10-22",
@@ -94,8 +94,8 @@
       9
     ],
     "score": null,
-    "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
-    "is_primary": true,
+    "reason": null,
+    "is_primary": false,
     "source": "reports/recommendations.json",
     "final_score": 51.5,
     "final_breakdown": {
@@ -114,18 +114,7 @@
       "stage": "stable",
       "effective_sample": 28
     },
-    "final_rank": 1,
-    "explanation": {
-      "explanation_version": "1.1",
-      "strategy_type": "unknown",
-      "strategy": "C-AI智能型",
-      "target_issue": "26121",
-      "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
-      "factors": [],
-      "generated_from": [],
-      "reason_status": "unavailable",
-      "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
-    }
+    "final_rank": 1
   },
   {
     "date": "2026-10-22",
@@ -164,7 +153,7 @@
       "stage": "stable",
       "effective_sample": 28
     },
-    "final_rank": 4
+    "final_rank": 5
   },
   {
     "date": "2026-10-22",
@@ -172,11 +161,11 @@
     "strategy": "E-走势AI型",
     "idx": 0,
     "front": [
-      5,
-      12,
-      18,
-      24,
-      35
+      6,
+      13,
+      17,
+      25,
+      32
     ],
     "back": [
       4,
@@ -204,5 +193,55 @@
       "effective_sample": 28
     },
     "final_rank": 2
+  },
+  {
+    "date": "2026-10-22",
+    "target_issue": "26121",
+    "strategy": "F-综合AI型",
+    "idx": 0,
+    "front": [
+      3,
+      6,
+      11,
+      17,
+      26
+    ],
+    "back": [
+      5,
+      9
+    ],
+    "score": null,
+    "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+    "is_primary": true,
+    "source": "reports/recommendations.json",
+    "final_score": 51.5,
+    "final_breakdown": {
+      "base": 60.0,
+      "history": 50.0,
+      "recent": 50.0,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.4,
+        "history": 0.2,
+        "recent": 0.15,
+        "structure": 0.2
+      },
+      "degraded": false,
+      "stage": "stable",
+      "effective_sample": 28
+    },
+    "final_rank": 1,
+    "explanation": {
+      "explanation_version": "1.1",
+      "strategy_type": "unknown",
+      "strategy": "F-综合AI型",
+      "target_issue": "26121",
+      "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+      "factors": [],
+      "generated_from": [],
+      "reason_status": "unavailable",
+      "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
+    }
   }
 ]

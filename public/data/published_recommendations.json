@@ -328,18 +328,18 @@
     {
       "schema_version": "1.1",
       "issue": "26121",
-      "published_at": "2026-10-22 08:29:18",
-      "primary_strategy": "C-AI智能型",
+      "published_at": "2026-10-22 09:37:17",
+      "primary_strategy": "F-综合AI型",
       "numbers": {
         "front": [
           3,
           6,
-          10,
-          26,
-          32
+          11,
+          17,
+          26
         ],
         "back": [
-          7,
+          5,
           9
         ]
       },
@@ -365,7 +365,7 @@
       "explanation": {
         "explanation_version": "1.1",
         "strategy_type": "unknown",
-        "strategy": "C-AI智能型",
+        "strategy": "F-综合AI型",
         "target_issue": "26121",
         "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
         "factors": [],
@@ -373,8 +373,8 @@
         "reason_status": "unavailable",
         "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
       },
-      "snapshot_hash": "40027213b4879f5ec8c351ec90a65ab43a63c69378309d4458f1819159e1d510"
+      "snapshot_hash": "fdc1af69f9a1b4a4e342356a3ed72f41566f3f76b5fd01d9e24e609a04f32d5f"
     }
   ],
-  "updated_at": "2026-10-22 08:29:18"
+  "updated_at": "2026-10-22 09:37:17"
 }
