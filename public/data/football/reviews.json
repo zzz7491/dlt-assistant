@@ -1,6 +1,173 @@
 {
   "reviews": [
     {
+      "issue": "26146",
+      "draw_date": "2026-10-22",
+      "sfc_hits": 11,
+      "ren9_hits": 7,
+      "matches": [
+        {
+          "order": 1,
+          "home": "利物浦",
+          "away": "比利亚雷亚尔",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 2,
+          "home": "曼城",
+          "away": "雅典",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 3,
+          "home": "那不勒",
+          "away": "博德",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 4,
+          "home": "波尔图",
+          "away": "埃因霍",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 5,
+          "home": "日尔曼",
+          "away": "巴萨",
+          "result": "3",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 6,
+          "home": "罗马",
+          "away": "布拉迪",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 7,
+          "home": "斯图加特",
+          "away": "马竞技",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 8,
+          "home": "科莫",
+          "away": "曼联",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 9,
+          "home": "里尔",
+          "away": "加拉塔",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 10,
+          "home": "阿斯顿维拉",
+          "away": "维京",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 11,
+          "home": "拜仁",
+          "away": "阿森纳",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 12,
+          "home": "布鲁日",
+          "away": "朗斯",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 13,
+          "home": "贝蒂斯",
+          "away": "费耶诺",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 14,
+          "home": "皇马",
+          "away": "莱比锡",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        }
+      ]
+    },
+    {
       "issue": "26145",
       "draw_date": "2026-10-19",
       "sfc_hits": 11,
