@@ -289,12 +289,12 @@ def request_analysis(context):
     response_format={'type':'json_schema','json_schema':{'name':'dlt_'+context['kind'],'strict':True,
         'schema':{'type':'object','properties':properties,'required':SECTIONS[context['kind']],'additionalProperties':False}}}
     last='provider_unavailable';feedback='首次请求'
-    for attempt in range(3):
+    for attempt in range(5):
         # require_parameters=False: the paid deepseek endpoints do not
         # advertise json_schema support, so requiring every parameter
         # 404s the route before any model runs (2026-10-22). The strict
         # schema is still sent; validate_response stays the gatekeeper.
-        selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][attempt]
+        selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][min(attempt,2)]
         try:
             response=requests.post(url+'/chat/completions',headers={'Authorization':'Bearer '+key},json={
                 'model':selected_route,'temperature':0,'max_tokens':7000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':False},
@@ -314,11 +314,11 @@ def request_analysis(context):
             model_refs={name:copy.deepcopy(raw[name]['evidence_ids']) for name in SECTIONS[context['kind']]}
             # Stable canonical facts accompany each model paragraph. This also
             # supports period/identity claims when the model omits their citation.
-            canonical={'overview':['history_window','candidate_comparison','single_structure','compound_structure'],
+            canonical={'overview':['history_window','candidate_comparison','single_structure','compound_structure','compound_budget'],
                        'single_reason':['single_identity','single_selection','single_structure'],
                        'compound_reason':['compound_identity','compound_budget','compound_structure'],
                        'risk':['uncertainty','history_window'],
-                       'next_focus':['previous_review','history_window']}
+                       'next_focus':['previous_review','history_window','single_identity','compound_identity']}
             if context['kind']=='analysis':
                 for name,refs in canonical.items():
                     raw[name]['evidence_ids']=list(dict.fromkeys(raw[name]['evidence_ids']+[r for r in refs if r in context['evidence']]))
