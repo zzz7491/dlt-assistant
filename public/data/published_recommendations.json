@@ -328,15 +328,15 @@
     {
       "schema_version": "1.1",
       "issue": "26121",
-      "published_at": "2026-10-22 05:29:44",
+      "published_at": "2026-10-22 08:29:18",
       "primary_strategy": "C-AI智能型",
       "numbers": {
         "front": [
-          2,
+          3,
+          6,
           10,
-          11,
-          20,
-          26
+          26,
+          32
         ],
         "back": [
           7,
@@ -373,8 +373,8 @@
         "reason_status": "unavailable",
         "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
       },
-      "snapshot_hash": "81ae1d17b53cba42d3e67e7152a54edabdbd7ae4f67c515abb6c75fbe3513174"
+      "snapshot_hash": "40027213b4879f5ec8c351ec90a65ab43a63c69378309d4458f1819159e1d510"
     }
   ],
-  "updated_at": "2026-10-22 05:29:44"
+  "updated_at": "2026-10-22 08:29:18"
 }
