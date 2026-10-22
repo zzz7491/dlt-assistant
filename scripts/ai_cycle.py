@@ -286,7 +286,7 @@ def request_analysis(context):
     last='provider_unavailable';feedback='首次请求'
     for attempt in range(3):
         # Prefer a verified structured-output free endpoint; never add a paid route.
-        selected_route=route if route!='openrouter/free' else ['nvidia/nemotron-3-super-120b-a12b:free','dots-studio/dots-3-note-preview:free','openrouter/free'][attempt]
+        selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][attempt]
         try:
             response=requests.post(url+'/chat/completions',headers={'Authorization':'Bearer '+key},json={
                 'model':selected_route,'temperature':0,'max_tokens':7000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':True},
