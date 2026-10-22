@@ -1,11 +1,169 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-10-22T02:30:09.507423+00:00",
+  "updated_at": "2026-10-22T02:59:46.595063+00:00",
   "analysis": null,
-  "review": null,
+  "review": {
+    "status": "completed",
+    "model": "deepseek/deepseek-chat",
+    "route": "deepseek/deepseek-chat",
+    "prompt_version": "dlt-ai-cycle-v5",
+    "generated_at": "2026-10-22T03:01:21.744199+00:00",
+    "input_hash": "6fb6e6a373b8b84e5f5e5dfe81382c996b68d660895e60dc695b66b556204572",
+    "sections": {
+      "summary": {
+        "text": "本期单注命中1+0，复式命中0+0、1+0、2+0，均未中奖。单注综合分43.27，候选排名1，结构上奇偶比3:2，和值83，跨度23，体现对平衡与覆盖的兼顾。复式覆盖前区8个号码、后区4个号码，展开336注，基本投注672元，全部追加合计1008元。结构上奇偶比为3:7，偶数占优，与上期复盘建议的‘适度引入奇数冷号’存在偏离。",
+        "evidence_ids": [
+          "single_frozen",
+          "compound_outcome",
+          "prior_analysis"
+        ]
+      },
+      "reason_check": {
+        "text": "事前AI理由中，单注综合分43.27，候选排名1，策略基础68.0、历史表现15.34、近期表现20.0、结构贴合50.0。前区26近50期出现13次，遗漏1期，属热号；后区07出现11次，遗漏0期，为当前热号。结构上奇偶比3:2，和值83，跨度23，体现对平衡与覆盖的兼顾。但结构贴合度高不等于命中概率提升，评分仅反映算法偏好，不具预测效力。",
+        "evidence_ids": [
+          "single_frozen",
+          "prior_analysis"
+        ]
+      },
+      "limitations": {
+        "text": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。前区23遗漏36期，属极端冷号，其出现具有高度不确定性；后区08遗漏10期，同样存在回补不确定。复式虽扩大覆盖，但冷号占比高可能降低短期命中效率。结构特征如奇偶比、跨度等仅反映构造偏好，不能预测结果。",
+        "evidence_ids": [
+          "uncertainty",
+          "prior_analysis"
+        ]
+      },
+      "next_focus": {
+        "text": "结合上期复盘建议，下期应重点关注前区奇偶分布调整。当前单注奇偶比为3:2，结构较平衡；复式为3:7，偶数明显偏多。前区23为遗漏36期的冷号，其纳入虽提升跨度覆盖，但可能拉低短期响应能力。建议在保持跨度覆盖前提下，评估是否替换部分偶数为奇数冷号，优化结构分布，同时结合遗漏值变化评估追加策略的实际必要性。",
+        "evidence_ids": [
+          "prior_analysis"
+        ]
+      }
+    },
+    "model_evidence_ids": {
+      "summary": [
+        "single_frozen",
+        "compound_outcome",
+        "prior_analysis"
+      ],
+      "reason_check": [
+        "single_frozen",
+        "prior_analysis"
+      ],
+      "limitations": [
+        "uncertainty",
+        "prior_analysis"
+      ],
+      "next_focus": [
+        "prior_analysis"
+      ]
+    },
+    "evidence_policy": "model-plus-canonical-v1",
+    "kind": "review",
+    "issue": "26120",
+    "identity": {
+      "issue": "26120",
+      "single": {
+        "front": [
+          3,
+          6,
+          23,
+          25,
+          26
+        ],
+        "back": [
+          7,
+          8
+        ]
+      },
+      "actual": {
+        "front": [
+          1,
+          6,
+          10,
+          15,
+          32
+        ],
+        "back": [
+          3,
+          4
+        ]
+      },
+      "snapshot_hash": "aa2861ed5181a6e1e9e539a1ccd041fcd4d9fb0ede07d998dcfbbb4df7063b26",
+      "compound": {
+        "format": "8+4",
+        "front": [
+          3,
+          4,
+          6,
+          10,
+          14,
+          23,
+          25,
+          26
+        ],
+        "back": [
+          7,
+          8,
+          9,
+          12
+        ]
+      }
+    },
+    "evidence": {
+      "single_outcome": "展开1注，命中分布（前区+后区）：1+0命中1注；奖级：未中奖；基本成本2元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+      "draw": "实际开奖前区[1, 6, 10, 15, 32]，后区[3, 4]；期号26120，日期2026-10-21。",
+      "single_frozen": "当期冻结单注前区[3, 6, 23, 25, 26]，后区[7, 8]；当时评分43.27；当期冻结记录完整性已校验。",
+      "uncertainty": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。",
+      "original_statistical_basis": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 3 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 3:2、大小比 3:2、和值 83、跨度 23。",
+      "structure_comparison": "推荐前区和值83、实际和值64，绝对偏差19；推荐前区奇数3个，实际前区奇数2个。结构贴合不等于号码命中。",
+      "compound_outcome": "展开336注，命中分布（前区+后区）：0+0命中36注、1+0命中180注、2+0命中120注；奖级：未中奖；基本成本672元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+      "prior_analysis": "compound_reason：复式方案覆盖前区8个号码、后区4个号码，展开336注，基本投注672元，全部追加合计1008元。结构上奇偶比为3:7，偶数占优，与上期复盘建议的‘适度引入奇数冷号’存在偏离。前区03遗漏0期、近50期出现10次，属热号；而23遗漏36期、仅出现5次，为长期冷号，其纳入虽扩大跨度覆盖，但冷热失衡可能影响短期命中效率。结构贴合度需在广度与聚焦间权衡。；next_focus：结合上期复盘建议，下期应重点关注前区奇偶分布调整。当前单注奇偶比为3:2，结构较平衡；复式为3:7，偶数明显偏多。前区23为遗漏36期的冷号，其纳入虽提升跨度覆盖，但可能拉低短期响应能力。建议在保持跨度覆盖前提下，评估是否替换部分偶数为奇数冷号，优化结构分布，同时结合遗漏值变化评估追加策略的实际必要性。；overview：本方案基于50期历史样本构建，单注综合分43.27，候选排名1，结构为前区奇数3个、偶数2个，和值83，跨度23。复式结构为前区奇数3个、偶数5个，和值111，跨度23。候选比较显示其他组合综合分在36.5至41.03之间，本方案评分领先。结构集中度体现为奇偶分布与跨度控制，反映算法在平衡性上的取舍，但评分排名不等于中奖概率。；risk：每期开奖相互独立，历史频率和评分不构成中奖概率保证。前区23遗漏36期，属极端冷号，其出现具有高度不确定性；后区08遗漏10期，同样存在回补不确定。复式虽扩大覆盖，但冷号占比高可能降低短期命中效率。结构特征如奇偶比、跨度等仅反映构造偏好，不能预测结果。任何组合均面临同等随机风险。；single_reason：正式单注综合分43.27，候选排名1，策略基础68.0、历史表现15.34、近期表现20.0、结构贴合50.0。前区26近50期出现13次，遗漏1期，属热号；后区07出现11次，遗漏0期，为当前热号。结构上奇偶比3:2，和值83，跨度23，体现对平衡与覆盖的兼顾。但结构贴合度高不等于命中概率提升，评分仅反映算法偏好，不具预测效力。",
+      "reason_audit": "必须对照上述真实事前AI理由逐项核验；区分可观察的结构是否满足和未被证实的未来倾向，不得用事后走势编新理由。"
+    },
+    "settlement": {
+      "single": {
+        "matches": {
+          "1+0": 1
+        },
+        "prizes": [],
+        "tickets": 1,
+        "basic_cost_yuan": 2,
+        "basic_payout_yuan": "0",
+        "all_additional_cost_yuan": 3,
+        "all_additional_payout_yuan": "0",
+        "payout_status": "verified",
+        "rule_version": "26014-seven-tiers",
+        "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+        "simulation": true
+      },
+      "compound": {
+        "matches": {
+          "0+0": 36,
+          "1+0": 180,
+          "2+0": 120
+        },
+        "prizes": [],
+        "tickets": 336,
+        "basic_cost_yuan": 672,
+        "basic_payout_yuan": "0",
+        "all_additional_cost_yuan": 1008,
+        "all_additional_payout_yuan": "0",
+        "payout_status": "verified",
+        "rule_version": "26014-seven-tiers",
+        "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+        "simulation": true
+      }
+    },
+    "has_pre_draw_ai": true,
+    "prior_analysis_hash": "55d876a2b1f77dc1d0f3db807fa26d5fd6bf588ca06b3b5bb8203b2086b7487b",
+    "raw_source_hash": "c3de4cbfe9206be2dde80cf38579f39d97e36c93ae6a9a6e7fe8d439ae94f92d",
+    "editorial_policy": "grounded-editorial-v1",
+    "editorial_removed_clauses": 0,
+    "reviewed_at": "2026-10-22T03:01:21.745887+00:00"
+  },
   "statuses": {
-    "review": "http_404",
-    "analysis": "awaiting_review"
+    "review": "completed",
+    "analysis": "invalid_response"
   }
 }
