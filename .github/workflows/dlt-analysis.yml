@@ -74,6 +74,10 @@ jobs:
       - name: 运行分析（抓取 → 分析 → 推荐 → 报告）
         # P4-5 P11：运行后显式报告 history-lag 状态（不自动 skip、不重生历史）。
         # P4-5 P12：scheduler 失败 → SCHEDULER_FAILURE（D5：scheduler 失败不继续 publisher）。
+        env:
+          DLT_AI_API_KEY: ${{ secrets.DLT_AI_API_KEY }}
+          DLT_AI_BASE_URL: ${{ secrets.DLT_AI_BASE_URL }}
+          DLT_AI_MODEL: ${{ secrets.DLT_AI_MODEL }}
         run: |
           RC=0
           python -m src.scheduler --once || RC=$?
