@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-10-22T09:37:49.253832+00:00",
+  "updated_at": "2026-10-22T12:22:30.577529+00:00",
   "analysis": null,
   "review": {
     "status": "completed",
@@ -160,7 +160,33 @@
     "raw_source_hash": "c3de4cbfe9206be2dde80cf38579f39d97e36c93ae6a9a6e7fe8d439ae94f92d",
     "editorial_policy": "grounded-editorial-v1",
     "editorial_removed_clauses": 0,
-    "reviewed_at": "2026-10-22T03:01:21.745887+00:00"
+    "reviewed_at": "2026-10-22T03:01:21.745887+00:00",
+    "reflection": {
+      "version": "reflection-v1",
+      "generated_at": "2026-10-22T12:22:53.206231+00:00",
+      "model": "gemma4-26b-official:latest",
+      "front_hits": 1,
+      "back_hits": 0,
+      "causes": [
+        {
+          "code": "sum_bias",
+          "text": "和值偏差：推荐和值83、实际64，推荐偏高19。"
+        },
+        {
+          "code": "far_miss",
+          "text": "方向偏差：前区仅命中1个，且未命中开奖号多与推荐号相距较远。"
+        },
+        {
+          "code": "back_blank",
+          "text": "后区零命中：两个后区号均未中。"
+        }
+      ],
+      "improvement": {
+        "text": "优化前区和值分布结构，降低推荐和值的整体量级，使其向中低区间收敛，减少高位大号的权重。",
+        "source_issue": "26120"
+      },
+      "verdict": null
+    }
   },
   "statuses": {
     "review": "completed",
