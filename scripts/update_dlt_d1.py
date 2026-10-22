@@ -139,13 +139,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     _rc = main()
-    # 一次性重置二号（2026-10-22）：F-综合AI型上线，当前期整期重出（DELETE 须在各钩子重插之前）。
-    try:
-        from scripts.one_off_reset_f_20261022 import run as _reset_f_run
-
-        _reset_f_run(OUT)
-    except Exception as _exc:  # never break the DLT pipeline
-        print(f"one-off reset F hook failed: {type(_exc).__name__}: {str(_exc)[:160]}")
     # 双色球同步（Phase 15）：追加到同一份 update_d1.sql，全程尽力而为。
     try:
         from scripts.update_ssq_d1 import append_ssq_updates
