@@ -261,14 +261,13 @@ def validate_response(raw,context):
 def request_analysis(context):
     key=os.getenv('DLT_AI_API_KEY','').strip();url=os.getenv('DLT_AI_BASE_URL','').strip();route=os.getenv('DLT_AI_MODEL','').strip()
     if not all([key,url,route]):raise RuntimeError('not_configured')
-    # Route policy (owner decision, 2026-10-22): the configured route
-    # decides, free or paid. Free endpoints proved unreliable for this
-    # strict-schema feature (multi-day 404 / invalid responses), so the
-    # owner switched DLT_AI_MODEL to the paid deepseek route that the
-    # C-AI picker already uses. Only the base URL stays pinned, so the
-    # key is never sent to an arbitrary endpoint.
-    if url!='https://openrouter.ai/api/v1':
-        raise RuntimeError('openrouter_base_required')
+    # Route policy (owner decision, 2026-10-22): full-local switch. The
+    # owner's own Ollama endpoint (24/7 home Mac) serves this feature with
+    # gemma4-26b, which passes the strict validator; OpenRouter/deepseek
+    # remains the only other allowed base. The allowlist keeps the API key
+    # from ever being sent to an arbitrary endpoint.
+    if url not in ('https://openrouter.ai/api/v1','https://ai.585351.xyz/v1'):
+        raise RuntimeError('ai_base_not_allowlisted')
     schema={k:{'text':'中文解释引用指标的意义、取舍及局限；具体数字由页面自动展示，不要重新计算或复述。','evidence_ids':['现有证据ID']} for k in SECTIONS[context['kind']]}
     prompt=('你是大乐透专业数据分析助手。只返回JSON，字段严格匹配给定模板。依据evidence作具体分析，每段中文五十至一百五十字；'
             '不得使用随机生成、随机基线充当理由，不得说号码无重合。禁止使用证据中没有的走势、预算合理、市场环境、表现均衡或可接受范围等笼统评价。每段选择两三项引用指标，明确解释这些指标怎样影响本方案的评审和取舍；不要重新计算数值，不复述具体数字、整组号码、百分比或中文数量，程序会直接展示本段引用的具体数据。禁止自算回报率或新比率。不要只写概括性空话；例如说明评分排名与结构集中度体现何种取舍，而不是声称有效预测。不要写随机生成或随机基线作为理由；AI负责评审既定方案，解释真实结构与取舍。不得暗示遗漏必回补、奇偶必回归、冷热带来稳定性；不作无证据趋势或预测推断。不得说号码无重合；实际命中以程序结算为准。不编造事实、不承诺中奖或提高中奖概率，具体数值通过evidence_ids引用。'
@@ -296,9 +295,9 @@ def request_analysis(context):
         # schema is still sent; validate_response stays the gatekeeper.
         selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][min(attempt,2)]
         try:
-            response=requests.post(url+'/chat/completions',headers={'Authorization':'Bearer '+key},json={
+            response=requests.post(url+'/chat/completions',headers={'Authorization':'Bearer '+key,'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'},json={
                 'model':selected_route,'temperature':0,'max_tokens':7000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':False},
-                'messages':[{'role':'system','content':prompt+'\n若上次失败，请根据以下校验结果重写：'+feedback+'。所有章节必须逐项返回；解释所引指标的意义与取舍，数字由页面展示，无需复述或计算，禁止没有证据的评价；引用只选对应章节schema枚举内的ID。'},{'role':'user','content':json.dumps({'template':schema,'context':context},ensure_ascii=False)}]},timeout=(10,75))
+                'messages':[{'role':'system','content':prompt+'\n若上次失败，请根据以下校验结果重写：'+feedback+'。所有章节必须逐项返回；解释所引指标的意义与取舍，数字由页面展示，无需复述或计算，禁止没有证据的评价；引用只选对应章节schema枚举内的ID。'},{'role':'user','content':json.dumps({'template':schema,'context':context},ensure_ascii=False)}]},timeout=(10,300) if 'openrouter' not in url else (10,75))
             if not response.ok:
                 last=f'http_{response.status_code}'
                 if response.status_code in (401,402,403) or (response.status_code in (400,404) and route!='openrouter/free'):break

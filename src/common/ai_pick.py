@@ -89,7 +89,7 @@ def _env_chain(local: bool = False) -> tuple[str | None, str, list[str]]:
     ).rstrip("/")
     model_env = os.getenv("DLT_AI_MODEL", "").strip()
     models = [model_env] if model_env else []
-    if MODEL_FALLBACK not in models:
+    if base.startswith("https://openrouter.ai") and MODEL_FALLBACK not in models:
         models.append(MODEL_FALLBACK)
     return (key or None), base, models
 
@@ -212,11 +212,130 @@ def pick(game_id: str, target_issue: str | None, summary: dict) -> dict | None:
     return _call(game_id, target_issue, _build_prompt(game_id, str(target_issue or "?"), summary), "C-AI智能型", local=True)
 
 
+SEGMENT_SIZE = 60
+
+
+def _is_local_base(base: str) -> bool:
+    return not base.startswith("https://openrouter.ai")
+
+
+def _trend_segment(trend: dict, start: int, end: int) -> dict:
+    """把走势 dict 切出 [start, end) 一段（逐期序列与每条出号条同步切）。"""
+    seg = {"window": end - start}
+    for k in ("draws", "sum_series", "span_series", "distinct_series"):
+        if k in trend:
+            seg[k] = trend[k][start:end]
+    for k in ("main_strips", "sub_strips"):
+        if k in trend:
+            seg[k] = {n: s[start:end] for n, s in trend[k].items()}
+    if "position_strips" in trend:
+        seg["position_strips"] = [
+            {d: s[start:end] for d, s in pos.items()} for pos in trend["position_strips"]
+        ]
+    return seg
+
+
+def _headers(key: str) -> dict:
+    return {
+        "Authorization": f"Bearer {key}",
+        "HTTP-Referer": "https://dlt.mootlsv.com/",
+        "X-Title": "dlt-assistant C-AI",
+        # 本地网关（Cloudflare）会拦 Python 默认 UA，必须带浏览器 UA
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    }
+
+
+def _chat_text(key: str, base: str, models: list, prompt: str, max_tokens: int = 500) -> str | None:
+    """纯文本调用（分段研判用）：逐模型尝试，返回 content 文本或 None。"""
+    url = f"{base}/chat/completions"
+    for model in models:
+        for _attempt in (1, 2):
+            try:
+                body = _post_json(
+                    url,
+                    _headers(key),
+                    {
+                        "model": model,
+                        "temperature": 0.3,
+                        "max_tokens": max_tokens,
+                        "messages": [
+                            {"role": "system", "content": "你只输出研判要点文本，不输出其他内容。"},
+                            {"role": "user", "content": prompt},
+                        ],
+                    },
+                    timeout=100,
+                )
+                choices = body.get("choices") or []
+                text = ((choices[0].get("message") or {}).get("content") or "").strip() if choices else ""
+                if text:
+                    return text
+            except Exception:
+                continue
+    return None
+
+
+def _segment_prompt(game_id: str, idx: int, total: int, seg: dict) -> str:
+    rule = RULES[game_id]
+    seg_text = json.dumps(seg, ensure_ascii=False, separators=(",", ":"))
+    return (
+        f"你是一位在彩票店看走势图的资深彩民。下面是{rule['label']}走势图的第 {idx + 1}/{total} 段"
+        f"（本段 {seg.get('window', 0)} 期，逐期开奖旧→新、和值与跨度逐期序列、每个号码的出号条；"
+        f"数字型为每个数位上每个数字的出号条）。\n"
+        f"走势图数据：{seg_text}\n"
+        "只输出本段的走势研判要点（不超过 200 字）：各号码/数位出号条的疏密、连出与断档形态，"
+        "和值/跨度曲线的走向与位置，段末的形态衔接。不要出号，不要给最终号码。"
+    )
+
+
+def _pick_trend_segmented(game_id: str, target_issue: str, trend: dict) -> dict | None:
+    """本地端点分段研判（2026-10-22 用户定）：300 期走势图整段直喂会超过
+    本地网关单请求时限，故按 60 期一段逐段请 AI 研判要点，最后汇总各段
+    要点 + 最近一段原始走势出号。任一段失败 → 整策略跳过（不回退）。"""
+    key, base, models = _env_chain()
+    if not key:
+        print("[ai_pick] 未配置密钥，跳过 走势AI型（不报错）")
+        return None
+    n = int(trend.get("window") or len(trend.get("draws") or []))
+    if n <= SEGMENT_SIZE:
+        return _call(game_id, target_issue, _build_trend_prompt(game_id, target_issue, trend), "走势AI型")
+    total = (n + SEGMENT_SIZE - 1) // SEGMENT_SIZE
+    digests = []
+    for i in range(total):
+        seg = _trend_segment(trend, i * SEGMENT_SIZE, min(n, (i + 1) * SEGMENT_SIZE))
+        text = _chat_text(key, base, models, _segment_prompt(game_id, i, total, seg))
+        if not text:
+            print(f"[ai_pick] {game_id} 走势分段 {i + 1}/{total} 失败，跳过 走势AI型")
+            return None
+        digests.append(f"第{i + 1}段研判：{text}")
+        print(f"[ai_pick] {game_id} 走势分段 {i + 1}/{total} ok")
+    rule = RULES[game_id]
+    last_seg = _trend_segment(trend, n - SEGMENT_SIZE, n)
+    last_text = json.dumps(last_seg, ensure_ascii=False, separators=(",", ":"))
+    prompt = (
+        f"你是一位在彩票店看走势图的资深彩民，擅长看走势图研判号码。"
+        f"下面是{rule['label']}最近 {n} 期走势图的分段研判要点（由旧到新共 {total} 段），"
+        f"以及最近一段（{SEGMENT_SIZE} 期）的原始走势图数据。\n"
+        + "\n".join(digests)
+        + f"\n最近一段原始走势图：{last_text}\n"
+        f"请综合各段形态与最近一段的衔接，研判目标期 {target_issue}，给出 1 组号码。"
+        f"不要用频率统计或遗漏排名代替看图研判。\n"
+        f"出号规则：{rule['desc']}\n"
+        "要求：\n"
+        "1. 只输出严格 JSON，格式为 " + rule["schema"] + "，不要输出任何解释、前后缀或 markdown 代码块；\n"
+        "2. JSON 中的数字必须全部符合上面的出号规则。\n"
+    )
+    return _call(game_id, target_issue, prompt, "走势AI型")
+
+
 def pick_trend(game_id: str, target_issue: str | None, trend: dict) -> dict | None:
     """走势AI型出号：AI 看走势图数据（src/common/trend_data 构造）直接研判出号。
 
-    与 pick() 同通道、同校验；无密钥/失败返回 None（调用方跳过该策略）。
+    云端（OpenRouter）整段直喂；本地端点自动改走分段研判（时限原因）。
+    无密钥/失败返回 None（调用方跳过该策略）。
     """
+    _key, base, _models = _env_chain()
+    if _key and _is_local_base(base):
+        return _pick_trend_segmented(game_id, str(target_issue or "?"), trend)
     return _call(game_id, target_issue, _build_trend_prompt(game_id, str(target_issue or "?"), trend), "走势AI型")
 
 
@@ -225,7 +344,7 @@ def _call(game_id: str, target_issue: str | None, prompt: str, tag: str, local: 
         print(f"[ai_pick] 未知彩种 {game_id}，跳过 {tag}")
         return None
     key, base, models = _env_chain(local)
-    chan = "local" if local and os.getenv("DLT_PICK_BASE_URL", "").strip() else "openrouter"
+    chan = "openrouter" if base.startswith("https://openrouter.ai") else "local"
     if not key:
         print(f"[ai_pick] 未配置 DLT_AI_API_KEY/OPENROUTER_API_KEY，跳过 {tag}（不报错）")
         return None
