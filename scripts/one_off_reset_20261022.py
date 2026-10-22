@@ -52,6 +52,8 @@ def _drop_entries(path: str, list_key: str, field: str, value: str) -> None:
 
 
 def run(out_path: str) -> None:
+    print("[one-off reset] retired 2026-10-22 (already executed), no-op")
+    return
     if os.environ.get("GITHUB_WORKFLOW") != WORKFLOW_NAME:
         return
     if datetime.now(timezone.utc) >= DEADLINE:

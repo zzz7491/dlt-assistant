@@ -70,7 +70,15 @@ CALIBER = {
 }
 
 
-def _env_chain() -> tuple[str | None, str, list[str]]:
+def _env_chain(local: bool = False) -> tuple[str | None, str, list[str]]:
+    if local:
+        # C-AI智能型专用本地通道（2026-10-22 用户定混合方案）：配了
+        # DLT_PICK_BASE_URL 就走本地模型（零费用）；未配则落回下方云端链。
+        lbase = os.getenv("DLT_PICK_BASE_URL", "").strip().rstrip("/")
+        if lbase:
+            lkey = os.getenv("DLT_PICK_API_KEY", "").strip() or "ollama"
+            lmodel = os.getenv("DLT_PICK_MODEL", "").strip()
+            return lkey, lbase, ([lmodel] if lmodel else ["gemma3:27b"])
     key = os.getenv("DLT_AI_API_KEY", "").strip() or os.getenv(
         "OPENROUTER_API_KEY", ""
     ).strip()
@@ -121,14 +129,14 @@ def _build_trend_prompt(game_id: str, target_issue: str, trend: dict) -> str:
     )
 
 
-def _post_json(url: str, headers: dict, payload: dict) -> dict:
+def _post_json(url: str, headers: dict, payload: dict, timeout: int = TIMEOUT_SECS) -> dict:
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         url, data=data,
         headers={**headers, "Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=TIMEOUT_SECS) as resp:
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 
@@ -201,7 +209,7 @@ def pick(game_id: str, target_issue: str | None, summary: dict) -> dict | None:
     summary 由调用方按各彩种现有 A/B 统计口径构造（见模块 docstring），
     本函数只负责 prompt 组装、调用、校验。
     """
-    return _call(game_id, target_issue, _build_prompt(game_id, str(target_issue or "?"), summary), "C-AI智能型")
+    return _call(game_id, target_issue, _build_prompt(game_id, str(target_issue or "?"), summary), "C-AI智能型", local=True)
 
 
 def pick_trend(game_id: str, target_issue: str | None, trend: dict) -> dict | None:
@@ -212,11 +220,12 @@ def pick_trend(game_id: str, target_issue: str | None, trend: dict) -> dict | No
     return _call(game_id, target_issue, _build_trend_prompt(game_id, str(target_issue or "?"), trend), "走势AI型")
 
 
-def _call(game_id: str, target_issue: str | None, prompt: str, tag: str) -> dict | None:
+def _call(game_id: str, target_issue: str | None, prompt: str, tag: str, local: bool = False) -> dict | None:
     if game_id not in RULES:
         print(f"[ai_pick] 未知彩种 {game_id}，跳过 {tag}")
         return None
-    key, base, models = _env_chain()
+    key, base, models = _env_chain(local)
+    chan = "local" if local and os.getenv("DLT_PICK_BASE_URL", "").strip() else "openrouter"
     if not key:
         print(f"[ai_pick] 未配置 DLT_AI_API_KEY/OPENROUTER_API_KEY，跳过 {tag}（不报错）")
         return None
@@ -224,6 +233,8 @@ def _call(game_id: str, target_issue: str | None, prompt: str, tag: str) -> dict
         "Authorization": f"Bearer {key}",
         "HTTP-Referer": "https://dlt.mootlsv.com/",
         "X-Title": "dlt-assistant C-AI",
+        # 本地网关（Cloudflare）会拦 Python 默认 UA，必须带浏览器 UA
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
     }
     url = f"{base}/chat/completions"
     for model in models:
@@ -232,7 +243,8 @@ def _call(game_id: str, target_issue: str | None, prompt: str, tag: str) -> dict
                 body = _post_json(
                     url,
                     headers,
-                    {
+                    timeout=100 if chan == "local" else TIMEOUT_SECS,
+                    payload={
                         "model": model,
                         "temperature": 0.2,
                         "max_tokens": 300,
@@ -247,7 +259,7 @@ def _call(game_id: str, target_issue: str | None, prompt: str, tag: str) -> dict
                 obj = _extract_json(text)
                 valid = _validate(game_id, obj) if obj else None
                 if valid is not None:
-                    print(f"[ai_pick] {game_id} target={target_issue} model={model} ok")
+                    print(f"[ai_pick] {game_id} target={target_issue} model={model} via={chan} ok")
                     return valid
                 print(
                     f"[ai_pick] {game_id} model={model} attempt={attempt} "
@@ -263,5 +275,5 @@ def _call(game_id: str, target_issue: str | None, prompt: str, tag: str) -> dict
                     f"[ai_pick] {game_id} model={model} attempt={attempt} "
                     f"异常 {type(e).__name__}，{'重试' if attempt == 1 else '放弃'}"
                 )
-    print(f"[ai_pick] {game_id} target={target_issue} 全部失败，跳过 C（失败则跳过该策略）")
+    print(f"[ai_pick] {game_id} target={target_issue} 全部失败，跳过 {tag}（失败则跳过该策略）")
     return None
