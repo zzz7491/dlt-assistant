@@ -1,8 +1,185 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-10-22T04:57:26.255438+00:00",
-  "analysis": null,
+  "updated_at": "2026-10-22T05:29:47.843508+00:00",
+  "analysis": {
+    "status": "completed",
+    "model": "deepseek/deepseek-chat",
+    "route": "deepseek/deepseek-chat",
+    "prompt_version": "dlt-ai-cycle-v5",
+    "generated_at": "2026-10-22T05:30:38.541544+00:00",
+    "input_hash": "d5b0660697f202b3eaac1179a2d8624a4e001aa1d11ec257108ac64da45e04b5",
+    "sections": {
+      "overview": {
+        "text": "本期分析基于50期历史数据，目标为26121期。正式单注前区包含2、10、11、20、26，后区为7、9。复式前区扩展至2、3、10、11、14、20、26、32，后区为4、7、9、12。单注综合分51.5，排名第一，复式预算为672元，追加后为1008元。",
+        "evidence_ids": [
+          "history_window",
+          "single_identity",
+          "compound_identity",
+          "single_selection",
+          "candidate_comparison",
+          "single_structure",
+          "compound_structure",
+          "compound_budget"
+        ]
+      },
+      "single_reason": {
+        "text": "正式单注前区号码2、10、11、20、26中，10和26出现频率较高，分别为14次和13次，显示出较强的历史表现。后区7和9分别出现11次和14次，近期表现稳定。单注结构前区奇数1个、偶数4个，和值69，跨度24，整体结构较为平衡。",
+        "evidence_ids": [
+          "single_front_10",
+          "single_front_26",
+          "single_back_7",
+          "single_back_9",
+          "single_identity",
+          "single_selection",
+          "single_structure"
+        ]
+      },
+      "compound_reason": {
+        "text": "复式前区扩展至2、3、10、11、14、20、26、32，后区为4、7、9、12。前区3和32分别出现10次和9次，近期表现较好。后区4和12分别出现11次和11次，遗漏值较低。复式结构前区奇数2个、偶数6个，和值118，跨度30，整体覆盖范围较广。",
+        "evidence_ids": [
+          "compound_front_3",
+          "compound_front_32",
+          "compound_back_4",
+          "compound_back_12",
+          "compound_identity",
+          "compound_budget",
+          "compound_structure"
+        ]
+      },
+      "risk": {
+        "text": "每期开奖相互独立，历史频率和评分不是中奖概率，不保证任何组合中奖。复式预算较高，需根据个人财务状况谨慎选择。",
+        "evidence_ids": [
+          "uncertainty",
+          "compound_budget",
+          "history_window"
+        ]
+      },
+      "next_focus": {
+        "text": "结合上期复盘建议，下期应重点关注前区奇偶分布调整。当前单注奇偶比为3:2，结构较平衡；复式为3:7，偶数明显偏多。建议在保持跨度覆盖前提下，评估是否替换部分偶数为奇数冷号，优化结构分布，同时结合遗漏值变化评估追加策略的实际必要性。",
+        "evidence_ids": [
+          "previous_review",
+          "history_window",
+          "single_identity",
+          "compound_identity"
+        ]
+      }
+    },
+    "model_evidence_ids": {
+      "overview": [
+        "history_window",
+        "single_identity",
+        "compound_identity",
+        "single_selection"
+      ],
+      "single_reason": [
+        "single_front_10",
+        "single_front_26",
+        "single_back_7",
+        "single_back_9"
+      ],
+      "compound_reason": [
+        "compound_front_3",
+        "compound_front_32",
+        "compound_back_4",
+        "compound_back_12"
+      ],
+      "risk": [
+        "uncertainty",
+        "compound_budget"
+      ],
+      "next_focus": [
+        "previous_review"
+      ]
+    },
+    "evidence_policy": "model-plus-canonical-v1",
+    "kind": "analysis",
+    "issue": "26121",
+    "identity": {
+      "target_issue": "26121",
+      "single": {
+        "front": [
+          2,
+          10,
+          11,
+          20,
+          26
+        ],
+        "back": [
+          7,
+          9
+        ]
+      },
+      "compound": {
+        "format": "8+4",
+        "front": [
+          2,
+          3,
+          10,
+          11,
+          14,
+          20,
+          26,
+          32
+        ],
+        "back": [
+          4,
+          7,
+          9,
+          12
+        ]
+      }
+    },
+    "history_cutoff": "26120",
+    "evidence": {
+      "history_window": "样本50期，截止26120期，目标26121期。",
+      "selection_role": "号码由现有算法构造并已冻结；本次AI负责综合分析、候选评审和解释，不重新选号，不把候选的随机构造冒称为AI选号。",
+      "uncertainty": "每期开奖相互独立；历史频率和评分不是中奖概率；不保证任何组合中奖。",
+      "single_identity": "已冻结正式单注：前区[2, 10, 11, 20, 26]，后区[7, 9]。",
+      "compound_identity": "已冻结复式：前区[2, 3, 10, 11, 14, 20, 26, 32]，后区[4, 7, 9, 12]。",
+      "single_front_2": "前区 02：近50期出现6次，当前遗漏2期。",
+      "single_front_10": "前区 10：近50期出现14次，当前遗漏0期。",
+      "single_front_11": "前区 11：近50期出现7次，当前遗漏7期。",
+      "single_front_20": "前区 20：近50期出现6次，当前遗漏1期。",
+      "single_front_26": "前区 26：近50期出现13次，当前遗漏2期。",
+      "single_back_7": "后区 07：近50期出现11次，当前遗漏1期。",
+      "single_back_9": "后区 09：近50期出现14次，当前遗漏6期。",
+      "single_structure": "前区奇数1个、偶数4个，和值69，跨度24。",
+      "compound_front_2": "前区 02：近50期出现6次，当前遗漏2期。",
+      "compound_front_3": "前区 03：近50期出现10次，当前遗漏1期。",
+      "compound_front_10": "前区 10：近50期出现14次，当前遗漏0期。",
+      "compound_front_11": "前区 11：近50期出现7次，当前遗漏7期。",
+      "compound_front_14": "前区 14：近50期出现12次，当前遗漏11期。",
+      "compound_front_20": "前区 20：近50期出现6次，当前遗漏1期。",
+      "compound_front_26": "前区 26：近50期出现13次，当前遗漏2期。",
+      "compound_front_32": "前区 32：近50期出现9次，当前遗漏0期。",
+      "compound_back_4": "后区 04：近50期出现11次，当前遗漏0期。",
+      "compound_back_7": "后区 07：近50期出现11次，当前遗漏1期。",
+      "compound_back_9": "后区 09：近50期出现14次，当前遗漏6期。",
+      "compound_back_12": "后区 12：近50期出现11次，当前遗漏2期。",
+      "compound_structure": "前区奇数2个、偶数6个，和值118，跨度30。",
+      "single_selection": "正式单注综合分51.5，候选排名1；策略基础60.0、历史表现50.0、近期表现50.0、结构贴合50.0。分数不是概率。",
+      "candidate_comparison": "候选1：前区[3, 11, 14, 20, 24]、后区[5, 6]，综合分43.26，排名3；候选2：前区[1, 8, 24, 26, 27]、后区[3, 5]，综合分38.08，排名5；候选3：前区[2, 10, 11, 20, 26]、后区[7, 9]，综合分51.5，排名1；候选4：前区[14, 11, 7, 17, 28]、后区[9, 8]，综合分40.5，排名4；候选5：前区[5, 12, 18, 22, 35]、后区[1, 10]，综合分51.5，排名2",
+      "compound_budget": "复式8+4，展开336注，基本投注672元，全部追加合计1008元。",
+      "previous_review": "上期AI复盘26120的关注点：结合上期复盘建议，下期应重点关注前区奇偶分布调整。当前单注奇偶比为3:2，结构较平衡；复式为3:7，偶数明显偏多。前区23为遗漏36期的冷号，其纳入虽提升跨度覆盖，但可能拉低短期响应能力。建议在保持跨度覆盖前提下，评估是否替换部分偶数为奇数冷号，优化结构分布，同时结合遗漏值变化评估追加策略的实际必要性。这只是分析参考，不是已实施的权重变更。"
+    },
+    "previous_review": {
+      "issue": "26120",
+      "record_hash": "77ec0f17e991ae8d72298e0f1063a4fa0bebbe8b26e0101665e7396cdd3aceb1",
+      "next_focus": {
+        "text": "结合上期复盘建议，下期应重点关注前区奇偶分布调整。当前单注奇偶比为3:2，结构较平衡；复式为3:7，偶数明显偏多。前区23为遗漏36期的冷号，其纳入虽提升跨度覆盖，但可能拉低短期响应能力。建议在保持跨度覆盖前提下，评估是否替换部分偶数为奇数冷号，优化结构分布，同时结合遗漏值变化评估追加策略的实际必要性。",
+        "evidence_ids": [
+          "prior_analysis"
+        ]
+      }
+    },
+    "created_before_draw": true,
+    "historical_data_hash": "d6e56e563ac8b8c35dee28b55b76b9f06df5fdb6e40dbcedc6270fe98b2ac6c3",
+    "raw_source_hash": "04dbc350d0ebdce5f5357604f313ca97c099a4d18658ef027325943895687955",
+    "editorial_policy": "grounded-editorial-v1",
+    "editorial_removed_clauses": 0,
+    "reviewed_at": "2026-10-22T05:30:38.543539+00:00"
+  },
   "review": {
     "status": "completed",
     "model": "deepseek/deepseek-chat",
@@ -164,6 +341,6 @@
   },
   "statuses": {
     "review": "completed",
-    "analysis": "invalid_context"
+    "analysis": "completed"
   }
 }

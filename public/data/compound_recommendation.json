@@ -3,21 +3,21 @@
   "game_id": "dlt",
   "algorithm_version": "dlt-compound-v1",
   "target_issue": "26121",
-  "primary_fingerprint": "1601783df874b88456027da90fae09b9008d33ebc938474a28e7bc278befeacc",
+  "primary_fingerprint": "446b383aed2fa98fafb7e3e60112925acbdb04b57e78e82ade8356064cb1c75f",
   "primary": {
     "front": [
-      3,
+      2,
+      10,
       11,
-      14,
       20,
-      24
+      26
     ],
     "back": [
-      5,
-      6
+      7,
+      9
     ]
   },
-  "generated_at": "2026-10-21T15:01:08.599237+00:00",
+  "generated_at": "2026-10-22T05:29:45.097293+00:00",
   "history_cutoff": "26120",
   "window": 50,
   "evidence": {
@@ -77,20 +77,20 @@
     {
       "format": "8+4",
       "front": [
+        2,
         3,
         10,
         11,
         14,
         20,
-        24,
         26,
         32
       ],
       "back": [
         4,
-        5,
-        6,
-        9
+        7,
+        9,
+        12
       ],
       "tickets": 336,
       "basic_yuan": 672,
@@ -100,19 +100,19 @@
       "format": "10+3",
       "front": [
         1,
+        2,
         3,
         4,
         10,
         11,
         14,
         20,
-        24,
         26,
         32
       ],
       "back": [
-        5,
-        6,
+        4,
+        7,
         9
       ],
       "tickets": 756,
@@ -120,17 +120,17 @@
       "additional_yuan": 2268
     }
   ],
-  "selected_format": "10+3",
+  "selected_format": "8+4",
   "ai": {
     "status": "completed",
-    "model": "openrouter/free",
+    "model": "deepseek/deepseek-chat",
     "factor_refs": [
       "front:10",
-      "front:26",
       "front:14",
-      "back:9",
-      "front:3",
-      "back:6"
+      "front:26",
+      "back:4",
+      "back:7",
+      "back:9"
     ],
     "role": "candidate_selection_and_evidence_review"
   },
