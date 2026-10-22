@@ -77,10 +77,10 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
 
     recommendations = recommend(
         analysis, cfg, stats=stats,
-        # C-AI智能型需要最近10期开奖（与 A/B 相同的统计输入口径）
+        # C-AI智能型用最近10期（其内部自行截取）；E-走势AI型看最近30期走势图
         recent_issues=[
             {"issue": it.get("issue"), "front": it.get("front"), "back": it.get("back")}
-            for it in db["issues"][-10:]
+            for it in db["issues"][-30:]
         ],
         target_issue=str(target_issue),
     )
@@ -89,7 +89,7 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
     # target_issue 已在上方 P4-1 deterministic seed 注入前计算完成，复用同值。
     rec_date = datetime.now().strftime("%Y-%m-%d")
     all_recs: list[dict[str, Any]] = []
-    for key in ("A", "B", "C", "D"):
+    for key in ("A", "B", "C", "D", "E"):
         label = f"{key}-{STRATEGY_LABELS[key]}"
         combos = recommendations.get(key, [])
         if not combos:
@@ -103,7 +103,7 @@ def run_once(config_path: str = "config/settings.yaml") -> dict:
                 r["basis"] = c0.get("basis")
         all_recs.extend(recs)
     save_recs(rec_cfg["log_path"], all_recs)
-    done_keys = "/".join(k for k in ("A", "B", "C", "D") if recommendations.get(k))
+    done_keys = "/".join(k for k in ("A", "B", "C", "D", "E") if recommendations.get(k))
     print(f"[scheduler] 已记录推荐 {len(all_recs)} 组（{done_keys}），目标期号 {target_issue}")
 
     # 4) 开奖验证（比对历史推荐 vs 真实开奖），在生成报告前取得汇总

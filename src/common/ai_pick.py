@@ -101,6 +101,26 @@ def _build_prompt(game_id: str, target_issue: str, summary: dict) -> str:
     )
 
 
+def _build_trend_prompt(game_id: str, target_issue: str, trend: dict) -> str:
+    rule = RULES[game_id]
+    trend_text = json.dumps(trend, ensure_ascii=False, separators=(",", ":"))
+    return (
+        f"你是一位在彩票店看走势图的资深彩民，擅长看走势图研判号码。"
+        f"下面是{RULES[game_id]['label']}最近 {trend.get('window', 30)} 期的走势图数据："
+        f"逐期开奖（旧→新）、和值与跨度逐期序列（即和值/跨度曲线）、"
+        f"以及每个号码的出号条（逐期 1=开出、0=未开出，按时间从旧到新，末尾是最新一期；"
+        f"数字型为每个数位上每个数字的出号条）。\n"
+        f"请像看走势图一样研判目标期 {target_issue}：看各号码出号条的疏密、连出与断档形态，"
+        f"看和值/跨度曲线的走向与所处位置，结合最近几期的形态衔接，"
+        f"给出你研判的 1 组号码。不要用频率统计或遗漏排名代替看图研判。\n"
+        f"出号规则：{rule['desc']}\n"
+        f"走势图数据：{trend_text}\n"
+        "要求：\n"
+        "1. 只输出严格 JSON，格式为 " + rule["schema"] + "，不要输出任何解释、前后缀或 markdown 代码块；\n"
+        "2. JSON 中的数字必须全部符合上面的出号规则。\n"
+    )
+
+
 def _post_json(url: str, headers: dict, payload: dict) -> dict:
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
@@ -181,14 +201,25 @@ def pick(game_id: str, target_issue: str | None, summary: dict) -> dict | None:
     summary 由调用方按各彩种现有 A/B 统计口径构造（见模块 docstring），
     本函数只负责 prompt 组装、调用、校验。
     """
+    return _call(game_id, target_issue, _build_prompt(game_id, str(target_issue or "?"), summary), "C-AI智能型")
+
+
+def pick_trend(game_id: str, target_issue: str | None, trend: dict) -> dict | None:
+    """走势AI型出号：AI 看走势图数据（src/common/trend_data 构造）直接研判出号。
+
+    与 pick() 同通道、同校验；无密钥/失败返回 None（调用方跳过该策略）。
+    """
+    return _call(game_id, target_issue, _build_trend_prompt(game_id, str(target_issue or "?"), trend), "走势AI型")
+
+
+def _call(game_id: str, target_issue: str | None, prompt: str, tag: str) -> dict | None:
     if game_id not in RULES:
-        print(f"[ai_pick] 未知彩种 {game_id}，跳过 C")
+        print(f"[ai_pick] 未知彩种 {game_id}，跳过 {tag}")
         return None
     key, base, models = _env_chain()
     if not key:
-        print("[ai_pick] 未配置 DLT_AI_API_KEY/OPENROUTER_API_KEY，跳过 C（不报错）")
+        print(f"[ai_pick] 未配置 DLT_AI_API_KEY/OPENROUTER_API_KEY，跳过 {tag}（不报错）")
         return None
-    prompt = _build_prompt(game_id, str(target_issue or "?"), summary)
     headers = {
         "Authorization": f"Bearer {key}",
         "HTTP-Referer": "https://dlt.mootlsv.com/",

@@ -95,7 +95,14 @@ class SsqStatsTests(unittest.TestCase):
         first = stats.generate_picks("26119", rows)
         second = stats.generate_picks("26119", rows)
         self.assertEqual(first, second)
-        self.assertEqual(len(first), 3)
+        # A/B 恒在；C-AI 与 D-走势AI 视 AI 通道可用性追加（无密钥时跳过）
+        self.assertGreaterEqual(len(first), 2)
+        self.assertEqual(
+            [p["strategy"] for p in first[:2]],
+            ["A-均衡统计型", "B-冷热组合型"],
+        )
+        for pick in first[2:]:
+            self.assertIn(pick["strategy"], ("C-AI智能型", "D-走势AI型"))
         for pick in first:
             self.assertEqual(len(pick["red"]), 6)
             self.assertEqual(len(set(pick["red"])), 6)

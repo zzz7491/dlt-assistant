@@ -18,6 +18,7 @@ STRATEGY_LABELS: dict[str, str] = {
     "B": "冷热组合型",
     "C": "AI智能型",
     "D": "综合评分型",
+    "E": "走势AI型",
 }
 
 
@@ -159,6 +160,29 @@ def _strategy_ai(analysis: dict[str, Any], cfg: dict[str, Any],
     return {"front": numbers["front"], "back": numbers["back"]}
 
 
+def _strategy_trend(recent_issues: list[dict[str, Any]] | None = None,
+                    target_issue: str | None = None) -> dict[str, Any] | None:
+    """E 走势AI型：AI 看最近30期走势图数据直接研判出号（2026-10-22 用户指令）。
+
+    输入为 src/common/trend_data.ball_trend 的走势图文本形态（逐期开奖、
+    和值/跨度曲线、前后区出号条），不用热冷/遗漏统计口径。
+    无密钥或调用失败 → None（调用方跳过 E，失败则跳过该策略）。
+    """
+    from .common import ai_pick, trend_data
+
+    rows = [it for it in (recent_issues or []) if it.get("front")]
+    if len(rows) < 10:
+        return None
+    trend = trend_data.ball_trend(
+        [(list(it["front"]), list(it["back"])) for it in rows],
+        range(1, 36), range(1, 13),
+    )
+    numbers = ai_pick.pick_trend("dlt", target_issue, trend)
+    if numbers is None:
+        return None
+    return {"front": numbers["front"], "back": numbers["back"]}
+
+
 def _strategy_scored(analysis: dict[str, Any], cfg: dict[str, Any], rng: random.Random,
                      stats: dict[str, Any] | None = None) -> dict[str, Any]:
     """D 综合评分型（C-2-Step2）：C-1 四因素统计 + scorer 双层评分，遍历组合取 Top1。
@@ -282,6 +306,8 @@ def recommend(analysis: dict[str, Any], cfg: dict[str, Any],
     ai_combo = _strategy_ai(analysis, cfg, recent_issues=recent_issues,
                             target_issue=target_issue)
     out["C"] = [ai_combo] if ai_combo else []
+    trend_combo = _strategy_trend(recent_issues, target_issue)
+    out["E"] = [trend_combo] if trend_combo else []
     if stats is not None:
         d_combo = _STRATEGY_FUNCS["D"](analysis, cfg, rng, stats)
         out["D"] = [d_combo] if d_combo else []  # 统计缺失时 D 不出号，调用方跳过

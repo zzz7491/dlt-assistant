@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS dlt_recommendations (
 
 DEFAULT_OUT = "public/data/recommendations.json"
 EXISTING = "public/data/recommendations.json"   # 结构对比基准（当前线上 JSON）
-STRATEGY_PREFIXES = ("A", "B", "C")
+STRATEGY_PREFIXES = ("A", "B", "C", "D", "E")
 
 
 def _run_wrangler(cmd: str) -> str:

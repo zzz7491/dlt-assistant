@@ -78,6 +78,8 @@ def build_analysis(rows: list[dict], picks: list[dict], target: dict) -> dict:
     )
 
     pick_a, pick_b = picks[0], picks[1]
+    pick_c = next((p for p in picks if p["strategy"].startswith("C-")), None)
+    pick_t = next((p for p in picks if p["strategy"].startswith("D-")), None)
     basis = (
         f"A-均衡统计型选 {_fmt(pick_a['red'])} + {pick_a['blue']:02d}："
         "按近100期频率叠加遗漏加分的均衡评分、三区各取2个最高分；"
@@ -85,9 +87,15 @@ def build_analysis(rows: list[dict], picks: list[dict], target: dict) -> dict:
         "3 个热号 + 2 个高遗漏冷号 + 1 个均衡分最高号；"
         + (
             "C-AI智能型由 AI 模型基于近100期统计摘要直接出号"
-            "（与 A/B 同口径）。"
-            if len(picks) >= 3
-            else "C-AI智能型本期未生成（AI 通道不可用）。"
+            "（与 A/B 同口径）；"
+            if pick_c is not None
+            else "C-AI智能型本期未生成（AI 通道不可用）；"
+        )
+        + (
+            f"D-走势AI型选 {_fmt(pick_t['red'])} + {pick_t['blue']:02d}："
+            "AI 看近30期走势图（逐期开奖、和值/跨度曲线、各号出号条）研判出号。"
+            if pick_t is not None
+            else "D-走势AI型本期未生成（AI 通道不可用）。"
         )
     )
 

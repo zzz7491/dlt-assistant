@@ -122,6 +122,24 @@ def generate_c_ai(target_issue: str, rows: list[dict]) -> dict | None:
     return {"strategy": "C-AI智能型", "red": numbers["red"], "blue": numbers["blue"]}
 
 
+def generate_trend_ai(target_issue: str, rows: list[dict]) -> dict | None:
+    """D-走势AI型：AI 看最近30期走势图数据直接研判出号（2026-10-22 用户指令）。
+
+    输入为 src/common/trend_data.ball_trend 的走势图文本形态（逐期开奖、
+    和值/跨度曲线、各号出号条），不用频率/遗漏统计口径。
+    无密钥或调用失败 → None（调用方跳过该策略，失败则跳过）。
+    """
+    from src.common import ai_pick, trend_data  # 延迟导入，避免循环依赖
+
+    trend = trend_data.ball_trend(
+        [(r["red"], r["blue"]) for r in rows], RED_RANGE, BLUE_RANGE
+    )
+    numbers = ai_pick.pick_trend("ssq", target_issue, trend)
+    if numbers is None:
+        return None
+    return {"strategy": "D-走势AI型", "red": numbers["red"], "blue": numbers["blue"]}
+
+
 def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
     """A/B 统计策略 + C-AI智能型（无密钥/失败时跳过 C）。"""
     if len(rows) < 100:
@@ -165,6 +183,9 @@ def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
     pick_c = generate_c_ai(target_issue, rows)
     if pick_c is not None:
         picks.append(pick_c)
+    pick_t = generate_trend_ai(target_issue, rows)
+    if pick_t is not None:
+        picks.append(pick_t)
     return picks
 
 
