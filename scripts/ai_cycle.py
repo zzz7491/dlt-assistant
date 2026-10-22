@@ -290,11 +290,14 @@ def request_analysis(context):
         'schema':{'type':'object','properties':properties,'required':SECTIONS[context['kind']],'additionalProperties':False}}}
     last='provider_unavailable';feedback='首次请求'
     for attempt in range(3):
-        # Prefer a verified structured-output free endpoint; never add a paid route.
+        # require_parameters=False: the paid deepseek endpoints do not
+        # advertise json_schema support, so requiring every parameter
+        # 404s the route before any model runs (2026-10-22). The strict
+        # schema is still sent; validate_response stays the gatekeeper.
         selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][attempt]
         try:
             response=requests.post(url+'/chat/completions',headers={'Authorization':'Bearer '+key},json={
-                'model':selected_route,'temperature':0,'max_tokens':7000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':True},
+                'model':selected_route,'temperature':0,'max_tokens':7000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':False},
                 'messages':[{'role':'system','content':prompt+'\n若上次失败，请根据以下校验结果重写：'+feedback+'。所有章节必须逐项返回；解释所引指标的意义与取舍，数字由页面展示，无需复述或计算，禁止没有证据的评价；引用只选对应章节schema枚举内的ID。'},{'role':'user','content':json.dumps({'template':schema,'context':context},ensure_ascii=False)}]},timeout=(10,75))
             if not response.ok:
                 last=f'http_{response.status_code}'
