@@ -211,3 +211,55 @@ class AICycleTests(unittest.TestCase):
         self.assertEqual(m.read('ai_cycle_archive.json')['schema_version'],99)
 
 if __name__=='__main__':unittest.main()
+
+
+class ReflectionTests(unittest.TestCase):
+    """反思型复盘：程序核算错因 + 改进/验收校验 + 时间戳归属（2026-10-22）。"""
+
+    def _record(self, pick, actual):
+        return {'issue': '26120',
+                'identity': {'single': {'front': pick[0], 'back': pick[1]},
+                             'actual': {'front': actual[0], 'back': actual[1]}},
+                'evidence': {'single_outcome': '展开1注；基本成本2元。',
+                             'draw': '实际开奖', 'single_frozen': '冻结',
+                             'structure_comparison': '结构'}}
+
+    def test_causes_zone_gap_and_far_miss(self):
+        rec = self._record(([3, 11, 14, 20, 24], [5, 6]), ([1, 8, 24, 26, 27], [3, 5]))
+        b = m.compute_causes(rec)
+        codes = {c['code'] for c in b['causes']}
+        self.assertEqual(b['front_hits'], 1)
+        self.assertIn('zone_gap', codes)
+        self.assertIn('far_miss', codes)
+        self.assertNotIn('sum_bias', codes)
+
+    def test_causes_near_miss_back_blank_odd_even(self):
+        rec = self._record(([10, 15, 20, 25, 30], [1, 2]), ([9, 17, 21, 27, 33], [11, 12]))
+        codes = {c['code'] for c in m.compute_causes(rec)['causes']}
+        self.assertIn('near_miss', codes)
+        self.assertIn('back_blank', codes)
+        self.assertIn('odd_even_mismatch', codes)
+
+    def test_validate_reflection_accepts_and_rejects(self):
+        from decimal import Decimal
+        allowed = {Decimal(2), Decimal(5)}
+        ok = {'improvement': '下一批推荐把和值向中部收敛，补足第三区覆盖，避免整体偏高失衡。', 'verdict': ''}
+        self.assertEqual(m.validate_reflection(ok, allowed)['improvement'], ok['improvement'])
+        with self.assertRaises(ValueError):
+            m.validate_reflection({'improvement': '下期保证中奖，把和值向中部收敛补足覆盖。', 'verdict': ''}, allowed)
+        with self.assertRaises(ValueError):
+            m.validate_reflection({'improvement': '下一批推荐前区至少命中3个号，和值向中部收敛。', 'verdict': ''}, allowed)
+        with self.assertRaises(ValueError):
+            m.validate_reflection({'improvement': '太短', 'verdict': ''}, allowed)
+
+    def test_resolve_prior_by_timestamp(self):
+        def rev(issue, gen):
+            return {'issue': issue, 'reflection': {'generated_at': gen,
+                    'improvement': {'text': '改进内容示例文本，足够长度通过筛选。'}}}
+        archive = {'reviews': [rev('26119', '2026-10-18T02:00:00+00:00'),
+                               rev('26120', '2026-10-21T02:00:00+00:00')]}
+        got = m.resolve_prior_reflection(archive, '26121', '2026-10-21 15:01:08')
+        self.assertEqual(got['issue'], '26120')
+        got = m.resolve_prior_reflection(archive, '26121', '2026-10-20 15:00:00')
+        self.assertEqual(got['issue'], '26119')
+        self.assertIsNone(m.resolve_prior_reflection({'reviews': []}, '26121', None))

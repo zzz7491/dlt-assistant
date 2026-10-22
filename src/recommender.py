@@ -23,6 +23,29 @@ STRATEGY_LABELS: dict[str, str] = {
 }
 
 
+def _latest_review_improvement(target_issue: str | None, _path=None) -> str | None:
+    """读取最新 AI 复盘立下的改进要求（反思型复盘闭环）。
+
+    数据来自 public/data/ai_cycle.json 的 review.reflection.improvement；
+    文件缺失/格式异常/复盘期号不早于目标期时返回 None（fail-open，
+    合成行为与无改进时完全一致）。"""
+    try:
+        import json as _json
+        from pathlib import Path as _Path
+
+        path = _path or (_Path(__file__).resolve().parent.parent / "public" / "data" / "ai_cycle.json")
+        data = _json.loads(path.read_text(encoding="utf-8"))
+        review = data.get("review") or {}
+        if review.get("status") != "completed":
+            return None
+        improvement = ((review.get("reflection") or {}).get("improvement") or {}).get("text")
+        if improvement and str(review.get("issue", "")) < str(target_issue or ""):
+            return str(improvement)
+    except Exception:
+        return None
+    return None
+
+
 def _norm(d: dict[int, float]) -> dict[int, float]:
     s = sum(d.values()) or 1.0
     return {k: v / s for k, v in d.items()}
@@ -323,7 +346,8 @@ def recommend(analysis: dict[str, Any], cfg: dict[str, Any],
     if len(views) >= 2:
         try:
             from .common import ai_pick as _ai_pick
-            r = _ai_pick.synthesize("dlt", str(target_issue or ""), views)
+            r = _ai_pick.synthesize("dlt", str(target_issue or ""), views,
+                                    guidance=_latest_review_improvement(target_issue))
             if r:
                 synth = {"front": r["front"], "back": r["back"]}
         except Exception:

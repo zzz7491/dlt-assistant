@@ -367,8 +367,12 @@ def _pick_text(pick: dict) -> str:
     return f"前区 {front} + 后区 {back}"
 
 
-def synthesize(game_id: str, target_issue: str, picks: list[dict]) -> dict | None:
-    """把各策略本期号码喂给 AI，合成唯一一注。成功返回校验后的号码 dict。"""
+def synthesize(game_id: str, target_issue: str, picks: list[dict],
+               guidance: str | None = None) -> dict | None:
+    """把各策略本期号码喂给 AI，合成唯一一注。成功返回校验后的号码 dict。
+
+    guidance 非空时（上期复盘立下的改进要求），追加进提示词要求合成落实，
+    实现「复盘 → 改进 → 下期推荐」闭环；为空时行为与旧版完全一致。"""
     usable = [p for p in (picks or []) if isinstance(p, dict) and p.get("strategy")]
     if len(usable) < 2:
         print(f"[ai_pick] {game_id} target={target_issue} synth skipped: "
@@ -390,6 +394,9 @@ def synthesize(game_id: str, target_issue: str, picks: list[dict]) -> dict | Non
         "不要整注照抄任何一路，也不要机械多数投票，要做出独立取舍。"
         f"目标期号 {target_issue}。只输出严格 JSON，格式为 " + rule["schema"] + "，不要输出任何解释、前后缀或 markdown 代码块。"
     )
+    if guidance:
+        prompt += (f"\n\n另须落实上期复盘立下的改进要求：{guidance}"
+                   "在不违反号码规则与结构均衡的前提下，合成时优先满足这条改进。")
     result = _call(game_id, target_issue, prompt, "综合AI型")
     if result is not None:
         result["strategy"] = "F-综合AI型"

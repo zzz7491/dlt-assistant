@@ -21,6 +21,13 @@
   function sectionFolded(record,key,title){
     return '<details><summary>'+esc(title)+'（点开看）</summary>'+section(record,key,title)+'</details>';
   }
+  function reflection(r){
+    var f=r.reflection;if(!f||!Array.isArray(f.causes)||!f.causes.length)return '';
+    var h='<h3>错因归因（按真实数据核算）</h3><ul>'+f.causes.map(function(c){return '<li>'+esc(c.text)+'</li>';}).join('')+'</ul>';
+    if(f.improvement&&f.improvement.text)h+='<h3>本期立下的改进（下一批推荐落实）</h3><p>'+esc(f.improvement.text)+'</p>';
+    if(f.verdict&&f.verdict.text)h+='<h3>上次改进验收（第 '+esc(f.verdict.on_issue)+' 期复盘所立）</h3><p>'+esc(f.verdict.text)+'</p>';
+    return h;
+  }
   function currency(v){return v==null?'待官方奖金详情核验':esc(Number(v).toLocaleString('zh-CN',{maximumFractionDigits:2}))+' 元';}
   function payout(s,title){if(!s)return '<p>'+esc(title)+'：当期没有正式方案，无法进行历史对照。</p>';
     return '<h4>'+esc(title)+' · 投注测算</h4><p>展开 '+esc(s.tickets)+' 注；基本成本 '+currency(s.basic_cost_yuan)+'；税前基本奖金 '+currency(s.basic_payout_yuan)+'</p>'+
@@ -46,10 +53,11 @@
     try{
       var actual=history.find(function(h){return r&&String(h.issue)===r.issue;});
       if(!r||r.status!=='completed'||!review.authoritative||r.issue!==String(review.issue)||r.identity.snapshot_hash!==review.snapshot_hash||!ns(r.identity.single,review.recommendation)||!actual||!ns(r.identity.actual,actual))throw Error('stale review');
+      var reflHtml='';try{reflHtml=reflection(r);}catch(e){reflHtml='';}
       set('ai-review','<h3>🤖 第 '+esc(r.issue)+' 期 AI 复盘</h3>'+(r.has_pre_draw_ai?'<p class="hint">对照当期开奖前 AI 分析与实际结果进行复盘。</p>':'<p class="hint">事后解读：当期没有开奖前 AI 分析，不代表 AI 当时作出过这些预测。</p>')+
         payout(r.settlement.single,'正式单注')+payout(r.settlement.compound,'复式方案')+
         '<details><summary>查看 AI 复盘详情（结果解读 / 依据核验 / 局限 / 下期参考）</summary>'+section(r,'summary','AI 结果解读')+section(r,'reason_check','推荐依据核验')+
-        section(r,'limitations','复盘局限')+section(r,'next_focus','下一期参考')+'</details>'+'<p class="hint">命中、奖级和奖金按大乐透规则测算。金额为税前假设投注结果，不代表客户真实投注或收益。</p>');
+        section(r,'limitations','复盘局限')+section(r,'next_focus','下一期参考')+reflHtml+'</details>'+'<p class="hint">命中、奖级和奖金按大乐透规则测算。金额为税前假设投注结果，不代表客户真实投注或收益。</p>');
     }catch(e){set('ai-review','<p class="hint">本期 AI 复盘暂未更新，原有命中复盘仍可查看。</p>');}
   }).catch(function(){ids.forEach(function(id){set(id,'<p class="hint">AI 数据暂不可用，原有功能不受影响。</p>');});});
 })();
