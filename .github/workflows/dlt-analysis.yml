@@ -78,6 +78,9 @@ jobs:
           DLT_AI_API_KEY: ${{ secrets.DLT_AI_API_KEY }}
           DLT_AI_BASE_URL: ${{ secrets.DLT_AI_BASE_URL }}
           DLT_AI_MODEL: ${{ secrets.DLT_AI_MODEL }}
+          DLT_PICK_BASE_URL: ${{ secrets.DLT_PICK_BASE_URL }}
+          DLT_PICK_API_KEY: ${{ secrets.DLT_PICK_API_KEY }}
+          DLT_PICK_MODEL: ${{ secrets.DLT_PICK_MODEL }}
         run: |
           RC=0
           python -m src.scheduler --once || RC=$?
@@ -119,6 +122,9 @@ jobs:
           DLT_AI_API_KEY: ${{ secrets.DLT_AI_API_KEY }}
           DLT_AI_BASE_URL: ${{ secrets.DLT_AI_BASE_URL }}
           DLT_AI_MODEL: ${{ secrets.DLT_AI_MODEL }}
+          DLT_PICK_BASE_URL: ${{ secrets.DLT_PICK_BASE_URL }}
+          DLT_PICK_API_KEY: ${{ secrets.DLT_PICK_API_KEY }}
+          DLT_PICK_MODEL: ${{ secrets.DLT_PICK_MODEL }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
             echo "⚠️ 未配置 CLOUDFLARE_API_TOKEN，跳过 D1 增量同步"
