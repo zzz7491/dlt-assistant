@@ -83,21 +83,27 @@ def _request_ai(plan: dict, review: dict | None = None) -> dict:
     key = os.getenv("DLT_AI_API_KEY", "").strip()
     base = os.getenv("DLT_AI_BASE_URL", "").strip()
     route = os.getenv("DLT_AI_MODEL", "").strip()
-    if not key or base != "https://openrouter.ai/api/v1" or not route:
+    # Route policy (owner decision, 2026-10-22 full-local switch; the
+    # football path was missed in that migration and fixed 2026-10-23):
+    # accept the OpenRouter base or the owner's own Ollama endpoint —
+    # the same allowlist as scripts/ai_cycle.py. The ":free" route rule
+    # only applies to OpenRouter; the local base serves DLT_AI_MODEL as-is.
+    local = base == "https://ai.585351.xyz/v1"
+    if not key or base not in ("https://openrouter.ai/api/v1", "https://ai.585351.xyz/v1") or not route:
         _ai_fallback_notice(
             "config: "
             + ", ".join(
                 name
                 for name, bad in (
                     ("key-missing", not key),
-                    ("base-mismatch", base != "https://openrouter.ai/api/v1"),
+                    ("base-mismatch", base not in ("https://openrouter.ai/api/v1", "https://ai.585351.xyz/v1")),
                     ("route-missing", not route),
                 )
                 if bad
             )
         )
         return _fallback_ai(plan, review)
-    if route != "openrouter/free" and not route.endswith(":free"):
+    if not local and route != "openrouter/free" and not route.endswith(":free"):
         _ai_fallback_notice("config: route-not-free")
         return _fallback_ai(plan, review)
     import requests
@@ -134,7 +140,7 @@ def _request_ai(plan: dict, review: dict | None = None) -> dict:
     # some routed endpoints mandate reasoning and reject the request
     # with HTTP 400 (observed 2026-10-15). Extra candidates also spread
     # the per-model daily free quota (HTTP 429 free-models-per-day).
-    if route != "openrouter/free":
+    if local or route != "openrouter/free":
         attempts = [(route, True, 2400)]
     else:
         attempts = [
@@ -151,19 +157,25 @@ def _request_ai(plan: dict, review: dict | None = None) -> dict:
                 "temperature": 0,
                 "max_tokens": max_tokens,
                 "response_format": schema,
-                "provider": {"require_parameters": True},
                 "messages": [
                     {"role": "system", "content": prompt},
                     {"role": "user", "content": json.dumps(facts, ensure_ascii=False)},
                 ],
             }
+            if not local:
+                payload["provider"] = {"require_parameters": True}
             if disable_reasoning:
                 payload["reasoning"] = {"enabled": False}
+            headers = {"Authorization": "Bearer " + key}
+            if local:
+                # The local endpoint sits behind Cloudflare, which rejects
+                # the default python-requests UA (same handling as ai_cycle).
+                headers["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
             response = requests.post(
                 base + "/chat/completions",
-                headers={"Authorization": "Bearer " + key},
+                headers=headers,
                 json=payload,
-                timeout=90,
+                timeout=300 if local else 90,
             )
             if response.status_code >= 400:
                 raise ValueError(

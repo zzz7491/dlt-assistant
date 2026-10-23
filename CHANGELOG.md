@@ -1,3 +1,10 @@
+## 2026-10-23 — 足彩 AI 解读本地通道修复
+
+- 问题：2026-10-22 全切本地时漏迁 scripts/football_cycle.py，其 _request_ai 把 base 写死为 OpenRouter 地址，本地 base 恒走 fallback，足彩 ai.status 长期 pending、占位文案上站，生产验收步（check_football_production）每轮失败（26148 全程无 AI 深度解读）。
+- 修复：_request_ai 改为与 ai_cycle 相同的双路白名单（OpenRouter + 所有者本地端点）；本地路直调 DLT_AI_MODEL、去掉 provider.require_parameters、补浏览器 UA（端点前有 Cloudflare）、超时放宽到 300s；OpenRouter 的 :free 路由规则与原有 attempts/护栏完全保留；未知 base 仍不外发请求。
+- 验证：新增 tests/test_football_ai_route.py 4 项（本地直调/未知 base 不外发/OpenRouter 免费规则/ provider 块保留）全过；离线以线上 26149 真实 plan + 本地 gemma4 实测 _request_ai 返回 completed（39 秒，四段内容完整）。
+- 回滚：revert 本提交即恢复。
+
 ## 2026-10-22 — 反思型复盘（大乐透）
 
 - 背景：用户定版复盘不能只对答案，必须反思错因并指导下期改进。
