@@ -3888,11 +3888,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周五002": {
           "code": "周五002",
@@ -4152,11 +4155,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周五002": {
           "code": "周五002",
@@ -5028,7 +5034,7 @@
           "name": "稳健2串1",
           "codes": [
             "周六028",
-            "周五006"
+            "周日006"
           ],
           "picks": [
             {
@@ -5036,7 +5042,7 @@
               "pick_label": "主胜"
             },
             {
-              "code": "周五006",
+              "code": "周日006",
               "pick_label": "主胜"
             }
           ],
@@ -5046,7 +5052,7 @@
           "name": "进取3串1",
           "codes": [
             "周六028",
-            "周五006",
+            "周日006",
             "周日003"
           ],
           "picks": [
@@ -5055,7 +5061,7 @@
               "pick_label": "主胜"
             },
             {
-              "code": "周五006",
+              "code": "周日006",
               "pick_label": "主胜"
             },
             {
