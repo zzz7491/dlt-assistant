@@ -1,109 +1,49 @@
 {
-  "updated_at": "2026-10-21 15:01:08",
+  "updated_at": "2026-10-24 14:28:18",
   "empty": false,
-  "issue": "26120",
+  "issue": "26121",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "aa2861ed5181a6e1e9e539a1ccd041fcd4d9fb0ede07d998dcfbbb4df7063b26",
+  "snapshot_hash": "fdc1af69f9a1b4a4e342356a3ed72f41566f3f76b5fd01d9e24e609a04f32d5f",
   "recommendation": {
-    "strategy": "A-均衡统计型",
+    "strategy": "F-综合AI型",
     "front": [
       3,
       6,
-      23,
-      25,
+      11,
+      17,
       26
     ],
     "back": [
-      7,
-      8
+      5,
+      9
     ],
-    "score_total": 43.27,
+    "score_total": 51.5,
     "model_version": null
   },
-  "reason": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 3 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 3:2、大小比 3:2、和值 83、跨度 23。",
+  "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
   "explanation": {
     "explanation_version": "1.1",
-    "strategy_type": "balanced_statistical",
-    "strategy": "A-均衡统计型",
-    "target_issue": "26120",
-    "summary": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 3 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 3:2、大小比 3:2、和值 83、跨度 23。",
-    "factors": [
-      {
-        "type": "hot_cold",
-        "label": "热冷混合",
-        "detail": "前区落在当前窗口热号集合 3 个、冷号集合 1 个。",
-        "evidence": {
-          "front_hot": [
-            3,
-            25,
-            26
-          ],
-          "front_cold": [
-            23
-          ],
-          "window": 50
-        }
-      },
-      {
-        "type": "frequency",
-        "label": "频率依据",
-        "detail": "前区号码取自近期基础频率与近期频率加权（0.5/0.5）的候选池。",
-        "evidence": {
-          "front_freq": {
-            "3": 10,
-            "6": 7,
-            "23": 5,
-            "25": 8,
-            "26": 13
-          }
-        }
-      },
-      {
-        "type": "balance",
-        "label": "奇偶/大小均衡",
-        "detail": "前区奇偶比 3:2、大小比 3:2（算法强制均衡到 2~3）。",
-        "evidence": {
-          "front_odd_even": [
-            3,
-            2
-          ],
-          "front_big_small": [
-            3,
-            2
-          ]
-        }
-      },
-      {
-        "type": "structure",
-        "label": "结构分布",
-        "detail": "前区和值 83、跨度 23。",
-        "evidence": {
-          "front_sum": 83,
-          "front_span": 23
-        }
-      }
-    ],
-    "generated_from": [
-      "dlt_history.json",
-      "window=50",
-      "strategy_type=balanced_statistical"
-    ],
-    "reason_status": "ok",
-    "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
-    "explanation_hash": "015182b9f9c7cd36"
+    "strategy_type": "unknown",
+    "strategy": "F-综合AI型",
+    "target_issue": "26121",
+    "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+    "factors": [],
+    "generated_from": [],
+    "reason_status": "unavailable",
+    "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
   },
   "actual_result": {
     "front": [
-      1,
       6,
-      10,
-      15,
-      32
+      8,
+      19,
+      24,
+      25
     ],
     "back": [
-      3,
-      4
+      1,
+      8
     ]
   },
   "hit_count": {

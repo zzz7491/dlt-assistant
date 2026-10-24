@@ -374,7 +374,57 @@
         "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
       },
       "snapshot_hash": "fdc1af69f9a1b4a4e342356a3ed72f41566f3f76b5fd01d9e24e609a04f32d5f"
+    },
+    {
+      "schema_version": "1.1",
+      "issue": "26122",
+      "published_at": "2026-10-24 14:28:18",
+      "primary_strategy": "F-综合AI型",
+      "numbers": {
+        "front": [
+          3,
+          7,
+          11,
+          14,
+          20
+        ],
+        "back": [
+          4,
+          6
+        ]
+      },
+      "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+      "final_score": 44.0,
+      "final_breakdown": {
+        "base": 60.0,
+        "history": 50.0,
+        "recent": 0.0,
+        "structure": 50.0,
+        "risk": 0.0,
+        "weights": {
+          "base": 0.4,
+          "history": 0.2,
+          "recent": 0.15,
+          "structure": 0.2
+        },
+        "degraded": false,
+        "stage": "stable",
+        "effective_sample": 29
+      },
+      "model_version": null,
+      "explanation": {
+        "explanation_version": "1.1",
+        "strategy_type": "unknown",
+        "strategy": "F-综合AI型",
+        "target_issue": "26122",
+        "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+        "factors": [],
+        "generated_from": [],
+        "reason_status": "unavailable",
+        "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
+      },
+      "snapshot_hash": "91b9203b0dab0c3e5fda9ec07c45fffdc76ff2314718f589c08e83d560b2ced0"
     }
   ],
-  "updated_at": "2026-10-22 09:37:17"
+  "updated_at": "2026-10-24 14:28:18"
 }
