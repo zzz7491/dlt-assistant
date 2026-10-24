@@ -36,10 +36,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-        - name: 连接 Tailscale（直达本地模型）
-          uses: tailscale/github-action@v3
-          with:
-            authkey: ${{ secrets.TS_AUTHKEY }}
+      - name: 连接 Tailscale（直达本地模型）
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TS_AUTHKEY }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
