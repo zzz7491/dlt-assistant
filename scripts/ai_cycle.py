@@ -258,6 +258,46 @@ def validate_response(raw,context):
     return raw
 
 
+def _post_chat(url,key,payload,timeout):
+    headers={'Authorization':'Bearer '+key,'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'}
+    if '585351' not in url:
+        return requests.post(url+'/chat/completions',headers=headers,json=payload,timeout=timeout)
+    # Local route (owner's Ollama behind a Cloudflare Tunnel): two transport
+    # adaptations, generation semantics unchanged (2026-10-24).
+    # 1) reasoning_effort='none': the endpoint ignores the OpenRouter-style
+    #    reasoning.enabled flag, and the reasoning model otherwise burns the
+    #    whole token budget on hidden reasoning, returning empty content.
+    # 2) streaming: this call is the site's largest; a single non-streamed
+    #    response exceeds the tunnel's idle timeout (HTTP 524). Streamed
+    #    chunks keep the connection active; the body is reassembled into the
+    #    standard chat-completion shape so the caller sees no difference.
+    payload=dict(payload);payload['reasoning_effort']='none';payload['stream']=True
+    raw=requests.post(url+'/chat/completions',headers=headers,json=payload,timeout=timeout,stream=True)
+    if not raw.ok:
+        status=raw.status_code
+        try:raw.close()
+        except Exception:pass
+        class _R:ok=False;status_code=status
+        return _R()
+    content='';model=str(payload.get('model') or 'unknown');finish='unknown'
+    for line in raw.iter_lines(decode_unicode=True):
+        if not line or not line.startswith('data:'):continue
+        data=line[5:].strip()
+        if data=='[DONE]':break
+        try:chunk=json.loads(data)
+        except ValueError:continue
+        model=str(chunk.get('model') or model)
+        ch=(chunk.get('choices') or [{}])[0]
+        delta=ch.get('delta') or {}
+        if delta.get('content'):content+=delta['content']
+        if ch.get('finish_reason'):finish=str(ch['finish_reason'])
+    body={'model':model,'choices':[{'message':{'content':content},'finish_reason':finish}]}
+    class _R:
+        ok=True;status_code=200
+        def json(self):return body
+    return _R()
+
+
 def request_analysis(context):
     key=os.getenv('DLT_AI_API_KEY','').strip();url=os.getenv('DLT_AI_BASE_URL','').strip();route=os.getenv('DLT_AI_MODEL','').strip()
     if not all([key,url,route]):raise RuntimeError('not_configured')
@@ -295,9 +335,9 @@ def request_analysis(context):
         # schema is still sent; validate_response stays the gatekeeper.
         selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][min(attempt,2)]
         try:
-            response=requests.post(url+'/chat/completions',headers={'Authorization':'Bearer '+key,'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'},json={
+            response=_post_chat(url,key,{
                 'model':selected_route,'temperature':0,'max_tokens':7000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':False},
-                'messages':[{'role':'system','content':prompt+'\n若上次失败，请根据以下校验结果重写：'+feedback+'。所有章节必须逐项返回；解释所引指标的意义与取舍，数字由页面展示，无需复述或计算，禁止没有证据的评价；引用只选对应章节schema枚举内的ID。'},{'role':'user','content':json.dumps({'template':schema,'context':context},ensure_ascii=False)}]},timeout=(10,300) if 'openrouter' not in url else (10,75))
+                'messages':[{'role':'system','content':prompt+'\n若上次失败，请根据以下校验结果重写：'+feedback+'。所有章节必须逐项返回；解释所引指标的意义与取舍，数字由页面展示，无需复述或计算，禁止没有证据的评价；引用只选对应章节schema枚举内的ID。'},{'role':'user','content':json.dumps({'template':schema,'context':context},ensure_ascii=False)}]},(10,300) if 'openrouter' not in url else (10,75))
             if not response.ok:
                 last=f'http_{response.status_code}'
                 if response.status_code in (401,402,403) or (response.status_code in (400,404) and route!='openrouter/free'):break

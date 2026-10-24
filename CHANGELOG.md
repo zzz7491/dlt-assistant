@@ -1,3 +1,10 @@
+## 2026-10-24 — ai_cycle 本地路传输修复（分析大调用）
+
+- 问题：全切本地后 ai_cycle 的 analysis 大调用持续失败：单次非流式响应超过 Cloudflare 隧道空闲超时（http_524）；且端点不认 OpenRouter 风格的 reasoning.enabled=False，gemma4 推理 token 烧光 7000 预算、正文为空（26121 赛前分析全天缺失，2026-10-24 实锤）。
+- 修复：request_analysis 的请求改走 _post_chat 垫片——本地路加 reasoning_effort:'none'（端点实际认的关推理方言，与 ai_pick 一致）并启用流式接收、在客户端重组为标准 chat-completion 响应体；提示词、结构化 schema、校验与证据规则零改动；OpenRouter 路完全原样直通。
+- 验证：py_compile 通过；离线桩测（模拟 SSE 分片含 reasoning 增量）验证内容拼装/推理忽略/reasoning_effort 注入/OpenRouter 路零改动。生产验收以下一轮工作流 ai_cycle 两项状态为准。
+- 回滚：revert 本提交即恢复。
+
 ## 2026-10-23 — 足彩 AI 解读本地通道修复
 
 - 问题：2026-10-22 全切本地时漏迁 scripts/football_cycle.py，其 _request_ai 把 base 写死为 OpenRouter 地址，本地 base 恒走 fallback，足彩 ai.status 长期 pending、占位文案上站，生产验收步（check_football_production）每轮失败（26148 全程无 AI 深度解读）。
