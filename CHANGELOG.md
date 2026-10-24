@@ -1,3 +1,11 @@
+## 2026-10-24 — ai_cycle 分析本地通道根治（原生接口 + 分段生成）+ Tailscale 白名单
+
+- 根因（2026-10-24 逐层实锤）：① 单次非流式大请求被 Cloudflare 隧道空闲超时掐断（http_524）；② 本地端点的 OpenAI 兼容层不认任何关推理开关（reasoning_effort / think / reasoning.enabled 全部无效），gemma4 推理烧光 token 预算、正文为空（empty_content）；③ 单次全章节调用体量过大。
+- 修复（scripts/ai_cycle.py）：本地路改走 Ollama 原生 /api/chat（think=False 关思考、严格 schema 走原生 format、NDJSON 流式重组为标准响应体）；分析/复盘生成改为按章节分段请求（每段独立 schema 与 3000 token 预算），合并后仍由 validate_response 全量校验把关，校验失败按报错定位章节、带反馈只重打该段（最多 4 轮）；白名单新增所有者 Mac 的 Tailscale Serve 地址（mingmac-studio.<tailnet>.ts.net），为工作流直连做准备，CF 地址保留可回滚。
+- 验证：离线端到端实跑（26121 上下文）：五段一次出正文，合并校验首轮拦下 compound_reason 未核验数字、反馈轮只重打该段后 completed；全程约 41 秒（此前为 10 分钟级失败）。
+- 足彩 scripts/football_cycle.py 同步 Tailscale 白名单，其余逻辑未动。
+- 回滚：revert 本提交即恢复。
+
 ## 2026-10-24 — ai_cycle 本地路传输修复（分析大调用）
 
 - 问题：全切本地后 ai_cycle 的 analysis 大调用持续失败：单次非流式响应超过 Cloudflare 隧道空闲超时（http_524）；且端点不认 OpenRouter 风格的 reasoning.enabled=False，gemma4 推理 token 烧光 7000 预算、正文为空（26121 赛前分析全天缺失，2026-10-24 实锤）。

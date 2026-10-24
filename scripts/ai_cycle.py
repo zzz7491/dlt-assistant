@@ -258,21 +258,37 @@ def validate_response(raw,context):
     return raw
 
 
+def _base_allowed(url):
+    # Allowed AI bases: OpenRouter, the owner's Cloudflare-Tunnel endpoint,
+    # or the owner's Mac served over Tailscale (mingmac-studio.<tailnet>.ts.net).
+    if url in ('https://openrouter.ai/api/v1','https://ai.585351.xyz/v1'):
+        return True
+    return bool(re.fullmatch(r'https://mingmac-studio\.[a-z0-9-]+\.ts\.net/v1',url or ''))
+
+
+def _is_local_base(url):
+    return bool(url) and ('585351' in url or '.ts.net' in url)
+
+
 def _post_chat(url,key,payload,timeout):
     headers={'Authorization':'Bearer '+key,'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'}
-    if '585351' not in url:
+    if not _is_local_base(url):
         return requests.post(url+'/chat/completions',headers=headers,json=payload,timeout=timeout)
-    # Local route (owner's Ollama behind a Cloudflare Tunnel): two transport
-    # adaptations, generation semantics unchanged (2026-10-24).
-    # 1) reasoning_effort='none': the endpoint ignores the OpenRouter-style
-    #    reasoning.enabled flag, and the reasoning model otherwise burns the
-    #    whole token budget on hidden reasoning, returning empty content.
-    # 2) streaming: this call is the site's largest; a single non-streamed
-    #    response exceeds the tunnel's idle timeout (HTTP 524). Streamed
-    #    chunks keep the connection active; the body is reassembled into the
-    #    standard chat-completion shape so the caller sees no difference.
-    payload=dict(payload);payload['reasoning_effort']='none';payload['stream']=True
-    raw=requests.post(url+'/chat/completions',headers=headers,json=payload,timeout=timeout,stream=True)
+    # Local route (owner's Ollama): use the native /api/chat, not the
+    # OpenAI-compat layer. Every reasoning-off switch sent to /v1 is ignored
+    # by this endpoint (reasoning_effort, think, reasoning.enabled \u2014 all
+    # verified ineffective 2026-10-24): the reasoning model burns the whole
+    # token budget on hidden reasoning and returns empty content. The native
+    # API honors think=False. The strict JSON schema is passed as the native
+    # `format`; the streamed NDJSON response is reassembled into the standard
+    # chat-completion shape so the caller sees no difference (streaming also
+    # keeps the tunnel connection active on long generations).
+    origin=url[:-3] if url.endswith('/v1') else url
+    native={'model':payload.get('model'),'messages':payload.get('messages'),'stream':True,'think':False,
+            'options':{'temperature':payload.get('temperature',0),'num_predict':payload.get('max_tokens',3000)}}
+    fmt=((payload.get('response_format') or {}).get('json_schema') or {}).get('schema')
+    if fmt:native['format']=fmt
+    raw=requests.post(origin+'/api/chat',headers={'User-Agent':headers['User-Agent']},json=native,timeout=timeout,stream=True)
     if not raw.ok:
         status=raw.status_code
         try:raw.close()
@@ -281,16 +297,13 @@ def _post_chat(url,key,payload,timeout):
         return _R()
     content='';model=str(payload.get('model') or 'unknown');finish='unknown'
     for line in raw.iter_lines(decode_unicode=True):
-        if not line or not line.startswith('data:'):continue
-        data=line[5:].strip()
-        if data=='[DONE]':break
-        try:chunk=json.loads(data)
+        if not line:continue
+        try:chunk=json.loads(line)
         except ValueError:continue
         model=str(chunk.get('model') or model)
-        ch=(chunk.get('choices') or [{}])[0]
-        delta=ch.get('delta') or {}
-        if delta.get('content'):content+=delta['content']
-        if ch.get('finish_reason'):finish=str(ch['finish_reason'])
+        msg=chunk.get('message') or {}
+        if msg.get('content'):content+=msg['content']
+        if chunk.get('done'):finish='stop' if chunk.get('done_reason') in (None,'stop') else str(chunk['done_reason'])
     body={'model':model,'choices':[{'message':{'content':content},'finish_reason':finish}]}
     class _R:
         ok=True;status_code=200
@@ -306,7 +319,7 @@ def request_analysis(context):
     # gemma4-26b, which passes the strict validator; OpenRouter/deepseek
     # remains the only other allowed base. The allowlist keeps the API key
     # from ever being sent to an arbitrary endpoint.
-    if url not in ('https://openrouter.ai/api/v1','https://ai.585351.xyz/v1'):
+    if not _base_allowed(url):
         raise RuntimeError('ai_base_not_allowlisted')
     schema={k:{'text':'中文解释引用指标的意义、取舍及局限；具体数字由页面自动展示，不要重新计算或复述。','evidence_ids':['现有证据ID']} for k in SECTIONS[context['kind']]}
     prompt=('你是大乐透专业数据分析助手。只返回JSON，字段严格匹配给定模板。依据evidence作具体分析，每段中文五十至一百五十字；'
@@ -325,57 +338,85 @@ def request_analysis(context):
             'text':{'type':'string','description':'五十至一百五十字中文具体评审，点明本段引用指标名称，解释取舍；具体数字由页面展示，不自算或复述数值，不虚构走势、预算合理等评价。'},
             'evidence_ids':{'type':'array','items':{'type':'string','enum':refs},'minItems':1,'maxItems':4}},
             'required':['text','evidence_ids'],'additionalProperties':False}
-    response_format={'type':'json_schema','json_schema':{'name':'dlt_'+context['kind'],'strict':True,
-        'schema':{'type':'object','properties':properties,'required':SECTIONS[context['kind']],'additionalProperties':False}}}
-    last='provider_unavailable';feedback='首次请求'
-    for attempt in range(5):
-        # require_parameters=False: the paid deepseek endpoints do not
-        # advertise json_schema support, so requiring every parameter
-        # 404s the route before any model runs (2026-10-22). The strict
-        # schema is still sent; validate_response stays the gatekeeper.
-        selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][min(attempt,2)]
-        try:
-            response=_post_chat(url,key,{
-                'model':selected_route,'temperature':0,'max_tokens':7000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':False},
-                'messages':[{'role':'system','content':prompt+'\n若上次失败，请根据以下校验结果重写：'+feedback+'。所有章节必须逐项返回；解释所引指标的意义与取舍，数字由页面展示，无需复述或计算，禁止没有证据的评价；引用只选对应章节schema枚举内的ID。'},{'role':'user','content':json.dumps({'template':schema,'context':context},ensure_ascii=False)}]},(10,300) if 'openrouter' not in url else (10,75))
-            if not response.ok:
-                last=f'http_{response.status_code}'
-                if response.status_code in (401,402,403) or (response.status_code in (400,404) and route!='openrouter/free'):break
+    # Section-split transport (2026-10-24): the single all-sections call is
+    # the site's largest. On the local route the reasoning model burns the
+    # whole token budget before any section content is emitted
+    # (empty_content), so each section is requested separately with its own
+    # strict schema and a bounded token budget; validate_response on the
+    # merged result below stays the gatekeeper, exactly as before.
+    raw={};model_refs={};model_seen=''
+    round_feedback='首次请求';pending=list(SECTIONS[context['kind']])
+    for _round in range(4):
+        for section in [s for s in SECTIONS[context['kind']] if s in pending]:
+            response_format={'type':'json_schema','json_schema':{'name':'dlt_'+context['kind']+'_'+section,'strict':True,
+                'schema':{'type':'object','properties':{section:properties[section]},'required':[section],'additionalProperties':False}}}
+            section_template={section:schema[section]}
+            last='provider_unavailable';feedback=round_feedback;section_ok=False
+            for attempt in range(5):
+                # require_parameters=False: the paid deepseek endpoints do not
+                # advertise json_schema support, so requiring every parameter
+                # 404s the route before any model runs (2026-10-22). The strict
+                # schema is still sent; validate_response stays the gatekeeper.
+                selected_route=route if route!='openrouter/free' else ['google/gemma-4-31b-it:free','nvidia/nemotron-3-super-120b-a12b:free','openrouter/free'][min(attempt,2)]
+                try:
+                    response=_post_chat(url,key,{
+                        'model':selected_route,'temperature':0,'max_tokens':3000,'reasoning':{'enabled':False},'response_format':response_format,'provider':{'require_parameters':False},
+                        'messages':[{'role':'system','content':prompt+'\n若上次失败，请根据以下校验结果重写：'+feedback+'。本请求只返回「'+section+'」这一个章节，不要返回其他章节；解释所引指标的意义与取舍，数字由页面展示，无需复述或计算，禁止没有证据的评价；引用只选对应章节schema枚举内的ID。'},{'role':'user','content':json.dumps({'template':section_template,'context':context},ensure_ascii=False)}]},(10,300) if 'openrouter' not in url else (10,75))
+                    if not response.ok:
+                        last=f'http_{response.status_code}'
+                        if response.status_code in (401,402,403) or (response.status_code in (400,404) and route!='openrouter/free'):break
+                        if attempt<2:time.sleep(3)
+                        continue
+                    body=response.json();choice=body['choices'][0];content=choice['message'].get('content')
+                    print('ai_cycle_provider',context['kind'],section,str(body.get('model','unknown'))[:120],str(choice.get('finish_reason','unknown'))[:20],'content_chars',len(content or ''))
+                    if not content:
+                        last='empty_content';print('ai_cycle_validation',context['kind'],section,'empty_content');continue
+                    if content.startswith('```') and content.rstrip().endswith('```'):
+                        content='\n'.join(content.strip().splitlines()[1:-1])
+                    part=json.loads(content)
+                    if set(part)!={section}:
+                        raise ValueError('section_keys')
+                    raw[section]=part[section]
+                    model_refs[section]=copy.deepcopy(part[section]['evidence_ids'])
+                    model_seen=str(body.get('model') or route)
+                    section_ok=True
+                    break
+                except requests.Timeout:last='timeout'
+                except (ValueError,KeyError,TypeError,IndexError) as exc:
+                    last='invalid_response'
+                    reason=str(exc) if re.fullmatch(r'[a-z_0-9 .]{1,90}',str(exc)) else 'json_or_schema_error'
+                    feedback=reason+'；请删去随机生成、随机基线、回归均衡、稳定性存疑、捕获能力、号码无重合、号码本身无重叠等表述，改为客观评审；每段仅依据自己引用的数据。若报unverified_numeric，错误后缀即未获本段引用支持的数值，请为本段引用该数字对应的证据ID；没有可用引用就删去该数字，禁止改成中文数词绕过。'
+                    if reason.startswith('unsupported_interpretation_'):
+                        feedback+=' 具体需删去的表述：'+FORBIDDEN[int(reason.rsplit('_',1)[1])]+'。'
+                    print('ai_cycle_validation',context['kind'],section,reason)
+                except requests.RequestException:last='connection_error'
                 if attempt<2:time.sleep(3)
+            if not section_ok:
+                raise RuntimeError(last)
+        # Stable canonical facts accompany each model paragraph. This also
+        # supports period/identity claims when the model omits their citation.
+        canonical={'overview':['history_window','candidate_comparison','single_structure','compound_structure','compound_budget'],
+                   'single_reason':['single_identity','single_selection','single_structure'],
+                   'compound_reason':['compound_identity','compound_budget','compound_structure'],
+                   'risk':['uncertainty','history_window'],
+                   'next_focus':['previous_review','history_window','single_identity','compound_identity']}
+        if context['kind']=='analysis':
+            for name,refs in canonical.items():
+                raw[name]['evidence_ids']=list(dict.fromkeys(raw[name]['evidence_ids']+[r for r in refs if r in context['evidence']]))
+            try:
+                sections=validate_response(raw,context)
+            except (ValueError,KeyError,TypeError) as exc:
+                reason=str(exc) if re.fullmatch(r'[a-z_0-9 .]{1,90}',str(exc)) else 'json_or_schema_error'
+                round_feedback=reason+'；请删去随机生成、随机基线、回归均衡、稳定性存疑、捕获能力、号码无重合、号码本身无重叠等表述，改为客观评审；每段仅依据自己引用的数据。若报unverified_numeric，错误后缀即未获本段引用支持的数值，请为本段引用该数字对应的证据ID；没有可用引用就删去该数字，禁止改成中文数词绕过。'
+                if reason.startswith('unsupported_interpretation_'):
+                    round_feedback+=' 具体需删去的表述：'+FORBIDDEN[int(reason.rsplit('_',1)[1])]+'。'
+                pending=[s for s in SECTIONS[context['kind']] if ('_'+s+'_') in ('_'+reason+'_') or reason.startswith(s+'_') or reason.endswith('_'+s)] or list(SECTIONS[context['kind']])
+                print('ai_cycle_validation',context['kind'],'merged',reason)
                 continue
-            body=response.json();choice=body['choices'][0];content=choice['message'].get('content')
-            print('ai_cycle_provider',context['kind'],str(body.get('model','unknown'))[:120],str(choice.get('finish_reason','unknown'))[:20],'content_chars',len(content or ''))
-            if not content:
-                last='empty_content';print('ai_cycle_validation',context['kind'],'empty_content');continue
-            if content.startswith('```') and content.rstrip().endswith('```'):
-                content='\n'.join(content.strip().splitlines()[1:-1])
-            raw=json.loads(content)
-            model_refs={name:copy.deepcopy(raw[name]['evidence_ids']) for name in SECTIONS[context['kind']]}
-            # Stable canonical facts accompany each model paragraph. This also
-            # supports period/identity claims when the model omits their citation.
-            canonical={'overview':['history_window','candidate_comparison','single_structure','compound_structure','compound_budget'],
-                       'single_reason':['single_identity','single_selection','single_structure'],
-                       'compound_reason':['compound_identity','compound_budget','compound_structure'],
-                       'risk':['uncertainty','history_window'],
-                       'next_focus':['previous_review','history_window','single_identity','compound_identity']}
-            if context['kind']=='analysis':
-                for name,refs in canonical.items():
-                    raw[name]['evidence_ids']=list(dict.fromkeys(raw[name]['evidence_ids']+[r for r in refs if r in context['evidence']]))
-            sections=validate_response(raw,context)
-            return {'status':'completed','model':str(body.get('model') or route)[:180], 'route':route,
-                    'prompt_version':VERSION,'generated_at':now(), 'input_hash':digest(context),
-                    'sections':sections,'model_evidence_ids':model_refs,'evidence_policy':'model-plus-canonical-v1', **copy.deepcopy(context)}
-        except requests.Timeout:last='timeout'
-        except (ValueError,KeyError,TypeError,IndexError) as exc:
-            last='invalid_response'
-            reason=str(exc) if re.fullmatch(r'[a-z_0-9 .]{1,90}',str(exc)) else 'json_or_schema_error'
-            feedback=reason+'；请删去随机生成、随机基线、回归均衡、稳定性存疑、捕获能力、号码无重合、号码本身无重叠等表述，改为客观评审；每段仅依据自己引用的数据。若报unverified_numeric，错误后缀即未获本段引用支持的数值，请为本段引用该数字对应的证据ID；没有可用引用就删去该数字，禁止改成中文数词绕过。'
-            if reason.startswith('unsupported_interpretation_'):
-                feedback+=' 具体需删去的表述：'+FORBIDDEN[int(reason.rsplit('_',1)[1])]+'。'
-            print('ai_cycle_validation',context['kind'],reason)
-        except requests.RequestException:last='connection_error'
-        if attempt<2:time.sleep(3)
-    raise RuntimeError(last)
+        return {'status':'completed','model':model_seen[:180], 'route':route,
+                'prompt_version':VERSION,'generated_at':now(), 'input_hash':digest(context),
+                'sections':sections,'model_evidence_ids':model_refs,'evidence_policy':'model-plus-canonical-v1', **copy.deepcopy(context)}
+    raise RuntimeError('invalid_response')
 
 
 REFLECTION_VERSION = 'reflection-v1'
@@ -470,7 +511,7 @@ def request_reflection(record, prior):
     key = os.getenv('DLT_AI_API_KEY', '').strip(); url = os.getenv('DLT_AI_BASE_URL', '').strip(); route = os.getenv('DLT_AI_MODEL', '').strip()
     if not all([key, url, route]):
         raise RuntimeError('not_configured')
-    if url not in ('https://openrouter.ai/api/v1', 'https://ai.585351.xyz/v1'):
+    if not _base_allowed(url):
         raise RuntimeError('ai_base_not_allowlisted')
     bundle = compute_causes(record)
     ev = record['evidence']

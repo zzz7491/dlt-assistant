@@ -79,6 +79,16 @@ def _ai_fallback_notice(reason: str) -> None:
     print(f"::warning title=football_ai_fallback::{safe}")
 
 
+def _base_allowed(base: str) -> bool:
+    # Same allowlist as scripts/ai_cycle.py: OpenRouter, the owner's
+    # Cloudflare-Tunnel endpoint, or the owner's Mac over Tailscale Serve
+    # (mingmac-studio.<tailnet>.ts.net). Keeps the API key from ever being
+    # sent to an arbitrary endpoint.
+    if base in ("https://openrouter.ai/api/v1", "https://ai.585351.xyz/v1"):
+        return True
+    return bool(re.fullmatch(r"https://mingmac-studio\.[a-z0-9-]+\.ts\.net/v1", base or ""))
+
+
 def _request_ai(plan: dict, review: dict | None = None) -> dict:
     key = os.getenv("DLT_AI_API_KEY", "").strip()
     base = os.getenv("DLT_AI_BASE_URL", "").strip()
@@ -88,15 +98,15 @@ def _request_ai(plan: dict, review: dict | None = None) -> dict:
     # accept the OpenRouter base or the owner's own Ollama endpoint —
     # the same allowlist as scripts/ai_cycle.py. The ":free" route rule
     # only applies to OpenRouter; the local base serves DLT_AI_MODEL as-is.
-    local = base == "https://ai.585351.xyz/v1"
-    if not key or base not in ("https://openrouter.ai/api/v1", "https://ai.585351.xyz/v1") or not route:
+    local = _base_allowed(base) and base != "https://openrouter.ai/api/v1"
+    if not key or not _base_allowed(base) or not route:
         _ai_fallback_notice(
             "config: "
             + ", ".join(
                 name
                 for name, bad in (
                     ("key-missing", not key),
-                    ("base-mismatch", base not in ("https://openrouter.ai/api/v1", "https://ai.585351.xyz/v1")),
+                    ("base-mismatch", not _base_allowed(base)),
                     ("route-missing", not route),
                 )
                 if bad
