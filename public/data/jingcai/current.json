@@ -1,2121 +1,6 @@
 {
-  "sale_date": "2026-10-24",
+  "sale_date": "2026-10-25",
   "matches": [
-    {
-      "code": "周六011",
-      "okooo_match_id": "1336370",
-      "league": "德甲",
-      "home": "莱红牛",
-      "away": "埃沃斯堡",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T21:30:00+08:00",
-      "deadline": "2026-10-24T21:30:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.35,
-        "1": 4.95,
-        "0": 5.35
-      },
-      "rq_odds": {
-        "3": 1.99,
-        "1": 4.05,
-        "0": 2.63
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 0,
-            "l": 5,
-            "points": 15,
-            "gf": 25,
-            "ga": 19
-          },
-          "rest_days": 2,
-          "last_match_date": "2026-10-22"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 2,
-            "l": 2,
-            "points": 20,
-            "gf": 25,
-            "ga": 16
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 2,
-          "home_wins": 1,
-          "draws": 0,
-          "away_wins": 1
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.35,
-          "1": 4.95,
-          "0": 5.35
-        },
-        "probabilities": {
-          "3": 0.5608,
-          "1": 0.1788,
-          "0": 0.2604
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.5608,
-        "value_edge": -0.2429
-      },
-      "rq": {
-        "odds": {
-          "3": 1.99,
-          "1": 4.05,
-          "0": 2.63
-        },
-        "probabilities": {
-          "3": 0.3751,
-          "1": 0.204,
-          "0": 0.4209
-        },
-        "pick": "3",
-        "pick_label": "让胜",
-        "confidence": 0.3751,
-        "value_edge": -0.2536,
-        "margin_model": {
-          "3": 0.3053,
-          "1": 0.1894,
-          "0": 0.5053
-        },
-        "xg": {
-          "home": 2.42,
-          "away": 1.92
-        },
-        "low_confidence": true,
-        "pick_note": "让球三项概率接近，模型把握较低，仅供参考"
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "rest_days"
-        ],
-        "data_completeness": 0.5714
-      }
-    },
-    {
-      "code": "周六012",
-      "okooo_match_id": "1336375",
-      "league": "德甲",
-      "home": "美因茨",
-      "away": "不来梅",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T21:30:00+08:00",
-      "deadline": "2026-10-24T21:30:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.64,
-        "1": 3.8,
-        "0": 3.9
-      },
-      "rq_odds": {
-        "3": 2.9,
-        "1": 3.65,
-        "0": 1.96
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 2,
-            "l": 2,
-            "points": 20,
-            "gf": 24,
-            "ga": 14
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 3,
-            "l": 3,
-            "points": 15,
-            "gf": 19,
-            "ga": 22
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 38,
-          "home_wins": 12,
-          "draws": 8,
-          "away_wins": 18
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.64,
-          "1": 3.8,
-          "0": 3.9
-        },
-        "probabilities": {
-          "3": 0.5343,
-          "1": 0.233,
-          "0": 0.2327
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.5343,
-        "value_edge": -0.1237
-      },
-      "rq": {
-        "odds": {
-          "3": 2.9,
-          "1": 3.65,
-          "0": 1.96
-        },
-        "probabilities": {
-          "3": 0.3676,
-          "1": 0.2314,
-          "0": 0.4009
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.4009,
-        "value_edge": -0.2142,
-        "margin_model": {
-          "3": 0.4298,
-          "1": 0.2202,
-          "0": 0.35
-        },
-        "xg": {
-          "home": 2.39,
-          "away": 1.14
-        },
-        "low_confidence": true,
-        "pick_note": "让球三项概率接近，模型把握较低，仅供参考"
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六013",
-      "okooo_match_id": "1336377",
-      "league": "德甲",
-      "home": "帕德博恩",
-      "away": "汉堡",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T21:30:00+08:00",
-      "deadline": "2026-10-24T21:30:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 2.12,
-        "1": 3.6,
-        "0": 2.63
-      },
-      "rq_odds": {
-        "3": 4.15,
-        "1": 4.2,
-        "0": 1.54
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 2,
-            "l": 4,
-            "points": 14,
-            "gf": 11,
-            "ga": 12
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 0,
-            "l": 4,
-            "points": 18,
-            "gf": 14,
-            "ga": 18
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 16,
-          "home_wins": 7,
-          "draws": 2,
-          "away_wins": 7
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 2.12,
-          "1": 3.6,
-          "0": 2.63
-        },
-        "probabilities": {
-          "3": 0.3901,
-          "1": 0.2459,
-          "0": 0.364
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.3901,
-        "value_edge": -0.173
-      },
-      "rq": {
-        "odds": {
-          "3": 4.15,
-          "1": 4.2,
-          "0": 1.54
-        },
-        "probabilities": {
-          "3": 0.218,
-          "1": 0.2154,
-          "0": 0.5665
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.5665,
-        "value_edge": -0.1276,
-        "margin_model": {
-          "3": 0.2226,
-          "1": 0.2198,
-          "0": 0.5576
-        },
-        "xg": {
-          "home": 1.55,
-          "away": 1.26
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六014",
-      "okooo_match_id": "1336376",
-      "league": "德甲",
-      "home": "科隆",
-      "away": "沙尔克04",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T21:30:00+08:00",
-      "deadline": "2026-10-24T21:30:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.87,
-        "1": 3.55,
-        "0": 3.2
-      },
-      "rq_odds": {
-        "3": 3.75,
-        "1": 3.65,
-        "0": 1.7
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 2,
-            "l": 3,
-            "points": 17,
-            "gf": 16,
-            "ga": 15
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 3,
-            "d": 3,
-            "l": 4,
-            "points": 12,
-            "gf": 12,
-            "ga": 14
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 37,
-          "home_wins": 13,
-          "draws": 12,
-          "away_wins": 12
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.87,
-          "1": 3.55,
-          "0": 3.2
-        },
-        "probabilities": {
-          "3": 0.4768,
-          "1": 0.2495,
-          "0": 0.2737
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.4768,
-        "value_edge": -0.1084
-      },
-      "rq": {
-        "odds": {
-          "3": 3.75,
-          "1": 3.65,
-          "0": 1.7
-        },
-        "probabilities": {
-          "3": 0.2521,
-          "1": 0.2379,
-          "0": 0.5099
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.5099,
-        "value_edge": -0.1332,
-        "margin_model": {
-          "3": 0.2681,
-          "1": 0.2332,
-          "0": 0.4987
-        },
-        "xg": {
-          "home": 1.67,
-          "away": 1.12
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六015",
-      "okooo_match_id": "1336374",
-      "league": "德甲",
-      "home": "奥格斯堡",
-      "away": "柏林联合",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T21:30:00+08:00",
-      "deadline": "2026-10-24T21:30:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.52,
-        "1": 4.18,
-        "0": 4.3
-      },
-      "rq_odds": {
-        "3": 2.6,
-        "1": 3.5,
-        "0": 2.18
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 3,
-            "l": 3,
-            "points": 15,
-            "gf": 23,
-            "ga": 20
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 3,
-            "d": 3,
-            "l": 4,
-            "points": 12,
-            "gf": 14,
-            "ga": 25
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 19,
-          "home_wins": 7,
-          "draws": 8,
-          "away_wins": 4
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.52,
-          "1": 4.18,
-          "0": 4.3
-        },
-        "probabilities": {
-          "3": 0.5693,
-          "1": 0.2118,
-          "0": 0.2189
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.5693,
-        "value_edge": -0.1347
-      },
-      "rq": {
-        "odds": {
-          "3": 2.6,
-          "1": 3.5,
-          "0": 2.18
-        },
-        "probabilities": {
-          "3": 0.4018,
-          "1": 0.2319,
-          "0": 0.3664
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.3664,
-        "value_edge": -0.2012,
-        "margin_model": {
-          "3": 0.4628,
-          "1": 0.2107,
-          "0": 0.3265
-        },
-        "xg": {
-          "home": 2.6,
-          "away": 1.2
-        },
-        "low_confidence": true,
-        "pick_note": "让球三项概率接近，模型把握较低，仅供参考"
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六016",
-      "okooo_match_id": "1331838",
-      "league": "英超",
-      "home": "阿森纳",
-      "away": "埃弗顿",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T22:00:00+08:00",
-      "deadline": "2026-10-24T22:00:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.24,
-        "1": 4.85,
-        "0": 8.6
-      },
-      "rq_odds": {
-        "3": 1.95,
-        "1": 3.35,
-        "0": 3.14
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 8,
-            "d": 1,
-            "l": 1,
-            "points": 25,
-            "gf": 18,
-            "ga": 9
-          },
-          "rest_days": 2,
-          "last_match_date": "2026-10-22"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 5,
-            "l": 1,
-            "points": 17,
-            "gf": 14,
-            "ga": 8
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 58,
-          "home_wins": 36,
-          "draws": 11,
-          "away_wins": 11
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.24,
-          "1": 4.85,
-          "0": 8.6
-        },
-        "probabilities": {
-          "3": 0.6817,
-          "1": 0.1826,
-          "0": 0.1357
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.6817,
-        "value_edge": -0.1547
-      },
-      "rq": {
-        "odds": {
-          "3": 1.95,
-          "1": 3.35,
-          "0": 3.14
-        },
-        "probabilities": {
-          "3": 0.3944,
-          "1": 0.2565,
-          "0": 0.3491
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.3491,
-        "value_edge": 0.0962,
-        "margin_model": {
-          "3": 0.3349,
-          "1": 0.2487,
-          "0": 0.4164
-        },
-        "xg": {
-          "home": 1.8,
-          "away": 0.91
-        },
-        "low_confidence": true,
-        "pick_note": "让球三项概率接近，模型把握较低，仅供参考"
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六017",
-      "okooo_match_id": "1331841",
-      "league": "英超",
-      "home": "考文垂",
-      "away": "富勒姆",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T22:00:00+08:00",
-      "deadline": "2026-10-24T22:00:00+08:00",
-      "handicap": 1,
-      "spf_odds": {
-        "3": 2.88,
-        "1": 3.2,
-        "0": 2.13
-      },
-      "rq_odds": {
-        "3": 1.53,
-        "1": 4.0,
-        "0": 4.42
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 0,
-            "l": 6,
-            "points": 12,
-            "gf": 13,
-            "ga": 19
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-20"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 2,
-            "l": 4,
-            "points": 14,
-            "gf": 14,
-            "ga": 12
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 2,
-          "home_wins": 2,
-          "draws": 0,
-          "away_wins": 0
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 2.88,
-          "1": 3.2,
-          "0": 2.13
-        },
-        "probabilities": {
-          "3": 0.2985,
-          "1": 0.2767,
-          "0": 0.4248
-        },
-        "pick": "0",
-        "pick_label": "客胜",
-        "confidence": 0.4248,
-        "value_edge": -0.0952
-      },
-      "rq": {
-        "odds": {
-          "3": 1.53,
-          "1": 4.0,
-          "0": 4.42
-        },
-        "probabilities": {
-          "3": 0.5654,
-          "1": 0.225,
-          "0": 0.2096
-        },
-        "pick": "3",
-        "pick_label": "让胜",
-        "confidence": 0.5654,
-        "value_edge": -0.1349,
-        "margin_model": {
-          "3": 0.5524,
-          "1": 0.2287,
-          "0": 0.2189
-        },
-        "xg": {
-          "home": 1.13,
-          "away": 1.46
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "rest_days"
-        ],
-        "data_completeness": 0.5714
-      }
-    },
-    {
-      "code": "周六018",
-      "okooo_match_id": "1327491",
-      "league": "挪超",
-      "home": "博德闪耀",
-      "away": "瓦勒伦加",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T22:00:00+08:00",
-      "deadline": "2026-10-24T22:00:00+08:00",
-      "handicap": -2,
-      "spf_odds": null,
-      "rq_odds": {
-        "3": 1.65,
-        "1": 4.75,
-        "0": 3.2
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 7,
-            "d": 0,
-            "l": 3,
-            "points": 21,
-            "gf": 25,
-            "ga": 19
-          },
-          "rest_days": 3,
-          "last_match_date": "2026-10-21"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 3,
-            "l": 5,
-            "points": 9,
-            "gf": 20,
-            "ga": 23
-          },
-          "rest_days": 6,
-          "last_match_date": "2026-10-18"
-        },
-        "head_to_head": {
-          "meetings": 40,
-          "home_wins": 13,
-          "draws": 14,
-          "away_wins": 13
-        }
-      },
-      "spf": null,
-      "rq": {
-        "odds": {
-          "3": 1.65,
-          "1": 4.75,
-          "0": 3.2
-        },
-        "probabilities": {
-          "3": 0.5368,
-          "1": 0.1865,
-          "0": 0.2768
-        },
-        "pick": "3",
-        "pick_label": "让胜",
-        "confidence": 0.5368,
-        "value_edge": -0.1143
-      },
-      "factors": null
-    },
-    {
-      "code": "周六019",
-      "okooo_match_id": "1335563",
-      "league": "西甲",
-      "home": "桑坦德",
-      "away": "西班牙人",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T22:15:00+08:00",
-      "deadline": "2026-10-24T22:15:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 2.28,
-        "1": 3.15,
-        "0": 2.68
-      },
-      "rq_odds": {
-        "3": 4.85,
-        "1": 4.05,
-        "0": 1.48
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 3,
-            "l": 5,
-            "points": 9,
-            "gf": 14,
-            "ga": 26
-          },
-          "rest_days": 6,
-          "last_match_date": "2026-10-18"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 2,
-            "l": 6,
-            "points": 8,
-            "gf": 12,
-            "ga": 15
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 25,
-          "home_wins": 10,
-          "draws": 4,
-          "away_wins": 11
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 2.28,
-          "1": 3.15,
-          "0": 2.68
-        },
-        "probabilities": {
-          "3": 0.3714,
-          "1": 0.2811,
-          "0": 0.3475
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.3714,
-        "value_edge": -0.1532
-      },
-      "rq": {
-        "odds": {
-          "3": 4.85,
-          "1": 4.05,
-          "0": 1.48
-        },
-        "probabilities": {
-          "3": 0.1682,
-          "1": 0.2072,
-          "0": 0.6246
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.6246,
-        "value_edge": -0.0756,
-        "margin_model": {
-          "3": 0.1537,
-          "1": 0.1957,
-          "0": 0.6505
-        },
-        "xg": {
-          "home": 1.3,
-          "away": 1.39
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六020",
-      "okooo_match_id": "1328879",
-      "league": "荷甲",
-      "home": "乌德勒支",
-      "away": "兹沃勒",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T22:30:00+08:00",
-      "deadline": "2026-10-24T22:30:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.44,
-        "1": 4.35,
-        "0": 4.9
-      },
-      "rq_odds": {
-        "3": 2.39,
-        "1": 3.55,
-        "0": 2.33
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 3,
-            "d": 1,
-            "l": 6,
-            "points": 10,
-            "gf": 14,
-            "ga": 26
-          },
-          "rest_days": 5,
-          "last_match_date": "2026-10-19"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 1,
-            "l": 7,
-            "points": 7,
-            "gf": 10,
-            "ga": 25
-          },
-          "rest_days": 6,
-          "last_match_date": "2026-10-18"
-        },
-        "head_to_head": {
-          "meetings": 33,
-          "home_wins": 15,
-          "draws": 12,
-          "away_wins": 6
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.44,
-          "1": 4.35,
-          "0": 4.9
-        },
-        "probabilities": {
-          "3": 0.5813,
-          "1": 0.2037,
-          "0": 0.215
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.5813,
-        "value_edge": -0.1629
-      },
-      "rq": {
-        "odds": {
-          "3": 2.39,
-          "1": 3.55,
-          "0": 2.33
-        },
-        "probabilities": {
-          "3": 0.3625,
-          "1": 0.2364,
-          "0": 0.4011
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.4011,
-        "value_edge": -0.0654,
-        "margin_model": {
-          "3": 0.3544,
-          "1": 0.2234,
-          "0": 0.4222
-        },
-        "xg": {
-          "home": 2.13,
-          "away": 1.24
-        },
-        "low_confidence": true,
-        "pick_note": "让球三项概率接近，模型把握较低，仅供参考"
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六021",
-      "okooo_match_id": "1337966",
-      "league": "葡超",
-      "home": "阿马多拉",
-      "away": "卡萨皮亚",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-24T22:30:00+08:00",
-      "deadline": "2026-10-24T22:30:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.6,
-        "1": 3.55,
-        "0": 4.5
-      },
-      "rq_odds": {
-        "3": 3.06,
-        "1": 3.18,
-        "0": 2.05
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 3,
-            "d": 5,
-            "l": 2,
-            "points": 14,
-            "gf": 20,
-            "ga": 19
-          },
-          "rest_days": 12,
-          "last_match_date": "2026-10-12"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 1,
-            "l": 7,
-            "points": 7,
-            "gf": 7,
-            "ga": 23
-          },
-          "rest_days": 13,
-          "last_match_date": "2026-10-11"
-        },
-        "head_to_head": {
-          "meetings": 8,
-          "home_wins": 5,
-          "draws": 0,
-          "away_wins": 3
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.6,
-          "1": 3.55,
-          "0": 4.5
-        },
-        "probabilities": {
-          "3": 0.5586,
-          "1": 0.2495,
-          "0": 0.1919
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.5586,
-        "value_edge": -0.1062
-      },
-      "rq": {
-        "odds": {
-          "3": 3.06,
-          "1": 3.18,
-          "0": 2.05
-        },
-        "probabilities": {
-          "3": 0.3885,
-          "1": 0.2564,
-          "0": 0.355
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.355,
-        "value_edge": -0.2723,
-        "margin_model": {
-          "3": 0.4876,
-          "1": 0.2343,
-          "0": 0.2781
-        },
-        "xg": {
-          "home": 2.3,
-          "away": 0.75
-        },
-        "low_confidence": true,
-        "pick_note": "让球三项概率接近，模型把握较低，仅供参考"
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六022",
-      "okooo_match_id": "1328137",
-      "league": "意甲",
-      "home": "那不勒斯",
-      "away": "罗马",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T00:00:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": 1,
-      "spf_odds": {
-        "3": 2.75,
-        "1": 2.87,
-        "0": 2.4
-      },
-      "rq_odds": {
-        "3": 1.44,
-        "1": 3.8,
-        "0": 5.85
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 1,
-            "l": 5,
-            "points": 13,
-            "gf": 15,
-            "ga": 14
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-21"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 3,
-            "l": 1,
-            "points": 21,
-            "gf": 24,
-            "ga": 8
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-21"
-        },
-        "head_to_head": {
-          "meetings": 44,
-          "home_wins": 16,
-          "draws": 12,
-          "away_wins": 16
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 2.75,
-          "1": 2.87,
-          "0": 2.4
-        },
-        "probabilities": {
-          "3": 0.2828,
-          "1": 0.3087,
-          "0": 0.4085
-        },
-        "pick": "0",
-        "pick_label": "客胜",
-        "confidence": 0.4085,
-        "value_edge": -0.0196
-      },
-      "rq": {
-        "odds": {
-          "3": 1.44,
-          "1": 3.8,
-          "0": 5.85
-        },
-        "probabilities": {
-          "3": 0.5453,
-          "1": 0.2435,
-          "0": 0.2112
-        },
-        "pick": "3",
-        "pick_label": "让胜",
-        "confidence": 0.5453,
-        "value_edge": -0.2148,
-        "margin_model": {
-          "3": 0.4753,
-          "1": 0.2539,
-          "0": 0.2709
-        },
-        "xg": {
-          "home": 0.87,
-          "away": 1.52
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六023",
-      "okooo_match_id": "1331839",
-      "league": "英超",
-      "home": "切尔西",
-      "away": "热刺",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T00:30:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.68,
-        "1": 3.8,
-        "0": 3.7
-      },
-      "rq_odds": {
-        "3": 2.88,
-        "1": 3.78,
-        "0": 1.93
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 7,
-            "d": 1,
-            "l": 2,
-            "points": 22,
-            "gf": 28,
-            "ga": 17
-          },
-          "rest_days": 8,
-          "last_match_date": "2026-10-17"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 4,
-            "l": 4,
-            "points": 10,
-            "gf": 14,
-            "ga": 16
-          },
-          "rest_days": 5,
-          "last_match_date": "2026-10-20"
-        },
-        "head_to_head": {
-          "meetings": 67,
-          "home_wins": 39,
-          "draws": 18,
-          "away_wins": 10
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.68,
-          "1": 3.8,
-          "0": 3.7
-        },
-        "probabilities": {
-          "3": 0.5534,
-          "1": 0.2332,
-          "0": 0.2134
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.5534,
-        "value_edge": -0.0703
-      },
-      "rq": {
-        "odds": {
-          "3": 2.88,
-          "1": 3.78,
-          "0": 1.93
-        },
-        "probabilities": {
-          "3": 0.3575,
-          "1": 0.2314,
-          "0": 0.4111
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.4111,
-        "value_edge": -0.2066,
-        "margin_model": {
-          "3": 0.4076,
-          "1": 0.2288,
-          "0": 0.3636
-        },
-        "xg": {
-          "home": 2.22,
-          "away": 1.06
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六024",
-      "okooo_match_id": "1336369",
-      "league": "德甲",
-      "home": "多特蒙德",
-      "away": "法兰克福",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T00:30:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.32,
-        "1": 5.05,
-        "0": 5.75
-      },
-      "rq_odds": {
-        "3": 1.94,
-        "1": 4.0,
-        "0": 2.75
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 2,
-            "l": 2,
-            "points": 20,
-            "gf": 17,
-            "ga": 10
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-21"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 2,
-            "l": 3,
-            "points": 17,
-            "gf": 18,
-            "ga": 24
-          },
-          "rest_days": 8,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 50,
-          "home_wins": 27,
-          "draws": 15,
-          "away_wins": 8
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.32,
-          "1": 5.05,
-          "0": 5.75
-        },
-        "probabilities": {
-          "3": 0.6431,
-          "1": 0.1753,
-          "0": 0.1816
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.6431,
-        "value_edge": -0.1511
-      },
-      "rq": {
-        "odds": {
-          "3": 1.94,
-          "1": 4.0,
-          "0": 2.75
-        },
-        "probabilities": {
-          "3": 0.4692,
-          "1": 0.216,
-          "0": 0.3148
-        },
-        "pick": "3",
-        "pick_label": "让胜",
-        "confidence": 0.4692,
-        "value_edge": -0.0898,
-        "margin_model": {
-          "3": 0.4819,
-          "1": 0.2105,
-          "0": 0.3076
-        },
-        "xg": {
-          "home": 2.62,
-          "away": 1.13
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六025",
-      "okooo_match_id": "1335568",
-      "league": "西甲",
-      "home": "巴伦西亚",
-      "away": "比利亚雷",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T00:30:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": 1,
-      "spf_odds": {
-        "3": 3.52,
-        "1": 3.7,
-        "0": 1.74
-      },
-      "rq_odds": {
-        "3": 1.82,
-        "1": 3.4,
-        "0": 3.5
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 1,
-            "d": 3,
-            "l": 6,
-            "points": 6,
-            "gf": 6,
-            "ga": 16
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-18"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 3,
-            "d": 1,
-            "l": 6,
-            "points": 10,
-            "gf": 17,
-            "ga": 17
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-21"
-        },
-        "head_to_head": {
-          "meetings": 58,
-          "home_wins": 23,
-          "draws": 12,
-          "away_wins": 23
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 3.52,
-          "1": 3.7,
-          "0": 1.74
-        },
-        "probabilities": {
-          "3": 0.2555,
-          "1": 0.2394,
-          "0": 0.5051
-        },
-        "pick": "0",
-        "pick_label": "客胜",
-        "confidence": 0.5051,
-        "value_edge": -0.1211
-      },
-      "rq": {
-        "odds": {
-          "3": 1.82,
-          "1": 3.4,
-          "0": 3.5
-        },
-        "probabilities": {
-          "3": 0.4709,
-          "1": 0.2525,
-          "0": 0.2766
-        },
-        "pick": "3",
-        "pick_label": "让胜",
-        "confidence": 0.4709,
-        "value_edge": -0.143,
-        "margin_model": {
-          "3": 0.4552,
-          "1": 0.2447,
-          "0": 0.3001
-        },
-        "xg": {
-          "home": 0.98,
-          "away": 1.71
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六026",
-      "okooo_match_id": "1328135",
-      "league": "意甲",
-      "home": "拉齐奥",
-      "away": "帕尔马",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T02:45:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.29,
-        "1": 4.45,
-        "0": 7.7
-      },
-      "rq_odds": {
-        "3": 2.01,
-        "1": 3.55,
-        "0": 2.86
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 7,
-            "d": 2,
-            "l": 1,
-            "points": 23,
-            "gf": 19,
-            "ga": 10
-          },
-          "rest_days": 6,
-          "last_match_date": "2026-10-19"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 1,
-            "l": 7,
-            "points": 7,
-            "gf": 6,
-            "ga": 17
-          },
-          "rest_days": 5,
-          "last_match_date": "2026-10-20"
-        },
-        "head_to_head": {
-          "meetings": 43,
-          "home_wins": 23,
-          "draws": 12,
-          "away_wins": 8
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.29,
-          "1": 4.45,
-          "0": 7.7
-        },
-        "probabilities": {
-          "3": 0.6716,
-          "1": 0.1989,
-          "0": 0.1295
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.6716,
-        "value_edge": -0.1336
-      },
-      "rq": {
-        "odds": {
-          "3": 2.01,
-          "1": 3.55,
-          "0": 2.86
-        },
-        "probabilities": {
-          "3": 0.4958,
-          "1": 0.2388,
-          "0": 0.2654
-        },
-        "pick": "3",
-        "pick_label": "让胜",
-        "confidence": 0.4958,
-        "value_edge": -0.0034,
-        "margin_model": {
-          "3": 0.5509,
-          "1": 0.2281,
-          "0": 0.221
-        },
-        "xg": {
-          "home": 2.41,
-          "away": 0.58
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六027",
-      "okooo_match_id": "1328557",
-      "league": "法甲",
-      "home": "朗斯",
-      "away": "巴黎FC",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T02:45:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 2.36,
-        "1": 3.25,
-        "0": 2.51
-      },
-      "rq_odds": {
-        "3": 4.95,
-        "1": 4.4,
-        "0": 1.43
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 1,
-            "l": 5,
-            "points": 13,
-            "gf": 17,
-            "ga": 18
-          },
-          "rest_days": 3,
-          "last_match_date": "2026-10-22"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 3,
-            "l": 3,
-            "points": 15,
-            "gf": 16,
-            "ga": 16
-          },
-          "rest_days": 7,
-          "last_match_date": "2026-10-18"
-        },
-        "head_to_head": {
-          "meetings": 12,
-          "home_wins": 6,
-          "draws": 4,
-          "away_wins": 2
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 2.36,
-          "1": 3.25,
-          "0": 2.51
-        },
-        "probabilities": {
-          "3": 0.368,
-          "1": 0.2723,
-          "0": 0.3597
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.368,
-        "value_edge": -0.1315
-      },
-      "rq": {
-        "odds": {
-          "3": 4.95,
-          "1": 4.4,
-          "0": 1.43
-        },
-        "probabilities": {
-          "3": 0.1912,
-          "1": 0.2054,
-          "0": 0.6034
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.6034,
-        "value_edge": -0.1371,
-        "margin_model": {
-          "3": 0.2034,
-          "1": 0.2094,
-          "0": 0.5872
-        },
-        "xg": {
-          "home": 1.53,
-          "away": 1.37
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六028",
-      "okooo_match_id": "1335561",
-      "league": "西甲",
-      "home": "马竞",
-      "away": "拉科鲁尼亚",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T03:00:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": -2,
-      "spf_odds": {
-        "3": 1.15,
-        "1": 5.8,
-        "0": 11.5
-      },
-      "rq_odds": {
-        "3": 2.76,
-        "1": 3.75,
-        "0": 2.0
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 7,
-            "d": 1,
-            "l": 2,
-            "points": 22,
-            "gf": 19,
-            "ga": 9
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-21"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 2,
-            "d": 5,
-            "l": 3,
-            "points": 11,
-            "gf": 15,
-            "ga": 16
-          },
-          "rest_days": 8,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 33,
-          "home_wins": 19,
-          "draws": 7,
-          "away_wins": 7
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.15,
-          "1": 5.8,
-          "0": 11.5
-        },
-        "probabilities": {
-          "3": 0.741,
-          "1": 0.1527,
-          "0": 0.1063
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.741,
-        "value_edge": -0.1479
-      },
-      "rq": {
-        "odds": {
-          "3": 2.76,
-          "1": 3.75,
-          "0": 2.0
-        },
-        "probabilities": {
-          "3": 0.3074,
-          "1": 0.2233,
-          "0": 0.4693
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.4693,
-        "value_edge": -0.0614,
-        "margin_model": {
-          "3": 0.2939,
-          "1": 0.2104,
-          "0": 0.4957
-        },
-        "xg": {
-          "home": 2.47,
-          "away": 0.86
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六029",
-      "okooo_match_id": "1337968",
-      "league": "葡超",
-      "home": "吉维森特",
-      "away": "波尔图",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T03:30:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": 1,
-      "spf_odds": {
-        "3": 8.25,
-        "1": 4.55,
-        "0": 1.27
-      },
-      "rq_odds": {
-        "3": 3.0,
-        "1": 3.45,
-        "0": 1.98
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 3,
-            "l": 2,
-            "points": 18,
-            "gf": 11,
-            "ga": 8
-          },
-          "rest_days": 5,
-          "last_match_date": "2026-10-20"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 7,
-            "d": 0,
-            "l": 3,
-            "points": 21,
-            "gf": 21,
-            "ga": 11
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-21"
-        },
-        "head_to_head": {
-          "meetings": 38,
-          "home_wins": 6,
-          "draws": 4,
-          "away_wins": 28
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 8.25,
-          "1": 4.55,
-          "0": 1.27
-        },
-        "probabilities": {
-          "3": 0.1534,
-          "1": 0.1948,
-          "0": 0.6518
-        },
-        "pick": "0",
-        "pick_label": "客胜",
-        "confidence": 0.6518,
-        "value_edge": -0.1722
-      },
-      "rq": {
-        "odds": {
-          "3": 3.0,
-          "1": 3.45,
-          "0": 1.98
-        },
-        "probabilities": {
-          "3": 0.3839,
-          "1": 0.2499,
-          "0": 0.3662
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.3662,
-        "value_edge": -0.2749,
-        "margin_model": {
-          "3": 0.4723,
-          "1": 0.2429,
-          "0": 0.2848
-        },
-        "xg": {
-          "home": 1.0,
-          "away": 1.66
-        },
-        "low_confidence": true,
-        "pick_note": "让球三项概率接近，模型把握较低，仅供参考"
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
-    {
-      "code": "周六030",
-      "okooo_match_id": "1317011",
-      "league": "巴西甲",
-      "home": "桑托斯",
-      "away": "巴伊亚",
-      "home_rank": null,
-      "away_rank": null,
-      "kickoff": "2026-10-25T08:00:00+08:00",
-      "deadline": "2026-10-24T23:00:00+08:00",
-      "handicap": -1,
-      "spf_odds": {
-        "3": 1.75,
-        "1": 3.4,
-        "0": 3.8
-      },
-      "rq_odds": {
-        "3": 3.4,
-        "1": 3.4,
-        "0": 1.85
-      },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 2,
-            "l": 2,
-            "points": 20,
-            "gf": 18,
-            "ga": 14
-          },
-          "rest_days": 6,
-          "last_match_date": "2026-10-19"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 2,
-            "l": 3,
-            "points": 17,
-            "gf": 15,
-            "ga": 14
-          },
-          "rest_days": 6,
-          "last_match_date": "2026-10-19"
-        },
-        "head_to_head": {
-          "meetings": 26,
-          "home_wins": 12,
-          "draws": 8,
-          "away_wins": 6
-        }
-      },
-      "spf": {
-        "odds": {
-          "3": 1.75,
-          "1": 3.4,
-          "0": 3.8
-        },
-        "probabilities": {
-          "3": 0.4928,
-          "1": 0.2606,
-          "0": 0.2466
-        },
-        "pick": "3",
-        "pick_label": "主胜",
-        "confidence": 0.4928,
-        "value_edge": -0.1376
-      },
-      "rq": {
-        "odds": {
-          "3": 3.4,
-          "1": 3.4,
-          "0": 1.85
-        },
-        "probabilities": {
-          "3": 0.2669,
-          "1": 0.2481,
-          "0": 0.485
-        },
-        "pick": "0",
-        "pick_label": "让负",
-        "confidence": 0.485,
-        "value_edge": -0.1028,
-        "margin_model": {
-          "3": 0.2732,
-          "1": 0.2357,
-          "0": 0.4911
-        },
-        "xg": {
-          "home": 1.67,
-          "away": 1.09
-        }
-      },
-      "factors": {
-        "available": [
-          "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
-        ],
-        "data_completeness": 0.7143
-      }
-    },
     {
       "code": "周日001",
       "okooo_match_id": "1338465",
@@ -2663,14 +548,14 @@
       "deadline": "2026-10-25T19:30:00+08:00",
       "handicap": -1,
       "spf_odds": {
-        "3": 1.24,
-        "1": 5.25,
-        "0": 7.55
+        "3": 1.22,
+        "1": 5.4,
+        "0": 8.0
       },
       "rq_odds": {
-        "3": 1.76,
+        "3": 1.73,
         "1": 3.95,
-        "0": 3.25
+        "0": 3.35
       },
       "dynamics": {
         "home": {
@@ -2708,42 +593,42 @@
       },
       "spf": {
         "odds": {
-          "3": 1.24,
-          "1": 5.25,
-          "0": 7.55
+          "3": 1.22,
+          "1": 5.4,
+          "0": 8.0
         },
         "probabilities": {
-          "3": 0.6988,
-          "1": 0.1687,
-          "0": 0.1325
+          "3": 0.708,
+          "1": 0.1639,
+          "0": 0.1281
         },
         "pick": "3",
         "pick_label": "主胜",
-        "confidence": 0.6988,
-        "value_edge": -0.1335
+        "confidence": 0.708,
+        "value_edge": -0.1362
       },
       "rq": {
         "odds": {
-          "3": 1.76,
+          "3": 1.73,
           "1": 3.95,
-          "0": 3.25
+          "0": 3.35
         },
         "probabilities": {
-          "3": 0.5086,
-          "1": 0.2158,
-          "0": 0.2757
+          "3": 0.5157,
+          "1": 0.2149,
+          "0": 0.2694
         },
         "pick": "3",
         "pick_label": "让胜",
-        "confidence": 0.5086,
-        "value_edge": -0.1049,
+        "confidence": 0.5157,
+        "value_edge": -0.1078,
         "margin_model": {
-          "3": 0.5139,
-          "1": 0.2073,
-          "0": 0.2788
+          "3": 0.5197,
+          "1": 0.2057,
+          "0": 0.2746
         },
         "xg": {
-          "home": 2.71,
+          "home": 2.74,
           "away": 1.06
         }
       },
@@ -3947,14 +1832,14 @@
       "deadline": "2026-10-25T22:30:00+08:00",
       "handicap": 1,
       "spf_odds": {
-        "3": 2.52,
-        "1": 3.86,
-        "0": 2.11
+        "3": 2.57,
+        "1": 3.9,
+        "0": 2.07
       },
       "rq_odds": {
-        "3": 1.54,
-        "1": 4.28,
-        "0": 4.05
+        "3": 1.56,
+        "1": 4.25,
+        "0": 3.95
       },
       "dynamics": {
         "home": {
@@ -3992,43 +1877,43 @@
       },
       "spf": {
         "odds": {
-          "3": 2.52,
-          "1": 3.86,
-          "0": 2.11
+          "3": 2.57,
+          "1": 3.9,
+          "0": 2.07
         },
         "probabilities": {
-          "3": 0.2981,
-          "1": 0.2293,
-          "0": 0.4726
+          "3": 0.2937,
+          "1": 0.2272,
+          "0": 0.4791
         },
         "pick": "0",
         "pick_label": "客胜",
-        "confidence": 0.4726,
-        "value_edge": -0.0028
+        "confidence": 0.4791,
+        "value_edge": -0.0083
       },
       "rq": {
         "odds": {
-          "3": 1.54,
-          "1": 4.28,
-          "0": 4.05
+          "3": 1.56,
+          "1": 4.25,
+          "0": 3.95
         },
         "probabilities": {
-          "3": 0.4967,
-          "1": 0.2153,
-          "0": 0.288
+          "3": 0.4918,
+          "1": 0.2159,
+          "0": 0.2923
         },
         "pick": "3",
         "pick_label": "让胜",
-        "confidence": 0.4967,
-        "value_edge": -0.2351,
+        "confidence": 0.4918,
+        "value_edge": -0.2328,
         "margin_model": {
-          "3": 0.4186,
-          "1": 0.2238,
-          "0": 0.3575
+          "3": 0.4161,
+          "1": 0.2234,
+          "0": 0.3605
         },
         "xg": {
           "home": 1.23,
-          "away": 2.14
+          "away": 2.15
         }
       },
       "factors": {
@@ -4054,14 +1939,14 @@
       "deadline": "2026-10-25T23:00:00+08:00",
       "handicap": 1,
       "spf_odds": {
-        "3": 2.75,
-        "1": 3.3,
-        "0": 2.16
+        "3": 2.82,
+        "1": 3.35,
+        "0": 2.1
       },
       "rq_odds": {
-        "3": 1.53,
-        "1": 3.9,
-        "0": 4.55
+        "3": 1.56,
+        "1": 3.85,
+        "0": 4.4
       },
       "dynamics": {
         "home": {
@@ -4099,43 +1984,43 @@
       },
       "spf": {
         "odds": {
-          "3": 2.75,
-          "1": 3.3,
-          "0": 2.16
+          "3": 2.82,
+          "1": 3.35,
+          "0": 2.1
         },
         "probabilities": {
-          "3": 0.2946,
-          "1": 0.2683,
-          "0": 0.4371
+          "3": 0.2893,
+          "1": 0.2643,
+          "0": 0.4464
         },
         "pick": "0",
         "pick_label": "客胜",
-        "confidence": 0.4371,
-        "value_edge": -0.0559
+        "confidence": 0.4464,
+        "value_edge": -0.0626
       },
       "rq": {
         "odds": {
-          "3": 1.53,
-          "1": 3.9,
-          "0": 4.55
+          "3": 1.56,
+          "1": 3.85,
+          "0": 4.4
         },
         "probabilities": {
-          "3": 0.6171,
-          "1": 0.2117,
-          "0": 0.1712
+          "3": 0.6098,
+          "1": 0.2138,
+          "0": 0.1764
         },
         "pick": "3",
         "pick_label": "让胜",
-        "confidence": 0.6171,
-        "value_edge": -0.0558,
+        "confidence": 0.6098,
+        "value_edge": -0.0487,
         "margin_model": {
-          "3": 0.6557,
-          "1": 0.1964,
-          "0": 0.1479
+          "3": 0.6514,
+          "1": 0.1974,
+          "0": 0.1512
         },
         "xg": {
           "home": 1.35,
-          "away": 1.25
+          "away": 1.27
         }
       },
       "factors": {
@@ -4377,9 +2262,9 @@
       "deadline": "2026-10-25T23:00:00+08:00",
       "handicap": 2,
       "spf_odds": {
-        "3": 6.9,
-        "1": 5.82,
-        "0": 1.23
+        "3": 7.0,
+        "1": 6.0,
+        "0": 1.22
       },
       "rq_odds": {
         "3": 1.88,
@@ -4422,19 +2307,19 @@
       },
       "spf": {
         "odds": {
-          "3": 6.9,
-          "1": 5.82,
-          "0": 1.23
+          "3": 7.0,
+          "1": 6.0,
+          "0": 1.22
         },
         "probabilities": {
-          "3": 0.1781,
-          "1": 0.1521,
-          "0": 0.6698
+          "3": 0.1773,
+          "1": 0.1476,
+          "0": 0.6751
         },
         "pick": "0",
         "pick_label": "客胜",
-        "confidence": 0.6698,
-        "value_edge": -0.1761
+        "confidence": 0.6751,
+        "value_edge": -0.1764
       },
       "rq": {
         "odds": {
@@ -4443,22 +2328,22 @@
           "0": 2.7
         },
         "probabilities": {
-          "3": 0.5473,
+          "3": 0.5442,
           "1": 0.1841,
-          "0": 0.2686
+          "0": 0.2717
         },
         "pick": "3",
         "pick_label": "让胜",
-        "confidence": 0.5473,
-        "value_edge": 0.0289,
+        "confidence": 0.5442,
+        "value_edge": 0.0231,
         "margin_model": {
-          "3": 0.6238,
+          "3": 0.6175,
           "1": 0.167,
-          "0": 0.2092
+          "0": 0.2155
         },
         "xg": {
-          "home": 1.61,
-          "away": 2.53
+          "home": 1.64,
+          "away": 2.59
         }
       },
       "factors": {
@@ -4709,6 +2594,40 @@
         "1": 4.2,
         "0": 1.58
       },
+      "dynamics": {
+        "home": {
+          "form_last10": {
+            "played": 10,
+            "w": 6,
+            "d": 2,
+            "l": 2,
+            "points": 20,
+            "gf": 20,
+            "ga": 11
+          },
+          "rest_days": 3,
+          "last_match_date": "2026-10-23"
+        },
+        "away": {
+          "form_last10": {
+            "played": 10,
+            "w": 7,
+            "d": 2,
+            "l": 1,
+            "points": 23,
+            "gf": 26,
+            "ga": 9
+          },
+          "rest_days": 3,
+          "last_match_date": "2026-10-23"
+        },
+        "head_to_head": {
+          "meetings": 58,
+          "home_wins": 24,
+          "draws": 12,
+          "away_wins": 22
+        }
+      },
       "spf": {
         "odds": {
           "3": 2.06,
@@ -4716,14 +2635,14 @@
           "0": 2.74
         },
         "probabilities": {
-          "3": 0.4283,
+          "3": 0.3886,
           "1": 0.2462,
-          "0": 0.3255
+          "0": 0.3652
         },
         "pick": "3",
         "pick_label": "主胜",
-        "confidence": 0.4283,
-        "value_edge": -0.1177
+        "confidence": 0.3886,
+        "value_edge": -0.1995
       },
       "rq": {
         "odds": {
@@ -4732,30 +2651,33 @@
           "0": 1.58
         },
         "probabilities": {
-          "3": 0.2211,
-          "1": 0.2124,
-          "0": 0.5665
+          "3": 0.1914,
+          "1": 0.201,
+          "0": 0.6076
         },
         "pick": "0",
         "pick_label": "让负",
-        "confidence": 0.5665,
-        "value_edge": -0.1049,
+        "confidence": 0.6076,
+        "value_edge": -0.04,
         "margin_model": {
-          "3": 0.2148,
-          "1": 0.2137,
-          "0": 0.5716
+          "3": 0.1555,
+          "1": 0.1908,
+          "0": 0.6537
         },
         "xg": {
-          "home": 1.56,
-          "away": 1.33
+          "home": 1.35,
+          "away": 1.48
         }
       },
       "factors": {
         "available": [
           "market",
-          "home_away"
+          "home_away",
+          "recent_form",
+          "head_to_head",
+          "rest_days"
         ],
-        "data_completeness": 0.2857
+        "data_completeness": 0.7143
       }
     },
     {
@@ -5274,40 +3196,6 @@
         "1": 3.6,
         "0": 4.5
       },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 1,
-            "d": 7,
-            "l": 2,
-            "points": 10,
-            "gf": 7,
-            "ga": 7
-          },
-          "rest_days": 10,
-          "last_match_date": "2026-10-17"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 5,
-            "l": 0,
-            "points": 20,
-            "gf": 21,
-            "ga": 12
-          },
-          "rest_days": 10,
-          "last_match_date": "2026-10-17"
-        },
-        "head_to_head": {
-          "meetings": 12,
-          "home_wins": 3,
-          "draws": 3,
-          "away_wins": 6
-        }
-      },
       "spf": {
         "odds": {
           "3": 3.2,
@@ -5315,14 +3203,14 @@
           "0": 2.05
         },
         "probabilities": {
-          "3": 0.2467,
+          "3": 0.2831,
           "1": 0.2906,
-          "0": 0.4627
+          "0": 0.4263
         },
         "pick": "0",
         "pick_label": "客胜",
-        "confidence": 0.4627,
-        "value_edge": -0.0515
+        "confidence": 0.4263,
+        "value_edge": -0.1261
       },
       "rq": {
         "odds": {
@@ -5331,33 +3219,30 @@
           "0": 4.5
         },
         "probabilities": {
-          "3": 0.5567,
-          "1": 0.2484,
-          "0": 0.1949
+          "3": 0.5657,
+          "1": 0.2423,
+          "0": 0.1919
         },
         "pick": "3",
         "pick_label": "让胜",
-        "confidence": 0.5567,
-        "value_edge": -0.1148,
+        "confidence": 0.5657,
+        "value_edge": -0.1005,
         "margin_model": {
-          "3": 0.5564,
-          "1": 0.2507,
-          "0": 0.193
+          "3": 0.5743,
+          "1": 0.2386,
+          "0": 0.1871
         },
         "xg": {
-          "home": 0.82,
-          "away": 1.18
+          "home": 0.94,
+          "away": 1.22
         }
       },
       "factors": {
         "available": [
           "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
+          "home_away"
         ],
-        "data_completeness": 0.7143
+        "data_completeness": 0.2857
       }
     },
     {
@@ -5381,40 +3266,6 @@
         "1": 3.4,
         "0": 1.78
       },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 2,
-            "l": 4,
-            "points": 14,
-            "gf": 15,
-            "ga": 19
-          },
-          "rest_days": 8,
-          "last_match_date": "2026-10-19"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 3,
-            "d": 2,
-            "l": 5,
-            "points": 11,
-            "gf": 10,
-            "ga": 20
-          },
-          "rest_days": 9,
-          "last_match_date": "2026-10-18"
-        },
-        "head_to_head": {
-          "meetings": 47,
-          "home_wins": 20,
-          "draws": 13,
-          "away_wins": 14
-        }
-      },
       "spf": {
         "odds": {
           "3": 1.8,
@@ -5422,14 +3273,14 @@
           "0": 3.8
         },
         "probabilities": {
-          "3": 0.4822,
+          "3": 0.4852,
           "1": 0.275,
-          "0": 0.2428
+          "0": 0.2398
         },
         "pick": "3",
         "pick_label": "主胜",
-        "confidence": 0.4822,
-        "value_edge": -0.132
+        "confidence": 0.4852,
+        "value_edge": -0.1266
       },
       "rq": {
         "odds": {
@@ -5438,33 +3289,30 @@
           "0": 1.78
         },
         "probabilities": {
-          "3": 0.2762,
-          "1": 0.2528,
-          "0": 0.4711
+          "3": 0.2385,
+          "1": 0.2556,
+          "0": 0.5059
         },
         "pick": "0",
         "pick_label": "让负",
-        "confidence": 0.4711,
-        "value_edge": -0.1614,
+        "confidence": 0.5059,
+        "value_edge": -0.0995,
         "margin_model": {
-          "3": 0.3099,
-          "1": 0.2452,
-          "0": 0.4449
+          "3": 0.2345,
+          "1": 0.2509,
+          "0": 0.5145
         },
         "xg": {
-          "home": 1.74,
-          "away": 0.97
+          "home": 1.38,
+          "away": 0.88
         }
       },
       "factors": {
         "available": [
           "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
+          "home_away"
         ],
-        "data_completeness": 0.7143
+        "data_completeness": 0.2857
       }
     },
     {
@@ -5488,40 +3336,6 @@
         "1": 3.55,
         "0": 3.35
       },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 4,
-            "l": 0,
-            "points": 22,
-            "gf": 14,
-            "ga": 5
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-23"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 6,
-            "d": 2,
-            "l": 2,
-            "points": 20,
-            "gf": 17,
-            "ga": 11
-          },
-          "rest_days": 5,
-          "last_match_date": "2026-10-22"
-        },
-        "head_to_head": {
-          "meetings": 56,
-          "home_wins": 25,
-          "draws": 12,
-          "away_wins": 19
-        }
-      },
       "spf": {
         "odds": {
           "3": 1.23,
@@ -5529,14 +3343,14 @@
           "0": 8.35
         },
         "probabilities": {
-          "3": 0.6512,
+          "3": 0.7025,
           "1": 0.1737,
-          "0": 0.1751
+          "0": 0.1238
         },
         "pick": "3",
         "pick_label": "主胜",
-        "confidence": 0.6512,
-        "value_edge": -0.199
+        "confidence": 0.7025,
+        "value_edge": -0.1359
       },
       "rq": {
         "odds": {
@@ -5545,33 +3359,30 @@
           "0": 3.35
         },
         "probabilities": {
-          "3": 0.4333,
-          "1": 0.2441,
-          "0": 0.3226
+          "3": 0.4803,
+          "1": 0.2386,
+          "0": 0.2811
         },
         "pick": "3",
         "pick_label": "让胜",
-        "confidence": 0.4333,
-        "value_edge": -0.2114,
+        "confidence": 0.4803,
+        "value_edge": -0.1259,
         "margin_model": {
-          "3": 0.3801,
-          "1": 0.2388,
-          "0": 0.3811
+          "3": 0.4743,
+          "1": 0.2277,
+          "0": 0.298
         },
         "xg": {
-          "home": 2.03,
-          "away": 0.97
+          "home": 2.36,
+          "away": 0.89
         }
       },
       "factors": {
         "available": [
           "market",
-          "home_away",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
+          "home_away"
         ],
-        "data_completeness": 0.7143
+        "data_completeness": 0.2857
       }
     }
   ],
@@ -5579,65 +3390,65 @@
     {
       "name": "稳健2串1",
       "codes": [
-        "周六028",
-        "周日006"
+        "周日006",
+        "周一001"
       ],
       "picks": [
-        {
-          "code": "周六028",
-          "home": "马竞",
-          "away": "拉科鲁尼亚",
-          "pick_label": "主胜",
-          "odds": 1.18
-        },
         {
           "code": "周日006",
           "home": "国际米兰",
           "away": "佛罗伦萨",
           "pick_label": "主胜",
-          "odds": 1.24
+          "odds": 1.22
+        },
+        {
+          "code": "周一001",
+          "home": "圣克拉拉",
+          "away": "本菲卡",
+          "pick_label": "客胜",
+          "odds": 1.22
         }
       ],
-      "combined_odds": 1.46,
-      "combined_probability": 0.5108
+      "combined_odds": 1.49,
+      "combined_probability": 0.4991
     },
     {
       "name": "进取3串1",
       "codes": [
-        "周六028",
         "周日006",
-        "周日003"
+        "周一001",
+        "周一004"
       ],
       "picks": [
-        {
-          "code": "周六028",
-          "home": "马竞",
-          "away": "拉科鲁尼亚",
-          "pick_label": "主胜",
-          "odds": 1.18
-        },
         {
           "code": "周日006",
           "home": "国际米兰",
           "away": "佛罗伦萨",
           "pick_label": "主胜",
-          "odds": 1.24
+          "odds": 1.22
         },
         {
-          "code": "周日003",
-          "home": "东京FC",
-          "away": "水户蜀葵",
+          "code": "周一001",
+          "home": "圣克拉拉",
+          "away": "本菲卡",
+          "pick_label": "客胜",
+          "odds": 1.22
+        },
+        {
+          "code": "周一004",
+          "home": "弗拉门戈",
+          "away": "米竞技",
           "pick_label": "主胜",
-          "odds": 1.24
+          "odds": 1.23
         }
       ],
-      "combined_odds": 1.81,
-      "combined_probability": 0.356
+      "combined_odds": 1.83,
+      "combined_probability": 0.3506
     }
   ],
   "source": {
     "name": "澳客网竞彩赛程与固定奖金（与官方同步）",
     "url": "https://www.okooo.com/jingcai/",
-    "checked_at": "2026-10-24T21:22:43.149682+08:00"
+    "checked_at": "2026-10-25T01:34:06.371923+08:00"
   }
 }
