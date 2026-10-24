@@ -1,6 +1,173 @@
 {
   "reviews": [
     {
+      "issue": "26148",
+      "draw_date": "2026-10-24",
+      "sfc_hits": 7,
+      "ren9_hits": 4,
+      "matches": [
+        {
+          "order": 1,
+          "home": "伊普斯维奇",
+          "away": "诺丁汉森林",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "1"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 2,
+          "home": "博尔顿",
+          "away": "米德尔",
+          "result": "0",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 3,
+          "home": "斯图加特",
+          "away": "门兴格拉德巴赫",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 4,
+          "home": "波鸿",
+          "away": "沃尔夫",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 5,
+          "home": "达姆施",
+          "away": "圣保利",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 6,
+          "home": "都灵",
+          "away": "蒙扎",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "1"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 7,
+          "home": "阿拉维斯",
+          "away": "马拉加",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 8,
+          "home": "布雷斯",
+          "away": "尼斯",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "1"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 9,
+          "home": "敦刻克",
+          "away": "梅斯",
+          "result": "1",
+          "primary": "0",
+          "sfc_choices": [
+            "0",
+            "1"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 10,
+          "home": "波城FC",
+          "away": "格勒诺布尔",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3",
+            "1"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 11,
+          "home": "前进鹰",
+          "away": "特尔斯",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 12,
+          "home": "吉马良",
+          "away": "马里迪",
+          "result": "3",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": true
+        },
+        {
+          "order": 13,
+          "home": "埃尔夫",
+          "away": "马尔默",
+          "result": "1",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        },
+        {
+          "order": 14,
+          "home": "韦斯罗",
+          "away": "哈尔姆",
+          "result": "0",
+          "primary": "3",
+          "sfc_choices": [
+            "3"
+          ],
+          "sfc_hit": false
+        }
+      ]
+    },
+    {
       "issue": "26147",
       "draw_date": "2026-10-23",
       "sfc_hits": 8,
