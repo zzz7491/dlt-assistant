@@ -5007,11 +5007,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周日003": {
           "code": "周日003",
@@ -5025,11 +5028,14 @@
           "spf_label": "主胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            6,
+            0
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": true
         },
         "周日004": {
           "code": "周日004",
@@ -5043,11 +5049,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周日005": {
           "code": "周日005",
@@ -5802,11 +5811,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周日003": {
           "code": "周日003",
@@ -5820,11 +5832,14 @@
           "spf_label": "主胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            6,
+            0
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": true
         },
         "周日004": {
           "code": "周日004",
@@ -5838,11 +5853,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周日005": {
           "code": "周日005",
@@ -6024,11 +6042,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周日007": {
           "code": "周日007",
@@ -6486,11 +6507,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周日002": {
           "code": "周日002",
@@ -6504,11 +6528,14 @@
           "spf_label": "客胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周日003": {
           "code": "周日003",
@@ -6522,11 +6549,14 @@
           "spf_label": "主胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            6,
+            0
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": true
         },
         "周日004": {
           "code": "周日004",
@@ -6540,11 +6570,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            1
+          ],
+          "spf_result": "3",
+          "rq_result": "1",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周日005": {
           "code": "周日005",
@@ -7073,33 +7106,10 @@
         {
           "name": "稳健2串1",
           "codes": [
-            "周日006",
-            "周一001"
-          ],
-          "picks": [
-            {
-              "code": "周日006",
-              "pick_label": "主胜"
-            },
-            {
-              "code": "周一001",
-              "pick_label": "客胜"
-            }
-          ],
-          "hit": null
-        },
-        {
-          "name": "进取3串1",
-          "codes": [
-            "周日006",
             "周一001",
             "周一004"
           ],
           "picks": [
-            {
-              "code": "周日006",
-              "pick_label": "主胜"
-            },
             {
               "code": "周一001",
               "pick_label": "客胜"
@@ -7107,6 +7117,29 @@
             {
               "code": "周一004",
               "pick_label": "主胜"
+            }
+          ],
+          "hit": null
+        },
+        {
+          "name": "进取3串1",
+          "codes": [
+            "周一001",
+            "周一004",
+            "周日022"
+          ],
+          "picks": [
+            {
+              "code": "周一001",
+              "pick_label": "客胜"
+            },
+            {
+              "code": "周一004",
+              "pick_label": "主胜"
+            },
+            {
+              "code": "周日022",
+              "pick_label": "客胜"
             }
           ],
           "hit": null
