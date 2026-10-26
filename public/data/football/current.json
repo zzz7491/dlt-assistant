@@ -12,16 +12,16 @@
       "away": "神户",
       "kickoff": "2026-10-27T18:00:00+08:00",
       "odds": {
-        "3": 2.43,
-        "1": 3.38,
-        "0": 2.66
+        "3": 2.33,
+        "1": 3.36,
+        "0": 2.78
       },
       "home_rank": 3,
       "away_rank": 5,
       "probabilities": {
-        "3": 0.3796,
-        "1": 0.2731,
-        "0": 0.3473
+        "3": 0.389,
+        "1": 0.2739,
+        "0": 0.3371
       },
       "factors": {
         "available": [
@@ -35,12 +35,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.9877,
+        "uncertainty": 0.9681,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.0323,
+      "confidence": 0.0519,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -82,16 +82,16 @@
       "away": "喷射机",
       "kickoff": "2026-10-27T18:00:00+08:00",
       "odds": {
-        "3": 1.39,
-        "1": 4.87,
-        "0": 6.18
+        "3": 1.38,
+        "1": 4.93,
+        "0": 6.26
       },
       "home_rank": 16,
       "away_rank": 7,
       "probabilities": {
-        "3": 0.5468,
-        "1": 0.189,
-        "0": 0.2642
+        "3": 0.5499,
+        "1": 0.1866,
+        "0": 0.2635
       },
       "factors": {
         "available": [
@@ -105,12 +105,12 @@
           "injuries",
           "head_to_head"
         ],
-        "uncertainty": 0.7374,
+        "uncertainty": 0.7336,
         "data_completeness": 0.7143
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.2826,
+      "confidence": 0.2864,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -151,16 +151,16 @@
       "away": "全北",
       "kickoff": "2026-10-27T20:15:00+08:00",
       "odds": {
-        "3": 2.32,
-        "1": 3.48,
-        "0": 2.72
+        "3": 2.28,
+        "1": 3.46,
+        "0": 2.78
       },
       "home_rank": 3,
       "away_rank": 4,
       "probabilities": {
-        "3": 0.4237,
-        "1": 0.2646,
-        "0": 0.3117
+        "3": 0.4273,
+        "1": 0.2658,
+        "0": 0.3069
       },
       "factors": {
         "available": [
@@ -174,12 +174,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.908,
+        "uncertainty": 0.8996,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.112,
+      "confidence": 0.1204,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -226,16 +226,16 @@
       "away": "太阳神",
       "kickoff": "2026-10-27T20:15:00+08:00",
       "odds": {
-        "3": 5.78,
-        "1": 4.8,
-        "0": 1.42
+        "3": 6.03,
+        "1": 4.87,
+        "0": 1.4
       },
       "home_rank": 4,
       "away_rank": 4,
       "probabilities": {
-        "3": 0.2217,
-        "1": 0.1919,
-        "0": 0.5864
+        "3": 0.2171,
+        "1": 0.1892,
+        "0": 0.5937
       },
       "factors": {
         "available": [
@@ -249,12 +249,12 @@
           "rest_days",
           "head_to_head"
         ],
-        "uncertainty": 0.6353,
+        "uncertainty": 0.6234,
         "data_completeness": 0.4286
       },
       "primary": "0",
       "secondary": "3",
-      "confidence": 0.3647,
+      "confidence": 0.3766,
       "sfc_choices": [
         "0"
       ]
@@ -266,16 +266,16 @@
       "away": "美因茨",
       "kickoff": "2026-10-28T01:00:00+08:00",
       "odds": {
-        "3": 4.44,
-        "1": 3.95,
-        "0": 1.67
+        "3": 4.46,
+        "1": 3.97,
+        "0": 1.66
       },
       "home_rank": 14,
       "away_rank": 7,
       "probabilities": {
-        "3": 0.2026,
-        "1": 0.235,
-        "0": 0.5624
+        "3": 0.202,
+        "1": 0.2336,
+        "0": 0.5644
       },
       "factors": {
         "available": [
@@ -289,12 +289,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.6726,
+        "uncertainty": 0.6692,
         "data_completeness": 0.8571
       },
       "primary": "0",
       "secondary": "1",
-      "confidence": 0.3274,
+      "confidence": 0.3308,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -340,16 +340,16 @@
       "away": "法兰克福",
       "kickoff": "2026-10-28T01:00:00+08:00",
       "odds": {
-        "3": 2.92,
-        "1": 3.67,
+        "3": 2.93,
+        "1": 3.69,
         "0": 2.15
       },
       "home_rank": 11,
       "away_rank": 14,
       "probabilities": {
         "3": 0.3786,
-        "1": 0.2523,
-        "0": 0.3691
+        "1": 0.2515,
+        "0": 0.3699
       },
       "factors": {
         "available": [
@@ -368,7 +368,7 @@
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.0095,
+      "confidence": 0.0087,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -416,15 +416,15 @@
       "kickoff": "2026-10-28T03:45:00+08:00",
       "odds": {
         "3": 1.81,
-        "1": 3.73,
-        "0": 3.88
+        "1": 3.74,
+        "0": 3.89
       },
       "home_rank": 12,
       "away_rank": 17,
       "probabilities": {
-        "3": 0.5033,
-        "1": 0.2486,
-        "0": 0.2481
+        "3": 0.5037,
+        "1": 0.2483,
+        "0": 0.248
       },
       "factors": {
         "available": [
@@ -438,12 +438,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.7453,
+        "uncertainty": 0.7446,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.2547,
+      "confidence": 0.2554,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -491,14 +491,14 @@
       "odds": {
         "3": 1.36,
         "1": 5.01,
-        "0": 6.91
+        "0": 6.96
       },
       "home_rank": 2,
       "away_rank": 6,
       "probabilities": {
-        "3": 0.6401,
-        "1": 0.1849,
-        "0": 0.175
+        "3": 0.6405,
+        "1": 0.1851,
+        "0": 0.1744
       },
       "factors": {
         "available": [
@@ -512,12 +512,12 @@
           "rest_days",
           "head_to_head"
         ],
-        "uncertainty": 0.5448,
+        "uncertainty": 0.5446,
         "data_completeness": 0.4286
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.4552,
+      "confidence": 0.4554,
       "sfc_choices": [
         "3"
       ]
@@ -530,15 +530,15 @@
       "kickoff": "2026-10-28T03:45:00+08:00",
       "odds": {
         "3": 1.41,
-        "1": 4.75,
-        "0": 6.3
+        "1": 4.77,
+        "0": 6.34
       },
       "home_rank": 8,
       "away_rank": 18,
       "probabilities": {
-        "3": 0.6271,
-        "1": 0.1952,
-        "0": 0.1777
+        "3": 0.628,
+        "1": 0.1947,
+        "0": 0.1773
       },
       "factors": {
         "available": [
@@ -552,12 +552,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.5681,
+        "uncertainty": 0.5667,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.4319,
+      "confidence": 0.4333,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -604,15 +604,15 @@
       "kickoff": "2026-10-28T03:45:00+08:00",
       "odds": {
         "3": 1.34,
-        "1": 5.15,
-        "0": 7.11
+        "1": 5.17,
+        "0": 7.16
       },
       "home_rank": 18,
       "away_rank": 17,
       "probabilities": {
-        "3": 0.5923,
-        "1": 0.1796,
-        "0": 0.2281
+        "3": 0.593,
+        "1": 0.1792,
+        "0": 0.2278
       },
       "factors": {
         "available": [
@@ -626,12 +626,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.6358,
+        "uncertainty": 0.6348,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "0",
-      "confidence": 0.3642,
+      "confidence": 0.3652,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -678,15 +678,15 @@
       "kickoff": "2026-10-28T01:30:00+08:00",
       "odds": {
         "3": 3.21,
-        "1": 3.55,
+        "1": 3.56,
         "0": 2.14
       },
       "home_rank": 14,
       "away_rank": 2,
       "probabilities": {
-        "3": 0.231,
-        "1": 0.2656,
-        "0": 0.5034
+        "3": 0.2312,
+        "1": 0.2651,
+        "0": 0.5037
       },
       "factors": {
         "available": [
@@ -700,12 +700,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.7822,
+        "uncertainty": 0.7814,
         "data_completeness": 0.8571
       },
       "primary": "0",
       "secondary": "1",
-      "confidence": 0.2378,
+      "confidence": 0.2386,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -752,15 +752,15 @@
       "away": "科莫",
       "kickoff": "2026-10-28T03:45:00+08:00",
       "odds": {
-        "3": 4.62,
-        "1": 3.81,
+        "3": 4.66,
+        "1": 3.8,
         "0": 1.72
       },
       "home_rank": 8,
       "away_rank": 5,
       "probabilities": {
-        "3": 0.222,
-        "1": 0.2475,
+        "3": 0.221,
+        "1": 0.2485,
         "0": 0.5305
       },
       "factors": {
@@ -775,12 +775,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.717,
+        "uncertainty": 0.718,
         "data_completeness": 0.8571
       },
       "primary": "0",
       "secondary": "1",
-      "confidence": 0.283,
+      "confidence": 0.282,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -827,15 +827,15 @@
       "kickoff": "2026-10-28T03:45:00+08:00",
       "odds": {
         "3": 1.33,
-        "1": 5.08,
-        "0": 9.0
+        "1": 5.1,
+        "0": 9.08
       },
       "home_rank": 3,
       "away_rank": 9,
       "probabilities": {
-        "3": 0.6586,
-        "1": 0.1857,
-        "0": 0.1557
+        "3": 0.6594,
+        "1": 0.1853,
+        "0": 0.1553
       },
       "factors": {
         "available": [
@@ -849,12 +849,12 @@
         "unavailable": [
           "injuries"
         ],
-        "uncertainty": 0.5471,
+        "uncertainty": 0.5459,
         "data_completeness": 0.8571
       },
       "primary": "3",
       "secondary": "1",
-      "confidence": 0.4729,
+      "confidence": 0.4741,
       "dynamics": {
         "home": {
           "form_last10": {
@@ -900,69 +900,35 @@
       "away": "埃尔夫",
       "kickoff": "2026-10-28T02:00:00+08:00",
       "odds": {
-        "3": 2.93,
-        "1": 3.5,
+        "3": 2.95,
+        "1": 3.51,
         "0": 2.19
       },
       "home_rank": 8,
       "away_rank": 5,
       "probabilities": {
-        "3": 0.3015,
+        "3": 0.3103,
         "1": 0.2637,
-        "0": 0.4348
+        "0": 0.426
       },
       "factors": {
         "available": [
           "market",
           "home_away",
-          "ranking",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
+          "ranking"
         ],
         "unavailable": [
-          "injuries"
+          "recent_form",
+          "injuries",
+          "rest_days",
+          "head_to_head"
         ],
-        "uncertainty": 0.8667,
-        "data_completeness": 0.8571
+        "uncertainty": 0.8843,
+        "data_completeness": 0.4286
       },
       "primary": "0",
       "secondary": "3",
-      "confidence": 0.1333,
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 3,
-            "l": 3,
-            "points": 15,
-            "gf": 21,
-            "ga": 19
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-24"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 5,
-            "d": 3,
-            "l": 2,
-            "points": 18,
-            "gf": 17,
-            "ga": 7
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-24"
-        },
-        "head_to_head": {
-          "meetings": 56,
-          "home_wins": 21,
-          "draws": 17,
-          "away_wins": 18
-        }
-      },
+      "confidence": 0.1157,
       "sfc_choices": [
         "0",
         "1"
