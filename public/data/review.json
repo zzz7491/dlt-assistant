@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-10-24 14:28:18",
+  "updated_at": "2026-10-26 14:58:50",
   "empty": false,
-  "issue": "26121",
+  "issue": "26122",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "fdc1af69f9a1b4a4e342356a3ed72f41566f3f76b5fd01d9e24e609a04f32d5f",
+  "snapshot_hash": "91b9203b0dab0c3e5fda9ec07c45fffdc76ff2314718f589c08e83d560b2ced0",
   "recommendation": {
     "strategy": "F-综合AI型",
     "front": [
       3,
-      6,
+      7,
       11,
-      17,
-      26
+      14,
+      20
     ],
     "back": [
-      5,
-      9
+      4,
+      6
     ],
-    "score_total": 51.5,
+    "score_total": 44.0,
     "model_version": null
   },
   "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
@@ -26,7 +26,7 @@
     "explanation_version": "1.1",
     "strategy_type": "unknown",
     "strategy": "F-综合AI型",
-    "target_issue": "26121",
+    "target_issue": "26122",
     "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
     "factors": [],
     "generated_from": [],
@@ -35,15 +35,15 @@
   },
   "actual_result": {
     "front": [
-      6,
-      8,
-      19,
-      24,
-      25
+      2,
+      14,
+      21,
+      22,
+      24
     ],
     "back": [
-      1,
-      8
+      2,
+      12
     ]
   },
   "hit_count": {
@@ -57,9 +57,15 @@
     "amount": 0
   },
   "analysis": {
-    "sum_diff": 19,
+    "sum_diff": 28,
     "factor_review": {}
   },
-  "next_adjustment": [],
+  "next_adjustment": [
+    {
+      "type": "reduce",
+      "text": "收缩和值区间",
+      "reason": "上期和值偏差较大（差 28）"
+    }
+  ],
   "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖"
 }
