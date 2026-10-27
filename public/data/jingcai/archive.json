@@ -7488,11 +7488,14 @@
           "spf_label": "主胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            5,
+            2
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": true
         },
         "周二002": {
           "code": "周二002",
@@ -7506,11 +7509,14 @@
           "spf_label": "主胜",
           "rq_pick": "3",
           "rq_label": "让胜",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            1
+          ],
+          "spf_result": "0",
+          "rq_result": "1",
+          "spf_hit": false,
+          "rq_hit": false
         },
         "周二003": {
           "code": "周二003",
@@ -7524,11 +7530,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            2,
+            2
+          ],
+          "spf_result": "1",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周二004": {
           "code": "周二004",
@@ -7896,7 +7905,7 @@
           "name": "稳健2串1",
           "codes": [
             "周三005",
-            "周二009"
+            "周三002"
           ],
           "picks": [
             {
@@ -7904,7 +7913,7 @@
               "pick_label": "客胜"
             },
             {
-              "code": "周二009",
+              "code": "周三002",
               "pick_label": "主胜"
             }
           ],
@@ -7914,8 +7923,8 @@
           "name": "进取3串1",
           "codes": [
             "周三005",
-            "周二009",
-            "周三002"
+            "周三002",
+            "周三006"
           ],
           "picks": [
             {
@@ -7923,11 +7932,11 @@
               "pick_label": "客胜"
             },
             {
-              "code": "周二009",
+              "code": "周三002",
               "pick_label": "主胜"
             },
             {
-              "code": "周三002",
+              "code": "周三006",
               "pick_label": "主胜"
             }
           ],
