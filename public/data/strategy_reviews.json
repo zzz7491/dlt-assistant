@@ -63,15 +63,20 @@
     },
     {
       "strategy": "D-综合评分型",
-      "periods": 29,
-      "avg_hits": 0.66,
-      "avg_hits_sub": 0.31,
+      "periods": 30,
+      "avg_hits": 0.67,
+      "avg_hits_sub": 0.33,
       "dist": {
         "0": 13,
-        "1": 13,
+        "1": 14,
         "2": 3
       },
       "recent": [
+        {
+          "issue": "26123",
+          "hits": 1.0,
+          "hits_sub": 1.0
+        },
         {
           "issue": "26122",
           "hits": 1.0,
@@ -116,10 +121,69 @@
           "issue": "26114",
           "hits": 1.0,
           "hits_sub": 1.0
+        }
+      ],
+      "sample_warning": false
+    },
+    {
+      "strategy": "A-均衡统计型",
+      "periods": 31,
+      "avg_hits": 0.65,
+      "avg_hits_sub": 0.35,
+      "dist": {
+        "0": 15,
+        "1": 12,
+        "2": 4
+      },
+      "recent": [
+        {
+          "issue": "26123",
+          "hits": 2.0,
+          "hits_sub": 1.0
         },
         {
-          "issue": "26113",
+          "issue": "26122",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26121",
           "hits": 1.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26120",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26119",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26118",
+          "hits": 2.0,
+          "hits_sub": 1.0
+        },
+        {
+          "issue": "26117",
+          "hits": 0.0,
+          "hits_sub": 1.0
+        },
+        {
+          "issue": "26116",
+          "hits": 0.0,
+          "hits_sub": 1.0
+        },
+        {
+          "issue": "26115",
+          "hits": 0.0,
+          "hits_sub": 1.0
+        },
+        {
+          "issue": "26114",
+          "hits": 0.0,
           "hits_sub": 0.0
         }
       ],
@@ -127,16 +191,21 @@
     },
     {
       "strategy": "B-冷热组合型",
-      "periods": 30,
-      "avg_hits": 0.63,
-      "avg_hits_sub": 0.27,
+      "periods": 31,
+      "avg_hits": 0.65,
+      "avg_hits_sub": 0.26,
       "dist": {
         "0": 16,
-        "1": 9,
+        "1": 10,
         "2": 5
       },
       "recent": [
         {
+          "issue": "26123",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
+        {
           "issue": "26122",
           "hits": 1.0,
           "hits_sub": 0.0
@@ -179,75 +248,6 @@
         {
           "issue": "26114",
           "hits": 0.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26113",
-          "hits": 2.0,
-          "hits_sub": 0.0
-        }
-      ],
-      "sample_warning": false
-    },
-    {
-      "strategy": "A-均衡统计型",
-      "periods": 30,
-      "avg_hits": 0.6,
-      "avg_hits_sub": 0.33,
-      "dist": {
-        "0": 15,
-        "1": 12,
-        "2": 3
-      },
-      "recent": [
-        {
-          "issue": "26122",
-          "hits": 0.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26121",
-          "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26120",
-          "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26119",
-          "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26118",
-          "hits": 2.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26117",
-          "hits": 0.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26116",
-          "hits": 0.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26115",
-          "hits": 0.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26114",
-          "hits": 0.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26113",
-          "hits": 1.0,
           "hits_sub": 0.0
         }
       ],
@@ -260,5 +260,5 @@
     "main_max": 5
   },
   "disclaimer": "命中统计仅为历史娱乐回顾；彩票开奖为独立随机事件，不代表任何预测依据。",
-  "updated_at": "2026-10-28 07:43:34"
+  "updated_at": "2026-10-28 14:54:40"
 }

@@ -1,71 +1,124 @@
 {
-  "updated_at": "2026-10-26 14:58:50",
+  "updated_at": "2026-10-28 14:54:40",
   "empty": false,
-  "issue": "26122",
+  "issue": "26123",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "91b9203b0dab0c3e5fda9ec07c45fffdc76ff2314718f589c08e83d560b2ced0",
+  "snapshot_hash": "4bba7e4702c43f96b7d460b3a8694fb0181b300c31ba15a0d33e64f84f8d3aec",
   "recommendation": {
-    "strategy": "F-综合AI型",
+    "strategy": "A-均衡统计型",
     "front": [
-      3,
       7,
-      11,
       14,
-      20
-    ],
-    "back": [
-      4,
-      6
-    ],
-    "score_total": 44.0,
-    "model_version": null
-  },
-  "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
-  "explanation": {
-    "explanation_version": "1.1",
-    "strategy_type": "unknown",
-    "strategy": "F-综合AI型",
-    "target_issue": "26122",
-    "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
-    "factors": [],
-    "generated_from": [],
-    "reason_status": "unavailable",
-    "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
-  },
-  "actual_result": {
-    "front": [
-      2,
-      14,
-      21,
-      22,
+      19,
+      20,
       24
     ],
     "back": [
       2,
-      12
+      9
+    ],
+    "score_total": 42.72,
+    "model_version": null
+  },
+  "reason": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 2 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 84、跨度 17。",
+  "explanation": {
+    "explanation_version": "1.1",
+    "strategy_type": "balanced_statistical",
+    "strategy": "A-均衡统计型",
+    "target_issue": "26123",
+    "summary": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 2 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 84、跨度 17。",
+    "factors": [
+      {
+        "type": "hot_cold",
+        "label": "热冷混合",
+        "detail": "前区落在当前窗口热号集合 2 个、冷号集合 1 个。",
+        "evidence": {
+          "front_hot": [
+            14,
+            24
+          ],
+          "front_cold": [
+            7
+          ],
+          "window": 50
+        }
+      },
+      {
+        "type": "frequency",
+        "label": "频率依据",
+        "detail": "前区号码取自近期基础频率与近期频率加权（0.5/0.5）的候选池。",
+        "evidence": {
+          "front_freq": {
+            "7": 6,
+            "14": 13,
+            "19": 6,
+            "20": 6,
+            "24": 9
+          }
+        }
+      },
+      {
+        "type": "balance",
+        "label": "奇偶/大小均衡",
+        "detail": "前区奇偶比 2:3、大小比 3:2（算法强制均衡到 2~3）。",
+        "evidence": {
+          "front_odd_even": [
+            2,
+            3
+          ],
+          "front_big_small": [
+            3,
+            2
+          ]
+        }
+      },
+      {
+        "type": "structure",
+        "label": "结构分布",
+        "detail": "前区和值 84、跨度 17。",
+        "evidence": {
+          "front_sum": 84,
+          "front_span": 17
+        }
+      }
+    ],
+    "generated_from": [
+      "dlt_history.json",
+      "window=50",
+      "strategy_type=balanced_statistical"
+    ],
+    "reason_status": "ok",
+    "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
+    "explanation_hash": "53aaa2a0f14ef1a0"
+  },
+  "actual_result": {
+    "front": [
+      13,
+      18,
+      19,
+      20,
+      28
+    ],
+    "back": [
+      9,
+      11
     ]
   },
   "hit_count": {
-    "front": 1,
-    "back": 0,
-    "total": 1,
-    "level": 1
+    "front": 2,
+    "back": 1,
+    "total": 3,
+    "level": 2
   },
   "prize": {
-    "tier": null,
-    "amount": 0
+    "tier": "九等奖",
+    "amount": 5
   },
   "analysis": {
-    "sum_diff": 28,
+    "sum_diff": 14,
     "factor_review": {}
   },
-  "next_adjustment": [
-    {
-      "type": "reduce",
-      "text": "收缩和值区间",
-      "reason": "上期和值偏差较大（差 28）"
-    }
-  ],
+  "next_adjustment": [],
   "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖"
 }

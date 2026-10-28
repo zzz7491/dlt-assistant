@@ -1,49 +1,49 @@
 {
-  "update_time": "2026-10-28 07:42:10",
-  "total_periods": 30,
+  "update_time": "2026-10-28 14:53:23",
+  "total_periods": 31,
   "strategies": {
     "A": {
-      "count": 30,
-      "avg_front_hit": 0.667,
-      "avg_back_hit": 0.367,
-      "avg_total_hit": 1.033,
+      "count": 31,
+      "avg_front_hit": 0.71,
+      "avg_back_hit": 0.387,
+      "avg_total_hit": 1.097,
       "max_total_hit": 3,
-      "avg_distance_score": 5.97,
+      "avg_distance_score": 5.9,
       "hit_level_dist": {
         "1": 21,
         "0": 7,
-        "2": 2
+        "2": 3
       },
       "front_hit_dist": {
         "0": 15,
         "1": 11,
-        "2": 3,
+        "2": 4,
         "3": 1
       },
       "back_hit_dist": {
-        "1": 9,
+        "1": 10,
         "2": 1,
         "0": 20
       }
     },
     "B": {
-      "count": 30,
-      "avg_front_hit": 0.533,
-      "avg_back_hit": 0.2,
-      "avg_total_hit": 0.733,
+      "count": 31,
+      "avg_front_hit": 0.548,
+      "avg_back_hit": 0.194,
+      "avg_total_hit": 0.742,
       "max_total_hit": 2,
-      "avg_distance_score": 6.27,
+      "avg_distance_score": 6.26,
       "hit_level_dist": {
         "0": 15,
-        "1": 15
+        "1": 16
       },
       "front_hit_dist": {
         "0": 18,
-        "1": 8,
+        "1": 9,
         "2": 4
       },
       "back_hit_dist": {
-        "0": 24,
+        "0": 25,
         "1": 6
       }
     },
@@ -65,36 +65,36 @@
       }
     },
     "D": {
-      "count": 29,
-      "avg_front_hit": 0.655,
-      "avg_back_hit": 0.31,
-      "avg_total_hit": 0.966,
+      "count": 30,
+      "avg_front_hit": 0.667,
+      "avg_back_hit": 0.333,
+      "avg_total_hit": 1.0,
       "max_total_hit": 2,
-      "avg_distance_score": 6.03,
+      "avg_distance_score": 6.0,
       "hit_level_dist": {
         "0": 8,
-        "1": 21
+        "1": 22
       },
       "front_hit_dist": {
         "0": 13,
-        "1": 13,
+        "1": 14,
         "2": 3
       },
       "back_hit_dist": {
         "0": 20,
-        "1": 9
+        "1": 10
       }
     }
   },
   "factor_analysis": {
     "D": {
-      "count": 29,
+      "count": 30,
       "median_score": 41.51,
       "high_score": {
-        "count": 15,
-        "avg_front_hit": 0.533,
-        "avg_back_hit": 0.467,
-        "avg_total_hit": 1.0
+        "count": 16,
+        "avg_front_hit": 0.562,
+        "avg_back_hit": 0.5,
+        "avg_total_hit": 1.062
       },
       "low_score": {
         "count": 14,
@@ -106,11 +106,11 @@
     }
   },
   "recommendation_quality": {
-    "total_groups": 93,
-    "validated_periods": 30,
-    "avg_front_hit": 0.645,
-    "avg_back_hit": 0.28,
-    "avg_total_hit": 0.925,
+    "total_groups": 96,
+    "validated_periods": 31,
+    "avg_front_hit": 0.667,
+    "avg_back_hit": 0.292,
+    "avg_total_hit": 0.958,
     "best": {
       "issue": "26110",
       "strategy": "A-均衡统计型",

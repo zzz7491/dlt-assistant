@@ -533,7 +533,117 @@
         "explanation_hash": "53aaa2a0f14ef1a0"
       },
       "snapshot_hash": "4bba7e4702c43f96b7d460b3a8694fb0181b300c31ba15a0d33e64f84f8d3aec"
+    },
+    {
+      "schema_version": "1.1",
+      "issue": "26124",
+      "published_at": "2026-10-28 14:54:40",
+      "primary_strategy": "A-均衡统计型",
+      "numbers": {
+        "front": [
+          1,
+          3,
+          15,
+          24,
+          34
+        ],
+        "back": [
+          2,
+          5
+        ]
+      },
+      "reason": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 3 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 3:2、大小比 2:3、和值 77、跨度 33。",
+      "final_score": 42.91,
+      "final_breakdown": {
+        "base": 68.0,
+        "history": 15.67,
+        "recent": 17.14,
+        "structure": 50.0,
+        "risk": 0.0,
+        "weights": {
+          "base": 0.4,
+          "history": 0.2,
+          "recent": 0.15,
+          "structure": 0.2
+        },
+        "degraded": false,
+        "stage": "stable",
+        "effective_sample": 31
+      },
+      "model_version": null,
+      "explanation": {
+        "explanation_version": "1.1",
+        "strategy_type": "balanced_statistical",
+        "strategy": "A-均衡统计型",
+        "target_issue": "26124",
+        "summary": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 3 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 3:2、大小比 2:3、和值 77、跨度 33。",
+        "factors": [
+          {
+            "type": "hot_cold",
+            "label": "热冷混合",
+            "detail": "前区落在当前窗口热号集合 3 个、冷号集合 1 个。",
+            "evidence": {
+              "front_hot": [
+                3,
+                15,
+                24
+              ],
+              "front_cold": [
+                34
+              ],
+              "window": 50
+            }
+          },
+          {
+            "type": "frequency",
+            "label": "频率依据",
+            "detail": "前区号码取自近期基础频率与近期频率加权（0.5/0.5）的候选池。",
+            "evidence": {
+              "front_freq": {
+                "1": 7,
+                "3": 10,
+                "15": 8,
+                "24": 9,
+                "34": 4
+              }
+            }
+          },
+          {
+            "type": "balance",
+            "label": "奇偶/大小均衡",
+            "detail": "前区奇偶比 3:2、大小比 2:3（算法强制均衡到 2~3）。",
+            "evidence": {
+              "front_odd_even": [
+                3,
+                2
+              ],
+              "front_big_small": [
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "type": "structure",
+            "label": "结构分布",
+            "detail": "前区和值 77、跨度 33。",
+            "evidence": {
+              "front_sum": 77,
+              "front_span": 33
+            }
+          }
+        ],
+        "generated_from": [
+          "dlt_history.json",
+          "window=50",
+          "strategy_type=balanced_statistical"
+        ],
+        "reason_status": "ok",
+        "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
+        "explanation_hash": "8e408ed92ff3372c"
+      },
+      "snapshot_hash": "e371e4955c3ec15ac17a4605a78a1d30d5e04b8486be178325a06c513362ddab"
     }
   ],
-  "updated_at": "2026-10-26 14:58:50"
+  "updated_at": "2026-10-28 14:54:40"
 }
