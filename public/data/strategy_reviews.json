@@ -63,15 +63,20 @@
     },
     {
       "strategy": "D-综合评分型",
-      "periods": 30,
-      "avg_hits": 0.67,
-      "avg_hits_sub": 0.33,
+      "periods": 31,
+      "avg_hits": 0.68,
+      "avg_hits_sub": 0.32,
       "dist": {
         "0": 13,
-        "1": 14,
+        "1": 15,
         "2": 3
       },
       "recent": [
+        {
+          "issue": "26124",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26123",
           "hits": 1.0,
@@ -116,26 +121,26 @@
           "issue": "26115",
           "hits": 1.0,
           "hits_sub": 0.0
-        },
-        {
-          "issue": "26114",
-          "hits": 1.0,
-          "hits_sub": 1.0
         }
       ],
       "sample_warning": false
     },
     {
       "strategy": "A-均衡统计型",
-      "periods": 31,
-      "avg_hits": 0.65,
-      "avg_hits_sub": 0.35,
+      "periods": 32,
+      "avg_hits": 0.62,
+      "avg_hits_sub": 0.34,
       "dist": {
-        "0": 15,
+        "0": 16,
         "1": 12,
         "2": 4
       },
       "recent": [
+        {
+          "issue": "26124",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26123",
           "hits": 2.0,
@@ -180,26 +185,26 @@
           "issue": "26115",
           "hits": 0.0,
           "hits_sub": 1.0
-        },
-        {
-          "issue": "26114",
-          "hits": 0.0,
-          "hits_sub": 0.0
         }
       ],
       "sample_warning": false
     },
     {
       "strategy": "B-冷热组合型",
-      "periods": 31,
-      "avg_hits": 0.65,
-      "avg_hits_sub": 0.26,
+      "periods": 32,
+      "avg_hits": 0.62,
+      "avg_hits_sub": 0.28,
       "dist": {
-        "0": 16,
+        "0": 17,
         "1": 10,
         "2": 5
       },
       "recent": [
+        {
+          "issue": "26124",
+          "hits": 0.0,
+          "hits_sub": 1.0
+        },
         {
           "issue": "26123",
           "hits": 1.0,
@@ -242,11 +247,6 @@
         },
         {
           "issue": "26115",
-          "hits": 0.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26114",
           "hits": 0.0,
           "hits_sub": 0.0
         }
@@ -260,5 +260,5 @@
     "main_max": 5
   },
   "disclaimer": "命中统计仅为历史娱乐回顾；彩票开奖为独立随机事件，不代表任何预测依据。",
-  "updated_at": "2026-10-31 07:43:00"
+  "updated_at": "2026-10-31 14:54:44"
 }
