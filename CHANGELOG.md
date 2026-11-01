@@ -1,3 +1,11 @@
+## 2026-11-01 — 26125 主页 AI 分析失效治本（冻结优先 + 导出保展开 + 完整性标红）
+
+- 现象：主页 AI 综合分析「暂未更新」、本期唯一推荐被契约校验拦下、组合推荐未更新（用户截图实证）；复盘正常。
+- 根因链：26125 快照于 10-31 冻结（primary=A）；11-01 F 迟到进 D1 候选集，publisher 按「F 在场即唯一 primary」重算 → 与冻结快照冲突 fail-closed；但工作流前置的 D1 导出步已把展开版 recommendations.json 覆盖成 plain 版（无 is_primary），前端与 ai_cycle（要求恰好 1 个 primary）全部失效，工作流仍全绿无人知。
+- 修复：① src/publisher.py 冻结优先——已有快照的期 primary 以快照为准（冻结字段回填、快照 unchanged），迟到候选只作普通候选，新策略 primary 地位自下一期起生效；锁定策略缺席/号码与快照不一致的真冲突仍 fail-closed。② scripts/export_recommendations_json.py 导出合并——同号码记录的展开字段（is_primary/final_score 等）并回 plain 导出，导出步再不能抹掉权威标记。③ 新增 scripts/check_publication_integrity.py + 工作流末步校验——primary≠1 / 快照缺失 / ai_cycle 契约类失败（invalid_context 等）→ 运行标红报警（置于提交+部署之后，不阻断数据落地）。
+- 验证：新增 tests/test_freeze_priority.py 6 项全过（迟到 F 保冻结 primary / 真冲突仍 fail-closed / 导出合并与换号不并 / 完整性校验正反例）；全量 332 项测试通过；以 26125 生产数据本地回归：publisher 输出 snapshot unchanged、展开版恢复恰好 1 个 primary（A）、ai_cycle analysis_context 构建成功、复式对 A 指纹不变。26125 本期正式单注仍为冻结的 A，F 自 26126 期起按规则生效。
+- 回滚：revert 本提交即恢复（均为加法/保护性逻辑，不改快照与历史数据）。
+
 ## 2026-10-24 — ai_cycle 分析本地通道根治（原生接口 + 分段生成）+ Tailscale 白名单
 
 - 根因（2026-10-24 逐层实锤）：① 单次非流式大请求被 Cloudflare 隧道空闲超时掐断（http_524）；② 本地端点的 OpenAI 兼容层不认任何关推理开关（reasoning_effort / think / reasoning.enabled 全部无效），gemma4 推理烧光 token 预算、正文为空（empty_content）；③ 单次全章节调用体量过大。
