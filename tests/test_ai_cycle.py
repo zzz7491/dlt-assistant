@@ -193,6 +193,19 @@ class AICycleTests(unittest.TestCase):
         with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'qwen3.6:35b-a3b')):
             self.assertEqual(m.request_analysis(ctx)['status'],'completed')
 
+    def test_review_route_completes_regression_20261101(self):
+        # Regression: until 2026-11-01 validate_response was only called in
+        # the analysis branch, so every review died at the return with
+        # UnboundLocalError('sections') after all sections had generated;
+        # the error escaped run()'s handled set and killed the cycle.
+        ctx=m.review_context(self.h,m.read('published_recommendations.json')['items'],[],m.read('draw_details.json')['issues'],[])
+        raw=fake_response(ctx)['sections']
+        env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://ai.mootlsv.com:9443/v1','DLT_AI_MODEL':'qwen3.6:35b-a3b'}
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'qwen3.6:35b-a3b')):
+            result=m.request_analysis(ctx)
+        self.assertEqual(result['status'],'completed')
+        self.assertEqual(set(result['sections']),set(m.SECTIONS['review']))
+
     def test_paid_route_is_accepted(self):
         ctx=self.context();raw=fake_response(ctx)['sections']
         env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'deepseek/deepseek-chat'}

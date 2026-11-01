@@ -407,16 +407,21 @@ def request_analysis(context):
         if context['kind']=='analysis':
             for name,refs in canonical.items():
                 raw[name]['evidence_ids']=list(dict.fromkeys(raw[name]['evidence_ids']+[r for r in refs if r in context['evidence']]))
-            try:
-                sections=validate_response(raw,context)
-            except (ValueError,KeyError,TypeError) as exc:
-                reason=str(exc) if re.fullmatch(r'[a-z_0-9 .]{1,90}',str(exc)) else 'json_or_schema_error'
-                round_feedback=reason+'；请删去随机生成、随机基线、回归均衡、稳定性存疑、捕获能力、号码无重合、号码本身无重叠等表述，改为客观评审；每段仅依据自己引用的数据。若报unverified_numeric，错误后缀即未获本段引用支持的数值，请为本段引用该数字对应的证据ID；没有可用引用就删去该数字，禁止改成中文数词绕过。'
-                if reason.startswith('unsupported_interpretation_'):
-                    round_feedback+=' 具体需删去的表述：'+FORBIDDEN[int(reason.rsplit('_',1)[1])]+'。'
-                pending=[s for s in SECTIONS[context['kind']] if ('_'+s+'_') in ('_'+reason+'_') or reason.startswith(s+'_') or reason.endswith('_'+s)] or list(SECTIONS[context['kind']])
-                print('ai_cycle_validation',context['kind'],'merged',reason)
-                continue
+        # validate_response gates BOTH kinds. Until 2026-11-01 this call sat
+        # inside the analysis-only branch, so every review reached the return
+        # below with `sections` unbound; the resulting UnboundLocalError is
+        # not in run()'s handled set, so it killed the whole cycle silently
+        # (masked earlier by the Tailscale connection failure).
+        try:
+            sections=validate_response(raw,context)
+        except (ValueError,KeyError,TypeError) as exc:
+            reason=str(exc) if re.fullmatch(r'[a-z_0-9 .]{1,90}',str(exc)) else 'json_or_schema_error'
+            round_feedback=reason+'；请删去随机生成、随机基线、回归均衡、稳定性存疑、捕获能力、号码无重合、号码本身无重叠等表述，改为客观评审；每段仅依据自己引用的数据。若报unverified_numeric，错误后缀即未获本段引用支持的数值，请为本段引用该数字对应的证据ID；没有可用引用就删去该数字，禁止改成中文数词绕过。'
+            if reason.startswith('unsupported_interpretation_'):
+                round_feedback+=' 具体需删去的表述：'+FORBIDDEN[int(reason.rsplit('_',1)[1])]+'。'
+            pending=[s for s in SECTIONS[context['kind']] if ('_'+s+'_') in ('_'+reason+'_') or reason.startswith(s+'_') or reason.endswith('_'+s)] or list(SECTIONS[context['kind']])
+            print('ai_cycle_validation',context['kind'],'merged',reason)
+            continue
         return {'status':'completed','model':model_seen[:180], 'route':route,
                 'prompt_version':VERSION,'generated_at':now(), 'input_hash':digest(context),
                 'sections':sections,'model_evidence_ids':model_refs,'evidence_policy':'model-plus-canonical-v1', **copy.deepcopy(context)}
