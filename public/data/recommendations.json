@@ -16,9 +16,6 @@
       5
     ],
     "score": null,
-    "reason": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 2 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 98、跨度 20。",
-    "is_primary": true,
-    "source": "reports/recommendations.json",
     "final_score": 42.38,
     "final_breakdown": {
       "base": 68.0,
@@ -37,6 +34,8 @@
       "effective_sample": 32
     },
     "final_rank": 2,
+    "is_primary": true,
+    "reason": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 2 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 98、跨度 20。",
     "explanation": {
       "explanation_version": "1.1",
       "strategy_type": "balanced_statistical",
@@ -106,7 +105,8 @@
       "reason_status": "ok",
       "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
       "explanation_hash": "27805b6ff3d5c627"
-    }
+    },
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-10-31",
@@ -125,9 +125,6 @@
       11
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 39.14,
     "final_breakdown": {
       "base": 60.0,
@@ -145,7 +142,10 @@
       "stage": "stable",
       "effective_sample": 32
     },
-    "final_rank": 4
+    "final_rank": 4,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-11-01",
@@ -164,9 +164,6 @@
       9
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 24.0,
     "final_breakdown": {
       "base": 60.0,
@@ -184,7 +181,10 @@
       "stage": "stable",
       "effective_sample": 32
     },
-    "final_rank": 5
+    "final_rank": 5,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-10-31",
@@ -203,9 +203,6 @@
       5
     ],
     "score": 41.35,
-    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 40.6,
     "final_breakdown": {
       "base": 64.0,
@@ -223,7 +220,10 @@
       "stage": "stable",
       "effective_sample": 32
     },
-    "final_rank": 3
+    "final_rank": 3,
+    "is_primary": false,
+    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-11-01",
@@ -242,9 +242,6 @@
       7
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 44.0,
     "final_breakdown": {
       "base": 60.0,
@@ -262,6 +259,9 @@
       "stage": "stable",
       "effective_sample": 32
     },
-    "final_rank": 1
+    "final_rank": 1,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
   }
 ]
