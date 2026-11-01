@@ -1275,6 +1275,174 @@
           "on_issue": "26120"
         }
       }
+    },
+    {
+      "status": "completed",
+      "model": "qwen3.6:35b-a3b",
+      "route": "qwen3.6:35b-a3b",
+      "prompt_version": "dlt-ai-cycle-v6",
+      "generated_at": "2026-11-01T02:39:21.839807+00:00",
+      "input_hash": "4f77c4f7ca6eca04ffccfd147fd432f8c6c33add3a1755ebf3671c304171c42c",
+      "sections": {
+        "summary": {
+          "text": "本期单注方案基于均衡统计逻辑构建，前区奇偶比3:2与大小比2:3旨在覆盖常见分布形态，但实际开奖前区奇数仅1个且和值偏差达16点，显示结构贴合无法转化为号码命中。复式方案展开336注，成本显著增加，虽通过扩大后区覆盖提升局部概率，但整体仍全数未中，证明高投入并未带来风险对冲效果。由于缺乏事前AI分析记录，本次仅为事后解读，无法验证策略生成的合理性，仅能确认模拟结算结果与规则一致性。",
+          "evidence_ids": [
+            "single_frozen",
+            "structure_comparison",
+            "compound_outcome",
+            "prior_analysis"
+          ]
+        },
+        "reason_check": {
+          "text": "本次评审基于事后数据，因无事前AI分析记录（evidence_ids: prior_analysis），仅对既定方案的结构逻辑进行核验。原策略采用均衡统计型方法，强制奇偶比3:2与大小比2:3（evidence_ids: original_statistical_basis）。然而，实际开奖前区奇数仅1个，且推荐和值77与实际93存在显著偏差（evidence_ids: structure_comparison）。这种结构贴合度的缺失表明，基于历史频率的均衡约束在捕捉当期离散分布时失效。评审显示，固定结构假设无法覆盖极端偏离常态的开奖结果，导致单注与复式均未命中核心奖级。",
+          "evidence_ids": [
+            "prior_analysis",
+            "original_statistical_basis",
+            "structure_comparison"
+          ]
+        },
+        "limitations": {
+          "text": "本方案采用均衡统计型策略，依据近50期频率与遗漏生成，强制奇偶比3:2及大小比2:3以维持结构平衡。然而，实际开奖前区奇数仅1个，和值偏差达16，表明结构贴合不等于号码命中。单一注号评分42.91未能转化为有效覆盖，复式展开虽增加组合但成本显著上升且未中奖。此局限在于过度依赖历史均衡假设，忽视了短期随机波动对特定结构的破坏力，导致策略在当期失效。",
+          "evidence_ids": [
+            "original_statistical_basis",
+            "structure_comparison",
+            "single_frozen",
+            "compound_outcome"
+          ]
+        },
+        "next_focus": {
+          "text": "本期单注与复式均未命中，核心局限在于结构偏差：推荐前区和值77与实际93存在显著偏离（evidence_ids: [structure_comparison]），且奇数分布预测（3个）与实际（1个）严重不符。这显示均衡统计策略在应对极端离散开奖时缺乏鲁棒性。后续需关注和值波动区间与奇偶比的动态平衡，避免过度依赖历史频率均值而忽视短期结构突变，重点验证模型对偏离度指标的敏感度及调整机制。",
+          "evidence_ids": [
+            "structure_comparison"
+          ]
+        }
+      },
+      "model_evidence_ids": {
+        "summary": [
+          "single_frozen",
+          "structure_comparison",
+          "compound_outcome",
+          "prior_analysis"
+        ],
+        "reason_check": [
+          "prior_analysis",
+          "original_statistical_basis",
+          "structure_comparison"
+        ],
+        "limitations": [
+          "original_statistical_basis",
+          "structure_comparison",
+          "single_frozen",
+          "compound_outcome"
+        ],
+        "next_focus": [
+          "structure_comparison"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "review",
+      "issue": "26124",
+      "identity": {
+        "issue": "26124",
+        "single": {
+          "front": [
+            1,
+            3,
+            15,
+            24,
+            34
+          ],
+          "back": [
+            2,
+            5
+          ]
+        },
+        "actual": {
+          "front": [
+            12,
+            14,
+            18,
+            22,
+            27
+          ],
+          "back": [
+            1,
+            9
+          ]
+        },
+        "snapshot_hash": "e371e4955c3ec15ac17a4605a78a1d30d5e04b8486be178325a06c513362ddab",
+        "compound": {
+          "format": "8+4",
+          "front": [
+            1,
+            3,
+            10,
+            14,
+            15,
+            24,
+            26,
+            34
+          ],
+          "back": [
+            2,
+            4,
+            5,
+            9
+          ]
+        }
+      },
+      "evidence": {
+        "single_outcome": "展开1注，命中分布（前区+后区）：0+0命中1注；奖级：未中奖；基本成本2元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+        "draw": "实际开奖前区[12, 14, 18, 22, 27]，后区[1, 9]；期号26124，日期2026-10-31。",
+        "single_frozen": "当期冻结单注前区[1, 3, 15, 24, 34]，后区[2, 5]；当时评分42.91；当期冻结记录完整性已校验。",
+        "uncertainty": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。",
+        "original_statistical_basis": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 3 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 3:2、大小比 2:3、和值 77、跨度 33。",
+        "structure_comparison": "推荐前区和值77、实际和值93，绝对偏差16；推荐前区奇数3个，实际前区奇数1个。结构贴合不等于号码命中。",
+        "compound_outcome": "展开336注，命中分布（前区+后区）：0+0命中63注、0+1命中63注、1+0命中105注、1+1命中105注；奖级：未中奖；基本成本672元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+        "prior_analysis": "当期没有开奖前AI分析记录；本次仅为事后解读，无事前AI理由可核验，不得声称AI当时推荐或预测过。",
+        "reason_audit": "无事前AI理由，必须如实指出这一限制。"
+      },
+      "settlement": {
+        "single": {
+          "matches": {
+            "0+0": 1
+          },
+          "prizes": [],
+          "tickets": 1,
+          "basic_cost_yuan": 2,
+          "basic_payout_yuan": "0",
+          "all_additional_cost_yuan": 3,
+          "all_additional_payout_yuan": "0",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        },
+        "compound": {
+          "matches": {
+            "0+0": 63,
+            "0+1": 63,
+            "1+0": 105,
+            "1+1": 105
+          },
+          "prizes": [],
+          "tickets": 336,
+          "basic_cost_yuan": 672,
+          "basic_payout_yuan": "0",
+          "all_additional_cost_yuan": 1008,
+          "all_additional_payout_yuan": "0",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        }
+      },
+      "has_pre_draw_ai": false,
+      "prior_analysis_hash": null,
+      "raw_source_hash": "d03ec8392fb801d439d332c8ec36f7879bb3a1fc71545f407d95d42dd52a8856",
+      "editorial_policy": "grounded-editorial-v1",
+      "editorial_removed_clauses": 0,
+      "reviewed_at": "2026-11-01T02:39:21.841165+00:00"
     }
   ],
   "raw_model_records": {
@@ -2965,6 +3133,170 @@
       },
       "created_before_draw": true,
       "historical_data_hash": "4dd3c3faca54e70aa82799f47eea612b173d16da2ac46f4cea21d448c8e0ea39"
+    },
+    "d03ec8392fb801d439d332c8ec36f7879bb3a1fc71545f407d95d42dd52a8856": {
+      "status": "completed",
+      "model": "qwen3.6:35b-a3b",
+      "route": "qwen3.6:35b-a3b",
+      "prompt_version": "dlt-ai-cycle-v6",
+      "generated_at": "2026-11-01T02:39:21.839807+00:00",
+      "input_hash": "4f77c4f7ca6eca04ffccfd147fd432f8c6c33add3a1755ebf3671c304171c42c",
+      "sections": {
+        "summary": {
+          "text": "本期单注方案基于均衡统计逻辑构建，前区奇偶比3:2与大小比2:3旨在覆盖常见分布形态，但实际开奖前区奇数仅1个且和值偏差达16点，显示结构贴合无法转化为号码命中。复式方案展开336注，成本显著增加，虽通过扩大后区覆盖提升局部概率，但整体仍全数未中，证明高投入并未带来风险对冲效果。由于缺乏事前AI分析记录，本次仅为事后解读，无法验证策略生成的合理性，仅能确认模拟结算结果与规则一致性。",
+          "evidence_ids": [
+            "single_frozen",
+            "structure_comparison",
+            "compound_outcome",
+            "prior_analysis"
+          ]
+        },
+        "reason_check": {
+          "text": "本次评审基于事后数据，因无事前AI分析记录（evidence_ids: prior_analysis），仅对既定方案的结构逻辑进行核验。原策略采用均衡统计型方法，强制奇偶比3:2与大小比2:3（evidence_ids: original_statistical_basis）。然而，实际开奖前区奇数仅1个，且推荐和值77与实际93存在显著偏差（evidence_ids: structure_comparison）。这种结构贴合度的缺失表明，基于历史频率的均衡约束在捕捉当期离散分布时失效。评审显示，固定结构假设无法覆盖极端偏离常态的开奖结果，导致单注与复式均未命中核心奖级。",
+          "evidence_ids": [
+            "prior_analysis",
+            "original_statistical_basis",
+            "structure_comparison"
+          ]
+        },
+        "limitations": {
+          "text": "本方案采用均衡统计型策略，依据近50期频率与遗漏生成，强制奇偶比3:2及大小比2:3以维持结构平衡。然而，实际开奖前区奇数仅1个，和值偏差达16，表明结构贴合不等于号码命中。单一注号评分42.91未能转化为有效覆盖，复式展开虽增加组合但成本显著上升且未中奖。此局限在于过度依赖历史均衡假设，忽视了短期随机波动对特定结构的破坏力，导致策略在当期失效。",
+          "evidence_ids": [
+            "original_statistical_basis",
+            "structure_comparison",
+            "single_frozen",
+            "compound_outcome"
+          ]
+        },
+        "next_focus": {
+          "text": "本期单注与复式均未命中，核心局限在于结构偏差：推荐前区和值77与实际93存在显著偏离（evidence_ids: [structure_comparison]），且奇数分布预测（3个）与实际（1个）严重不符。这显示均衡统计策略在应对极端离散开奖时缺乏鲁棒性。后续需关注和值波动区间与奇偶比的动态平衡，避免过度依赖历史频率均值而忽视短期结构突变，重点验证模型对偏离度指标的敏感度及调整机制。",
+          "evidence_ids": [
+            "structure_comparison"
+          ]
+        }
+      },
+      "model_evidence_ids": {
+        "summary": [
+          "single_frozen",
+          "structure_comparison",
+          "compound_outcome",
+          "prior_analysis"
+        ],
+        "reason_check": [
+          "prior_analysis",
+          "original_statistical_basis",
+          "structure_comparison"
+        ],
+        "limitations": [
+          "original_statistical_basis",
+          "structure_comparison",
+          "single_frozen",
+          "compound_outcome"
+        ],
+        "next_focus": [
+          "structure_comparison"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "review",
+      "issue": "26124",
+      "identity": {
+        "issue": "26124",
+        "single": {
+          "front": [
+            1,
+            3,
+            15,
+            24,
+            34
+          ],
+          "back": [
+            2,
+            5
+          ]
+        },
+        "actual": {
+          "front": [
+            12,
+            14,
+            18,
+            22,
+            27
+          ],
+          "back": [
+            1,
+            9
+          ]
+        },
+        "snapshot_hash": "e371e4955c3ec15ac17a4605a78a1d30d5e04b8486be178325a06c513362ddab",
+        "compound": {
+          "format": "8+4",
+          "front": [
+            1,
+            3,
+            10,
+            14,
+            15,
+            24,
+            26,
+            34
+          ],
+          "back": [
+            2,
+            4,
+            5,
+            9
+          ]
+        }
+      },
+      "evidence": {
+        "single_outcome": "展开1注，命中分布（前区+后区）：0+0命中1注；奖级：未中奖；基本成本2元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+        "draw": "实际开奖前区[12, 14, 18, 22, 27]，后区[1, 9]；期号26124，日期2026-10-31。",
+        "single_frozen": "当期冻结单注前区[1, 3, 15, 24, 34]，后区[2, 5]；当时评分42.91；当期冻结记录完整性已校验。",
+        "uncertainty": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。",
+        "original_statistical_basis": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 3 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 3:2、大小比 2:3、和值 77、跨度 33。",
+        "structure_comparison": "推荐前区和值77、实际和值93，绝对偏差16；推荐前区奇数3个，实际前区奇数1个。结构贴合不等于号码命中。",
+        "compound_outcome": "展开336注，命中分布（前区+后区）：0+0命中63注、0+1命中63注、1+0命中105注、1+1命中105注；奖级：未中奖；基本成本672元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+        "prior_analysis": "当期没有开奖前AI分析记录；本次仅为事后解读，无事前AI理由可核验，不得声称AI当时推荐或预测过。",
+        "reason_audit": "无事前AI理由，必须如实指出这一限制。"
+      },
+      "settlement": {
+        "single": {
+          "matches": {
+            "0+0": 1
+          },
+          "prizes": [],
+          "tickets": 1,
+          "basic_cost_yuan": 2,
+          "basic_payout_yuan": "0",
+          "all_additional_cost_yuan": 3,
+          "all_additional_payout_yuan": "0",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        },
+        "compound": {
+          "matches": {
+            "0+0": 63,
+            "0+1": 63,
+            "1+0": 105,
+            "1+1": 105
+          },
+          "prizes": [],
+          "tickets": 336,
+          "basic_cost_yuan": 672,
+          "basic_payout_yuan": "0",
+          "all_additional_cost_yuan": 1008,
+          "all_additional_payout_yuan": "0",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        }
+      },
+      "has_pre_draw_ai": false,
+      "prior_analysis_hash": null
     }
   }
 }
