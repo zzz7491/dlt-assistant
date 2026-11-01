@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-01T08:30:28.087625+00:00",
+  "updated_at": "2026-11-01T11:20:28.694679+00:00",
   "analysis": null,
   "review": {
     "status": "completed",
@@ -169,7 +169,40 @@
     "raw_source_hash": "d03ec8392fb801d439d332c8ec36f7879bb3a1fc71545f407d95d42dd52a8856",
     "editorial_policy": "grounded-editorial-v1",
     "editorial_removed_clauses": 0,
-    "reviewed_at": "2026-11-01T02:39:21.841165+00:00"
+    "reviewed_at": "2026-11-01T02:39:21.841165+00:00",
+    "reflection": {
+      "version": "reflection-v1",
+      "generated_at": "2026-11-01T11:21:12.775823+00:00",
+      "model": "qwen3.6:35b-a3b",
+      "front_hits": 0,
+      "back_hits": 0,
+      "causes": [
+        {
+          "code": "sum_bias",
+          "text": "和值偏差：推荐和值77、实际93，推荐偏低16。"
+        },
+        {
+          "code": "odd_even_mismatch",
+          "text": "奇偶结构错位：推荐前区奇数3个、实际1个。"
+        },
+        {
+          "code": "far_miss",
+          "text": "方向偏差：前区仅命中0个，且未命中开奖号多与推荐号相距较远。"
+        },
+        {
+          "code": "back_blank",
+          "text": "后区零命中：两个后区号均未中。"
+        }
+      ],
+      "improvement": {
+        "text": "下一期推荐需将前区和值重心向中高区间偏移，适度压缩低位小号占比，同时补足中后段区间的号码覆盖密度，避免结构过度集中于低值域。",
+        "source_issue": "26124"
+      },
+      "verdict": {
+        "text": "本期未落实该改进。冻结单注前区和值仍为77，较实际开奖和值93偏低16，重心未向中高区间偏移，低位小号占比依然偏高。结构偏差直接导致前区零命中，改进要求未转化为实际推荐参数，未能缩小与开奖分布的差距。",
+        "on_issue": "26121"
+      }
+    }
   },
   "statuses": {
     "review": "completed",
