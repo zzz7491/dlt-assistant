@@ -14,99 +14,7 @@
     "back": [
       4,
       5
-    ],
-    "score": null,
-    "reason": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 2 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 98、跨度 20。",
-    "is_primary": true,
-    "source": "reports/recommendations.json",
-    "final_score": 42.38,
-    "final_breakdown": {
-      "base": 68.0,
-      "history": 15.17,
-      "recent": 14.29,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 32
-    },
-    "final_rank": 1,
-    "explanation": {
-      "explanation_version": "1.1",
-      "strategy_type": "balanced_statistical",
-      "strategy": "A-均衡统计型",
-      "target_issue": "26125",
-      "summary": "均衡统计型：依据近 50 期频率与遗漏，前区混合热号 2 个、冷号 1 个并强制奇偶/大小均衡后生成；本组前区 奇偶比 2:3、大小比 3:2、和值 98、跨度 20。",
-      "factors": [
-        {
-          "type": "hot_cold",
-          "label": "热冷混合",
-          "detail": "前区落在当前窗口热号集合 2 个、冷号集合 1 个。",
-          "evidence": {
-            "front_hot": [
-              12,
-              24
-            ],
-            "front_cold": [
-              11
-            ],
-            "window": 50
-          }
-        },
-        {
-          "type": "frequency",
-          "label": "频率依据",
-          "detail": "前区号码取自近期基础频率与近期频率加权（0.5/0.5）的候选池。",
-          "evidence": {
-            "front_freq": {
-              "11": 7,
-              "12": 8,
-              "20": 7,
-              "24": 9,
-              "31": 3
-            }
-          }
-        },
-        {
-          "type": "balance",
-          "label": "奇偶/大小均衡",
-          "detail": "前区奇偶比 2:3、大小比 3:2（算法强制均衡到 2~3）。",
-          "evidence": {
-            "front_odd_even": [
-              2,
-              3
-            ],
-            "front_big_small": [
-              3,
-              2
-            ]
-          }
-        },
-        {
-          "type": "structure",
-          "label": "结构分布",
-          "detail": "前区和值 98、跨度 20。",
-          "evidence": {
-            "front_sum": 98,
-            "front_span": 20
-          }
-        }
-      ],
-      "generated_from": [
-        "dlt_history.json",
-        "window=50",
-        "strategy_type=balanced_statistical"
-      ],
-      "reason_status": "ok",
-      "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。",
-      "explanation_hash": "27805b6ff3d5c627"
-    }
+    ]
   },
   {
     "date": "2026-10-31",
@@ -123,29 +31,24 @@
     "back": [
       1,
       11
+    ]
+  },
+  {
+    "date": "2026-11-01",
+    "target_issue": "26125",
+    "strategy": "C-AI智能型",
+    "idx": 0,
+    "front": [
+      2,
+      10,
+      14,
+      22,
+      26
     ],
-    "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 39.14,
-    "final_breakdown": {
-      "base": 60.0,
-      "history": 10.71,
-      "recent": 20.0,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 32
-    },
-    "final_rank": 3
+    "back": [
+      7,
+      9
+    ]
   },
   {
     "date": "2026-10-31",
@@ -162,28 +65,23 @@
     "back": [
       7,
       5
+    ]
+  },
+  {
+    "date": "2026-11-01",
+    "target_issue": "26125",
+    "strategy": "F-综合AI型",
+    "idx": 0,
+    "front": [
+      4,
+      11,
+      20,
+      26,
+      33
     ],
-    "score": 41.35,
-    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 40.6,
-    "final_breakdown": {
-      "base": 64.0,
-      "history": 14.29,
-      "recent": 14.29,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 32
-    },
-    "final_rank": 2
+    "back": [
+      5,
+      7
+    ]
   }
 ]
