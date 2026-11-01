@@ -116,12 +116,53 @@ def load(path: str) -> list[dict]:
         return json.load(f)
 
 
+EXPANDED_FIELDS = ("score", "final_score", "final_breakdown", "final_rank",
+                   "is_primary", "reason", "explanation", "source",
+                   "model_version")
+
+
+def merge_expanded(recs: list[dict], out_path: str) -> list[dict]:
+    """合并既有展开版字段（2026-11-01 治本）。
+
+    D1 导出只有 plain 字段；publisher 展开版带 final_score/is_primary 等
+    权威标记。此前导出步直接覆盖展开版，publisher 一旦 fail-closed，
+    recommendations.json 就只剩 plain 版，前端与 ai_cycle 找不到唯一
+    primary 全部失效（26125 实证）。同 (target_issue,strategy,idx) 且
+    front/back 一致时，把既有展开字段并回导出记录；号码不一致（真换号）
+    时不并，避免把旧标记贴到新号码上。
+    """
+    if not os.path.exists(out_path):
+        return recs
+    try:
+        existing = load(out_path)
+    except Exception:
+        return recs
+    by_key = {}
+    for old in existing if isinstance(existing, list) else []:
+        if isinstance(old, dict):
+            by_key[(str(old.get("target_issue")), old.get("strategy"),
+                    old.get("idx"))] = old
+    merged = []
+    for r in recs:
+        old = by_key.get((str(r.get("target_issue")), r.get("strategy"),
+                          r.get("idx")))
+        if old and old.get("front") == r.get("front") \
+                and old.get("back") == r.get("back"):
+            r = dict(r)
+            for f in EXPANDED_FIELDS:
+                if f in old:
+                    r[f] = old[f]
+        merged.append(r)
+    return merged
+
+
 def export(recs: list[dict], out_path: str) -> int:
     """写出 JSON。无数据时跳过写入以保护现有文件。返回写入条数。"""
     if not recs:
         print("⚠️ D1 无锁定推荐（target_issue 为空），保留现有 "
               f"{out_path}，不覆盖")
         return 0
+    recs = merge_expanded(recs, out_path)
     os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(recs, f, ensure_ascii=False, indent=2)

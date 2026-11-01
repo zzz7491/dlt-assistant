@@ -752,6 +752,40 @@ def publish(*, rec_path: str = "reports/recommendations.json",
                 if r["is_primary"]:
                     r["final_rank"] = 1
 
+    # 冻结优先（2026-11-01 治本）：该期已有不可变快照时，primary 以快照为准。
+    # 背景：快照在首轮发布即冻结，但候选集之后仍可增长（D1 首写锁定按策略行
+    # 逐行生效，新策略可迟到，如 F 在冻结次日才生成）。若按新候选重算 primary，
+    # 必然与冻结快照冲突 → publisher fail-closed → 展开版推荐被 plain 导出覆盖
+    # 后，前端与 ai_cycle 找不到 primary 全部失效（26125 实证）。冻结优先使
+    # 迟到候选只作普通候选参与展示/评分，本期 primary 保持冻结值；新策略的
+    # primary 地位从下一期（尚无快照）起正常生效。锁定策略缺席或号码与快照
+    # 不一致时不适用本条，仍走原冲突 fail-closed。
+    frozen_snapshot = None
+    if recs:
+        _snap_path_pre = published_path or os.path.join(out_dir, "published_recommendations.json")
+        _by_issue_pre = load_published_by_issue(_snap_path_pre)
+        _targets = {str(r.get("target_issue")) for r in recs if isinstance(r, dict)}
+        if len(_targets) == 1:
+            _snap = _by_issue_pre.get(next(iter(_targets)))
+            if isinstance(_snap, dict):
+                _snap_numbers = _snap.get("numbers") or {}
+                _locked = next((r for r in recs if isinstance(r, dict)
+                                and r.get("strategy") == _snap.get("primary_strategy")
+                                and list(r.get("front") or []) == list(_snap_numbers.get("front") or [])
+                                and list(r.get("back") or []) == list(_snap_numbers.get("back") or [])), None)
+                if _locked is not None:
+                    frozen_snapshot = _snap
+                    for r in recs:
+                        if isinstance(r, dict):
+                            r["is_primary"] = r is _locked
+                    # 冻结字段以快照为准，保证重建快照 hash 不变（unchanged）；
+                    # model_version 仅在快照有值或记录已有该键时回填，避免新增
+                    # null 键改变序列化结果、破坏二次运行幂等（写盘跳过判定）。
+                    _locked["final_score"] = _snap.get("final_score")
+                    _locked["final_breakdown"] = _snap.get("final_breakdown")
+                    if _snap.get("model_version") is not None or "model_version" in _locked:
+                        _locked["model_version"] = _snap.get("model_version")
+
     # P0 唯一权威 primary + 不可变发布快照：在「恰好一个 is_primary」确定之后写快照。
     # 快照必须使用与前端展示一致的同一 primary（pick_primary 与 selectPrimary 同契约：只读 is_primary）。
     snapshot_path = published_path or os.path.join(out_dir, "published_recommendations.json")
@@ -759,10 +793,16 @@ def publish(*, rec_path: str = "reports/recommendations.json",
     primary = pick_primary(recs)          # 恰好 1 个 is_primary=True 才返回；0/多个 → None
     snapshot_write_ok = isinstance(primary, dict)
     if snapshot_write_ok:
-        # P1-2：用真实历史数据为该 primary 生成确定性 explanation（不改 numbers/score/is_primary）。
-        expl = _build_primary_explanation(primary, _load_json(history_path), recent_window=recent_window)
-        primary["explanation"] = expl                      # 仅新增加法字段，供快照冻结 + 前端展示
-        primary["reason"] = primary.get("reason") or (expl.get("summary") if expl else None)
+        if frozen_snapshot is not None:
+            # 冻结优先：explanation/reason 直接沿用快照冻结值，不重算，
+            # 保证重建快照与已有快照 hash 完全一致（unchanged）。
+            primary["explanation"] = frozen_snapshot.get("explanation")
+            primary["reason"] = frozen_snapshot.get("reason")
+        else:
+            # P1-2：用真实历史数据为该 primary 生成确定性 explanation（不改 numbers/score/is_primary）。
+            expl = _build_primary_explanation(primary, _load_json(history_path), recent_window=recent_window)
+            primary["explanation"] = expl                      # 仅新增加法字段，供快照冻结 + 前端展示
+            primary["reason"] = primary.get("reason") or (expl.get("summary") if expl else None)
         snap = build_snapshot(primary, published_at=_now())
         st = upsert_published_snapshot(snapshot_path, snap)
         published_status["issues"][str(primary.get("target_issue"))] = st
