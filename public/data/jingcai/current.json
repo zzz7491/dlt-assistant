@@ -769,40 +769,6 @@
         "1": 4.1,
         "0": 2.41
       },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 9,
-            "d": 0,
-            "l": 1,
-            "points": 27,
-            "gf": 29,
-            "ga": 8
-          },
-          "rest_days": 4,
-          "last_match_date": "2026-10-30"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 3,
-            "d": 3,
-            "l": 4,
-            "points": 12,
-            "gf": 13,
-            "ga": 13
-          },
-          "rest_days": 9,
-          "last_match_date": "2026-10-25"
-        },
-        "head_to_head": {
-          "meetings": 4,
-          "home_wins": 4,
-          "draws": 0,
-          "away_wins": 0
-        }
-      },
       "spf": null,
       "rq": {
         "odds": {
@@ -993,6 +959,6 @@
   "source": {
     "name": "澳客网竞彩赛程与固定奖金（与官方同步）",
     "url": "https://www.okooo.com/jingcai/",
-    "checked_at": "2026-11-02T02:37:37.655434+08:00"
+    "checked_at": "2026-11-02T03:14:01.943212+08:00"
   }
 }
