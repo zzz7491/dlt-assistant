@@ -21,6 +21,27 @@ def fake_response(context):
             'generated_at':'2026-01-01T00:00:00+00:00','input_hash':m.digest(context),'sections':result,**copy.deepcopy(context)}
 
 
+def section_post(raw, model):
+    """Section-aware stand-in for requests.post. Since the 2026-10-24
+    section-split redesign the caller asks for one section per request, so
+    answer with just that section: the OpenAI shape for /v1 routes, or one
+    NDJSON line for the native /api/chat route."""
+    def _post(url, **kwargs):
+        payload = kwargs.get('json') or {}
+        system = payload['messages'][0]['content']
+        section = system.split('本请求只返回「')[1].split('」')[0]
+        part = json.dumps({section: raw[section]}, ensure_ascii=False)
+        resp = Mock(ok=True, status_code=200)
+        if url.endswith('/api/chat'):
+            resp.iter_lines.return_value = [json.dumps(
+                {'model': model, 'message': {'content': part},
+                 'done': True, 'done_reason': 'stop'}, ensure_ascii=False)]
+        else:
+            resp.json.return_value = {'model': model, 'choices': [
+                {'message': {'content': part}, 'finish_reason': 'stop'}]}
+        return resp
+    return _post
+
 def fixture_root(path):
     (path/'public/data').mkdir(parents=True)
     for name in ['dlt_history.json','recommendations.json','compound_recommendation.json','compound_archive.json','published_recommendations.json','draw_details.json','review.json']:
@@ -121,20 +142,23 @@ class AICycleTests(unittest.TestCase):
             self.assertEqual(m.chinese_number(text),expected)
 
     def test_free_router_transient_bad_endpoint_is_retried(self):
-        ctx=self.context();bad=Mock(ok=False,status_code=400);good=Mock(ok=True)
-        good.json.return_value={'model':'actual/free-model:free','choices':[{'message':{'content':json.dumps(fake_response(ctx)['sections'])}}]}
+        ctx=self.context();raw=fake_response(ctx)['sections']
+        good=section_post(raw,'actual/free-model:free');bad=Mock(ok=False,status_code=400)
+        calls={'n':0}
+        def flaky(url, **kwargs):
+            calls['n']+=1
+            return bad if calls['n']==1 else good(url, **kwargs)
         env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'openrouter/free'}
-        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=[bad,good]) as post,patch.object(m.time,'sleep'):
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=flaky) as post,patch.object(m.time,'sleep'):
             self.assertEqual(m.request_analysis(ctx)['status'],'completed')
-            self.assertEqual(post.call_count,2)
+            self.assertGreaterEqual(post.call_count,2)
 
     def test_canonical_period_evidence_is_attached_without_editing_ai_text(self):
         ctx=self.context();raw=fake_response(ctx)['sections']
         text='本期目标'+ctx['issue']+'期，模型评审既定方案的评分排序与结构取舍，不保证中奖。'
         raw['overview']={'text':text,'evidence_ids':['single_structure']}
-        response=Mock(ok=True);response.json.return_value={'model':'actual/free-model:free','choices':[{'message':{'content':json.dumps(raw)}}]}
         env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'openrouter/free'}
-        with patch.dict('os.environ',env),patch.object(m.requests,'post',return_value=response):
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'actual/free-model:free')):
             record=m.request_analysis(ctx)
         self.assertEqual(record['sections']['overview']['text'],text)
         self.assertIn('history_window',record['sections']['overview']['evidence_ids'])
@@ -158,27 +182,30 @@ class AICycleTests(unittest.TestCase):
             post.assert_not_called()
 
     def test_local_route_is_accepted(self):
-        ctx=self.context();raw=fake_response(ctx)['sections'];response=Mock(ok=True)
-        response.json.return_value={'model':'gemma4-26b-official:latest','choices':[{'message':{'content':json.dumps(raw)}}]}
+        ctx=self.context();raw=fake_response(ctx)['sections']
         env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://ai.585351.xyz/v1','DLT_AI_MODEL':'gemma4-26b-official:latest'}
-        with patch.dict('os.environ',env),patch.object(m.requests,'post',return_value=response):
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'gemma4-26b-official:latest')):
+            self.assertEqual(m.request_analysis(ctx)['status'],'completed')
+
+    def test_relay_route_is_accepted(self):
+        ctx=self.context();raw=fake_response(ctx)['sections']
+        env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://ai.mootlsv.com:9443/v1','DLT_AI_MODEL':'qwen3.6:35b-a3b'}
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'qwen3.6:35b-a3b')):
             self.assertEqual(m.request_analysis(ctx)['status'],'completed')
 
     def test_paid_route_is_accepted(self):
-        ctx=self.context();raw=fake_response(ctx)['sections'];response=Mock(ok=True)
-        response.json.return_value={'model':'deepseek/deepseek-chat','choices':[{'message':{'content':json.dumps(raw)}}]}
+        ctx=self.context();raw=fake_response(ctx)['sections']
         env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'deepseek/deepseek-chat'}
-        with patch.dict('os.environ',env),patch.object(m.requests,'post',return_value=response):
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'deepseek/deepseek-chat')):
             self.assertEqual(m.request_analysis(ctx)['status'],'completed')
 
     def test_actual_model_retained_and_http_failure_is_sanitized(self):
-        ctx=self.context();raw=fake_response(ctx)['sections'];response=Mock(ok=True)
-        response.json.return_value={'model':'actual/free-model:free','choices':[{'message':{'content':json.dumps(raw)}}]}
+        ctx=self.context();raw=fake_response(ctx)['sections']
         env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'openrouter/free'}
-        with patch.dict('os.environ',env),patch.object(m.requests,'post',return_value=response):
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'actual/free-model:free')):
             result=m.request_analysis(ctx)
         self.assertEqual(result['model'],'actual/free-model:free')
-        response.ok=False;response.status_code=401
+        response=Mock(ok=False,status_code=401)
         with patch.dict('os.environ',env),patch.object(m.requests,'post',return_value=response) as post:
             with self.assertRaisesRegex(RuntimeError,'^http_401$'):m.request_analysis(ctx)
             self.assertEqual(post.call_count,1)

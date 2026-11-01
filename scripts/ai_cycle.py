@@ -260,14 +260,15 @@ def validate_response(raw,context):
 
 def _base_allowed(url):
     # Allowed AI bases: OpenRouter, the owner's Cloudflare-Tunnel endpoint,
-    # or the owner's Mac served over Tailscale (mingmac-studio.<tailnet>.ts.net).
-    if url in ('https://openrouter.ai/api/v1','https://ai.585351.xyz/v1'):
+    # the owner's authenticated public relay (ai.mootlsv.com, 2026-11-01), or
+    # the owner's Mac served over Tailscale (mingmac-studio.<tailnet>.ts.net).
+    if url in ('https://openrouter.ai/api/v1','https://ai.585351.xyz/v1','https://ai.mootlsv.com:9443/v1'):
         return True
     return bool(re.fullmatch(r'https://mingmac-studio\.[a-z0-9-]+\.ts\.net/v1',url or ''))
 
 
 def _is_local_base(url):
-    return bool(url) and ('585351' in url or '.ts.net' in url)
+    return bool(url) and ('585351' in url or '.ts.net' in url or 'ai.mootlsv.com' in url)
 
 
 def _post_chat(url,key,payload,timeout):
@@ -288,7 +289,7 @@ def _post_chat(url,key,payload,timeout):
             'options':{'temperature':payload.get('temperature',0),'num_predict':payload.get('max_tokens',3000)}}
     fmt=((payload.get('response_format') or {}).get('json_schema') or {}).get('schema')
     if fmt:native['format']=fmt
-    raw=requests.post(origin+'/api/chat',headers={'User-Agent':headers['User-Agent']},json=native,timeout=timeout,stream=True)
+    raw=requests.post(origin+'/api/chat',headers={'User-Agent':headers['User-Agent'],'Authorization':headers['Authorization']},json=native,timeout=timeout,stream=True)
     if not raw.ok:
         status=raw.status_code
         try:raw.close()
@@ -314,11 +315,14 @@ def _post_chat(url,key,payload,timeout):
 def request_analysis(context):
     key=os.getenv('DLT_AI_API_KEY','').strip();url=os.getenv('DLT_AI_BASE_URL','').strip();route=os.getenv('DLT_AI_MODEL','').strip()
     if not all([key,url,route]):raise RuntimeError('not_configured')
-    # Route policy (owner decision, 2026-10-22): full-local switch. The
-    # owner's own Ollama endpoint (24/7 home Mac) serves this feature with
-    # gemma4-26b, which passes the strict validator; OpenRouter/deepseek
-    # remains the only other allowed base. The allowlist keeps the API key
-    # from ever being sent to an arbitrary endpoint.
+    # Route policy (owner decision, 2026-10-22; relay switch 2026-11-01):
+    # full-local switch. The owner's own Ollama endpoint (24/7 home Mac)
+    # serves this feature, reached via the owner's authenticated public
+    # relay (ai.mootlsv.com) after GitHub-hosted runners proved unable to
+    # reach the Mac over Tailscale directly; qwen3.6 and gemma4 both pass
+    # the strict validator on the native route. OpenRouter/deepseek remains
+    # the only other allowed base. The allowlist keeps the API key from
+    # ever being sent to an arbitrary endpoint.
     if not _base_allowed(url):
         raise RuntimeError('ai_base_not_allowlisted')
     schema={k:{'text':'中文解释引用指标的意义、取舍及局限；具体数字由页面自动展示，不要重新计算或复述。','evidence_ids':['现有证据ID']} for k in SECTIONS[context['kind']]}
