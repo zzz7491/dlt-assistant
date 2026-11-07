@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-11-04 15:06:54",
+  "updated_at": "2026-11-07 15:11:37",
   "empty": false,
-  "issue": "26126",
+  "issue": "26127",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "7db84f15ae512871e1e76fd1330ce005aec1e319adb9f6310e67e632e91ecf15",
+  "snapshot_hash": "67b5dd2d19bd44fc13885b1f90cbb9c8a1d25ce6f53c7e043f94427f1b06bcf2",
   "recommendation": {
     "strategy": "F-综合AI型",
     "front": [
-      4,
-      11,
-      20,
+      3,
+      10,
+      22,
       26,
       33
     ],
@@ -26,7 +26,7 @@
     "explanation_version": "1.1",
     "strategy_type": "unknown",
     "strategy": "F-综合AI型",
-    "target_issue": "26126",
+    "target_issue": "26127",
     "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
     "factors": [],
     "generated_from": [],
@@ -36,36 +36,30 @@
   "actual_result": {
     "front": [
       5,
-      11,
+      6,
       17,
-      25,
-      34
+      18,
+      27
     ],
     "back": [
-      4,
-      6
+      3,
+      12
     ]
   },
   "hit_count": {
-    "front": 1,
+    "front": 0,
     "back": 0,
-    "total": 1,
-    "level": 1
+    "total": 0,
+    "level": 0
   },
   "prize": {
     "tier": null,
     "amount": 0
   },
   "analysis": {
-    "sum_diff": 2,
+    "sum_diff": 21,
     "factor_review": {}
   },
-  "next_adjustment": [
-    {
-      "type": "keep",
-      "text": "维持和值区间",
-      "reason": "上期和值贴合历史高频区间"
-    }
-  ],
+  "next_adjustment": [],
   "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖"
 }
