@@ -525,40 +525,6 @@
         "1": 3.58,
         "0": 1.82
       },
-      "dynamics": {
-        "home": {
-          "form_last10": {
-            "played": 10,
-            "w": 1,
-            "d": 3,
-            "l": 6,
-            "points": 6,
-            "gf": 20,
-            "ga": 24
-          },
-          "rest_days": 5,
-          "last_match_date": "2026-11-07"
-        },
-        "away": {
-          "form_last10": {
-            "played": 10,
-            "w": 4,
-            "d": 3,
-            "l": 3,
-            "points": 15,
-            "gf": 13,
-            "ga": 13
-          },
-          "rest_days": 3,
-          "last_match_date": "2026-11-09"
-        },
-        "head_to_head": {
-          "meetings": 12,
-          "home_wins": 7,
-          "draws": 4,
-          "away_wins": 1
-        }
-      },
       "spf": {
         "odds": {
           "3": 1.75,
@@ -566,14 +532,14 @@
           "0": 3.35
         },
         "probabilities": {
-          "3": 0.4023,
+          "3": 0.4428,
           "1": 0.2361,
-          "0": 0.3616
+          "0": 0.3211
         },
         "pick": "3",
         "pick_label": "主胜",
-        "confidence": 0.4023,
-        "value_edge": -0.296
+        "confidence": 0.4428,
+        "value_edge": -0.2251
       },
       "rq": {
         "odds": {
@@ -582,34 +548,31 @@
           "0": 1.82
         },
         "probabilities": {
-          "3": 0.2384,
-          "1": 0.222,
-          "0": 0.5396
+          "3": 0.252,
+          "1": 0.2282,
+          "0": 0.5198
         },
         "pick": "0",
         "pick_label": "让负",
-        "confidence": 0.5396,
-        "value_edge": -0.0179,
+        "confidence": 0.5198,
+        "value_edge": -0.054,
         "margin_model": {
-          "3": 0.2042,
-          "1": 0.1988,
-          "0": 0.597
+          "3": 0.2315,
+          "1": 0.2112,
+          "0": 0.5573
         },
         "xg": {
-          "home": 1.64,
-          "away": 1.55
+          "home": 1.69,
+          "away": 1.41
         }
       },
       "factors": {
         "available": [
           "market",
           "home_away",
-          "ranking",
-          "recent_form",
-          "head_to_head",
-          "rest_days"
+          "ranking"
         ],
-        "data_completeness": 0.8571
+        "data_completeness": 0.4286
       }
     }
   ],
@@ -617,6 +580,6 @@
   "source": {
     "name": "澳客网竞彩赛程与固定奖金（与官方同步）",
     "url": "https://www.okooo.com/jingcai/",
-    "checked_at": "2026-11-11T01:08:10.899775+08:00"
+    "checked_at": "2026-11-11T04:40:00.432433+08:00"
   }
 }
