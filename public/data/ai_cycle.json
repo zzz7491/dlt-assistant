@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-09T23:14:25.564641+00:00",
+  "updated_at": "2026-11-10T09:02:46.011784+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
@@ -368,7 +368,28 @@
     "raw_source_hash": "76facf019e4209ea5fb97fda2b990b6a1827913dc250940615f37402274169e5",
     "editorial_policy": "grounded-editorial-v1",
     "editorial_removed_clauses": 0,
-    "reviewed_at": "2026-11-09T15:01:23.154741+00:00"
+    "reviewed_at": "2026-11-09T15:01:23.154741+00:00",
+    "reflection": {
+      "version": "reflection-v1",
+      "generated_at": "2026-11-10T09:04:57.672474+00:00",
+      "model": "qwen3.6:35b-a3b",
+      "front_hits": 1,
+      "back_hits": 1,
+      "causes": [
+        {
+          "code": "near_miss",
+          "text": "邻号精度偏差：未命中的开奖号中有3个与推荐号只差一位，方向大体贴近但落点偏移。"
+        }
+      ],
+      "improvement": {
+        "text": "针对邻位落点偏移问题，下期推荐需收紧前区号码的区间跨度，使分布重心向开奖高频过渡带靠拢，并通过压缩相邻号码的间距梯度来修正落点发散倾向。",
+        "source_issue": "26128"
+      },
+      "verdict": {
+        "text": "本期推荐前区奇偶比为3:2，基本响应了均衡收敛要求；但中轴区域仅覆盖单号14，未实质扩大密度，导致分布重心仍偏两侧。对照实际开奖，邻位偏差依旧存在（如14对13、26对25），改进落实仅部分达标，结构修正未能有效阻断落点偏移趋势。",
+        "on_issue": "26125"
+      }
+    }
   },
   "statuses": {
     "review": "completed",
