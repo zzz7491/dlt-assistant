@@ -7590,11 +7590,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            4
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周三006": {
           "code": "周三006",
@@ -7608,11 +7611,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            5,
+            2
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": false
         }
       },
       "parlays": []
@@ -7674,11 +7680,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            4
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周三006": {
           "code": "周三006",
@@ -7692,11 +7701,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            5,
+            2
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周三001": {
           "code": "周三001",
@@ -7731,11 +7743,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            1
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周三003": {
           "code": "周三003",
@@ -7818,11 +7833,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            1
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周三003": {
           "code": "周三003",
@@ -7878,11 +7896,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            0,
+            4
+          ],
+          "spf_result": "0",
+          "rq_result": "0",
+          "spf_hit": false,
+          "rq_hit": true
         },
         "周三006": {
           "code": "周三006",
@@ -7896,11 +7917,14 @@
           "spf_label": "主胜",
           "rq_pick": "0",
           "rq_label": "让负",
-          "score": null,
-          "spf_result": null,
-          "rq_result": null,
-          "spf_hit": null,
-          "rq_hit": null
+          "score": [
+            5,
+            2
+          ],
+          "spf_result": "3",
+          "rq_result": "3",
+          "spf_hit": true,
+          "rq_hit": false
         },
         "周四001": {
           "code": "周四001",
@@ -8160,6 +8184,150 @@
           "spf_label": null,
           "rq_pick": "0",
           "rq_label": "让负",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五002": {
+          "code": "周五002",
+          "mid": "1348728",
+          "league": "欧国联",
+          "home": "摩尔多瓦",
+          "away": "哈萨克",
+          "kickoff": "2026-11-14T01:00:00+08:00",
+          "handicap": -1,
+          "spf_pick": "0",
+          "spf_label": "客胜",
+          "rq_pick": "0",
+          "rq_label": "让负",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五003": {
+          "code": "周五003",
+          "mid": "1348716",
+          "league": "欧国联",
+          "home": "保加利亚",
+          "away": "冰岛",
+          "kickoff": "2026-11-14T03:45:00+08:00",
+          "handicap": 1,
+          "spf_pick": "0",
+          "spf_label": "客胜",
+          "rq_pick": "3",
+          "rq_label": "让胜",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五004": {
+          "code": "周五004",
+          "mid": "1348800",
+          "league": "欧国联",
+          "home": "苏格兰",
+          "away": "北马其顿",
+          "kickoff": "2026-11-14T03:45:00+08:00",
+          "handicap": -2,
+          "spf_pick": "3",
+          "spf_label": "主胜",
+          "rq_pick": "0",
+          "rq_label": "让负",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五005": {
+          "code": "周五005",
+          "mid": "1348675",
+          "league": "欧国联",
+          "home": "塞尔维亚",
+          "away": "德国",
+          "kickoff": "2026-11-14T03:45:00+08:00",
+          "handicap": 2,
+          "spf_pick": "0",
+          "spf_label": "客胜",
+          "rq_pick": "3",
+          "rq_label": "让胜",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五006": {
+          "code": "周五006",
+          "mid": "1348717",
+          "league": "欧国联",
+          "home": "卢森堡",
+          "away": "爱沙尼亚",
+          "kickoff": "2026-11-14T03:45:00+08:00",
+          "handicap": -1,
+          "spf_pick": "3",
+          "spf_label": "主胜",
+          "rq_pick": "0",
+          "rq_label": "让负",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五007": {
+          "code": "周五007",
+          "mid": "1348729",
+          "league": "欧国联",
+          "home": "斯洛伐克",
+          "away": "法罗群岛",
+          "kickoff": "2026-11-14T03:45:00+08:00",
+          "handicap": -1,
+          "spf_pick": "3",
+          "spf_label": "主胜",
+          "rq_pick": "3",
+          "rq_label": "让胜",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五008": {
+          "code": "周五008",
+          "mid": "1348801",
+          "league": "欧国联",
+          "home": "斯洛文尼",
+          "away": "瑞士",
+          "kickoff": "2026-11-14T03:45:00+08:00",
+          "handicap": 1,
+          "spf_pick": "0",
+          "spf_label": "客胜",
+          "rq_pick": "3",
+          "rq_label": "让胜",
+          "score": null,
+          "spf_result": null,
+          "rq_result": null,
+          "spf_hit": null,
+          "rq_hit": null
+        },
+        "周五009": {
+          "code": "周五009",
+          "mid": "1348674",
+          "league": "欧国联",
+          "home": "荷兰",
+          "away": "希腊",
+          "kickoff": "2026-11-14T03:45:00+08:00",
+          "handicap": -1,
+          "spf_pick": "3",
+          "spf_label": "主胜",
+          "rq_pick": "3",
+          "rq_label": "让胜",
           "score": null,
           "spf_result": null,
           "rq_result": null,
