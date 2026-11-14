@@ -1,26 +1,29 @@
 [
   {
-    "date": "2026-11-11",
-    "target_issue": "26130",
+    "date": "2026-11-14",
+    "target_issue": "26131",
     "strategy": "A-均衡统计型",
     "idx": 0,
     "front": [
-      3,
-      5,
-      24,
-      26,
-      33
+      4,
+      7,
+      13,
+      22,
+      24
     ],
     "back": [
       1,
-      9
+      4
     ],
     "score": null,
-    "final_score": 40.76,
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 40.25,
     "final_breakdown": {
       "base": 64.0,
-      "history": 15.06,
-      "recent": 14.29,
+      "history": 14.66,
+      "recent": 11.43,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -31,73 +34,34 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 37
+      "effective_sample": 38
     },
-    "final_rank": 4,
-    "is_primary": false,
-    "reason": null,
-    "source": "reports/recommendations.json"
+    "final_rank": 4
   },
   {
-    "date": "2026-11-11",
-    "target_issue": "26130",
+    "date": "2026-11-14",
+    "target_issue": "26131",
     "strategy": "B-冷热组合型",
     "idx": 0,
     "front": [
       2,
       7,
-      11,
       24,
-      28
+      26,
+      35
     ],
     "back": [
-      1,
-      7
+      2,
+      4
     ],
     "score": null,
-    "final_score": 38.38,
-    "final_breakdown": {
-      "base": 60.0,
-      "history": 11.2,
-      "recent": 14.29,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 37
-    },
-    "final_rank": 5,
-    "is_primary": false,
     "reason": null,
-    "source": "reports/recommendations.json"
-  },
-  {
-    "date": "2026-11-11",
-    "target_issue": "26130",
-    "strategy": "C-AI智能型",
-    "idx": 0,
-    "front": [
-      3,
-      7,
-      14,
-      20,
-      26
-    ],
-    "back": [
-      5,
-      9
-    ],
-    "score": null,
-    "final_score": 40.81,
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 39.33,
     "final_breakdown": {
       "base": 60.0,
-      "history": 19.04,
+      "history": 11.66,
       "recent": 20.0,
       "structure": 50.0,
       "risk": 0.0,
@@ -109,16 +73,52 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 37
+      "effective_sample": 38
     },
-    "final_rank": 3,
-    "is_primary": false,
-    "reason": null,
-    "source": "reports/recommendations.json"
+    "final_rank": 5
   },
   {
-    "date": "2026-11-11",
-    "target_issue": "26130",
+    "date": "2026-11-14",
+    "target_issue": "26131",
+    "strategy": "C-AI智能型",
+    "idx": 0,
+    "front": [
+      3,
+      10,
+      14,
+      25,
+      30
+    ],
+    "back": [
+      7,
+      9
+    ],
+    "score": null,
+    "reason": null,
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 40.67,
+    "final_breakdown": {
+      "base": 60.0,
+      "history": 18.37,
+      "recent": 20.0,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.4,
+        "history": 0.2,
+        "recent": 0.15,
+        "structure": 0.2
+      },
+      "degraded": false,
+      "stage": "stable",
+      "effective_sample": 38
+    },
+    "final_rank": 3
+  },
+  {
+    "date": "2026-11-14",
+    "target_issue": "26131",
     "strategy": "D-综合评分型",
     "idx": 0,
     "front": [
@@ -126,18 +126,21 @@
       10,
       21,
       15,
-      1
+      19
     ],
     "back": [
       5,
-      2
+      11
     ],
-    "score": 41.58,
-    "final_score": 43.22,
+    "score": 41.37,
+    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
+    "is_primary": false,
+    "source": "reports/recommendations.json",
+    "final_score": 43.72,
     "final_breakdown": {
       "base": 68.0,
-      "history": 15.09,
-      "recent": 20.0,
+      "history": 15.44,
+      "recent": 22.86,
       "structure": 50.0,
       "risk": 0.0,
       "weights": {
@@ -148,30 +151,30 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 37
+      "effective_sample": 38
     },
-    "final_rank": 2,
-    "is_primary": false,
-    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
-    "source": "reports/recommendations.json"
+    "final_rank": 2
   },
   {
-    "date": "2026-11-11",
-    "target_issue": "26130",
+    "date": "2026-11-14",
+    "target_issue": "26131",
     "strategy": "F-综合AI型",
     "idx": 0,
     "front": [
-      3,
-      14,
-      20,
-      26,
-      33
+      4,
+      10,
+      15,
+      24,
+      30
     ],
     "back": [
-      5,
-      9
+      4,
+      7
     ],
     "score": null,
+    "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+    "is_primary": true,
+    "source": "reports/recommendations.json",
     "final_score": 44.0,
     "final_breakdown": {
       "base": 60.0,
@@ -187,22 +190,19 @@
       },
       "degraded": false,
       "stage": "stable",
-      "effective_sample": 37
+      "effective_sample": 38
     },
     "final_rank": 1,
-    "is_primary": true,
-    "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
     "explanation": {
       "explanation_version": "1.1",
       "strategy_type": "unknown",
       "strategy": "F-综合AI型",
-      "target_issue": "26130",
+      "target_issue": "26131",
       "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
       "factors": [],
       "generated_from": [],
       "reason_status": "unavailable",
       "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
-    },
-    "source": "reports/recommendations.json"
+    }
   }
 ]

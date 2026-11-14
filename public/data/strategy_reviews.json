@@ -19,15 +19,20 @@
     },
     {
       "strategy": "C-AI智能型",
-      "periods": 7,
-      "avg_hits": 0.86,
-      "avg_hits_sub": 0.43,
+      "periods": 8,
+      "avg_hits": 0.88,
+      "avg_hits_sub": 0.38,
       "dist": {
-        "1": 4,
+        "1": 5,
         "0": 2,
         "2": 1
       },
       "recent": [
+        {
+          "issue": "26130",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26129",
           "hits": 2.0,
@@ -68,15 +73,20 @@
     },
     {
       "strategy": "F-综合AI型",
-      "periods": 7,
-      "avg_hits": 0.86,
-      "avg_hits_sub": 0.57,
+      "periods": 8,
+      "avg_hits": 0.75,
+      "avg_hits_sub": 0.5,
       "dist": {
         "1": 4,
-        "0": 2,
+        "0": 3,
         "2": 1
       },
       "recent": [
+        {
+          "issue": "26130",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26129",
           "hits": 2.0,
@@ -117,15 +127,20 @@
     },
     {
       "strategy": "D-综合评分型",
-      "periods": 36,
-      "avg_hits": 0.67,
-      "avg_hits_sub": 0.39,
+      "periods": 37,
+      "avg_hits": 0.68,
+      "avg_hits_sub": 0.41,
       "dist": {
         "0": 15,
-        "1": 18,
+        "1": 19,
         "2": 3
       },
       "recent": [
+        {
+          "issue": "26130",
+          "hits": 1.0,
+          "hits_sub": 1.0
+        },
         {
           "issue": "26129",
           "hits": 1.0,
@@ -170,10 +185,69 @@
           "issue": "26121",
           "hits": 0.0,
           "hits_sub": 1.0
+        }
+      ],
+      "sample_warning": false
+    },
+    {
+      "strategy": "B-冷热组合型",
+      "periods": 38,
+      "avg_hits": 0.66,
+      "avg_hits_sub": 0.29,
+      "dist": {
+        "0": 20,
+        "1": 11,
+        "2": 7
+      },
+      "recent": [
+        {
+          "issue": "26130",
+          "hits": 2.0,
+          "hits_sub": 0.0
         },
         {
-          "issue": "26120",
+          "issue": "26129",
           "hits": 0.0,
+          "hits_sub": 1.0
+        },
+        {
+          "issue": "26128",
+          "hits": 2.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26127",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26126",
+          "hits": 1.0,
+          "hits_sub": 1.0
+        },
+        {
+          "issue": "26125",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26124",
+          "hits": 0.0,
+          "hits_sub": 1.0
+        },
+        {
+          "issue": "26123",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26122",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
+        {
+          "issue": "26121",
+          "hits": 2.0,
           "hits_sub": 0.0
         }
       ],
@@ -181,16 +255,21 @@
     },
     {
       "strategy": "A-均衡统计型",
-      "periods": 37,
-      "avg_hits": 0.65,
+      "periods": 38,
+      "avg_hits": 0.63,
       "avg_hits_sub": 0.32,
       "dist": {
-        "0": 17,
+        "0": 18,
         "1": 16,
         "2": 4
       },
       "recent": [
         {
+          "issue": "26130",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
+        {
           "issue": "26129",
           "hits": 0.0,
           "hits_sub": 1.0
@@ -233,75 +312,6 @@
         {
           "issue": "26121",
           "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26120",
-          "hits": 1.0,
-          "hits_sub": 0.0
-        }
-      ],
-      "sample_warning": false
-    },
-    {
-      "strategy": "B-冷热组合型",
-      "periods": 37,
-      "avg_hits": 0.62,
-      "avg_hits_sub": 0.3,
-      "dist": {
-        "0": 20,
-        "1": 11,
-        "2": 6
-      },
-      "recent": [
-        {
-          "issue": "26129",
-          "hits": 0.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26128",
-          "hits": 2.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26127",
-          "hits": 0.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26126",
-          "hits": 1.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26125",
-          "hits": 0.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26124",
-          "hits": 0.0,
-          "hits_sub": 1.0
-        },
-        {
-          "issue": "26123",
-          "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26122",
-          "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26121",
-          "hits": 2.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26120",
-          "hits": 2.0,
           "hits_sub": 0.0
         }
       ],
@@ -314,5 +324,5 @@
     "main_max": 5
   },
   "disclaimer": "命中统计仅为历史娱乐回顾；彩票开奖为独立随机事件，不代表任何预测依据。",
-  "updated_at": "2026-11-14 08:22:19"
+  "updated_at": "2026-11-14 15:00:29"
 }
