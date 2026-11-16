@@ -30,6 +30,63 @@ def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
 
 
+# --- P1 失败可观测化（2026-11-17 审计提案）-----------------------------------
+# 以前校验失败的逐次 reason 只 print 到 Actions 日志，状态文件只剩
+# invalid_response 一个词，根因不可回溯。现在每次失败把 reason 分类计数
+# 落盘 ai_cycle_diag.json，并写进 ai_cycle.json 的 diag 附属字段。
+_DIAG_EVENTS = []
+
+
+def _diag_category(reason):
+    r = str(reason or '')
+    if r.startswith('reflection_'):
+        r = r[len('reflection_'):]
+    if r.startswith('unverified_numeric'):
+        return 'unverified_numeric'
+    if r.startswith('unsupported_interpretation') or r == 'forbidden':
+        return 'forbidden'
+    if r in ('invalid text length', 'improvement_length', 'verdict_length'):
+        return 'length'
+    if r in ('unverified_promise', 'promise'):
+        return 'promise'
+    if r.startswith('http_'):
+        return 'http'
+    if r in ('timeout', 'connection_error', 'empty_content', 'not_configured',
+             'provider_unavailable', 'ai_base_not_allowlisted'):
+        return r
+    if 'json' in r or r == 'invalid_response':
+        return 'json_parse'
+    return 'schema'
+
+
+def note_diag(kind, section, reason):
+    """记录一次 AI 调用/校验失败（分类计数，供 run() 落盘）。"""
+    _DIAG_EVENTS.append({'at': now(), 'kind': kind, 'section': section,
+                         'category': _diag_category(reason),
+                         'reason': str(reason)[:90]})
+
+
+def _persist_diag(output):
+    """把本轮失败事件合并进 ai_cycle_diag.json，并回填 output['diag']。"""
+    diag = read('ai_cycle_diag.json', {'schema_version': 1, 'counts': {}, 'events': [], 'last_statuses': {}})
+    if not isinstance(diag.get('counts'), dict):
+        diag['counts'] = {}
+    if not isinstance(diag.get('events'), list):
+        diag['events'] = []
+    for event in _DIAG_EVENTS:
+        bucket = diag['counts'].setdefault(event['kind'], {})
+        bucket[event['category']] = bucket.get(event['category'], 0) + 1
+    diag['events'] = (diag['events'] + _DIAG_EVENTS)[-30:]
+    diag['last_statuses'] = dict(output.get('statuses') or {})
+    diag['updated_at'] = now()
+    last_failure = _DIAG_EVENTS[-1] if _DIAG_EVENTS else (diag['events'][-1] if diag['events'] else None)
+    diag['last_failure'] = last_failure
+    write('ai_cycle_diag.json', diag)
+    output['diag'] = {'counts': diag['counts'], 'last_failure': last_failure,
+                      'run_failures': list(_DIAG_EVENTS)}
+    return diag
+
+
 def now():
     return datetime.now(timezone.utc).isoformat()
 
@@ -393,9 +450,11 @@ def request_analysis(context):
                     if reason.startswith('unsupported_interpretation_'):
                         feedback+=' 具体需删去的表述：'+FORBIDDEN[int(reason.rsplit('_',1)[1])]+'。'
                     print('ai_cycle_validation',context['kind'],section,reason)
+                    note_diag(context['kind'],section,reason)
                 except requests.RequestException:last='connection_error'
                 if attempt<2:time.sleep(3)
             if not section_ok:
+                if last!='invalid_response':note_diag(context['kind'],section,last)
                 raise RuntimeError(last)
         # Stable canonical facts accompany each model paragraph. This also
         # supports period/identity claims when the model omits their citation.
@@ -421,6 +480,7 @@ def request_analysis(context):
                 round_feedback+=' 具体需删去的表述：'+FORBIDDEN[int(reason.rsplit('_',1)[1])]+'。'
             pending=[s for s in SECTIONS[context['kind']] if ('_'+s+'_') in ('_'+reason+'_') or reason.startswith(s+'_') or reason.endswith('_'+s)] or list(SECTIONS[context['kind']])
             print('ai_cycle_validation',context['kind'],'merged',reason)
+            note_diag(context['kind'],'merged',reason)
             continue
         return {'status':'completed','model':model_seen[:180], 'route':route,
                 'prompt_version':VERSION,'generated_at':now(), 'input_hash':digest(context),
@@ -583,10 +643,13 @@ def request_reflection(record, prior):
             reason = str(exc) if re.fullmatch(r'[a-z_0-9 .]{1,90}', str(exc)) else 'json_or_schema_error'
             feedback = reason + '；请只用证据中的数字或不写数字，删去任何承诺性表述。'
             print('ai_cycle_reflection_validation', reason)
+            note_diag('reflection', '-', reason)
         except requests.RequestException:
             last = 'connection_error'
         if attempt < 2:
             time.sleep(3)
+    if last != 'invalid_response':
+        note_diag('reflection', '-', last)
     raise RuntimeError(last)
 
 
@@ -653,6 +716,7 @@ def run(request_fn=request_analysis):
     notices=read('draw_details.json',{'issues':[]})['issues']
     archive=read('ai_cycle_archive.json',{'schema_version':1,'analyses':[],'reviews':[]})
     if archive.get('schema_version')!=1 or not isinstance(archive.get('analyses'),list) or not isinstance(archive.get('reviews'),list):raise ValueError('corrupt AI archive')
+    _DIAG_EVENTS.clear()
     output={'schema_version':1,'game_id':'dlt','updated_at':now(),'analysis':None,'review':None,'statuses':{}}
     # Review first so the next pre-draw analysis really receives the latest lesson.
     for kind in ['review','analysis']:
@@ -677,6 +741,7 @@ def run(request_fn=request_analysis):
             if not re.fullmatch(r'[a-z_0-9]+',code):code='invalid_context'
             output['statuses'][kind]=code
         print('ai_cycle',kind,output['statuses'][kind])
+    _persist_diag(output)
     write('ai_cycle.json',output)
     return output
 

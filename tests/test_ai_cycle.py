@@ -253,6 +253,50 @@ class AICycleTests(unittest.TestCase):
 if __name__=='__main__':unittest.main()
 
 
+class DiagTests(unittest.TestCase):
+    """P1（2026-11-17）：校验失败 reason 分类落盘，状态文件可回溯。"""
+
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory();self.root=Path(self.temp.name);fixture_root(self.root)
+        self.patch=patch.object(m,'ROOT',self.root);self.patch.start()
+        m._DIAG_EVENTS.clear()
+    def tearDown(self):self.patch.stop();self.temp.cleanup()
+
+    def test_category_mapping(self):
+        self.assertEqual(m._diag_category('unverified_numeric_overview_999'),'unverified_numeric')
+        self.assertEqual(m._diag_category('unsupported_interpretation_3'),'forbidden')
+        self.assertEqual(m._diag_category('invalid text length'),'length')
+        self.assertEqual(m._diag_category('unverified_promise'),'promise')
+        self.assertEqual(m._diag_category('http_503'),'http')
+        self.assertEqual(m._diag_category('reflection_unverified_numeric'),'unverified_numeric')
+        self.assertEqual(m._diag_category('json_or_schema_error'),'json_parse')
+
+    def test_real_request_failure_records_diag(self):
+        h=m.read('dlt_history.json')['issues'];recs=m.read('recommendations.json');c=m.read('compound_recommendation.json')
+        ctx=m.analysis_context(recs,h,c,None)
+        raw=fake_response(ctx)['sections']
+        for key in raw:raw[key]['text']='本期出现了999次异常结构，评审取舍需要复核验证，不能代表未来结果走向。'
+        env={'DLT_AI_API_KEY':'TEST','DLT_AI_BASE_URL':'https://openrouter.ai/api/v1','DLT_AI_MODEL':'openrouter/free'}
+        with patch.dict('os.environ',env),patch.object(m.requests,'post',side_effect=section_post(raw,'actual/free-model:free')),patch.object(m.time,'sleep'):
+            with self.assertRaisesRegex(RuntimeError,'invalid_response'):m.request_analysis(ctx)
+        cats={e['category'] for e in m._DIAG_EVENTS}
+        self.assertIn('unverified_numeric',cats)
+        self.assertTrue(all(e['kind']=='analysis' for e in m._DIAG_EVENTS))
+
+    def test_run_persists_diag_file_and_output_field(self):
+        def failing(ctx):
+            m.note_diag(ctx['kind'],'merged','unverified_numeric_overview_999')
+            raise RuntimeError('invalid_response')
+        out=m.run(failing)
+        self.assertEqual(out['statuses']['review'],'invalid_response')
+        self.assertEqual(out['diag']['last_failure']['category'],'unverified_numeric')
+        self.assertEqual(out['diag']['counts']['review']['unverified_numeric'],1)
+        diag=json.loads((self.root/'public/data/ai_cycle_diag.json').read_text())
+        self.assertEqual(diag['counts']['review']['unverified_numeric'],1)
+        self.assertEqual(diag['last_statuses']['review'],'invalid_response')
+        self.assertEqual(diag['events'][-1]['reason'],'unverified_numeric_overview_999')
+
+
 class ReflectionTests(unittest.TestCase):
     """反思型复盘：程序核算错因 + 改进/验收校验 + 时间戳归属（2026-10-22）。"""
 
