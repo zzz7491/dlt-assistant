@@ -721,11 +721,20 @@ def run(request_fn=request_analysis):
     # Review first so the next pre-draw analysis really receives the latest lesson.
     for kind in ['review','analysis']:
         try:
-            if kind=='analysis' and output['statuses'].get('review')!='completed' and not any(str(a['issue'])==str(next((p for p in recs if p.get('is_primary')),{}).get('target_issue')) for a in archive['analyses']):
-                if any(str(s.get('issue')) in {str(h['issue']) for h in history} and int(s['issue'])>=26014 for s in snapshots):
-                    raise RuntimeError('awaiting_review')
+            previous_review=output['review']
+            if kind=='analysis' and output['statuses'].get('review')!='completed':
+                # P2（2026-11-17 审计提案）：复盘失败不再硬挡下期分析（旧逻辑
+                # awaiting_review 单点阻塞，复盘一断整链停摆）。降级放行：
+                # 用归档中最近一条 completed 复盘作 previous_review 继续生成，
+                # 并显式标记 degraded=review_stale；归档也没有时以 None 继续
+                #（analysis_context 会如实标注无上期复盘，不编造）。
+                # 复盘本体仍会在后续轮次按原逻辑补试。
+                completed=[r for r in archive['reviews'] if r.get('status')=='completed']
+                previous_review=max(completed,key=lambda r:str(r['issue'])) if completed else None
+                output['degraded']={'analysis':'review_stale'}
+                print('ai_cycle analysis degraded: review_stale (previous_review=%s)'%(previous_review and previous_review.get('issue')))
             context=(review_context(history,snapshots,compounds,notices,archive['analyses']) if kind=='review' else
-                     analysis_context(recs,history,compound,output['review']))
+                     analysis_context(recs,history,compound,previous_review))
             record=get_record(context,archive,request_fn)
             record=audit_record(record,archive)
             if kind=='review' and 'reflection' not in record:

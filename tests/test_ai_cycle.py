@@ -124,9 +124,27 @@ class AICycleTests(unittest.TestCase):
 
     def test_failed_analysis_is_retried_not_frozen(self):
         def failed(ctx):raise RuntimeError('timeout')
-        a=m.run(failed);self.assertEqual(a['statuses']['analysis'],'awaiting_review')
+        a=m.run(failed)
+        # P2（2026-11-17）：复盘失败不再把分析硬挡为 awaiting_review；
+        # 分析照常尝试，状态如实记其自身失败原因，下轮重试。
+        self.assertEqual(a['statuses']['analysis'],'timeout')
         self.assertIsNone(a['analysis'])
         b=m.run(fake_response);self.assertEqual(b['statuses']['analysis'],'completed')
+
+    def test_review_failure_degrades_analysis_not_blocks(self):
+        # P2 验收回放：当期复盘失败时，分析用归档最近 completed 复盘降级生成。
+        latest=str(self.h[-1]['issue'])
+        stale={'status':'completed','issue':latest,
+               'sections':{'next_focus':{'text':'上期复盘关注点示例，仅作分析参考使用。','evidence_ids':['draw']}}}
+        m.write('ai_cycle_archive.json',{'schema_version':1,'analyses':[],'reviews':[stale]})
+        def fn(ctx):
+            if ctx['kind']=='review':raise RuntimeError('invalid_response')
+            return fake_response(ctx)
+        out=m.run(fn)
+        self.assertEqual(out['statuses']['review'],'invalid_response')
+        self.assertEqual(out['statuses']['analysis'],'completed')
+        self.assertEqual(out['degraded']['analysis'],'review_stale')
+        self.assertEqual(out['analysis']['previous_review']['issue'],latest)
 
     def test_chinese_quantities_and_unsupported_claims_rejected(self):
         ctx=self.context()
@@ -293,6 +311,8 @@ class DiagTests(unittest.TestCase):
         self.assertEqual(out['diag']['counts']['review']['unverified_numeric'],1)
         diag=json.loads((self.root/'public/data/ai_cycle_diag.json').read_text())
         self.assertEqual(diag['counts']['review']['unverified_numeric'],1)
+        # P2 后分析不再被守卫挡住，同样真实尝试并留下失败记录
+        self.assertEqual(diag['counts']['analysis']['unverified_numeric'],1)
         self.assertEqual(diag['last_statuses']['review'],'invalid_response')
         self.assertEqual(diag['events'][-1]['reason'],'unverified_numeric_overview_999')
 
