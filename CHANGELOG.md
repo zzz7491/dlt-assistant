@@ -1,3 +1,15 @@
+## 2026-11-17 — AI 链修复第一阶段：复盘闭环 P1–P5（审计提案 ai-selfimprove-audit-2026-11-17）
+
+- 背景：审计实锤——大乐透复盘闭环静默断裂（复盘失败→下期分析被 awaiting_review 硬挡→improvement 被 fail-open 丢弃且无告警）、四数字彩根本没有复盘闭环、E-走势AI 分段链任一段失败整策略跳过（生产样本仅 1 期）、失败 reason 只 print 到 Actions 日志不可回溯。mo 2026-11-17 批准按 P1–P11 顺序开修（先闭环、再走势输入、后度量），本阶段为 P1–P5。
+- P1 失败可观测化（55cf32e）：ai_cycle 校验/调用失败 reason 经 note_diag 分类（unverified_numeric/forbidden/length/promise/http/json_parse 等）计数落盘 public/data/ai_cycle_diag.json，并写入 ai_cycle.json 的 diag 字段（counts/last_failure/run_failures）。
+- P2 解 awaiting_review 阻塞（d9ac7b2）：复盘失败时分析降级使用归档最近 completed 复盘继续生成，ai_cycle.json 显式标记 degraded=review_stale；归档也没有时以「无上期复盘」如实生成，不编造。
+- P3 失败不清空产物（521337b）：失败轮次 ai_cycle.json 回填归档最新 completed 分析/复盘（statuses 仍如实记本轮失败码）；guidance 读取加 ai_cycle_archive 兜底，改进要求不再静默丢失。
+- P5 E 分段链降级续跑（0bad570）：走势分段单段失败先整段重试一次，仍失败则缺段标注降级出号；全段失败降级最近段原文直研判；失败/降级计数落盘 data/ai_pick_diag.json。
+- P4 四彩种复盘闭环（030fbd3）：新增 src/common/review_cycle.py——双色球/福彩3D/排列三/排列五与大乐透同口径：程序核算错因（不经模型、杜绝编造）+ 模型写一条 improvement 与对上期改进的 verdict（数字必须来自核算证据、禁承诺表述；失败 fail-open、只存错因下轮补试）；各彩种 generate_synth_ai 经 latest_improvement 喂回 guidance，合成 prompt 原文存证于 data/{game}_ai_reviews.json 的 synth_evidence；update_*_d1 在出号前补齐最近 3 期复盘并写 D1 {game}_reviews 表。
+- 验证：新增 tests/test_review_cycle.py、test_ai_pick_trend_degrade.py 等阶段测试全过；全量 462 项测试失败集合与基线 cbf2cd2 逐项相同（51 项均为既有环境性失败：本机缺 bs4、脚本写死 /opt/homebrew/bin/git 等），零新增回归。scratch 副本以生产数据实跑：ai_cycle 无 key 轮次呈现 degraded=review_stale + 回填复盘 26130/分析 26131 + diag 落盘；四彩种以真实历史跑通 fail-open 落盘、improvement/verdict 链、F 合成 prompt 存证；E 分段单段失败降级出号且 ai_pick_diag 计数 +1。
+- 待生产验收（不提前宣称通过）：P4 双色球闭环于 2026-11-17（周二）晚生产轮次首次真实运行（improvement 由生产模型生成）；大乐透 P1–P3/P5 于 2026-11-18（周三）轮次验收。
+- 回滚：revert 本阶段各提交即恢复（均为加法/降级逻辑，不改既有数据口径与模型绑定 qwen3.6:35b-a3b）。
+
 ## 2026-11-01 — 26125 主页 AI 分析失效治本（冻结优先 + 导出保展开 + 完整性标红）
 
 - 现象：主页 AI 综合分析「暂未更新」、本期唯一推荐被契约校验拦下、组合推荐未更新（用户截图实证）；复盘正常。
