@@ -26,21 +26,36 @@ STRATEGY_LABELS: dict[str, str] = {
 def _latest_review_improvement(target_issue: str | None, _path=None) -> str | None:
     """读取最新 AI 复盘立下的改进要求（反思型复盘闭环）。
 
-    数据来自 public/data/ai_cycle.json 的 review.reflection.improvement；
-    文件缺失/格式异常/复盘期号不早于目标期时返回 None（fail-open，
-    合成行为与无改进时完全一致）。"""
-    try:
-        import json as _json
-        from pathlib import Path as _Path
+    主数据源 public/data/ai_cycle.json 的 review.reflection.improvement；
+    P3（2026-11-17）起增加归档兜底：ai_cycle.json 的 review 缺失/未完成时，
+    改读同目录 ai_cycle_archive.json 中最新一条 completed 且带 improvement
+    的复盘——失败轮次不再静默丢掉改进要求。两处都无才返回 None
+    （fail-open，合成行为与无改进时完全一致）。"""
+    import json as _json
+    from pathlib import Path as _Path
 
-        path = _path or (_Path(__file__).resolve().parent.parent / "public" / "data" / "ai_cycle.json")
+    path = _path or (_Path(__file__).resolve().parent.parent / "public" / "data" / "ai_cycle.json")
+    try:
         data = _json.loads(path.read_text(encoding="utf-8"))
         review = data.get("review") or {}
-        if review.get("status") != "completed":
-            return None
-        improvement = ((review.get("reflection") or {}).get("improvement") or {}).get("text")
-        if improvement and str(review.get("issue", "")) < str(target_issue or ""):
-            return str(improvement)
+        if review.get("status") == "completed":
+            improvement = ((review.get("reflection") or {}).get("improvement") or {}).get("text")
+            if improvement and str(review.get("issue", "")) < str(target_issue or ""):
+                return str(improvement)
+    except Exception:
+        pass
+    try:
+        archive = _json.loads(path.with_name("ai_cycle_archive.json").read_text(encoding="utf-8"))
+        best = None
+        for record in archive.get("reviews") or []:
+            if record.get("status") != "completed":
+                continue
+            text = ((record.get("reflection") or {}).get("improvement") or {}).get("text")
+            if text and str(record.get("issue", "")) < str(target_issue or ""):
+                if best is None or str(record["issue"]) > str(best["issue"]):
+                    best = record
+        if best is not None:
+            return str(((best.get("reflection") or {}).get("improvement") or {})["text"])
     except Exception:
         return None
     return None

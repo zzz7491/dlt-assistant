@@ -750,6 +750,16 @@ def run(request_fn=request_analysis):
             if not re.fullmatch(r'[a-z_0-9]+',code):code='invalid_context'
             output['statuses'][kind]=code
         print('ai_cycle',kind,output['statuses'][kind])
+    # P3（2026-11-17 审计提案）：失败轮次不清空已完成产物。本轮某 kind 失败时
+    # ai_cycle.json 回填归档中最新 completed 记录（记录自带期号与生成时间，
+    # statuses 仍如实记本轮失败码），站点 AI 区继续展示上期复盘/分析，
+    # 下游 guidance 读取不中断。
+    for kind,pool in [('review',archive['reviews']),('analysis',archive['analyses'])]:
+        if output[kind] is None:
+            completed=[r for r in pool if r.get('status')=='completed']
+            if completed:
+                output[kind]=max(completed,key=lambda r:str(r['issue']))
+                print('ai_cycle',kind,'backfilled_from_archive',output[kind].get('issue'))
     _persist_diag(output)
     write('ai_cycle.json',output)
     return output

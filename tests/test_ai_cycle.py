@@ -131,6 +131,23 @@ class AICycleTests(unittest.TestCase):
         self.assertIsNone(a['analysis'])
         b=m.run(fake_response);self.assertEqual(b['statuses']['analysis'],'completed')
 
+    def test_failed_run_backfills_latest_completed_from_archive(self):
+        # P3 验收回放：整轮失败后 ai_cycle.json 仍带归档最新 completed 产物，
+        # statuses 如实记失败码（不冒充本轮成功）。
+        stale_review={'status':'completed','issue':str(self.h[-1]['issue']),
+                      'sections':{'next_focus':{'text':'上期复盘关注点示例，仅作分析参考使用。','evidence_ids':['draw']}}}
+        stale_analysis={'status':'completed','issue':'26001',
+                        'identity':{'target_issue':'26001','single':{'front':[1,2,3,4,5],'back':[1,2]},'compound':{'front':[1,2,3,4,5,6],'back':[1,2,3],'format':'6+3'}}}
+        m.write('ai_cycle_archive.json',{'schema_version':1,'analyses':[stale_analysis],'reviews':[stale_review]})
+        def failed(ctx):raise RuntimeError('timeout')
+        out=m.run(failed)
+        self.assertEqual(out['statuses']['review'],'timeout')
+        self.assertEqual(out['statuses']['analysis'],'timeout')
+        self.assertEqual(out['review']['issue'],str(self.h[-1]['issue']))
+        self.assertEqual(out['analysis']['issue'],'26001')
+        on_disk=m.read('ai_cycle.json')
+        self.assertIsNotNone(on_disk['review']);self.assertIsNotNone(on_disk['analysis'])
+
     def test_review_failure_degrades_analysis_not_blocks(self):
         # P2 验收回放：当期复盘失败时，分析用归档最近 completed 复盘降级生成。
         latest=str(self.h[-1]['issue'])

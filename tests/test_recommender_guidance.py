@@ -24,6 +24,27 @@ class GuidanceTests(unittest.TestCase):
         # 复盘期号不早于目标期 → 不注入
         self.assertIsNone(recommender._latest_review_improvement('26120', _path=path))
 
+    def test_loader_falls_back_to_archive_when_cycle_review_missing(self):
+        # P3（2026-11-17）：ai_cycle.json 失败轮次 review 为空时，
+        # guidance 改读归档最新 completed 复盘的 improvement，不再静默丢失。
+        import tempfile as _tf
+        with _tf.TemporaryDirectory() as td:
+            d = Path(td)
+            (d / 'ai_cycle.json').write_text(json.dumps({'review': None}), encoding='utf-8')
+            archive = {'reviews': [
+                {'status': 'completed', 'issue': '26119',
+                 'reflection': {'improvement': {'text': '较早一条改进，不应被选中。'}}},
+                {'status': 'completed', 'issue': '26120',
+                 'reflection': {'improvement': {'text': '和值向中部收敛，补足第三区覆盖。'}}},
+                {'status': 'invalid_response', 'issue': '26121',
+                 'reflection': {'improvement': {'text': '未完成的改进，不应被选中。'}}},
+            ]}
+            (d / 'ai_cycle_archive.json').write_text(json.dumps(archive, ensure_ascii=False), encoding='utf-8')
+            self.assertEqual(recommender._latest_review_improvement('26122', _path=d / 'ai_cycle.json'),
+                             '和值向中部收敛，补足第三区覆盖。')
+            # 目标期不晚于全部归档复盘 → 无可用改进
+            self.assertIsNone(recommender._latest_review_improvement('26119', _path=d / 'ai_cycle.json'))
+
     def test_loader_fail_open_on_garbage(self):
         path = self._write_cycle({'review': None})
         self.assertIsNone(recommender._latest_review_improvement('26121', _path=path))
