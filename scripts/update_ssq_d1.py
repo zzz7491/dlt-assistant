@@ -261,7 +261,20 @@ def append_ssq_updates(out_path: str) -> None:
                 "::warning title=ssq深度诊断::"
                 f"phaseA plans_statements={len(plan_lines)} plans_bytes={plan_bytes}"
             )
+            # P4（2026-11-17）：先补齐最近 3 期复盘闭环（程序核算错因 +
+            # improvement/verdict），归档落盘后再出号，保证本轮 F 合成
+            # 能吃到最新 guidance；复盘失败不阻断出号。
+            review_lines = []
+            try:
+                from src.common import review_cycle
+
+                review_lines = review_cycle.review_sql(
+                    "ssq", review_cycle.ensure_reviews("ssq", history))
+            except Exception as exc:
+                print(f"ssq review_cycle skipped: "
+                      f"{type(exc).__name__}: {str(exc)[:120]}")
             lines = list(SCHEMA)
+            lines.extend(review_lines)
             lines.extend(_recommendation_sql(history))
             lines.extend(plan_lines)
             _append_lines(out_path, "-- 双色球方案/分析（无网络依赖）", lines)

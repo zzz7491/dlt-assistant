@@ -203,6 +203,17 @@ def append_pl5_updates(out_path: str) -> None:
         lines.extend(_draw_sql(rows))
         lines.extend(_details_sql(_notices))
         if len(history) >= 100:
+            # P4（2026-11-17）：先补齐最近 3 期复盘闭环（程序核算错因 +
+            # improvement/verdict），归档落盘后再出号，保证本轮 F 合成
+            # 能吃到最新 guidance；复盘失败不阻断出号。
+            try:
+                from src.common import review_cycle
+
+                lines.extend(review_cycle.review_sql(
+                    "pl5", review_cycle.ensure_reviews("pl5", history)))
+            except Exception as exc:
+                print(f"pl5 review_cycle skipped: "
+                      f"{type(exc).__name__}: {str(exc)[:120]}")
             lines.extend(_recommendation_sql(history))
             lines.extend(_plans_analysis_sql(history))
         os.makedirs(os.path.dirname(out_path), exist_ok=True)

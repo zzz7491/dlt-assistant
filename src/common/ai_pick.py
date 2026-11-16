@@ -428,11 +428,14 @@ def _pick_text(pick: dict) -> str:
 
 
 def synthesize(game_id: str, target_issue: str, picks: list[dict],
-               guidance: str | None = None) -> dict | None:
+               guidance: str | None = None,
+               prompt_sink: list | None = None) -> dict | None:
     """把各策略本期号码喂给 AI，合成唯一一注。成功返回校验后的号码 dict。
 
     guidance 非空时（上期复盘立下的改进要求），追加进提示词要求合成落实，
-    实现「复盘 → 改进 → 下期推荐」闭环；为空时行为与旧版完全一致。"""
+    实现「复盘 → 改进 → 下期推荐」闭环；为空时行为与旧版完全一致。
+    prompt_sink 非空时（P4 存证）：把最终合成 prompt 原文 append 进去，
+    供调用方落盘核查 guidance 是否真进了 prompt。"""
     usable = [p for p in (picks or []) if isinstance(p, dict) and p.get("strategy")]
     if len(usable) < 2:
         print(f"[ai_pick] {game_id} target={target_issue} synth skipped: "
@@ -457,6 +460,8 @@ def synthesize(game_id: str, target_issue: str, picks: list[dict],
     if guidance:
         prompt += (f"\n\n另须落实上期复盘立下的改进要求：{guidance}"
                    "在不违反号码规则与结构均衡的前提下，合成时优先满足这条改进。")
+    if prompt_sink is not None:
+        prompt_sink.append(prompt)
     result = _call(game_id, target_issue, prompt, "综合AI型")
     if result is not None:
         result["strategy"] = "F-综合AI型"

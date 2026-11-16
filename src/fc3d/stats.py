@@ -146,11 +146,17 @@ def generate_synth_ai(target_issue: str, picks: list[dict]) -> dict | None:
     策略退居幕后，页面唯一推荐即此注。失败或可用策略不足 → None
     （调用方跳过，展示层回退既有兜底），绝不照抄任一路冒充综合。
     """
-    from src.common import ai_pick  # 延迟导入，避免循环依赖
+    from src.common import ai_pick, review_cycle  # 延迟导入，避免循环依赖
 
-    numbers = ai_pick.synthesize("fc3d", target_issue, picks)
+    # P4（2026-11-17）：喂回上期复盘 improvement，并存证合成 prompt。
+    guidance = review_cycle.latest_improvement("fc3d", target_issue)
+    sink: list = []
+    numbers = ai_pick.synthesize("fc3d", target_issue, picks,
+                                 guidance=guidance, prompt_sink=sink)
     if numbers is None:
         return None
+    if sink:
+        review_cycle.save_synth_evidence("fc3d", target_issue, sink[0], guidance)
     return {"strategy": "F-综合AI型", "digits": numbers["digits"]}
 
 def generate_picks(target_issue: str, rows: list[dict]) -> list[dict]:
