@@ -229,6 +229,41 @@ def _is_local_base(base: str) -> bool:
     return not base.startswith("https://openrouter.ai")
 
 
+# --- P5 失败计数（2026-11-17 审计提案）--------------------------------------
+# 走势分段链的失败/降级计数落盘 data/ai_pick_diag.json（随工作流提交回仓），
+# 每期 skip 原因可回溯，不再只有 Actions 日志里的 print。尽力而为：落盘
+# 失败静默，绝不影响出号主流程。测试可 monkeypatch _DIAG_PATH 改道。
+_DIAG_PATH = None
+
+
+def _note_diag(game_id: str, event: str, detail: str = "") -> None:
+    try:
+        import datetime as _dt
+        from pathlib import Path as _Path
+
+        path = _DIAG_PATH or (
+            _Path(__file__).resolve().parents[2] / "data" / "ai_pick_diag.json"
+        )
+        try:
+            diag = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            diag = {"schema_version": 1, "counts": {}, "events": []}
+        bucket = diag.setdefault("counts", {}).setdefault(game_id, {})
+        bucket[event] = bucket.get(event, 0) + 1
+        events = diag.setdefault("events", [])
+        events.append({
+            "at": _dt.datetime.now(_dt.timezone.utc).isoformat(),
+            "game": game_id, "event": event, "detail": str(detail)[:60],
+        })
+        diag["events"] = events[-30:]
+        diag["updated_at"] = _dt.datetime.now(_dt.timezone.utc).isoformat()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(diag, ensure_ascii=False, indent=1) + "\n",
+                        encoding="utf-8")
+    except Exception:
+        pass
+
+
 def _trend_segment(trend: dict, start: int, end: int) -> dict:
     """把走势 dict 切出 [start, end) 一段（逐期序列与每条出号条同步切）。"""
     seg = {"window": end - start}
@@ -298,16 +333,22 @@ def _segment_prompt(game_id: str, idx: int, total: int, seg: dict) -> str:
 def _pick_trend_segmented(game_id: str, target_issue: str, trend: dict) -> dict | None:
     """本地端点分段研判（2026-10-22 用户定）：300 期走势图整段直喂会超过
     本地网关单请求时限，故按 60 期一段逐段请 AI 研判要点，最后汇总各段
-    要点 + 最近一段原始走势出号。任一段失败 → 整策略跳过（不回退）。"""
+    要点 + 最近一段原始走势出号。
+
+    P5（2026-11-17 审计提案）：单段失败不再整策略跳过——该段先整段重试
+    一次，仍失败则降级（缺段标注后用已成功段摘要 + 最近段原文出号）；
+    全部段都失败时再降级为最近一段原文直研判；失败/降级计数入 diag。"""
     key, base, models = _env_chain()
     if not key:
         print("[ai_pick] 未配置密钥，跳过 走势AI型（不报错）")
+        _note_diag(game_id, "trend_skipped_no_key")
         return None
     n = int(trend.get("window") or len(trend.get("draws") or []))
     if n <= SEGMENT_SIZE:
         return _call(game_id, target_issue, _build_trend_prompt(game_id, target_issue, trend), "走势AI型")
     total = (n + SEGMENT_SIZE - 1) // SEGMENT_SIZE
     digests = []
+    missing = []
     # 分段要点走非推理模型直出文本：推理模型会把 token 预算烧在隐藏思考上、
     # 正文为空（2026-10-22 #177 实测全灭）。可用 DLT_AI_DIGEST_MODEL 覆盖。
     digest_models = models
@@ -317,12 +358,26 @@ def _pick_trend_segmented(game_id: str, target_issue: str, trend: dict) -> dict 
         seg = _trend_segment(trend, i * SEGMENT_SIZE, min(n, (i + 1) * SEGMENT_SIZE))
         text = _chat_text(key, base, digest_models, _segment_prompt(game_id, i, total, seg))
         if not text:
-            print(f"[ai_pick] {game_id} 走势分段 {i + 1}/{total} 失败，跳过 走势AI型")
-            return None
+            # 单段整段重试一次（_chat_text 内部已逐模型重试，这里再给整段一次机会）
+            text = _chat_text(key, base, digest_models, _segment_prompt(game_id, i, total, seg))
+        if not text:
+            missing.append(i + 1)
+            _note_diag(game_id, "trend_segment_failed", f"segment {i + 1}/{total}")
+            print(f"[ai_pick] {game_id} 走势分段 {i + 1}/{total} 失败，降级跳过该段（P5）")
+            continue
         digests.append(f"第{i + 1}段研判：{text}")
         print(f"[ai_pick] {game_id} 走势分段 {i + 1}/{total} ok")
-    rule = RULES[game_id]
     last_seg = _trend_segment(trend, n - SEGMENT_SIZE, n)
+    if not digests:
+        # 全部段研判失败：降级为最近一段（60 期）原文直研判，再失败才跳过。
+        _note_diag(game_id, "trend_degraded_last_segment_only")
+        print(f"[ai_pick] {game_id} 走势分段全部失败，降级最近段原文直研判（P5）")
+        result = _call(game_id, target_issue,
+                       _build_trend_prompt(game_id, target_issue, last_seg), "走势AI型")
+        if result is None:
+            _note_diag(game_id, "trend_skipped_all_segments_failed")
+        return result
+    rule = RULES[game_id]
     last_text = json.dumps(last_seg, ensure_ascii=False, separators=(",", ":"))
     prompt = (
         f"你是一位在彩票店看走势图的资深彩民，擅长看走势图研判号码。"
@@ -337,6 +392,11 @@ def _pick_trend_segmented(game_id: str, target_issue: str, trend: dict) -> dict 
         "1. 只输出严格 JSON，格式为 " + rule["schema"] + "，不要输出任何解释、前后缀或 markdown 代码块；\n"
         "2. JSON 中的数字必须全部符合上面的出号规则。\n"
     )
+    if missing:
+        _note_diag(game_id, "trend_degraded_missing_segments",
+                   "missing " + ",".join(str(x) for x in missing))
+        prompt += (f"\n注意：第{'、'.join(str(x) for x in missing)}段研判缺失，"
+                   "以上结论基于其余各段与最近一段原始走势，请降低对缺失段形态的假设。")
     return _call(game_id, target_issue, prompt, "走势AI型")
 
 
