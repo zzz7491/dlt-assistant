@@ -2,11 +2,15 @@
   "schema_version": 1,
   "counts": {
     "review": {
-      "unverified_numeric": 3
+      "unverified_numeric": 7
     },
     "reflection": {
       "empty_content": 2,
       "json_parse": 1
+    },
+    "analysis": {
+      "unverified_numeric": 3,
+      "forbidden": 1
     }
   },
   "events": [
@@ -51,18 +55,74 @@
       "section": "-",
       "category": "empty_content",
       "reason": "empty_content"
+    },
+    {
+      "at": "2026-11-18T15:26:53.041668+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_summary_0"
+    },
+    {
+      "at": "2026-11-18T15:27:12.690674+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_reason_check_6"
+    },
+    {
+      "at": "2026-11-18T15:27:32.879219+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_reason_check_0"
+    },
+    {
+      "at": "2026-11-18T15:27:49.959848+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_limitations_4"
+    },
+    {
+      "at": "2026-11-18T15:29:41.361272+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_overview_37"
+    },
+    {
+      "at": "2026-11-18T15:30:05.837839+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "forbidden",
+      "reason": "unsupported_interpretation_0"
+    },
+    {
+      "at": "2026-11-18T15:31:41.292616+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_overview_0"
+    },
+    {
+      "at": "2026-11-18T15:34:06.984995+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_overview_60.0"
     }
   ],
   "last_statuses": {
-    "review": "completed",
-    "analysis": "completed"
+    "review": "invalid_response",
+    "analysis": "invalid_response"
   },
-  "updated_at": "2026-11-18T09:40:10.206923+00:00",
+  "updated_at": "2026-11-18T15:34:06.985239+00:00",
   "last_failure": {
-    "at": "2026-11-18T09:40:10.199103+00:00",
-    "kind": "reflection",
-    "section": "-",
-    "category": "empty_content",
-    "reason": "empty_content"
+    "at": "2026-11-18T15:34:06.984995+00:00",
+    "kind": "analysis",
+    "section": "merged",
+    "category": "unverified_numeric",
+    "reason": "unverified_numeric_overview_60.0"
   }
 }

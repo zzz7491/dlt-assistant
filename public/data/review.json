@@ -1,22 +1,22 @@
 {
-  "updated_at": "2026-11-16 14:58:54",
+  "updated_at": "2026-11-18 15:25:10",
   "empty": false,
-  "issue": "26131",
+  "issue": "26132",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "4ec37634f3a71659e00c7d025a57b55f3c917d714c14eb1ec83faf17bb9788e4",
+  "snapshot_hash": "b43630daf30a16569339957a276fa5bef4fa7cfcc68bd199d263ff4653e5f97c",
   "recommendation": {
     "strategy": "F-综合AI型",
     "front": [
-      4,
-      10,
-      15,
-      24,
+      2,
+      5,
+      14,
+      20,
       30
     ],
     "back": [
-      4,
-      7
+      5,
+      9
     ],
     "score_total": 44.0,
     "model_version": null
@@ -26,7 +26,7 @@
     "explanation_version": "1.1",
     "strategy_type": "unknown",
     "strategy": "F-综合AI型",
-    "target_issue": "26131",
+    "target_issue": "26132",
     "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
     "factors": [],
     "generated_from": [],
@@ -36,36 +36,30 @@
   "actual_result": {
     "front": [
       2,
-      11,
-      18,
-      19,
-      29
+      9,
+      16,
+      26,
+      35
     ],
     "back": [
-      4,
-      7
+      6,
+      11
     ]
   },
   "hit_count": {
-    "front": 0,
-    "back": 2,
-    "total": 2,
+    "front": 1,
+    "back": 0,
+    "total": 1,
     "level": 1
   },
   "prize": {
-    "tier": "九等奖",
-    "amount": 5
+    "tier": null,
+    "amount": 0
   },
   "analysis": {
-    "sum_diff": 4,
+    "sum_diff": 17,
     "factor_review": {}
   },
-  "next_adjustment": [
-    {
-      "type": "keep",
-      "text": "维持和值区间",
-      "reason": "上期和值贴合历史高频区间"
-    }
-  ],
+  "next_adjustment": [],
   "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖"
 }
