@@ -1461,6 +1461,187 @@
       "editorial_policy": "grounded-editorial-v1",
       "editorial_removed_clauses": 0,
       "reviewed_at": "2026-11-14T15:05:24.748060+00:00"
+    },
+    {
+      "status": "completed",
+      "model": "qwen3.6:35b-a3b",
+      "route": "qwen3.6:35b-a3b",
+      "prompt_version": "dlt-ai-cycle-v6",
+      "generated_at": "2026-11-18T02:51:33.664064+00:00",
+      "input_hash": "6f347d4da68d9200ec6f8f36596a1b4ea2e79d60689c7806826a5890e2a44f55",
+      "sections": {
+        "overview": {
+          "text": "本方案基于算法构造的固定号码池进行评审，核心在于解析评分机制与结构特征背后的取舍逻辑。单注综合分44.0并列第一，其构成中策略基础60.0与历史表现50.0权重较高，而近期表现0.0表明该组合未依赖短期热度，这种低近期权重的设计旨在规避追热风险，但同时也意味着方案对即时市场情绪不敏感。候选对比显示，同分候选多集中于特定结构区间，说明高分段存在明显的同质化竞争，评审重点在于区分细微的结构差异而非分数高低。复式覆盖336注，通过扩展前区号码提升容错率，但这必然导致成本激增，需在覆盖率与预算间做出明确权衡。",
+          "evidence_ids": [
+            "single_selection",
+            "candidate_comparison",
+            "compound_budget",
+            "history_window",
+            "single_structure",
+            "compound_structure"
+          ]
+        },
+        "single_reason": {
+          "text": "本方案评审聚焦于结构离散度与极端形态的容忍度。前区跨度指标显示分布偏向中低位密集，需警惕实际开奖向两端发散的风险，这体现了对号码覆盖广度的取舍。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。综合分44.0虽排名靠前，但需结合候选对比审视其结构贴合度是否过度依赖历史表现评分，而忽视近期表现的零分状态，这种权重分配反映了算法对长期频率的偏好与短期波动性的权衡。",
+          "evidence_ids": [
+            "single_structure",
+            "single_back_5",
+            "single_selection",
+            "single_front_30",
+            "single_identity"
+          ]
+        },
+        "compound_reason": {
+          "text": "本方案采用8+4复式结构，核心取舍在于通过扩大前区覆盖范围以应对分布离散风险，同时控制后区变量。前区选取结合了高频活跃号与长遗漏号码，如引用指标显示部分号码近期出现频次较高，而另一些则处于较长遗漏状态，这种组合旨在平衡短期热度与长期均值回归的假设，但需明确历史频率不决定未来独立事件概率。后区配置包含零遗漏与高遗漏号码，意在捕捉不同周期的随机波动。该结构展开336注，成本显著高于单式，其价值在于提升命中任意组合的理论上限，而非保证特定结果。评审重点在于理解这种预算投入与覆盖广度之间的权衡，即以更高的资金成本换取对更多可能性的容纳，而非基于任何必然性趋势的判断。",
+          "evidence_ids": [
+            "compound_budget",
+            "compound_front_2",
+            "compound_front_30",
+            "compound_back_4",
+            "compound_identity",
+            "compound_structure"
+          ]
+        },
+        "risk": {
+          "text": "本方案的核心风险在于对极端遗漏号码的依赖与独立随机性之间的冲突。前区30号近50期仅出现3次且当前遗漏17期，后区05号近50期出现5次且当前遗漏高达36期，这两项指标在统计上属于极低频或长尾分布。引用single_front_30与single_back_5可知，方案将高遗漏值作为结构覆盖的一部分，但这并不意味着其具备回补的必然性。在每期开奖相互独立的机制下，长遗漏仅代表历史样本中的稀疏状态，而非概率倾斜。这种取舍导致单注命中高度依赖小概率事件的即时发生，一旦这些极端号码继续休眠，组合的整体有效性将大幅降低。同时，复式方案虽通过扩大前区范围至8个号码、后区4个号码来增加覆盖密度，但引用compound_budget可知其成本显著上升，这种以预算换取覆盖率的策略在随机样本中无法保证收益与投入的线性关系，需警惕因号码持续偏离高频区间而导致的整体落空。",
+          "evidence_ids": [
+            "single_front_30",
+            "single_back_5",
+            "compound_budget",
+            "uncertainty",
+            "history_window"
+          ]
+        },
+        "next_focus": {
+          "text": "结合上期对离散度的关注，本期需重点审视前区跨度与和值的实际落点。证据single_front_30显示号码30遗漏值较高，其是否回补将直接决定方案覆盖的尾部风险；同时evidence_single_structure中的奇偶比1:4构成显著结构倾斜，若开奖形态向均衡回归，该单注的结构贴合度将面临考验。取舍在于：是坚持当前算法对特定结构的偏好，还是接受因结构极端化带来的不确定性。需观察实际开奖是否延续这种非对称分布，以验证策略在独立随机事件中的适应性。",
+          "evidence_ids": [
+            "single_front_30",
+            "single_structure",
+            "previous_review",
+            "history_window",
+            "single_identity",
+            "compound_identity"
+          ]
+        }
+      },
+      "model_evidence_ids": {
+        "overview": [
+          "single_selection",
+          "candidate_comparison",
+          "compound_budget"
+        ],
+        "single_reason": [
+          "single_structure",
+          "single_back_5",
+          "single_selection",
+          "single_front_30"
+        ],
+        "compound_reason": [
+          "compound_budget",
+          "compound_front_2",
+          "compound_front_30",
+          "compound_back_4"
+        ],
+        "risk": [
+          "single_front_30",
+          "single_back_5",
+          "compound_budget",
+          "uncertainty"
+        ],
+        "next_focus": [
+          "single_front_30",
+          "single_structure"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "analysis",
+      "issue": "26132",
+      "identity": {
+        "target_issue": "26132",
+        "single": {
+          "front": [
+            2,
+            5,
+            14,
+            20,
+            30
+          ],
+          "back": [
+            5,
+            9
+          ]
+        },
+        "compound": {
+          "format": "8+4",
+          "front": [
+            2,
+            3,
+            5,
+            10,
+            11,
+            14,
+            20,
+            30
+          ],
+          "back": [
+            4,
+            5,
+            7,
+            9
+          ]
+        }
+      },
+      "history_cutoff": "26131",
+      "evidence": {
+        "history_window": "样本50期，截止26131期，目标26132期。",
+        "selection_role": "号码由现有算法构造并已冻结；本次AI负责综合分析、候选评审和解释，不重新选号，不把候选的随机构造冒称为AI选号。",
+        "uncertainty": "每期开奖相互独立；历史频率和评分不是中奖概率；不保证任何组合中奖。",
+        "single_identity": "已冻结正式单注：前区[2, 5, 14, 20, 30]，后区[5, 9]。",
+        "compound_identity": "已冻结复式：前区[2, 3, 5, 10, 11, 14, 20, 30]，后区[4, 5, 7, 9]。",
+        "single_front_2": "前区 02：近50期出现8次，当前遗漏0期。",
+        "single_front_5": "前区 05：近50期出现7次，当前遗漏4期。",
+        "single_front_14": "前区 14：近50期出现14次，当前遗漏2期。",
+        "single_front_20": "前区 20：近50期出现6次，当前遗漏3期。",
+        "single_front_30": "前区 30：近50期出现3次，当前遗漏17期。",
+        "single_back_5": "后区 05：近50期出现5次，当前遗漏36期。",
+        "single_back_9": "后区 09：近50期出现15次，当前遗漏3期。",
+        "single_structure": "前区奇数1个、偶数4个，和值71，跨度28。",
+        "compound_front_2": "前区 02：近50期出现8次，当前遗漏0期。",
+        "compound_front_3": "前区 03：近50期出现11次，当前遗漏3期。",
+        "compound_front_5": "前区 05：近50期出现7次，当前遗漏4期。",
+        "compound_front_10": "前区 10：近50期出现11次，当前遗漏11期。",
+        "compound_front_11": "前区 11：近50期出现10次，当前遗漏0期。",
+        "compound_front_14": "前区 14：近50期出现14次，当前遗漏2期。",
+        "compound_front_20": "前区 20：近50期出现6次，当前遗漏3期。",
+        "compound_front_30": "前区 30：近50期出现3次，当前遗漏17期。",
+        "compound_back_4": "后区 04：近50期出现12次，当前遗漏0期。",
+        "compound_back_5": "后区 05：近50期出现5次，当前遗漏36期。",
+        "compound_back_7": "后区 07：近50期出现12次，当前遗漏0期。",
+        "compound_back_9": "后区 09：近50期出现15次，当前遗漏3期。",
+        "compound_structure": "前区奇数3个、偶数5个，和值95，跨度28。",
+        "single_selection": "正式单注综合分44.0，候选排名1；策略基础60.0、历史表现50.0、近期表现0.0、结构贴合50.0。分数不是概率。",
+        "candidate_comparison": "候选1：前区[5, 14, 18, 20, 35]、后区[9, 12]，综合分40.25，排名5；候选2：前区[7, 11, 20, 24, 27]、后区[11, 12]，综合分39.42，排名6；候选3：前区[4, 16, 20, 25, 30]、后区[5, 9]，综合分42.14，排名4；候选4：前区[26, 10, 21, 35, 9]、后区[1, 5]，综合分43.28，排名3；候选5：前区[3, 14, 19, 26, 33]、后区[5, 8]，综合分44.0，排名1；候选6：前区[2, 5, 14, 20, 30]、后区[5, 9]，综合分44.0，排名1",
+        "compound_budget": "复式8+4，展开336注，基本投注672元，全部追加合计1008元。",
+        "previous_review": "上期AI复盘26131的关注点：基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。这只是分析参考，不是已实施的权重变更。"
+      },
+      "previous_review": {
+        "issue": "26131",
+        "record_hash": "e7dd81b9f5b9584499558d0dc2cd1247c2b6963bef43d8b13bfde137518dfd26",
+        "next_focus": {
+          "text": "基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+          "evidence_ids": [
+            "structure_comparison",
+            "single_frozen",
+            "draw"
+          ]
+        }
+      },
+      "created_before_draw": true,
+      "historical_data_hash": "720a1f4ac1bbd5551a36dc651df1406b8535ecbc9c6cf4d267a01647e8316ec8",
+      "raw_source_hash": "427cec16142cad40b0d17ff4e0157efa40d02c32cbead7be8a29e138b89a1e21",
+      "editorial_policy": "grounded-editorial-v1",
+      "editorial_removed_clauses": 0,
+      "reviewed_at": "2026-11-18T02:51:33.664752+00:00"
     }
   ],
   "reviews": [
@@ -2980,6 +3161,185 @@
           "on_issue": "26128"
         }
       }
+    },
+    {
+      "status": "completed",
+      "model": "qwen3.6:35b-a3b",
+      "route": "qwen3.6:35b-a3b",
+      "prompt_version": "dlt-ai-cycle-v6",
+      "generated_at": "2026-11-18T02:48:19.750548+00:00",
+      "input_hash": "d59a41d4370457973955167b05bb68a725ae9216a4afed6ec04fbccb0f2d8a28",
+      "sections": {
+        "summary": {
+          "text": "本期单注方案以极端的奇偶比结构为核心特征，依据single_structure指标，这种非均衡形态旨在捕捉离散分布，但牺牲了形态稳定性。后区选择基于single_back_7所反映的近期热度延续性，试图利用高频属性提升覆盖效率。然而，实际开奖结果证实了这种策略的局限性：单注仅命中后区号码，前区完全偏离，说明结构贴合度并不等同于号码命中概率。评审显示，过度依赖特定形态偏差会导致对实际随机波动的误判，评分优势未能转化为有效的前区覆盖。复式方案虽通过扩大样本量获得少量奖金，但其高成本与低回报的对比凸显了预算扩张策略在独立随机事件中的效率低下，核心取舍在于以高昂成本换取微弱的容错空间，而非提升预测准确性。",
+          "evidence_ids": [
+            "single_outcome",
+            "single_frozen",
+            "single_outcome",
+            "compound_outcome"
+          ]
+        },
+        "reason_check": {
+          "text": "事前理由强调前区奇偶比1:4的极端偏态旨在捕捉离散形态，依据single_structure指标，这种非均衡结构在历史样本中伴随较高的和值波动风险，但策略仍赋予其最高综合分，体现了对特定形态偏离的容忍。同时，后区07仅遗漏1期，依据single_back_7的高频属性判断为活跃区间，选择它而非更冷号码是基于近期热度的延续性。然而，实际开奖前区奇数3个与推荐1个严重失衡，且和值偏差显著，证明过度依赖特定形态会导致对实际分布的误判。评审需区分可观察的结构特征与未被证实的未来倾向，极端奇偶比牺牲了形态稳定性以换取覆盖，但未能转化为实际命中，证实了强行贴合预设结构的风险。",
+          "evidence_ids": [
+            "single_frozen",
+            "structure_comparison",
+            "prior_analysis"
+          ]
+        },
+        "limitations": {
+          "text": "本次评审的核心局限在于事前统计依据的缺失。证据original_statistical_basis明确指出推荐理由暂未生成，导致无法追溯单注选择的具体算法逻辑与权重分配。这种数据断层使得对single_structure中奇偶比1:4极端形态的取舍分析缺乏源头支撑，仅能基于结果进行逆向推测。同时，prior_analysis中关于候选池比较的描述虽存在，但因缺乏原始决策记录，难以验证其是否真正主导了最终号码的锁定。这限制了我们对策略有效性的客观评估，所有关于结构贴合度与历史频率权重的解释均属于事后重构，而非事前指令的执行结果。",
+          "evidence_ids": [
+            "original_statistical_basis",
+            "prior_analysis"
+          ]
+        },
+        "next_focus": {
+          "text": "基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+          "evidence_ids": [
+            "structure_comparison",
+            "single_frozen",
+            "draw"
+          ]
+        }
+      },
+      "model_evidence_ids": {
+        "summary": [
+          "single_outcome",
+          "single_frozen",
+          "single_outcome",
+          "compound_outcome"
+        ],
+        "reason_check": [
+          "single_frozen",
+          "structure_comparison",
+          "prior_analysis"
+        ],
+        "limitations": [
+          "original_statistical_basis",
+          "prior_analysis"
+        ],
+        "next_focus": [
+          "structure_comparison",
+          "single_frozen",
+          "draw"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "review",
+      "issue": "26131",
+      "identity": {
+        "issue": "26131",
+        "single": {
+          "front": [
+            4,
+            10,
+            15,
+            24,
+            30
+          ],
+          "back": [
+            4,
+            7
+          ]
+        },
+        "actual": {
+          "front": [
+            2,
+            11,
+            18,
+            19,
+            29
+          ],
+          "back": [
+            4,
+            7
+          ]
+        },
+        "snapshot_hash": "4ec37634f3a71659e00c7d025a57b55f3c917d714c14eb1ec83faf17bb9788e4",
+        "compound": {
+          "format": "8+4",
+          "front": [
+            3,
+            4,
+            10,
+            12,
+            14,
+            15,
+            24,
+            30
+          ],
+          "back": [
+            4,
+            7,
+            9,
+            12
+          ]
+        }
+      },
+      "evidence": {
+        "single_outcome": "展开1注，命中分布（前区+后区）：0+2命中1注；奖级：七等奖1注；基本成本2元，税前基本奖金5元。是假设投注结算，不是客户真实收益。",
+        "draw": "实际开奖前区[2, 11, 18, 19, 29]，后区[4, 7]；期号26131，日期2026-11-16。",
+        "single_frozen": "当期冻结单注前区[4, 10, 15, 24, 30]，后区[4, 7]；当时评分44.0；当期冻结记录完整性已校验。",
+        "uncertainty": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。",
+        "original_statistical_basis": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+        "structure_comparison": "推荐前区和值83、实际和值79，绝对偏差4；推荐前区奇数1个，实际前区奇数3个。结构贴合不等于号码命中。",
+        "compound_outcome": "展开336注，命中分布（前区+后区）：0+0命中56注、0+1命中224注、0+2命中56注；奖级：七等奖56注；基本成本672元，税前基本奖金280元。是假设投注结算，不是客户真实收益。",
+        "prior_analysis": "overview：本方案基于算法冻结的候选池进行评审，核心取舍在于结构贴合度与历史频率权重的平衡。正式单注前区奇偶比1:4呈现极端偏态，依据single_structure指标，这种非均衡结构在历史样本中往往伴随较高的和值波动风险，但当前策略仍赋予其最高综合分，体现了对特定形态偏离的容忍。候选比较显示，排名靠前的组合虽分数接近，但在前区跨度与后区遗漏分布上存在差异，如candidate_comparison所示，高分位候选更侧重近期表现的结构稳定性。复式方案通过扩大前区覆盖范围（compound_front_3至compound_front_30）来对冲单注的结构性风险，其预算成本显著增加，依据compound_budget，这种覆盖策略旨在提升容错率而非提高单注概率。整体来看，评审重点在于解释为何在历史表现评分较低的情况下（single_selection），算法仍选择该结构，这反映了对短期随机波动的捕捉而非长期均值回归的依赖。；single_reason：本方案评审聚焦于结构特征与历史表现的权衡。前区奇偶比1:4的极端分布（evidence_ids: [single_structure]）虽偏离常规均衡预期，但旨在捕捉离散形态，这种取舍牺牲了形态稳定性以换取对非对称分布的覆盖。同时，后区07仅遗漏1期（evidence_ids: [single_back_7]），其高频属性（近50期11次）表明该号码处于活跃区间，选择它而非更冷号码是基于近期热度的延续性判断。这种策略在结构贴合度上得分较高（evidence_ids: [single_selection]），但需警惕极端奇偶比在实际开奖中可能因随机波动而失效，导致评分优势无法转化为实际命中。；compound_reason：本方案采用8+4复式结构，核心取舍在于以预算扩张换取覆盖度。证据显示该组合展开336注，追加成本1008元（compound_budget），通过增加前区容错空间来对冲单注失效风险。前区奇偶比2:6（compound_structure）显著偏离常规均衡态，这种极端结构旨在捕捉离散分布，但需承担形态偏差带来的高不确定性。后区引入9和12（compound_back_9, compound_back_12），利用其近期高频特征（近50期分别出现16次和11次）增强稳定性，然而高频号码的持续热态可能面临回调压力。整体策略在成本与覆盖率之间进行权衡，牺牲了单注性价比以追求更广的样本捕捉能力。；risk：本期评审需直面单注与复式均未命中的事实，核心风险源于结构偏差过大。证据显示推荐前区和值96与实际75存在21点绝对偏差，且奇数比例（推荐2个对比实际5个）严重失衡。这证实了过度依赖特定和值区间或形态均衡会导致对实际开奖分布的误判。后续需关注实际开奖在极端形态下的离散程度，避免将历史统计均值作为刚性约束，应更重视当期号码的随机波动特征而非强行贴合预设结构。；next_focus：基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度26及和值83显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取04与07均为高频号，但遗漏值分别为4期和1期，这种冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+        "reason_audit": "必须对照上述真实事前AI理由逐项核验；区分可观察的结构是否满足和未被证实的未来倾向，不得用事后走势编新理由。"
+      },
+      "settlement": {
+        "single": {
+          "matches": {
+            "0+2": 1
+          },
+          "prizes": [
+            {
+              "tier": "七等奖",
+              "tickets": 1,
+              "per_ticket_yuan": 5
+            }
+          ],
+          "tickets": 1,
+          "basic_cost_yuan": 2,
+          "basic_payout_yuan": "5",
+          "all_additional_cost_yuan": 3,
+          "all_additional_payout_yuan": "5",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        },
+        "compound": {
+          "matches": {
+            "0+0": 56,
+            "0+1": 224,
+            "0+2": 56
+          },
+          "prizes": [
+            {
+              "tier": "七等奖",
+              "tickets": 56,
+              "per_ticket_yuan": 5
+            }
+          ],
+          "tickets": 336,
+          "basic_cost_yuan": 672,
+          "basic_payout_yuan": "280",
+          "all_additional_cost_yuan": 1008,
+          "all_additional_payout_yuan": "280",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        }
+      },
+      "has_pre_draw_ai": true,
+      "prior_analysis_hash": "e9c5bbf164c04f56cb0a70eaa69adc98e9cd1ad1da42c466de1a6c795c743aa0",
+      "raw_source_hash": "884f3b8fe37ab90f1469ba6fe0b6cf0caa7499099581d60d5ca173273688ce9f",
+      "editorial_policy": "grounded-editorial-v1",
+      "editorial_removed_clauses": 0,
+      "reviewed_at": "2026-11-18T02:48:19.751359+00:00"
     }
   ],
   "raw_model_records": {
@@ -6219,6 +6579,358 @@
       },
       "created_before_draw": true,
       "historical_data_hash": "0682f2383be8e7635e19a4051cfec45f17442b8c89aa490ff4cc497909cb9c8c"
+    },
+    "884f3b8fe37ab90f1469ba6fe0b6cf0caa7499099581d60d5ca173273688ce9f": {
+      "status": "completed",
+      "model": "qwen3.6:35b-a3b",
+      "route": "qwen3.6:35b-a3b",
+      "prompt_version": "dlt-ai-cycle-v6",
+      "generated_at": "2026-11-18T02:48:19.750548+00:00",
+      "input_hash": "d59a41d4370457973955167b05bb68a725ae9216a4afed6ec04fbccb0f2d8a28",
+      "sections": {
+        "summary": {
+          "text": "本期单注方案以极端的奇偶比结构为核心特征，依据single_structure指标，这种非均衡形态旨在捕捉离散分布，但牺牲了形态稳定性。后区选择基于single_back_7所反映的近期热度延续性，试图利用高频属性提升覆盖效率。然而，实际开奖结果证实了这种策略的局限性：单注仅命中后区号码，前区完全偏离，说明结构贴合度并不等同于号码命中概率。评审显示，过度依赖特定形态偏差会导致对实际随机波动的误判，评分优势未能转化为有效的前区覆盖。复式方案虽通过扩大样本量获得少量奖金，但其高成本与低回报的对比凸显了预算扩张策略在独立随机事件中的效率低下，核心取舍在于以高昂成本换取微弱的容错空间，而非提升预测准确性。",
+          "evidence_ids": [
+            "single_outcome",
+            "single_frozen",
+            "single_outcome",
+            "compound_outcome"
+          ]
+        },
+        "reason_check": {
+          "text": "事前理由强调前区奇偶比1:4的极端偏态旨在捕捉离散形态，依据single_structure指标，这种非均衡结构在历史样本中伴随较高的和值波动风险，但策略仍赋予其最高综合分，体现了对特定形态偏离的容忍。同时，后区07仅遗漏1期，依据single_back_7的高频属性判断为活跃区间，选择它而非更冷号码是基于近期热度的延续性。然而，实际开奖前区奇数3个与推荐1个严重失衡，且和值偏差显著，证明过度依赖特定形态会导致对实际分布的误判。评审需区分可观察的结构特征与未被证实的未来倾向，极端奇偶比牺牲了形态稳定性以换取覆盖，但未能转化为实际命中，证实了强行贴合预设结构的风险。",
+          "evidence_ids": [
+            "single_frozen",
+            "structure_comparison",
+            "prior_analysis"
+          ]
+        },
+        "limitations": {
+          "text": "本次评审的核心局限在于事前统计依据的缺失。证据original_statistical_basis明确指出推荐理由暂未生成，导致无法追溯单注选择的具体算法逻辑与权重分配。这种数据断层使得对single_structure中奇偶比1:4极端形态的取舍分析缺乏源头支撑，仅能基于结果进行逆向推测。同时，prior_analysis中关于候选池比较的描述虽存在，但因缺乏原始决策记录，难以验证其是否真正主导了最终号码的锁定。这限制了我们对策略有效性的客观评估，所有关于结构贴合度与历史频率权重的解释均属于事后重构，而非事前指令的执行结果。",
+          "evidence_ids": [
+            "original_statistical_basis",
+            "prior_analysis"
+          ]
+        },
+        "next_focus": {
+          "text": "基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+          "evidence_ids": [
+            "structure_comparison",
+            "single_frozen",
+            "draw"
+          ]
+        }
+      },
+      "model_evidence_ids": {
+        "summary": [
+          "single_outcome",
+          "single_frozen",
+          "single_outcome",
+          "compound_outcome"
+        ],
+        "reason_check": [
+          "single_frozen",
+          "structure_comparison",
+          "prior_analysis"
+        ],
+        "limitations": [
+          "original_statistical_basis",
+          "prior_analysis"
+        ],
+        "next_focus": [
+          "structure_comparison",
+          "single_frozen",
+          "draw"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "review",
+      "issue": "26131",
+      "identity": {
+        "issue": "26131",
+        "single": {
+          "front": [
+            4,
+            10,
+            15,
+            24,
+            30
+          ],
+          "back": [
+            4,
+            7
+          ]
+        },
+        "actual": {
+          "front": [
+            2,
+            11,
+            18,
+            19,
+            29
+          ],
+          "back": [
+            4,
+            7
+          ]
+        },
+        "snapshot_hash": "4ec37634f3a71659e00c7d025a57b55f3c917d714c14eb1ec83faf17bb9788e4",
+        "compound": {
+          "format": "8+4",
+          "front": [
+            3,
+            4,
+            10,
+            12,
+            14,
+            15,
+            24,
+            30
+          ],
+          "back": [
+            4,
+            7,
+            9,
+            12
+          ]
+        }
+      },
+      "evidence": {
+        "single_outcome": "展开1注，命中分布（前区+后区）：0+2命中1注；奖级：七等奖1注；基本成本2元，税前基本奖金5元。是假设投注结算，不是客户真实收益。",
+        "draw": "实际开奖前区[2, 11, 18, 19, 29]，后区[4, 7]；期号26131，日期2026-11-16。",
+        "single_frozen": "当期冻结单注前区[4, 10, 15, 24, 30]，后区[4, 7]；当时评分44.0；当期冻结记录完整性已校验。",
+        "uncertainty": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。",
+        "original_statistical_basis": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
+        "structure_comparison": "推荐前区和值83、实际和值79，绝对偏差4；推荐前区奇数1个，实际前区奇数3个。结构贴合不等于号码命中。",
+        "compound_outcome": "展开336注，命中分布（前区+后区）：0+0命中56注、0+1命中224注、0+2命中56注；奖级：七等奖56注；基本成本672元，税前基本奖金280元。是假设投注结算，不是客户真实收益。",
+        "prior_analysis": "overview：本方案基于算法冻结的候选池进行评审，核心取舍在于结构贴合度与历史频率权重的平衡。正式单注前区奇偶比1:4呈现极端偏态，依据single_structure指标，这种非均衡结构在历史样本中往往伴随较高的和值波动风险，但当前策略仍赋予其最高综合分，体现了对特定形态偏离的容忍。候选比较显示，排名靠前的组合虽分数接近，但在前区跨度与后区遗漏分布上存在差异，如candidate_comparison所示，高分位候选更侧重近期表现的结构稳定性。复式方案通过扩大前区覆盖范围（compound_front_3至compound_front_30）来对冲单注的结构性风险，其预算成本显著增加，依据compound_budget，这种覆盖策略旨在提升容错率而非提高单注概率。整体来看，评审重点在于解释为何在历史表现评分较低的情况下（single_selection），算法仍选择该结构，这反映了对短期随机波动的捕捉而非长期均值回归的依赖。；single_reason：本方案评审聚焦于结构特征与历史表现的权衡。前区奇偶比1:4的极端分布（evidence_ids: [single_structure]）虽偏离常规均衡预期，但旨在捕捉离散形态，这种取舍牺牲了形态稳定性以换取对非对称分布的覆盖。同时，后区07仅遗漏1期（evidence_ids: [single_back_7]），其高频属性（近50期11次）表明该号码处于活跃区间，选择它而非更冷号码是基于近期热度的延续性判断。这种策略在结构贴合度上得分较高（evidence_ids: [single_selection]），但需警惕极端奇偶比在实际开奖中可能因随机波动而失效，导致评分优势无法转化为实际命中。；compound_reason：本方案采用8+4复式结构，核心取舍在于以预算扩张换取覆盖度。证据显示该组合展开336注，追加成本1008元（compound_budget），通过增加前区容错空间来对冲单注失效风险。前区奇偶比2:6（compound_structure）显著偏离常规均衡态，这种极端结构旨在捕捉离散分布，但需承担形态偏差带来的高不确定性。后区引入9和12（compound_back_9, compound_back_12），利用其近期高频特征（近50期分别出现16次和11次）增强稳定性，然而高频号码的持续热态可能面临回调压力。整体策略在成本与覆盖率之间进行权衡，牺牲了单注性价比以追求更广的样本捕捉能力。；risk：本期评审需直面单注与复式均未命中的事实，核心风险源于结构偏差过大。证据显示推荐前区和值96与实际75存在21点绝对偏差，且奇数比例（推荐2个对比实际5个）严重失衡。这证实了过度依赖特定和值区间或形态均衡会导致对实际开奖分布的误判。后续需关注实际开奖在极端形态下的离散程度，避免将历史统计均值作为刚性约束，应更重视当期号码的随机波动特征而非强行贴合预设结构。；next_focus：基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度26及和值83显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取04与07均为高频号，但遗漏值分别为4期和1期，这种冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+        "reason_audit": "必须对照上述真实事前AI理由逐项核验；区分可观察的结构是否满足和未被证实的未来倾向，不得用事后走势编新理由。"
+      },
+      "settlement": {
+        "single": {
+          "matches": {
+            "0+2": 1
+          },
+          "prizes": [
+            {
+              "tier": "七等奖",
+              "tickets": 1,
+              "per_ticket_yuan": 5
+            }
+          ],
+          "tickets": 1,
+          "basic_cost_yuan": 2,
+          "basic_payout_yuan": "5",
+          "all_additional_cost_yuan": 3,
+          "all_additional_payout_yuan": "5",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        },
+        "compound": {
+          "matches": {
+            "0+0": 56,
+            "0+1": 224,
+            "0+2": 56
+          },
+          "prizes": [
+            {
+              "tier": "七等奖",
+              "tickets": 56,
+              "per_ticket_yuan": 5
+            }
+          ],
+          "tickets": 336,
+          "basic_cost_yuan": 672,
+          "basic_payout_yuan": "280",
+          "all_additional_cost_yuan": 1008,
+          "all_additional_payout_yuan": "280",
+          "payout_status": "verified",
+          "rule_version": "26014-seven-tiers",
+          "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
+          "simulation": true
+        }
+      },
+      "has_pre_draw_ai": true,
+      "prior_analysis_hash": "e9c5bbf164c04f56cb0a70eaa69adc98e9cd1ad1da42c466de1a6c795c743aa0"
+    },
+    "427cec16142cad40b0d17ff4e0157efa40d02c32cbead7be8a29e138b89a1e21": {
+      "status": "completed",
+      "model": "qwen3.6:35b-a3b",
+      "route": "qwen3.6:35b-a3b",
+      "prompt_version": "dlt-ai-cycle-v6",
+      "generated_at": "2026-11-18T02:51:33.664064+00:00",
+      "input_hash": "6f347d4da68d9200ec6f8f36596a1b4ea2e79d60689c7806826a5890e2a44f55",
+      "sections": {
+        "overview": {
+          "text": "本方案基于算法构造的固定号码池进行评审，核心在于解析评分机制与结构特征背后的取舍逻辑。单注综合分44.0并列第一，其构成中策略基础60.0与历史表现50.0权重较高，而近期表现0.0表明该组合未依赖短期热度，这种低近期权重的设计旨在规避追热风险，但同时也意味着方案对即时市场情绪不敏感。候选对比显示，同分候选多集中于特定结构区间，说明高分段存在明显的同质化竞争，评审重点在于区分细微的结构差异而非分数高低。复式覆盖336注，通过扩展前区号码提升容错率，但这必然导致成本激增，需在覆盖率与预算间做出明确权衡。",
+          "evidence_ids": [
+            "single_selection",
+            "candidate_comparison",
+            "compound_budget",
+            "history_window",
+            "single_structure",
+            "compound_structure"
+          ]
+        },
+        "single_reason": {
+          "text": "本方案评审聚焦于结构离散度与极端形态的容忍度。前区跨度指标显示分布偏向中低位密集，需警惕实际开奖向两端发散的风险，这体现了对号码覆盖广度的取舍。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。综合分44.0虽排名靠前，但需结合候选对比审视其结构贴合度是否过度依赖历史表现评分，而忽视近期表现的零分状态，这种权重分配反映了算法对长期频率的偏好与短期波动性的权衡。",
+          "evidence_ids": [
+            "single_structure",
+            "single_back_5",
+            "single_selection",
+            "single_front_30",
+            "single_identity"
+          ]
+        },
+        "compound_reason": {
+          "text": "本方案采用8+4复式结构，核心取舍在于通过扩大前区覆盖范围以应对分布离散风险，同时控制后区变量。前区选取结合了高频活跃号与长遗漏号码，如引用指标显示部分号码近期出现频次较高，而另一些则处于较长遗漏状态，这种组合旨在平衡短期热度与长期均值回归的假设，但需明确历史频率不决定未来独立事件概率。后区配置包含零遗漏与高遗漏号码，意在捕捉不同周期的随机波动。该结构展开336注，成本显著高于单式，其价值在于提升命中任意组合的理论上限，而非保证特定结果。评审重点在于理解这种预算投入与覆盖广度之间的权衡，即以更高的资金成本换取对更多可能性的容纳，而非基于任何必然性趋势的判断。",
+          "evidence_ids": [
+            "compound_budget",
+            "compound_front_2",
+            "compound_front_30",
+            "compound_back_4",
+            "compound_identity",
+            "compound_structure"
+          ]
+        },
+        "risk": {
+          "text": "本方案的核心风险在于对极端遗漏号码的依赖与独立随机性之间的冲突。前区30号近50期仅出现3次且当前遗漏17期，后区05号近50期出现5次且当前遗漏高达36期，这两项指标在统计上属于极低频或长尾分布。引用single_front_30与single_back_5可知，方案将高遗漏值作为结构覆盖的一部分，但这并不意味着其具备回补的必然性。在每期开奖相互独立的机制下，长遗漏仅代表历史样本中的稀疏状态，而非概率倾斜。这种取舍导致单注命中高度依赖小概率事件的即时发生，一旦这些极端号码继续休眠，组合的整体有效性将大幅降低。同时，复式方案虽通过扩大前区范围至8个号码、后区4个号码来增加覆盖密度，但引用compound_budget可知其成本显著上升，这种以预算换取覆盖率的策略在随机样本中无法保证收益与投入的线性关系，需警惕因号码持续偏离高频区间而导致的整体落空。",
+          "evidence_ids": [
+            "single_front_30",
+            "single_back_5",
+            "compound_budget",
+            "uncertainty",
+            "history_window"
+          ]
+        },
+        "next_focus": {
+          "text": "结合上期对离散度的关注，本期需重点审视前区跨度与和值的实际落点。证据single_front_30显示号码30遗漏值较高，其是否回补将直接决定方案覆盖的尾部风险；同时evidence_single_structure中的奇偶比1:4构成显著结构倾斜，若开奖形态向均衡回归，该单注的结构贴合度将面临考验。取舍在于：是坚持当前算法对特定结构的偏好，还是接受因结构极端化带来的不确定性。需观察实际开奖是否延续这种非对称分布，以验证策略在独立随机事件中的适应性。",
+          "evidence_ids": [
+            "single_front_30",
+            "single_structure",
+            "previous_review",
+            "history_window",
+            "single_identity",
+            "compound_identity"
+          ]
+        }
+      },
+      "model_evidence_ids": {
+        "overview": [
+          "single_selection",
+          "candidate_comparison",
+          "compound_budget"
+        ],
+        "single_reason": [
+          "single_structure",
+          "single_back_5",
+          "single_selection",
+          "single_front_30"
+        ],
+        "compound_reason": [
+          "compound_budget",
+          "compound_front_2",
+          "compound_front_30",
+          "compound_back_4"
+        ],
+        "risk": [
+          "single_front_30",
+          "single_back_5",
+          "compound_budget",
+          "uncertainty"
+        ],
+        "next_focus": [
+          "single_front_30",
+          "single_structure"
+        ]
+      },
+      "evidence_policy": "model-plus-canonical-v1",
+      "kind": "analysis",
+      "issue": "26132",
+      "identity": {
+        "target_issue": "26132",
+        "single": {
+          "front": [
+            2,
+            5,
+            14,
+            20,
+            30
+          ],
+          "back": [
+            5,
+            9
+          ]
+        },
+        "compound": {
+          "format": "8+4",
+          "front": [
+            2,
+            3,
+            5,
+            10,
+            11,
+            14,
+            20,
+            30
+          ],
+          "back": [
+            4,
+            5,
+            7,
+            9
+          ]
+        }
+      },
+      "history_cutoff": "26131",
+      "evidence": {
+        "history_window": "样本50期，截止26131期，目标26132期。",
+        "selection_role": "号码由现有算法构造并已冻结；本次AI负责综合分析、候选评审和解释，不重新选号，不把候选的随机构造冒称为AI选号。",
+        "uncertainty": "每期开奖相互独立；历史频率和评分不是中奖概率；不保证任何组合中奖。",
+        "single_identity": "已冻结正式单注：前区[2, 5, 14, 20, 30]，后区[5, 9]。",
+        "compound_identity": "已冻结复式：前区[2, 3, 5, 10, 11, 14, 20, 30]，后区[4, 5, 7, 9]。",
+        "single_front_2": "前区 02：近50期出现8次，当前遗漏0期。",
+        "single_front_5": "前区 05：近50期出现7次，当前遗漏4期。",
+        "single_front_14": "前区 14：近50期出现14次，当前遗漏2期。",
+        "single_front_20": "前区 20：近50期出现6次，当前遗漏3期。",
+        "single_front_30": "前区 30：近50期出现3次，当前遗漏17期。",
+        "single_back_5": "后区 05：近50期出现5次，当前遗漏36期。",
+        "single_back_9": "后区 09：近50期出现15次，当前遗漏3期。",
+        "single_structure": "前区奇数1个、偶数4个，和值71，跨度28。",
+        "compound_front_2": "前区 02：近50期出现8次，当前遗漏0期。",
+        "compound_front_3": "前区 03：近50期出现11次，当前遗漏3期。",
+        "compound_front_5": "前区 05：近50期出现7次，当前遗漏4期。",
+        "compound_front_10": "前区 10：近50期出现11次，当前遗漏11期。",
+        "compound_front_11": "前区 11：近50期出现10次，当前遗漏0期。",
+        "compound_front_14": "前区 14：近50期出现14次，当前遗漏2期。",
+        "compound_front_20": "前区 20：近50期出现6次，当前遗漏3期。",
+        "compound_front_30": "前区 30：近50期出现3次，当前遗漏17期。",
+        "compound_back_4": "后区 04：近50期出现12次，当前遗漏0期。",
+        "compound_back_5": "后区 05：近50期出现5次，当前遗漏36期。",
+        "compound_back_7": "后区 07：近50期出现12次，当前遗漏0期。",
+        "compound_back_9": "后区 09：近50期出现15次，当前遗漏3期。",
+        "compound_structure": "前区奇数3个、偶数5个，和值95，跨度28。",
+        "single_selection": "正式单注综合分44.0，候选排名1；策略基础60.0、历史表现50.0、近期表现0.0、结构贴合50.0。分数不是概率。",
+        "candidate_comparison": "候选1：前区[5, 14, 18, 20, 35]、后区[9, 12]，综合分40.25，排名5；候选2：前区[7, 11, 20, 24, 27]、后区[11, 12]，综合分39.42，排名6；候选3：前区[4, 16, 20, 25, 30]、后区[5, 9]，综合分42.14，排名4；候选4：前区[26, 10, 21, 35, 9]、后区[1, 5]，综合分43.28，排名3；候选5：前区[3, 14, 19, 26, 33]、后区[5, 8]，综合分44.0，排名1；候选6：前区[2, 5, 14, 20, 30]、后区[5, 9]，综合分44.0，排名1",
+        "compound_budget": "复式8+4，展开336注，基本投注672元，全部追加合计1008元。",
+        "previous_review": "上期AI复盘26131的关注点：基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。。这只是分析参考，不是已实施的权重变更。"
+      },
+      "previous_review": {
+        "issue": "26131",
+        "record_hash": "e7dd81b9f5b9584499558d0dc2cd1247c2b6963bef43d8b13bfde137518dfd26",
+        "next_focus": {
+          "text": "基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+          "evidence_ids": [
+            "structure_comparison",
+            "single_frozen",
+            "draw"
+          ]
+        }
+      },
+      "created_before_draw": true,
+      "historical_data_hash": "720a1f4ac1bbd5551a36dc651df1406b8535ecbc9c6cf4d267a01647e8316ec8"
     }
   }
 }
