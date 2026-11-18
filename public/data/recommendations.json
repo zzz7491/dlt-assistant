@@ -16,9 +16,6 @@
       11
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 40.24,
     "final_breakdown": {
       "base": 64.0,
@@ -36,7 +33,10 @@
       "stage": "stable",
       "effective_sample": 40
     },
-    "final_rank": 5
+    "final_rank": 5,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-11-18",
@@ -55,9 +55,6 @@
       6
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 39.86,
     "final_breakdown": {
       "base": 60.0,
@@ -75,7 +72,10 @@
       "stage": "stable",
       "effective_sample": 40
     },
-    "final_rank": 6
+    "final_rank": 6,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-11-18",
@@ -94,9 +94,6 @@
       9
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 42.41,
     "final_breakdown": {
       "base": 60.0,
@@ -114,7 +111,10 @@
       "stage": "stable",
       "effective_sample": 40
     },
-    "final_rank": 4
+    "final_rank": 4,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-11-18",
@@ -133,9 +133,6 @@
       5
     ],
     "score": 41.19,
-    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 44.71,
     "final_breakdown": {
       "base": 68.0,
@@ -153,7 +150,10 @@
       "stage": "stable",
       "effective_sample": 40
     },
-    "final_rank": 3
+    "final_rank": 3,
+    "is_primary": false,
+    "reason": "含超平均遗漏回补信号；和值/跨度贴合历史高频区间",
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-11-18",
@@ -172,48 +172,6 @@
       8
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
-    "final_score": 45.07,
-    "final_breakdown": {
-      "base": 60.0,
-      "history": 50.0,
-      "recent": 7.14,
-      "structure": 50.0,
-      "risk": 0.0,
-      "weights": {
-        "base": 0.4,
-        "history": 0.2,
-        "recent": 0.15,
-        "structure": 0.2
-      },
-      "degraded": false,
-      "stage": "stable",
-      "effective_sample": 40
-    },
-    "final_rank": 1
-  },
-  {
-    "date": "2026-11-18",
-    "target_issue": "26133",
-    "strategy": "F-综合AI型",
-    "idx": 0,
-    "front": [
-      2,
-      5,
-      14,
-      24,
-      30
-    ],
-    "back": [
-      5,
-      6
-    ],
-    "score": null,
-    "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
-    "is_primary": true,
-    "source": "reports/recommendations.json",
     "final_score": 45.07,
     "final_breakdown": {
       "base": 60.0,
@@ -232,6 +190,47 @@
       "effective_sample": 40
     },
     "final_rank": 1,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
+  },
+  {
+    "date": "2026-11-18",
+    "target_issue": "26133",
+    "strategy": "F-综合AI型",
+    "idx": 0,
+    "front": [
+      2,
+      5,
+      14,
+      24,
+      30
+    ],
+    "back": [
+      5,
+      6
+    ],
+    "score": null,
+    "final_score": 45.07,
+    "final_breakdown": {
+      "base": 60.0,
+      "history": 50.0,
+      "recent": 7.14,
+      "structure": 50.0,
+      "risk": 0.0,
+      "weights": {
+        "base": 0.4,
+        "history": 0.2,
+        "recent": 0.15,
+        "structure": 0.2
+      },
+      "degraded": false,
+      "stage": "stable",
+      "effective_sample": 40
+    },
+    "final_rank": 1,
+    "is_primary": true,
+    "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
     "explanation": {
       "explanation_version": "1.1",
       "strategy_type": "unknown",
@@ -242,6 +241,7 @@
       "generated_from": [],
       "reason_status": "unavailable",
       "disclaimer": "本解释仅描述内部算法如何构造候选组合，不代表任何号码会中奖，亦不构成预测。"
-    }
+    },
+    "source": "reports/recommendations.json"
   }
 ]

@@ -2,14 +2,14 @@
   "schema_version": 1,
   "counts": {
     "review": {
-      "unverified_numeric": 7
+      "unverified_numeric": 11
     },
     "reflection": {
       "empty_content": 2,
       "json_parse": 1
     },
     "analysis": {
-      "unverified_numeric": 3,
+      "unverified_numeric": 4,
       "forbidden": 1
     }
   },
@@ -111,18 +111,53 @@
       "section": "merged",
       "category": "unverified_numeric",
       "reason": "unverified_numeric_overview_60.0"
+    },
+    {
+      "at": "2026-11-18T21:44:49.964061+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_summary_0"
+    },
+    {
+      "at": "2026-11-18T21:44:58.762675+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_reason_check_6"
+    },
+    {
+      "at": "2026-11-18T21:45:07.229355+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_limitations_4"
+    },
+    {
+      "at": "2026-11-18T21:45:16.558715+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_limitations_4"
+    },
+    {
+      "at": "2026-11-18T21:46:04.209788+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_overview_37"
     }
   ],
   "last_statuses": {
     "review": "invalid_response",
-    "analysis": "invalid_response"
+    "analysis": "completed"
   },
-  "updated_at": "2026-11-18T15:34:06.985239+00:00",
+  "updated_at": "2026-11-18T21:46:13.428511+00:00",
   "last_failure": {
-    "at": "2026-11-18T15:34:06.984995+00:00",
+    "at": "2026-11-18T21:46:04.209788+00:00",
     "kind": "analysis",
     "section": "merged",
     "category": "unverified_numeric",
-    "reason": "unverified_numeric_overview_60.0"
+    "reason": "unverified_numeric_overview_37"
   }
 }
