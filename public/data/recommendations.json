@@ -172,9 +172,6 @@
       8
     ],
     "score": null,
-    "reason": null,
-    "is_primary": false,
-    "source": "reports/recommendations.json",
     "final_score": 44.0,
     "final_breakdown": {
       "base": 60.0,
@@ -192,7 +189,10 @@
       "stage": "stable",
       "effective_sample": 39
     },
-    "final_rank": 1
+    "final_rank": 1,
+    "is_primary": false,
+    "reason": null,
+    "source": "reports/recommendations.json"
   },
   {
     "date": "2026-11-16",
