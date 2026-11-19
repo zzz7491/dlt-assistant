@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-18T21:44:10.690616+00:00",
+  "updated_at": "2026-11-19T09:50:03.143479+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
@@ -373,7 +373,7 @@
   "diag": {
     "counts": {
       "review": {
-        "unverified_numeric": 11
+        "unverified_numeric": 15
       },
       "reflection": {
         "empty_content": 2,
@@ -385,47 +385,40 @@
       }
     },
     "last_failure": {
-      "at": "2026-11-18T21:46:04.209788+00:00",
-      "kind": "analysis",
+      "at": "2026-11-19T09:52:31.974360+00:00",
+      "kind": "review",
       "section": "merged",
       "category": "unverified_numeric",
-      "reason": "unverified_numeric_overview_37"
+      "reason": "unverified_numeric_limitations_4"
     },
     "run_failures": [
       {
-        "at": "2026-11-18T21:44:49.964061+00:00",
+        "at": "2026-11-19T09:50:48.685130+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_summary_0"
       },
       {
-        "at": "2026-11-18T21:44:58.762675+00:00",
+        "at": "2026-11-19T09:50:58.972647+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_reason_check_6"
       },
       {
-        "at": "2026-11-18T21:45:07.229355+00:00",
+        "at": "2026-11-19T09:51:17.736110+00:00",
+        "kind": "review",
+        "section": "merged",
+        "category": "unverified_numeric",
+        "reason": "unverified_numeric_reason_check_6"
+      },
+      {
+        "at": "2026-11-19T09:52:31.974360+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_limitations_4"
-      },
-      {
-        "at": "2026-11-18T21:45:16.558715+00:00",
-        "kind": "review",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_limitations_4"
-      },
-      {
-        "at": "2026-11-18T21:46:04.209788+00:00",
-        "kind": "analysis",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_overview_37"
       }
     ]
   }
