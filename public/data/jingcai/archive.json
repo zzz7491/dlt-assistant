@@ -1,32 +1,5 @@
 {
   "days": {
-    "2026-11-05": {
-      "sale_date": "2026-11-05",
-      "matches": {
-        "周四013": {
-          "code": "周四013",
-          "mid": "1317032",
-          "league": "巴西甲",
-          "home": "帕梅拉斯",
-          "away": "里莫",
-          "kickoff": "2026-11-06T06:30:00+08:00",
-          "handicap": -2,
-          "spf_pick": "3",
-          "spf_label": "主胜",
-          "rq_pick": "0",
-          "rq_label": "让负",
-          "score": [
-            6,
-            1
-          ],
-          "spf_result": "3",
-          "rq_result": "3",
-          "spf_hit": true,
-          "rq_hit": false
-        }
-      },
-      "parlays": []
-    },
     "2026-11-06": {
       "sale_date": "2026-11-06",
       "matches": {
@@ -5788,8 +5761,8 @@
           "handicap": 1,
           "spf_pick": "0",
           "spf_label": "客胜",
-          "rq_pick": "0",
-          "rq_label": "让负",
+          "rq_pick": "3",
+          "rq_label": "让胜",
           "score": null,
           "spf_result": null,
           "rq_result": null,
