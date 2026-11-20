@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-20T09:33:06.354490+00:00",
+  "updated_at": "2026-11-20T15:07:16.119820+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
@@ -373,7 +373,7 @@
   "diag": {
     "counts": {
       "review": {
-        "unverified_numeric": 19
+        "unverified_numeric": 23
       },
       "reflection": {
         "empty_content": 2,
@@ -385,7 +385,7 @@
       }
     },
     "last_failure": {
-      "at": "2026-11-20T09:36:42.595414+00:00",
+      "at": "2026-11-20T15:08:32.218064+00:00",
       "kind": "review",
       "section": "merged",
       "category": "unverified_numeric",
@@ -393,28 +393,28 @@
     },
     "run_failures": [
       {
-        "at": "2026-11-20T09:36:13.677642+00:00",
+        "at": "2026-11-20T15:07:53.730317+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_summary_0"
       },
       {
-        "at": "2026-11-20T09:36:23.777147+00:00",
-        "kind": "review",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_summary_0"
-      },
-      {
-        "at": "2026-11-20T09:36:31.932209+00:00",
+        "at": "2026-11-20T15:08:03.541430+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_reason_check_6"
       },
       {
-        "at": "2026-11-20T09:36:42.595414+00:00",
+        "at": "2026-11-20T15:08:23.919218+00:00",
+        "kind": "review",
+        "section": "merged",
+        "category": "unverified_numeric",
+        "reason": "unverified_numeric_reason_check_0"
+      },
+      {
+        "at": "2026-11-20T15:08:32.218064+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",

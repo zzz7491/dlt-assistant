@@ -2,207 +2,207 @@
  "schema_version": 1,
  "counts": {
   "ssq": {
-   "trend_segment_failed": 140,
-   "trend_degraded_last_segment_only": 28
+   "trend_segment_failed": 150,
+   "trend_degraded_last_segment_only": 30
   },
   "fc3d": {
-   "trend_segment_failed": 140,
-   "trend_degraded_last_segment_only": 28
+   "trend_segment_failed": 150,
+   "trend_degraded_last_segment_only": 30
   },
   "pl3": {
-   "trend_segment_failed": 140,
-   "trend_degraded_last_segment_only": 28
+   "trend_segment_failed": 150,
+   "trend_degraded_last_segment_only": 30
   },
   "pl5": {
-   "trend_segment_failed": 140,
-   "trend_degraded_last_segment_only": 28
+   "trend_segment_failed": 150,
+   "trend_degraded_last_segment_only": 30
   },
   "dlt": {
-   "trend_segment_failed": 30,
-   "trend_degraded_last_segment_only": 6
+   "trend_segment_failed": 35,
+   "trend_degraded_last_segment_only": 7
   }
  },
  "events": [
   {
-   "at": "2026-11-20T09:29:50.680134+00:00",
+   "at": "2026-11-20T15:03:03.099961+00:00",
    "game": "fc3d",
    "event": "trend_segment_failed",
    "detail": "segment 1/5"
   },
   {
-   "at": "2026-11-20T09:29:53.479385+00:00",
+   "at": "2026-11-20T15:03:12.322538+00:00",
    "game": "fc3d",
    "event": "trend_segment_failed",
    "detail": "segment 2/5"
   },
   {
-   "at": "2026-11-20T09:29:56.298297+00:00",
+   "at": "2026-11-20T15:03:24.363934+00:00",
    "game": "fc3d",
    "event": "trend_segment_failed",
    "detail": "segment 3/5"
   },
   {
-   "at": "2026-11-20T09:30:11.330575+00:00",
+   "at": "2026-11-20T15:03:32.542933+00:00",
    "game": "fc3d",
    "event": "trend_segment_failed",
    "detail": "segment 4/5"
   },
   {
-   "at": "2026-11-20T09:30:14.902789+00:00",
+   "at": "2026-11-20T15:03:41.163469+00:00",
    "game": "fc3d",
    "event": "trend_segment_failed",
    "detail": "segment 5/5"
   },
   {
-   "at": "2026-11-20T09:30:14.903367+00:00",
+   "at": "2026-11-20T15:03:41.164078+00:00",
    "game": "fc3d",
    "event": "trend_degraded_last_segment_only",
    "detail": ""
   },
   {
-   "at": "2026-11-20T09:30:39.359256+00:00",
+   "at": "2026-11-20T15:04:07.404190+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 1/5"
   },
   {
-   "at": "2026-11-20T09:30:43.962092+00:00",
+   "at": "2026-11-20T15:04:37.511074+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 2/5"
   },
   {
-   "at": "2026-11-20T09:30:46.598238+00:00",
+   "at": "2026-11-20T15:04:46.148856+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 3/5"
   },
   {
-   "at": "2026-11-20T09:30:50.609298+00:00",
+   "at": "2026-11-20T15:04:51.192824+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 4/5"
   },
   {
-   "at": "2026-11-20T09:30:53.530760+00:00",
+   "at": "2026-11-20T15:04:59.160636+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 5/5"
   },
   {
-   "at": "2026-11-20T09:30:53.531367+00:00",
+   "at": "2026-11-20T15:04:59.161224+00:00",
    "game": "pl3",
    "event": "trend_degraded_last_segment_only",
    "detail": ""
   },
   {
-   "at": "2026-11-20T09:31:04.380176+00:00",
+   "at": "2026-11-20T15:05:17.704985+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 1/5"
   },
   {
-   "at": "2026-11-20T09:31:07.662121+00:00",
+   "at": "2026-11-20T15:05:21.563838+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 2/5"
   },
   {
-   "at": "2026-11-20T09:31:11.394312+00:00",
+   "at": "2026-11-20T15:05:32.131859+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 3/5"
   },
   {
-   "at": "2026-11-20T09:31:14.119700+00:00",
+   "at": "2026-11-20T15:05:37.863619+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 4/5"
   },
   {
-   "at": "2026-11-20T09:31:16.563630+00:00",
+   "at": "2026-11-20T15:05:41.698437+00:00",
    "game": "pl3",
    "event": "trend_segment_failed",
    "detail": "segment 5/5"
   },
   {
-   "at": "2026-11-20T09:31:16.564231+00:00",
+   "at": "2026-11-20T15:05:41.699021+00:00",
    "game": "pl3",
    "event": "trend_degraded_last_segment_only",
    "detail": ""
   },
   {
-   "at": "2026-11-20T09:31:33.314778+00:00",
+   "at": "2026-11-20T15:05:56.539995+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 1/5"
   },
   {
-   "at": "2026-11-20T09:31:37.613757+00:00",
+   "at": "2026-11-20T15:06:00.633169+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 2/5"
   },
   {
-   "at": "2026-11-20T09:31:44.702284+00:00",
+   "at": "2026-11-20T15:06:04.617416+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 3/5"
   },
   {
-   "at": "2026-11-20T09:31:48.743778+00:00",
+   "at": "2026-11-20T15:06:10.496086+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 4/5"
   },
   {
-   "at": "2026-11-20T09:31:53.047399+00:00",
+   "at": "2026-11-20T15:06:15.115745+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 5/5"
   },
   {
-   "at": "2026-11-20T09:31:53.048002+00:00",
+   "at": "2026-11-20T15:06:15.116363+00:00",
    "game": "pl5",
    "event": "trend_degraded_last_segment_only",
    "detail": ""
   },
   {
-   "at": "2026-11-20T09:32:06.723740+00:00",
+   "at": "2026-11-20T15:06:36.312588+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 1/5"
   },
   {
-   "at": "2026-11-20T09:32:10.181326+00:00",
+   "at": "2026-11-20T15:06:39.914140+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 2/5"
   },
   {
-   "at": "2026-11-20T09:32:28.043173+00:00",
+   "at": "2026-11-20T15:06:43.778693+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 3/5"
   },
   {
-   "at": "2026-11-20T09:32:34.146263+00:00",
+   "at": "2026-11-20T15:06:49.114321+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 4/5"
   },
   {
-   "at": "2026-11-20T09:32:44.732758+00:00",
+   "at": "2026-11-20T15:06:53.065257+00:00",
    "game": "pl5",
    "event": "trend_segment_failed",
    "detail": "segment 5/5"
   },
   {
-   "at": "2026-11-20T09:32:44.733338+00:00",
+   "at": "2026-11-20T15:06:53.065831+00:00",
    "game": "pl5",
    "event": "trend_degraded_last_segment_only",
    "detail": ""
   }
  ],
- "updated_at": "2026-11-20T09:32:44.733343+00:00"
+ "updated_at": "2026-11-20T15:06:53.065842+00:00"
 }
