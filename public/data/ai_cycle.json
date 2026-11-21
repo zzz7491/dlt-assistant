@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-21T15:36:52.137836+00:00",
+  "updated_at": "2026-11-21T20:24:58.066055+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
@@ -190,144 +190,138 @@
     "model": "qwen3.6:35b-a3b",
     "route": "qwen3.6:35b-a3b",
     "prompt_version": "dlt-ai-cycle-v6",
-    "generated_at": "2026-11-18T02:48:19.750548+00:00",
-    "input_hash": "d59a41d4370457973955167b05bb68a725ae9216a4afed6ec04fbccb0f2d8a28",
+    "generated_at": "2026-11-21T20:25:57.795220+00:00",
+    "input_hash": "4667dadf58aa5cb3157e6d0dc348c76c690025927bb186ad972833bcca640adf",
     "sections": {
       "summary": {
-        "text": "本期单注方案以极端的奇偶比结构为核心特征，依据single_structure指标，这种非均衡形态旨在捕捉离散分布，但牺牲了形态稳定性。后区选择基于single_back_7所反映的近期热度延续性，试图利用高频属性提升覆盖效率。然而，实际开奖结果证实了这种策略的局限性：单注仅命中后区号码，前区完全偏离，说明结构贴合度并不等同于号码命中概率。评审显示，过度依赖特定形态偏差会导致对实际随机波动的误判，评分优势未能转化为有效的前区覆盖。复式方案虽通过扩大样本量获得少量奖金，但其高成本与低回报的对比凸显了预算扩张策略在独立随机事件中的效率低下，核心取舍在于以高昂成本换取微弱的容错空间，而非提升预测准确性。",
+        "text": "本期单注方案在结构上呈现显著的非均衡特征，前区奇偶比1:4的极端分布与和值75的低偏态，反映了算法为追求特定形态评分而牺牲常规覆盖率的取舍逻辑。这种策略依赖于对低频结构的拟合，而非基于号码独立随机性的概率优势，导致其与实际开奖的前区和值108及奇数2个的结构产生33的绝对偏差，证明结构贴合度不等于命中能力。后区选取中，05号的长遗漏特征与06号的零遗漏形成对比，显示策略在冷热搭配上的内在矛盾：既试图捕捉长尾机会，又依赖高频稳定性，但在独立随机事件中缺乏必然的回补逻辑。单注仅命中1+0且未中奖，验证了单一极端结构在离散分布中的脆弱性；而复式方案通过扩大前区覆盖至8个号码并组合4个后区，展开336注以应对分布风险，虽获得1050元税前奖金，但672元的成本体现了对覆盖率与资金效率的权衡。评审重点在于承认该组合在统计上的低概率特性及其依赖极端形态实现的潜在收益，而非将其视为高确定性结果，实际命中情况表明，结构上的偏态取舍在独立随机事件中难以保证稳定性，需警惕因过度拟合特定参数而导致的策略失效风险。",
         "evidence_ids": [
-          "single_outcome",
           "single_frozen",
-          "single_outcome",
+          "structure_comparison",
+          "prior_analysis",
           "compound_outcome"
         ]
       },
       "reason_check": {
-        "text": "事前理由强调前区奇偶比1:4的极端偏态旨在捕捉离散形态，依据single_structure指标，这种非均衡结构在历史样本中伴随较高的和值波动风险，但策略仍赋予其最高综合分，体现了对特定形态偏离的容忍。同时，后区07仅遗漏1期，依据single_back_7的高频属性判断为活跃区间，选择它而非更冷号码是基于近期热度的延续性。然而，实际开奖前区奇数3个与推荐1个严重失衡，且和值偏差显著，证明过度依赖特定形态会导致对实际分布的误判。评审需区分可观察的结构特征与未被证实的未来倾向，极端奇偶比牺牲了形态稳定性以换取覆盖，但未能转化为实际命中，证实了强行贴合预设结构的风险。",
+        "text": "事前理由强调前区奇偶比1:4的极端分布是换取特定结构得分的取舍，牺牲了常规均衡性。实际开奖前区奇数2个，与预测的1个存在偏差，说明该策略对形态的押注并未命中，验证了单一维度评分无法完全覆盖结构风险的局限。后区选取05号基于其长遗漏特征，试图捕捉冷号回补机会，但实际后区为9和10，未包含05，表明依赖孤立遗漏值的策略在独立随机事件中缺乏必然性，冷热搭配的逻辑未能转化为实际命中。",
         "evidence_ids": [
           "single_frozen",
+          "draw",
           "structure_comparison",
           "prior_analysis"
         ]
       },
       "limitations": {
-        "text": "本次评审的核心局限在于事前统计依据的缺失。证据original_statistical_basis明确指出推荐理由暂未生成，导致无法追溯单注选择的具体算法逻辑与权重分配。这种数据断层使得对single_structure中奇偶比1:4极端形态的取舍分析缺乏源头支撑，仅能基于结果进行逆向推测。同时，prior_analysis中关于候选池比较的描述虽存在，但因缺乏原始决策记录，难以验证其是否真正主导了最终号码的锁定。这限制了我们对策略有效性的客观评估，所有关于结构贴合度与历史频率权重的解释均属于事后重构，而非事前指令的执行结果。",
+        "text": "本方案的核心局限在于样本结构与实际开奖分布的显著偏离。结构对比证据显示，推荐前区和值75与实际和值108存在33的绝对偏差，且奇数数量仅1个而实际为2个，表明算法对低频形态的偏好导致了常规均衡性的牺牲。这种取舍使得单注在独立随机事件中缺乏稳健性，高分主要源于对特定策略参数的拟合而非预测优势。同时，前区跨度与后区遗漏极值的组合依赖极端离散分布，一旦开奖回归均值或呈现其他形态，结构错配风险将显著增加，证明单一维度的评分无法完全覆盖结构风险。",
         "evidence_ids": [
-          "original_statistical_basis",
+          "structure_comparison",
           "prior_analysis"
         ]
       },
       "next_focus": {
-        "text": "基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+        "text": "本期需重点审视前区跨度与和值所反映的分布离散度，以及后区遗漏极值在独立随机事件中的孤立性。前区方案跨度较大且偏向中低位密集，若实际开奖向两端发散，则结构贴合度将显著降低；后区选取虽含高频号，但长遗漏号码的出现缺乏连续性逻辑，仅视为随机样本的偶然触发。评审应关注这种离散分布与极端遗漏在独立事件中的真实表现，而非预设的回补预期。",
         "evidence_ids": [
           "structure_comparison",
-          "single_frozen",
-          "draw"
+          "single_frozen"
         ]
       }
     },
     "model_evidence_ids": {
       "summary": [
-        "single_outcome",
         "single_frozen",
-        "single_outcome",
+        "structure_comparison",
+        "prior_analysis",
         "compound_outcome"
       ],
       "reason_check": [
         "single_frozen",
+        "draw",
         "structure_comparison",
         "prior_analysis"
       ],
       "limitations": [
-        "original_statistical_basis",
+        "structure_comparison",
         "prior_analysis"
       ],
       "next_focus": [
         "structure_comparison",
-        "single_frozen",
-        "draw"
+        "single_frozen"
       ]
     },
     "evidence_policy": "model-plus-canonical-v1",
     "kind": "review",
-    "issue": "26131",
+    "issue": "26133",
     "identity": {
-      "issue": "26131",
+      "issue": "26133",
       "single": {
         "front": [
-          4,
-          10,
-          15,
+          2,
+          5,
+          14,
           24,
           30
         ],
         "back": [
-          4,
-          7
+          5,
+          6
         ]
       },
       "actual": {
         "front": [
-          2,
+          10,
           11,
-          18,
-          19,
-          29
+          25,
+          30,
+          32
         ],
         "back": [
-          4,
-          7
+          9,
+          10
         ]
       },
-      "snapshot_hash": "4ec37634f3a71659e00c7d025a57b55f3c917d714c14eb1ec83faf17bb9788e4",
+      "snapshot_hash": "0a341683e31cd97f07fa25244d8f1f15f678e4369ed3cd94de59c260384a0f39",
       "compound": {
         "format": "8+4",
         "front": [
+          2,
           3,
-          4,
+          5,
           10,
-          12,
+          11,
           14,
-          15,
           24,
           30
         ],
         "back": [
           4,
-          7,
-          9,
-          12
+          5,
+          6,
+          9
         ]
       }
     },
     "evidence": {
-      "single_outcome": "展开1注，命中分布（前区+后区）：0+2命中1注；奖级：七等奖1注；基本成本2元，税前基本奖金5元。是假设投注结算，不是客户真实收益。",
-      "draw": "实际开奖前区[2, 11, 18, 19, 29]，后区[4, 7]；期号26131，日期2026-11-16。",
-      "single_frozen": "当期冻结单注前区[4, 10, 15, 24, 30]，后区[4, 7]；当时评分44.0；当期冻结记录完整性已校验。",
+      "single_outcome": "展开1注，命中分布（前区+后区）：1+0命中1注；奖级：未中奖；基本成本2元，税前基本奖金0元。是假设投注结算，不是客户真实收益。",
+      "draw": "实际开奖前区[10, 11, 25, 30, 32]，后区[9, 10]；期号26133，日期2026-11-21。",
+      "single_frozen": "当期冻结单注前区[2, 5, 14, 24, 30]，后区[5, 6]；当时评分45.07；当期冻结记录完整性已校验。",
       "uncertainty": "本次结果不能证明预测能力或策略优势；不能把命中等级当作中奖奖级；成本与回报均为按公告结算的假设投注，不是客户真实投注。",
       "original_statistical_basis": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
-      "structure_comparison": "推荐前区和值83、实际和值79，绝对偏差4；推荐前区奇数1个，实际前区奇数3个。结构贴合不等于号码命中。",
-      "compound_outcome": "展开336注，命中分布（前区+后区）：0+0命中56注、0+1命中224注、0+2命中56注；奖级：七等奖56注；基本成本672元，税前基本奖金280元。是假设投注结算，不是客户真实收益。",
-      "prior_analysis": "overview：本方案基于算法冻结的候选池进行评审，核心取舍在于结构贴合度与历史频率权重的平衡。正式单注前区奇偶比1:4呈现极端偏态，依据single_structure指标，这种非均衡结构在历史样本中往往伴随较高的和值波动风险，但当前策略仍赋予其最高综合分，体现了对特定形态偏离的容忍。候选比较显示，排名靠前的组合虽分数接近，但在前区跨度与后区遗漏分布上存在差异，如candidate_comparison所示，高分位候选更侧重近期表现的结构稳定性。复式方案通过扩大前区覆盖范围（compound_front_3至compound_front_30）来对冲单注的结构性风险，其预算成本显著增加，依据compound_budget，这种覆盖策略旨在提升容错率而非提高单注概率。整体来看，评审重点在于解释为何在历史表现评分较低的情况下（single_selection），算法仍选择该结构，这反映了对短期随机波动的捕捉而非长期均值回归的依赖。；single_reason：本方案评审聚焦于结构特征与历史表现的权衡。前区奇偶比1:4的极端分布（evidence_ids: [single_structure]）虽偏离常规均衡预期，但旨在捕捉离散形态，这种取舍牺牲了形态稳定性以换取对非对称分布的覆盖。同时，后区07仅遗漏1期（evidence_ids: [single_back_7]），其高频属性（近50期11次）表明该号码处于活跃区间，选择它而非更冷号码是基于近期热度的延续性判断。这种策略在结构贴合度上得分较高（evidence_ids: [single_selection]），但需警惕极端奇偶比在实际开奖中可能因随机波动而失效，导致评分优势无法转化为实际命中。；compound_reason：本方案采用8+4复式结构，核心取舍在于以预算扩张换取覆盖度。证据显示该组合展开336注，追加成本1008元（compound_budget），通过增加前区容错空间来对冲单注失效风险。前区奇偶比2:6（compound_structure）显著偏离常规均衡态，这种极端结构旨在捕捉离散分布，但需承担形态偏差带来的高不确定性。后区引入9和12（compound_back_9, compound_back_12），利用其近期高频特征（近50期分别出现16次和11次）增强稳定性，然而高频号码的持续热态可能面临回调压力。整体策略在成本与覆盖率之间进行权衡，牺牲了单注性价比以追求更广的样本捕捉能力。；risk：本期评审需直面单注与复式均未命中的事实，核心风险源于结构偏差过大。证据显示推荐前区和值96与实际75存在21点绝对偏差，且奇数比例（推荐2个对比实际5个）严重失衡。这证实了过度依赖特定和值区间或形态均衡会导致对实际开奖分布的误判。后续需关注实际开奖在极端形态下的离散程度，避免将历史统计均值作为刚性约束，应更重视当期号码的随机波动特征而非强行贴合预设结构。；next_focus：基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度26及和值83显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取04与07均为高频号，但遗漏值分别为4期和1期，这种冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+      "structure_comparison": "推荐前区和值75、实际和值108，绝对偏差33；推荐前区奇数1个，实际前区奇数2个。结构贴合不等于号码命中。",
+      "compound_outcome": "展开336注，命中分布（前区+后区）：0+0命中3注、0+1命中3注、1+0命中45注、1+1命中45注、2+0命中90注、2+1命中90注、3+0命中30注、3+1命中30注；奖级：六等奖30注、七等奖120注；基本成本672元，税前基本奖金1050元。是假设投注结算，不是客户真实收益。",
+      "prior_analysis": "overview：本方案基于50期样本构建，正式单注与候选组在结构贴合度上呈现显著差异。前区奇偶比1:4的极端分布（single_structure）虽在综合评分中占据优势，但反映了算法对低频形态的偏好，这种取舍牺牲了常规均衡性以换取特定结构得分。后区05的长遗漏特征（single_back_5）与06的零遗漏形成对比，显示策略在冷热搭配上的矛盾：既依赖高频号的稳定性，又试图捕捉长尾机会。候选组中，部分组合通过调整奇偶比和跨度来优化评分（candidate_comparison），说明单一维度评分无法完全覆盖结构风险。本分析旨在揭示评分机制背后的结构代价，而非预测结果。；single_reason：本方案评审聚焦于结构集中度与评分排名的取舍逻辑。前区奇偶比1:4呈现显著偏态，这种极端分布牺牲了常规均衡性以换取特定形态的覆盖，其有效性完全依赖于当期开奖恰好落入该离散区间。综合分45.07虽在候选中并列第一，但需结合结构贴合度50.0审视，高分主要源于对既定策略参数的拟合，而非独立预测优势。后区选取05与06，其中05遗漏值极大，这种冷热搭配在独立随机事件中缺乏必然的回补逻辑，仅作为样本孤立性的体现。评审重点在于承认该组合在统计上的低概率特性，以及其依赖极端形态实现的潜在收益，而非将其视为高确定性结果。；compound_reason：本方案采用8+4复式结构，核心取舍在于通过扩大前区覆盖范围以应对分布离散风险，同时控制后区组合数量以约束成本。前区选取兼顾高频热号与长遗漏冷号，如引用指标显示部分号码近期出现频次较高而另一些长期未出，这种搭配旨在平衡样本的随机波动性，避免单一形态导致的失效。后区引入不同遗漏周期的号码，意在捕捉独立事件中的偶然重合，而非依赖连续性逻辑。预算方面，展开336注及相应追加费用体现了对覆盖率的追求与资金效率之间的权衡，需在不确定性中寻求结构上的稳健性。；risk：本方案的核心风险在于对极端遗漏号码的依赖与独立随机性之间的冲突。前区30号近50期仅出现3次且当前遗漏18期，后区05号近50期出现5次且当前遗漏高达37期，这两项指标在统计上属于长尾分布中的极值。引用single_front_30与single_back_5可知，方案将高遗漏值作为结构覆盖的一部分，但这并不意味着其回补概率高于其他号码，历史频率在此类独立事件中不具备预测效力。同时，单注前区奇偶比1:4极度偏离常态分布，结合single_structure所示和值75偏低，表明该组合在形态上具有强烈的非对称性。这种取舍牺牲了结构的均衡性以换取特定遗漏值的覆盖，一旦开奖号码回归均值分布或呈现其他极端形态，该方案将面临较大的结构错配风险。；next_focus：本期需重点审视前区跨度与和值所反映的分布离散度，以及后区遗漏极值在独立随机事件中的孤立性。前区方案跨度较大且偏向中低位密集，若实际开奖向两端发散，则结构贴合度将显著降低；后区选取虽含高频号，但长遗漏号码的出现缺乏连续性逻辑，仅视为随机样本的偶然触发。评审应关注这种离散分布与极端遗漏在独立事件中的真实表现，而非预设的回补预期。",
       "reason_audit": "必须对照上述真实事前AI理由逐项核验；区分可观察的结构是否满足和未被证实的未来倾向，不得用事后走势编新理由。"
     },
     "settlement": {
       "single": {
         "matches": {
-          "0+2": 1
+          "1+0": 1
         },
-        "prizes": [
-          {
-            "tier": "七等奖",
-            "tickets": 1,
-            "per_ticket_yuan": 5
-          }
-        ],
+        "prizes": [],
         "tickets": 1,
         "basic_cost_yuan": 2,
-        "basic_payout_yuan": "5",
+        "basic_payout_yuan": "0",
         "all_additional_cost_yuan": 3,
-        "all_additional_payout_yuan": "5",
+        "all_additional_payout_yuan": "0",
         "payout_status": "verified",
         "rule_version": "26014-seven-tiers",
         "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
@@ -335,22 +329,32 @@
       },
       "compound": {
         "matches": {
-          "0+0": 56,
-          "0+1": 224,
-          "0+2": 56
+          "0+0": 3,
+          "0+1": 3,
+          "1+0": 45,
+          "1+1": 45,
+          "2+0": 90,
+          "2+1": 90,
+          "3+0": 30,
+          "3+1": 30
         },
         "prizes": [
           {
+            "tier": "六等奖",
+            "tickets": 30,
+            "per_ticket_yuan": 15
+          },
+          {
             "tier": "七等奖",
-            "tickets": 56,
+            "tickets": 120,
             "per_ticket_yuan": 5
           }
         ],
         "tickets": 336,
         "basic_cost_yuan": 672,
-        "basic_payout_yuan": "280",
+        "basic_payout_yuan": "1050",
         "all_additional_cost_yuan": 1008,
-        "all_additional_payout_yuan": "280",
+        "all_additional_payout_yuan": "1050",
         "payout_status": "verified",
         "rule_version": "26014-seven-tiers",
         "rule_source": "https://m.lottery.gov.cn/ksjz/m/yxgz_dlt/",
@@ -358,23 +362,53 @@
       }
     },
     "has_pre_draw_ai": true,
-    "prior_analysis_hash": "e9c5bbf164c04f56cb0a70eaa69adc98e9cd1ad1da42c466de1a6c795c743aa0",
-    "raw_source_hash": "884f3b8fe37ab90f1469ba6fe0b6cf0caa7499099581d60d5ca173273688ce9f",
+    "prior_analysis_hash": "f671b2fd9f915c4ab80934e190a714c8e7e04ee47e012feab6fcc4c52b4d64bd",
+    "raw_source_hash": "ff658fd672a211b7811885097d7cfbe52655f21c58f72a1158324886b81908a5",
     "editorial_policy": "grounded-editorial-v1",
     "editorial_removed_clauses": 0,
-    "reviewed_at": "2026-11-18T02:48:19.751359+00:00"
+    "reviewed_at": "2026-11-21T20:25:57.796285+00:00",
+    "reflection": {
+      "version": "reflection-v1",
+      "generated_at": "2026-11-21T20:26:35.965914+00:00",
+      "model": "qwen3.6:35b-a3b",
+      "front_hits": 1,
+      "back_hits": 0,
+      "causes": [
+        {
+          "code": "sum_bias",
+          "text": "和值偏差：推荐和值75、实际108，推荐偏低33。"
+        },
+        {
+          "code": "zone_gap",
+          "text": "第3区覆盖不足：推荐1个、实际开出3个。"
+        },
+        {
+          "code": "far_miss",
+          "text": "方向偏差：前区仅命中1个，且未命中开奖号多与推荐号相距较远。"
+        },
+        {
+          "code": "back_blank",
+          "text": "后区零命中：两个后区号均未中。"
+        }
+      ],
+      "improvement": {
+        "text": "针对三区覆盖断层与和值过度偏低问题，下期推荐需将前区和值向中高位区间适度回摆，并强制补足第三区号码配比，使分布重心向中大号段平移，以修复跨度失衡倾向。",
+        "source_issue": "26133"
+      },
+      "verdict": {
+        "text": "已落实。推荐和值向中小区间收敛且一区配比提升，结构修正执行到位；对照实际开奖，一区覆盖匹配但整体跨度仍发散，仅中1码且后区零命中，未转化为有效收益，需同步校准区间联动。",
+        "on_issue": "26130"
+      }
+    }
   },
   "statuses": {
-    "review": "invalid_response",
+    "review": "completed",
     "analysis": "completed"
-  },
-  "degraded": {
-    "analysis": "review_stale"
   },
   "diag": {
     "counts": {
       "review": {
-        "unverified_numeric": 31
+        "unverified_numeric": 34
       },
       "reflection": {
         "empty_content": 2,
@@ -386,47 +420,33 @@
       }
     },
     "last_failure": {
-      "at": "2026-11-21T15:44:01.008825+00:00",
-      "kind": "analysis",
+      "at": "2026-11-21T20:25:51.573472+00:00",
+      "kind": "review",
       "section": "merged",
       "category": "unverified_numeric",
-      "reason": "unverified_numeric_overview_38"
+      "reason": "unverified_numeric_limitations_4"
     },
     "run_failures": [
       {
-        "at": "2026-11-21T15:42:00.363415+00:00",
+        "at": "2026-11-21T20:25:32.808242+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_limitations_4"
       },
       {
-        "at": "2026-11-21T15:42:59.129253+00:00",
+        "at": "2026-11-21T20:25:42.546651+00:00",
+        "kind": "review",
+        "section": "merged",
+        "category": "unverified_numeric",
+        "reason": "unverified_numeric_limitations_336"
+      },
+      {
+        "at": "2026-11-21T20:25:51.573472+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_limitations_4"
-      },
-      {
-        "at": "2026-11-21T15:43:09.973994+00:00",
-        "kind": "review",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_limitations_4"
-      },
-      {
-        "at": "2026-11-21T15:43:17.152197+00:00",
-        "kind": "review",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_limitations_4"
-      },
-      {
-        "at": "2026-11-21T15:44:01.008825+00:00",
-        "kind": "analysis",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_overview_38"
       }
     ]
   }
