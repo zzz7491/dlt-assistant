@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-11-18 15:25:10",
+  "updated_at": "2026-11-21 15:36:16",
   "empty": false,
-  "issue": "26132",
+  "issue": "26133",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "b43630daf30a16569339957a276fa5bef4fa7cfcc68bd199d263ff4653e5f97c",
+  "snapshot_hash": "0a341683e31cd97f07fa25244d8f1f15f678e4369ed3cd94de59c260384a0f39",
   "recommendation": {
     "strategy": "F-综合AI型",
     "front": [
       2,
       5,
       14,
-      20,
+      24,
       30
     ],
     "back": [
       5,
-      9
+      6
     ],
-    "score_total": 44.0,
+    "score_total": 45.07,
     "model_version": null
   },
   "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
@@ -26,7 +26,7 @@
     "explanation_version": "1.1",
     "strategy_type": "unknown",
     "strategy": "F-综合AI型",
-    "target_issue": "26132",
+    "target_issue": "26133",
     "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
     "factors": [],
     "generated_from": [],
@@ -35,15 +35,15 @@
   },
   "actual_result": {
     "front": [
-      2,
-      9,
-      16,
-      26,
-      35
+      10,
+      11,
+      25,
+      30,
+      32
     ],
     "back": [
-      6,
-      11
+      9,
+      10
     ]
   },
   "hit_count": {
@@ -57,9 +57,15 @@
     "amount": 0
   },
   "analysis": {
-    "sum_diff": 17,
+    "sum_diff": 33,
     "factor_review": {}
   },
-  "next_adjustment": [],
+  "next_adjustment": [
+    {
+      "type": "reduce",
+      "text": "收缩和值区间",
+      "reason": "上期和值偏差较大（差 33）"
+    }
+  ],
   "disclaimer": "复盘读取当期已发布不可变快照，仅为娱乐回顾，不代表预测中奖"
 }
