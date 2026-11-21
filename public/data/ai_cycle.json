@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-20T15:07:16.119820+00:00",
+  "updated_at": "2026-11-21T09:06:19.412186+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
@@ -373,7 +373,7 @@
   "diag": {
     "counts": {
       "review": {
-        "unverified_numeric": 23
+        "unverified_numeric": 27
       },
       "reflection": {
         "empty_content": 2,
@@ -385,40 +385,40 @@
       }
     },
     "last_failure": {
-      "at": "2026-11-20T15:08:32.218064+00:00",
+      "at": "2026-11-21T09:08:33.518163+00:00",
       "kind": "review",
       "section": "merged",
       "category": "unverified_numeric",
-      "reason": "unverified_numeric_limitations_4"
+      "reason": "unverified_numeric_summary_9"
     },
     "run_failures": [
       {
-        "at": "2026-11-20T15:07:53.730317+00:00",
+        "at": "2026-11-21T09:07:20.644683+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
         "reason": "unverified_numeric_summary_0"
       },
       {
-        "at": "2026-11-20T15:08:03.541430+00:00",
+        "at": "2026-11-21T09:07:57.483340+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
-        "reason": "unverified_numeric_reason_check_6"
+        "reason": "unverified_numeric_summary_60.0"
       },
       {
-        "at": "2026-11-20T15:08:23.919218+00:00",
+        "at": "2026-11-21T09:08:20.627831+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
-        "reason": "unverified_numeric_reason_check_0"
+        "reason": "unverified_numeric_summary_4"
       },
       {
-        "at": "2026-11-20T15:08:32.218064+00:00",
+        "at": "2026-11-21T09:08:33.518163+00:00",
         "kind": "review",
         "section": "merged",
         "category": "unverified_numeric",
-        "reason": "unverified_numeric_limitations_4"
+        "reason": "unverified_numeric_summary_9"
       }
     ]
   }
