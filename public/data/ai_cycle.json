@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-21T20:24:58.066055+00:00",
+  "updated_at": "2026-11-22T09:08:24.665133+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
@@ -426,28 +426,6 @@
       "category": "unverified_numeric",
       "reason": "unverified_numeric_limitations_4"
     },
-    "run_failures": [
-      {
-        "at": "2026-11-21T20:25:32.808242+00:00",
-        "kind": "review",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_limitations_4"
-      },
-      {
-        "at": "2026-11-21T20:25:42.546651+00:00",
-        "kind": "review",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_limitations_336"
-      },
-      {
-        "at": "2026-11-21T20:25:51.573472+00:00",
-        "kind": "review",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_limitations_4"
-      }
-    ]
+    "run_failures": []
   }
 }
