@@ -15097,26 +15097,27 @@
           "home_rank": 29,
           "away_rank": 4,
           "probabilities": {
-            "3": 0.1213,
+            "3": 0.1167,
             "1": 0.1473,
-            "0": 0.7314
+            "0": 0.736
           },
           "factors": {
             "available": [
               "market",
               "home_away",
-              "ranking"
+              "ranking",
+              "recent_form",
+              "rest_days"
             ],
             "unavailable": [
-              "recent_form",
               "injuries",
-              "rest_days",
               "head_to_head"
             ],
             "weights": {
-              "market": 0.75,
-              "home_away": 0.05,
-              "ranking": 0.2
+              "market": 0.6316,
+              "home_away": 0.0526,
+              "recent_form": 0.1579,
+              "ranking": 0.1579
             },
             "components": {
               "market": {
@@ -15133,14 +15134,53 @@
                 "3": 0.0404,
                 "1": 0.1473,
                 "0": 0.8123
+              },
+              "recent_form": {
+                "3": 0.0647,
+                "1": 0.1473,
+                "0": 0.788
               }
             },
-            "uncertainty": 0.4159,
-            "data_completeness": 0.4286
+            "uncertainty": 0.4113,
+            "data_completeness": 0.7143
           },
           "primary": "0",
           "secondary": "1",
-          "confidence": 0.5841,
+          "confidence": 0.5887,
+          "dynamics": {
+            "home": {
+              "form_last10": {
+                "played": 10,
+                "w": 5,
+                "d": 2,
+                "l": 3,
+                "points": 17,
+                "gf": 21,
+                "ga": 19
+              },
+              "rest_days": 369,
+              "last_match_date": "2026-10-10"
+            },
+            "away": {
+              "form_last10": {
+                "played": 10,
+                "w": 10,
+                "d": 0,
+                "l": 0,
+                "points": 30,
+                "gf": 41,
+                "ga": 9
+              },
+              "rest_days": 368,
+              "last_match_date": "2026-10-11"
+            },
+            "head_to_head": {
+              "meetings": 2,
+              "home_wins": 0,
+              "draws": 1,
+              "away_wins": 1
+            }
+          },
           "sfc_choices": [
             "0"
           ]
@@ -15733,12 +15773,12 @@
         "schedule": {
           "name": "澳客网足彩赛程（与官方公告同步）",
           "url": "https://www.okooo.com/zucai/26140/",
-          "checked_at": "2026-11-21T06:00:02.448836+08:00"
+          "checked_at": "2026-11-23T01:12:20.605970+08:00"
         },
         "market": {
           "name": "澳客平均欧指及页面联赛排名",
           "url": "https://www.okooo.com/zucai/26140/",
-          "checked_at": "2026-11-21T06:00:02.448836+08:00"
+          "checked_at": "2026-11-23T01:12:20.605970+08:00"
         }
       },
       "ai": {
