@@ -2256,6 +2256,142 @@
         "status": "unavailable"
       },
       "frozen": true
+    },
+    {
+      "schema_version": 1,
+      "game_id": "dlt",
+      "algorithm_version": "dlt-compound-v1",
+      "target_issue": "26135",
+      "primary_fingerprint": "d6bc2efc7b3b65d18d4937fe003af191990b19562daa87b0c583f36680e4c386",
+      "primary": {
+        "front": [
+          7,
+          17,
+          23,
+          28,
+          33
+        ],
+        "back": [
+          5,
+          10
+        ]
+      },
+      "generated_at": "2026-11-23T15:05:07.384041+00:00",
+      "history_cutoff": "26134",
+      "window": 50,
+      "evidence": {
+        "front": {
+          "14": 13,
+          "10": 12,
+          "3": 11,
+          "11": 11,
+          "12": 10,
+          "17": 10,
+          "25": 10,
+          "2": 9,
+          "29": 9,
+          "6": 8,
+          "9": 8,
+          "18": 8,
+          "24": 8,
+          "26": 8,
+          "5": 7,
+          "7": 7,
+          "19": 7,
+          "22": 7,
+          "27": 7,
+          "32": 7,
+          "33": 7,
+          "35": 7,
+          "1": 6,
+          "4": 6,
+          "15": 6,
+          "20": 6,
+          "8": 5,
+          "16": 5,
+          "21": 5,
+          "13": 4,
+          "28": 4,
+          "31": 4,
+          "34": 4,
+          "30": 3,
+          "23": 1
+        },
+        "back": {
+          "9": 16,
+          "4": 11,
+          "7": 11,
+          "12": 10,
+          "1": 9,
+          "6": 9,
+          "2": 7,
+          "10": 7,
+          "8": 6,
+          "3": 5,
+          "11": 5,
+          "5": 4
+        }
+      },
+      "candidates": [
+        {
+          "format": "8+4",
+          "front": [
+            3,
+            7,
+            10,
+            14,
+            17,
+            23,
+            28,
+            33
+          ],
+          "back": [
+            4,
+            5,
+            9,
+            10
+          ],
+          "tickets": 336,
+          "basic_yuan": 672,
+          "additional_yuan": 1008
+        },
+        {
+          "format": "10+3",
+          "front": [
+            3,
+            7,
+            10,
+            11,
+            12,
+            14,
+            17,
+            23,
+            28,
+            33
+          ],
+          "back": [
+            5,
+            9,
+            10
+          ],
+          "tickets": 756,
+          "basic_yuan": 1512,
+          "additional_yuan": 2268
+        }
+      ],
+      "selected_format": "8+4",
+      "ai": {
+        "status": "completed",
+        "model": "qwen3.6:35b-a3b",
+        "factor_refs": [
+          "front:14",
+          "front:10",
+          "back:9",
+          "back:4"
+        ],
+        "role": "candidate_selection_and_evidence_review"
+      },
+      "frozen": true
     }
   ]
 }

@@ -2,74 +2,20 @@
   "schema_version": 1,
   "counts": {
     "review": {
-      "unverified_numeric": 34
+      "unverified_numeric": 37
     },
     "reflection": {
-      "empty_content": 2,
+      "empty_content": 3,
       "json_parse": 1
     },
     "analysis": {
-      "unverified_numeric": 5,
-      "forbidden": 1
+      "unverified_numeric": 7,
+      "forbidden": 1,
+      "schema": 1,
+      "promise": 1
     }
   },
   "events": [
-    {
-      "at": "2026-11-18T15:34:06.984995+00:00",
-      "kind": "analysis",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_overview_60.0"
-    },
-    {
-      "at": "2026-11-18T21:44:49.964061+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_summary_0"
-    },
-    {
-      "at": "2026-11-18T21:44:58.762675+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_reason_check_6"
-    },
-    {
-      "at": "2026-11-18T21:45:07.229355+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_limitations_4"
-    },
-    {
-      "at": "2026-11-18T21:45:16.558715+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_limitations_4"
-    },
-    {
-      "at": "2026-11-18T21:46:04.209788+00:00",
-      "kind": "analysis",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_overview_37"
-    },
-    {
-      "at": "2026-11-19T09:50:48.685130+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_summary_0"
-    },
-    {
-      "at": "2026-11-19T09:50:58.972647+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_reason_check_6"
-    },
     {
       "at": "2026-11-19T09:51:17.736110+00:00",
       "kind": "review",
@@ -223,18 +169,74 @@
       "section": "merged",
       "category": "unverified_numeric",
       "reason": "unverified_numeric_limitations_4"
+    },
+    {
+      "at": "2026-11-23T15:06:42.237962+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_summary_672"
+    },
+    {
+      "at": "2026-11-23T15:07:01.233616+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_limitations_44.71"
+    },
+    {
+      "at": "2026-11-23T15:07:12.820864+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_limitations_60.0"
+    },
+    {
+      "at": "2026-11-23T15:09:40.200758+00:00",
+      "kind": "reflection",
+      "section": "-",
+      "category": "empty_content",
+      "reason": "empty_content"
+    },
+    {
+      "at": "2026-11-23T15:10:34.986204+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "schema",
+      "reason": "bad evidence refs"
+    },
+    {
+      "at": "2026-11-23T15:11:24.014328+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_overview_14"
+    },
+    {
+      "at": "2026-11-23T15:11:35.011856+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "promise",
+      "reason": "unverified_promise"
+    },
+    {
+      "at": "2026-11-23T15:12:31.871003+00:00",
+      "kind": "analysis",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_overview_14"
     }
   ],
   "last_statuses": {
     "review": "completed",
-    "analysis": "completed"
+    "analysis": "invalid_response"
   },
-  "updated_at": "2026-11-23T10:13:55.689494+00:00",
+  "updated_at": "2026-11-23T15:12:31.871460+00:00",
   "last_failure": {
-    "at": "2026-11-21T20:25:51.573472+00:00",
-    "kind": "review",
+    "at": "2026-11-23T15:12:31.871003+00:00",
+    "kind": "analysis",
     "section": "merged",
     "category": "unverified_numeric",
-    "reason": "unverified_numeric_limitations_4"
+    "reason": "unverified_numeric_overview_14"
   }
 }

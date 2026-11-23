@@ -2,14 +2,20 @@
   "strategies": [
     {
       "strategy": "E-走势AI型",
-      "periods": 3,
-      "avg_hits": 1.33,
+      "periods": 4,
+      "avg_hits": 1.0,
       "avg_hits_sub": 0.0,
       "dist": {
         "2": 1,
-        "1": 2
+        "1": 2,
+        "0": 1
       },
       "recent": [
+        {
+          "issue": "26134",
+          "hits": 0.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26133",
           "hits": 1.0,
@@ -30,15 +36,20 @@
     },
     {
       "strategy": "C-AI智能型",
-      "periods": 11,
-      "avg_hits": 0.82,
-      "avg_hits_sub": 0.45,
+      "periods": 12,
+      "avg_hits": 0.83,
+      "avg_hits_sub": 0.5,
       "dist": {
-        "1": 7,
+        "1": 8,
         "0": 3,
         "2": 1
       },
       "recent": [
+        {
+          "issue": "26134",
+          "hits": 1.0,
+          "hits_sub": 1.0
+        },
         {
           "issue": "26133",
           "hits": 1.0,
@@ -83,27 +94,27 @@
           "issue": "26125",
           "hits": 0.0,
           "hits_sub": 1.0
-        },
-        {
-          "issue": "26121",
-          "hits": 1.0,
-          "hits_sub": 0.0
         }
       ],
       "sample_warning": false
     },
     {
       "strategy": "D-综合评分型",
-      "periods": 40,
-      "avg_hits": 0.75,
-      "avg_hits_sub": 0.38,
+      "periods": 41,
+      "avg_hits": 0.8,
+      "avg_hits_sub": 0.37,
       "dist": {
         "0": 15,
         "1": 21,
         "2": 3,
-        "3": 1
+        "3": 2
       },
       "recent": [
+        {
+          "issue": "26134",
+          "hits": 3.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26133",
           "hits": 1.0,
@@ -148,26 +159,26 @@
           "issue": "26125",
           "hits": 0.0,
           "hits_sub": 1.0
-        },
-        {
-          "issue": "26124",
-          "hits": 1.0,
-          "hits_sub": 0.0
         }
       ],
       "sample_warning": false
     },
     {
       "strategy": "F-综合AI型",
-      "periods": 11,
-      "avg_hits": 0.73,
-      "avg_hits_sub": 0.55,
+      "periods": 12,
+      "avg_hits": 0.75,
+      "avg_hits_sub": 0.58,
       "dist": {
-        "1": 6,
+        "1": 7,
         "0": 4,
         "2": 1
       },
       "recent": [
+        {
+          "issue": "26134",
+          "hits": 1.0,
+          "hits_sub": 1.0
+        },
         {
           "issue": "26133",
           "hits": 1.0,
@@ -212,26 +223,26 @@
           "issue": "26125",
           "hits": 0.0,
           "hits_sub": 1.0
-        },
-        {
-          "issue": "26122",
-          "hits": 1.0,
-          "hits_sub": 0.0
         }
       ],
       "sample_warning": false
     },
     {
       "strategy": "B-冷热组合型",
-      "periods": 41,
-      "avg_hits": 0.66,
-      "avg_hits_sub": 0.32,
+      "periods": 42,
+      "avg_hits": 0.67,
+      "avg_hits_sub": 0.31,
       "dist": {
         "0": 21,
-        "1": 13,
+        "1": 14,
         "2": 7
       },
       "recent": [
+        {
+          "issue": "26134",
+          "hits": 1.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26133",
           "hits": 1.0,
@@ -276,26 +287,26 @@
           "issue": "26125",
           "hits": 0.0,
           "hits_sub": 0.0
-        },
-        {
-          "issue": "26124",
-          "hits": 0.0,
-          "hits_sub": 1.0
         }
       ],
       "sample_warning": false
     },
     {
       "strategy": "A-均衡统计型",
-      "periods": 41,
-      "avg_hits": 0.61,
-      "avg_hits_sub": 0.32,
+      "periods": 42,
+      "avg_hits": 0.64,
+      "avg_hits_sub": 0.31,
       "dist": {
         "0": 20,
         "1": 17,
-        "2": 4
+        "2": 5
       },
       "recent": [
+        {
+          "issue": "26134",
+          "hits": 2.0,
+          "hits_sub": 0.0
+        },
         {
           "issue": "26133",
           "hits": 0.0,
@@ -339,11 +350,6 @@
         {
           "issue": "26125",
           "hits": 1.0,
-          "hits_sub": 0.0
-        },
-        {
-          "issue": "26124",
-          "hits": 0.0,
           "hits_sub": 0.0
         }
       ],
@@ -356,5 +362,5 @@
     "main_max": 5
   },
   "disclaimer": "命中统计仅为历史娱乐回顾；彩票开奖为独立随机事件，不代表任何预测依据。",
-  "updated_at": "2026-11-23 10:13:54"
+  "updated_at": "2026-11-23 15:05:06"
 }
