@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-24T11:55:03.541401+00:00",
+  "updated_at": "2026-11-24T14:27:00.602447+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
@@ -367,7 +367,7 @@
         "unverified_numeric": 37
       },
       "reflection": {
-        "empty_content": 6,
+        "empty_content": 7,
         "json_parse": 1
       },
       "analysis": {
@@ -378,7 +378,7 @@
       }
     },
     "last_failure": {
-      "at": "2026-11-24T11:57:25.241355+00:00",
+      "at": "2026-11-24T14:30:21.596306+00:00",
       "kind": "reflection",
       "section": "-",
       "category": "empty_content",
@@ -386,7 +386,7 @@
     },
     "run_failures": [
       {
-        "at": "2026-11-24T11:57:25.241355+00:00",
+        "at": "2026-11-24T14:30:21.596306+00:00",
         "kind": "reflection",
         "section": "-",
         "category": "empty_content",
