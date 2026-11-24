@@ -1,63 +1,63 @@
 {
   "schema_version": 1,
   "game_id": "dlt",
-  "updated_at": "2026-11-24T01:21:53.388856+00:00",
+  "updated_at": "2026-11-24T05:06:08.187818+00:00",
   "analysis": {
     "status": "completed",
     "model": "qwen3.6:35b-a3b",
     "route": "qwen3.6:35b-a3b",
     "prompt_version": "dlt-ai-cycle-v6",
-    "generated_at": "2026-11-21T15:44:11.333146+00:00",
-    "input_hash": "3eb248b6e3590e394aa12ea2d0cdf46efdfb613cee4758c7ce2aed2717d6fd8f",
+    "generated_at": "2026-11-24T05:10:15.884529+00:00",
+    "input_hash": "8856ef56c9714bee72d846151ee717f15397cbd175eb712918e51cf8791602f9",
     "sections": {
       "overview": {
-        "text": "本方案基于50期样本构建，核心取舍在于平衡历史热度与结构离散度。正式单注前区跨度28及和值77显示其偏向中低位密集分布，这与候选3、4的高分结构形成对比，体现了在有限预算下对特定形态的坚持而非广泛覆盖。后区选取05与09，前者遗漏38期而后者遗漏0期，这种极端冷热搭配旨在捕捉随机样本中的孤立事件，而非依赖连续性回补逻辑。相较于候选1和2，本方案放弃了部分高频重合号以换取结构上的独立性，其局限性在于若开奖向两端发散，该密集分布策略将面临较大偏差风险。",
+        "text": "本方案基于算法构造的既定号码进行评审，核心在于解析评分模型对特定结构的偏好及其在随机样本中的局限。正式单注前区奇偶比4:1呈现显著偏态，这种结构集中度高但覆盖窄，依据single_selection可知其综合分44.54位列候选第一，主要得益于策略基础与结构贴合度的加权，而非号码本身的必然性。对比candidate_comparison中排名靠前的其他候选，本方案在历史表现维度得分较低，说明模型更看重当前形态的拟合度而非长期频率回归。复式方案通过扩大前区至8码并增加后区选项，以compound_budget所示的高昂预算换取覆盖率的提升，试图弥补单注结构过于极端的缺陷。然而，single_structure显示的和值108与跨度26属于特定离散区间，若实际开奖偏离此范围，现有评分体系的结构贴合优势将迅速减弱。评审需明确，高分仅反映模型对当前样本的拟合程度，不代表中奖概率的提升，各指标间的权衡体现了在有限样本下对形态确定性的追求与随机性本质之间的冲突。",
         "evidence_ids": [
-          "single_structure",
-          "candidate_comparison",
-          "single_back_5",
-          "single_back_9",
-          "history_window",
-          "compound_structure",
-          "compound_budget"
-        ]
-      },
-      "single_reason": {
-        "text": "本方案评审聚焦于结构贴合度与历史表现的权衡。前区跨度28及和值77显示号码分布偏向中低位密集，这与上期复盘提示的离散度风险形成对比，需评估实际开奖是否向两端发散。后区选取05与09，前者遗漏38期属极端冷号，后者遗漏0期为极热号，这种冷热搭配在独立随机事件中缺乏必然的回补逻辑，仅体现对孤立样本的捕捉。综合分44.71虽居候选首位，但策略基础60.0与近期表现4.76的巨大落差表明评分高度依赖长期结构而非短期趋势，取舍在于以结构稳定性牺牲了对近期波动的敏感度。",
-        "evidence_ids": [
-          "single_structure",
-          "single_back_5",
-          "single_back_9",
           "single_selection",
-          "single_identity"
-        ]
-      },
-      "compound_reason": {
-        "text": "本方案采用8+4复式结构，核心取舍在于以预算成本换取对前区高频热号的覆盖能力。通过引用evidence_ids: [compound_front_10, compound_front_11]可见，所选号码在近50期内均处于遗漏值为0的热态，这种策略旨在利用短期惯性捕捉连续出号的可能，而非追求冷门回补。同时，结合evidence_ids: [compound_budget]可知，展开336注带来的资金压力是覆盖广度的直接代价，必须在成本与概率空间之间进行权衡。此外，参考evidence_ids: [single_selection]中的综合分排名逻辑，该复式保留了高分单注的核心骨架，体现了在有限预算下优先保障核心结构完整性的取舍思路，而非盲目扩大选号范围。",
-        "evidence_ids": [
-          "compound_front_10",
-          "compound_front_11",
+          "candidate_comparison",
+          "single_structure",
           "compound_budget",
-          "selection_role",
-          "compound_identity",
+          "history_window",
           "compound_structure"
         ]
       },
-      "risk": {
-        "text": "本方案的核心风险在于对极端遗漏号码的依赖与独立随机性之间的冲突。前区31号近50期仅出现3次且当前遗漏16期，属于典型的小概率长尾分布；后区05号遗漏高达38期，其出现完全依赖随机波动而非历史回补逻辑。这种结构在统计上具有极高的离散度，一旦开奖号码向高频密集区收敛，该组合将因缺乏支撑而失效。同时，复式方案覆盖336注，成本显著高于单注，若未能命中关键胆码，投入产出比将面临严峻挑战。评审需明确：历史低频不代表未来必出，遗漏值仅是状态描述而非概率修正，任何基于“冷号回补”的假设均无统计学依据。",
+      "single_reason": {
+        "text": "本方案选取前区号码时，重点权衡了历史表现与结构贴合度。证据single_front_17显示该号近50期出现10次且当前遗漏为0，属于高频热号，其入选体现了策略对近期活跃度的依赖；而single_front_23仅出现1次且遗漏9期，作为冷号被纳入，旨在覆盖低概率分布区域。这种冷热搭配并非基于回补逻辑，而是为了在评分模型中平衡历史表现得分。同时，single_structure指出前区奇数4个、偶数1个，和值108，跨度26，这种极端偏态结构在候选比较中虽导致单一形态风险，但因其综合分最高而被保留，反映了模型对特定结构特征的偏好而非概率优势。",
         "evidence_ids": [
-          "single_front_31",
+          "single_front_17",
+          "single_front_23",
+          "single_structure",
+          "single_identity",
+          "single_selection"
+        ]
+      },
+      "compound_reason": {
+        "text": "本方案采用8+4复式结构，通过扩大前区覆盖范围以应对单注评分模型在极端形态下的局限性。前区选取兼顾了近期高频出现的号码与长期遗漏的冷号，这种组合旨在平衡样本分布的离散度，避免单一结构过于集中导致的风险。后区则选择了包含零遗漏热号与长遗漏冷号的搭配，利用不同遗漏阶段的号码特性进行分散覆盖。该策略的核心取舍在于以较高的投注成本换取对更多可能形态的包容性，而非追求单注的高评分集中度。",
+        "evidence_ids": [
+          "compound_budget",
+          "compound_structure",
+          "compound_front_3",
+          "compound_back_5",
+          "compound_identity"
+        ]
+      },
+      "risk": {
+        "text": "单注前区跨度26与和值108体现了对离散分布的侧重，依据single_structure指标，这种结构在覆盖广度的同时牺牲了局部密度，若开奖号码集中在中位区间，该方案的评分优势将因结构贴合度不足而失效。后区选取5号遗漏39期与10号遗漏1期形成极端对比，依据single_back_5和single_back_10证据，这种冷热搭配在独立随机事件中缺乏必然的回补逻辑，仅作为样本孤立性的体现。复式方案通过8+4格式扩大覆盖，依据compound_budget数据，其展开的336注及对应成本增加了资金门槛，旨在以预算换取概率空间的提升，但并未改变单注命中的随机本质。",
+        "evidence_ids": [
+          "single_structure",
           "single_back_5",
+          "single_back_10",
           "compound_budget",
           "uncertainty",
           "history_window"
         ]
       },
       "next_focus": {
-        "text": "本期需重点评估前区跨度与和值的离散度，以检验方案对极端形态的容忍度。单注结构显示中低位密集分布，若实际开奖向两端发散，则现有评分模型的结构贴合度将面临挑战。后区选取虽涵盖高频号，但遗漏值差异巨大，表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+        "text": "结合上期对跨度与和值离散度的关注，本期需重点审视前区号码在区间分布上的均衡性。证据single_front_17显示该号当前遗漏为0期，属于热态延续；而single_front_23遗漏9期，处于相对冷态。这种冷热并存的结构取舍，旨在通过覆盖不同活跃度区域来应对随机波动。若实际开奖号码集中在近期高频区间，则单注中低频号的权重分配将面临效率低下的风险。同时，后区选取需关注compound_back_9的0期遗漏状态，其作为极热号在独立随机事件中的持续出现概率极低，过度依赖此类号码可能增加组合的不稳定性。因此，下一期的评审应更侧重于验证评分模型对冷热交替节奏的捕捉能力，而非单纯追求历史频率的高匹配度。",
         "evidence_ids": [
-          "single_structure",
-          "compound_structure",
+          "single_front_17",
+          "single_front_23",
+          "compound_back_9",
           "previous_review",
           "history_window",
           "single_identity",
@@ -67,50 +67,50 @@
     },
     "model_evidence_ids": {
       "overview": [
-        "single_structure",
+        "single_selection",
         "candidate_comparison",
-        "single_back_5",
-        "single_back_9"
+        "single_structure",
+        "compound_budget"
       ],
       "single_reason": [
-        "single_structure",
-        "single_back_5",
-        "single_back_9",
-        "single_selection"
+        "single_front_17",
+        "single_front_23",
+        "single_structure"
       ],
       "compound_reason": [
-        "compound_front_10",
-        "compound_front_11",
         "compound_budget",
-        "selection_role"
+        "compound_structure",
+        "compound_front_3",
+        "compound_back_5"
       ],
       "risk": [
-        "single_front_31",
+        "single_structure",
         "single_back_5",
+        "single_back_10",
         "compound_budget"
       ],
       "next_focus": [
-        "single_structure",
-        "compound_structure",
-        "previous_review"
+        "single_front_17",
+        "single_front_23",
+        "compound_back_9"
       ]
     },
     "evidence_policy": "model-plus-canonical-v1",
     "kind": "analysis",
-    "issue": "26134",
+    "issue": "26135",
     "identity": {
-      "target_issue": "26134",
+      "target_issue": "26135",
       "single": {
         "front": [
-          3,
           7,
-          14,
-          22,
-          31
+          17,
+          23,
+          28,
+          33
         ],
         "back": [
           5,
-          9
+          10
         ]
       },
       "compound": {
@@ -119,71 +119,71 @@
           3,
           7,
           10,
-          11,
           14,
-          22,
-          25,
-          31
+          17,
+          23,
+          28,
+          33
         ],
         "back": [
           4,
           5,
-          7,
-          9
+          9,
+          10
         ]
       }
     },
-    "history_cutoff": "26133",
+    "history_cutoff": "26134",
     "evidence": {
-      "history_window": "样本50期，截止26133期，目标26134期。",
+      "history_window": "样本50期，截止26134期，目标26135期。",
       "selection_role": "号码由现有算法构造并已冻结；本次AI负责综合分析、候选评审和解释，不重新选号，不把候选的随机构造冒称为AI选号。",
       "uncertainty": "每期开奖相互独立；历史频率和评分不是中奖概率；不保证任何组合中奖。",
-      "single_identity": "已冻结正式单注：前区[3, 7, 14, 22, 31]，后区[5, 9]。",
-      "compound_identity": "已冻结复式：前区[3, 7, 10, 11, 14, 22, 25, 31]，后区[4, 5, 7, 9]。",
-      "single_front_3": "前区 03：近50期出现11次，当前遗漏5期。",
-      "single_front_7": "前区 07：近50期出现7次，当前遗漏3期。",
-      "single_front_14": "前区 14：近50期出现13次，当前遗漏4期。",
-      "single_front_22": "前区 22：近50期出现7次，当前遗漏9期。",
-      "single_front_31": "前区 31：近50期出现3次，当前遗漏16期。",
-      "single_back_5": "后区 05：近50期出现5次，当前遗漏38期。",
-      "single_back_9": "后区 09：近50期出现15次，当前遗漏0期。",
-      "single_structure": "前区奇数3个、偶数2个，和值77，跨度28。",
-      "compound_front_3": "前区 03：近50期出现11次，当前遗漏5期。",
-      "compound_front_7": "前区 07：近50期出现7次，当前遗漏3期。",
-      "compound_front_10": "前区 10：近50期出现12次，当前遗漏0期。",
-      "compound_front_11": "前区 11：近50期出现11次，当前遗漏0期。",
-      "compound_front_14": "前区 14：近50期出现13次，当前遗漏4期。",
-      "compound_front_22": "前区 22：近50期出现7次，当前遗漏9期。",
-      "compound_front_25": "前区 25：近50期出现11次，当前遗漏0期。",
-      "compound_front_31": "前区 31：近50期出现3次，当前遗漏16期。",
-      "compound_back_4": "后区 04：近50期出现12次，当前遗漏2期。",
-      "compound_back_5": "后区 05：近50期出现5次，当前遗漏38期。",
-      "compound_back_7": "后区 07：近50期出现11次，当前遗漏2期。",
-      "compound_back_9": "后区 09：近50期出现15次，当前遗漏0期。",
-      "compound_structure": "前区奇数5个、偶数3个，和值123，跨度28。",
-      "single_selection": "正式单注综合分44.71，候选排名1；策略基础60.0、历史表现50.0、近期表现4.76、结构贴合50.0。分数不是概率。",
-      "candidate_comparison": "候选1：前区[10, 15, 22, 24, 33]、后区[2, 4]，综合分39.74，排名5；候选2：前区[7, 11, 14, 20, 24]、后区[5, 10]，综合分39.44，排名6；候选3：前区[3, 7, 14, 25, 31]、后区[4, 9]，综合分43.29，排名4；候选4：前区[22, 21, 15, 4, 31]、后区[1, 5]，综合分44.27，排名3；候选5：前区[3, 14, 19, 26, 32]、后区[5, 8]，综合分44.71，排名1；候选6：前区[3, 7, 14, 22, 31]、后区[5, 9]，综合分44.71，排名1",
+      "single_identity": "已冻结正式单注：前区[7, 17, 23, 28, 33]，后区[5, 10]。",
+      "compound_identity": "已冻结复式：前区[3, 7, 10, 14, 17, 23, 28, 33]，后区[4, 5, 9, 10]。",
+      "single_front_7": "前区 07：近50期出现7次，当前遗漏4期。",
+      "single_front_17": "前区 17：近50期出现10次，当前遗漏0期。",
+      "single_front_23": "前区 23：近50期出现1次，当前遗漏9期。",
+      "single_front_28": "前区 28：近50期出现4次，当前遗漏11期。",
+      "single_front_33": "前区 33：近50期出现7次，当前遗漏5期。",
+      "single_back_5": "后区 05：近50期出现4次，当前遗漏39期。",
+      "single_back_10": "后区 10：近50期出现7次，当前遗漏1期。",
+      "single_structure": "前区奇数4个、偶数1个，和值108，跨度26。",
+      "compound_front_3": "前区 03：近50期出现11次，当前遗漏6期。",
+      "compound_front_7": "前区 07：近50期出现7次，当前遗漏4期。",
+      "compound_front_10": "前区 10：近50期出现12次，当前遗漏1期。",
+      "compound_front_14": "前区 14：近50期出现13次，当前遗漏5期。",
+      "compound_front_17": "前区 17：近50期出现10次，当前遗漏0期。",
+      "compound_front_23": "前区 23：近50期出现1次，当前遗漏9期。",
+      "compound_front_28": "前区 28：近50期出现4次，当前遗漏11期。",
+      "compound_front_33": "前区 33：近50期出现7次，当前遗漏5期。",
+      "compound_back_4": "后区 04：近50期出现11次，当前遗漏3期。",
+      "compound_back_5": "后区 05：近50期出现4次，当前遗漏39期。",
+      "compound_back_9": "后区 09：近50期出现16次，当前遗漏0期。",
+      "compound_back_10": "后区 10：近50期出现7次，当前遗漏1期。",
+      "compound_structure": "前区奇数5个、偶数3个，和值135，跨度30。",
+      "single_selection": "正式单注综合分44.54，候选排名1；策略基础60.0、历史表现50.0、近期表现3.57、结构贴合50.0。分数不是概率。",
+      "candidate_comparison": "候选1：前区[7, 10, 17, 20, 26]、后区[7, 10]，综合分40.24，排名5；候选2：前区[3, 7, 11, 24, 33]、后区[5, 10]，综合分39.45，排名6；候选3：前区[3, 11, 17, 25, 28]、后区[4, 9]，综合分42.96，排名4；候选4：前区[22, 21, 5, 28, 23]、后区[1, 5]，综合分44.83，排名1；候选5：前区[4, 11, 19, 25, 30]、后区[3, 8]，综合分44.54，排名2；候选6：前区[7, 17, 23, 28, 33]、后区[5, 10]，综合分44.54，排名1",
       "compound_budget": "复式8+4，展开336注，基本投注672元，全部追加合计1008元。",
-      "previous_review": "上期AI复盘26131的关注点：基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。这只是分析参考，不是已实施的权重变更。"
+      "previous_review": "上期AI复盘26134的关注点：本期需重点评估前区跨度与和值的离散度，以检验方案对极端形态的容忍度。单注结构显示中低位密集分布，若实际开奖向两端发散，则现有评分模型的结构贴合度将面临挑战。后区选取虽涵盖高频号，但遗漏值差异巨大，表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。这只是分析参考，不是已实施的权重变更。"
     },
     "previous_review": {
-      "issue": "26131",
-      "record_hash": "e7dd81b9f5b9584499558d0dc2cd1247c2b6963bef43d8b13bfde137518dfd26",
+      "issue": "26134",
+      "record_hash": "da72145839e717bfd5610b6920c372cc6f2278d00cd3a0763f5682be52183bde",
       "next_focus": {
-        "text": "基于上期结构偏差教训，本期需重点评估号码分布的离散度与极端形态的容忍度。前区跨度及和值显示方案偏向中低位密集分布，需警惕实际开奖向两端发散的风险。后区选取均为高频号，但遗漏值差异表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
+        "text": "本期需重点评估前区跨度与和值的离散度，以检验方案对极端形态的容忍度。单注结构显示中低位密集分布，若实际开奖向两端发散，则现有评分模型的结构贴合度将面临挑战。后区选取虽涵盖高频号，但遗漏值差异巨大，表明冷热搭配在独立随机事件中缺乏必然的回补逻辑，应关注其作为随机样本的孤立性而非连续性。",
         "evidence_ids": [
           "structure_comparison",
           "single_frozen",
-          "draw"
+          "prior_analysis"
         ]
       }
     },
     "created_before_draw": true,
-    "historical_data_hash": "89f96092d822ada2cfa9078ea7e634cf61a9c8589ad9b7fcbf8cc23d47f72708",
-    "raw_source_hash": "4ce26c7115ff812c631f5954f53af22116429b556a92ed3289e8b41d9e877a98",
+    "historical_data_hash": "80c40f8c3f740a29442f5fbb5648f0da2b2e2dcdadc2f0339ccf922b028f68d8",
+    "raw_source_hash": "2b0f94bc1d58ef0aeadfd7292e7be85795da617839443461b10b8862545eecee",
     "editorial_policy": "grounded-editorial-v1",
     "editorial_removed_clauses": 0,
-    "reviewed_at": "2026-11-21T15:44:11.334384+00:00"
+    "reviewed_at": "2026-11-24T05:10:15.886164+00:00"
   },
   "review": {
     "status": "completed",
@@ -359,7 +359,7 @@
   },
   "statuses": {
     "review": "completed",
-    "analysis": "invalid_response"
+    "analysis": "completed"
   },
   "diag": {
     "counts": {
@@ -367,58 +367,51 @@
         "unverified_numeric": 37
       },
       "reflection": {
-        "empty_content": 4,
+        "empty_content": 5,
         "json_parse": 1
       },
       "analysis": {
-        "unverified_numeric": 10,
+        "unverified_numeric": 12,
         "forbidden": 1,
-        "schema": 2,
+        "schema": 3,
         "promise": 1
       }
     },
     "last_failure": {
-      "at": "2026-11-24T01:26:02.876299+00:00",
+      "at": "2026-11-24T05:10:07.474124+00:00",
       "kind": "analysis",
       "section": "merged",
       "category": "unverified_numeric",
-      "reason": "unverified_numeric_single_reason_44.83"
+      "reason": "unverified_numeric_compound_reason_26"
     },
     "run_failures": [
       {
-        "at": "2026-11-24T01:24:10.290252+00:00",
+        "at": "2026-11-24T05:08:20.574552+00:00",
         "kind": "reflection",
         "section": "-",
         "category": "empty_content",
         "reason": "empty_content"
       },
       {
-        "at": "2026-11-24T01:25:01.883969+00:00",
+        "at": "2026-11-24T05:09:07.881839+00:00",
         "kind": "analysis",
         "section": "merged",
         "category": "schema",
         "reason": "bad evidence refs"
       },
       {
-        "at": "2026-11-24T01:25:44.934499+00:00",
+        "at": "2026-11-24T05:09:56.500646+00:00",
         "kind": "analysis",
         "section": "merged",
         "category": "unverified_numeric",
-        "reason": "unverified_numeric_overview_16"
+        "reason": "unverified_numeric_overview_14"
       },
       {
-        "at": "2026-11-24T01:25:54.608348+00:00",
+        "at": "2026-11-24T05:10:07.474124+00:00",
         "kind": "analysis",
         "section": "merged",
         "category": "unverified_numeric",
-        "reason": "unverified_numeric_single_reason_44.83"
-      },
-      {
-        "at": "2026-11-24T01:26:02.876299+00:00",
-        "kind": "analysis",
-        "section": "merged",
-        "category": "unverified_numeric",
-        "reason": "unverified_numeric_single_reason_44.83"
+        "reason": "unverified_numeric_compound_reason_26"
       }
     ]
   }
