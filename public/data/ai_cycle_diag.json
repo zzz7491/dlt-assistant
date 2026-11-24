@@ -5,7 +5,7 @@
       "unverified_numeric": 37
     },
     "reflection": {
-      "empty_content": 5,
+      "empty_content": 6,
       "json_parse": 1
     },
     "analysis": {
@@ -16,13 +16,6 @@
     }
   },
   "events": [
-    {
-      "at": "2026-11-20T15:08:32.218064+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_limitations_4"
-    },
     {
       "at": "2026-11-21T09:07:20.644683+00:00",
       "kind": "review",
@@ -225,18 +218,25 @@
       "section": "merged",
       "category": "unverified_numeric",
       "reason": "unverified_numeric_compound_reason_26"
+    },
+    {
+      "at": "2026-11-24T11:57:25.241355+00:00",
+      "kind": "reflection",
+      "section": "-",
+      "category": "empty_content",
+      "reason": "empty_content"
     }
   ],
   "last_statuses": {
     "review": "completed",
     "analysis": "completed"
   },
-  "updated_at": "2026-11-24T05:10:15.890036+00:00",
+  "updated_at": "2026-11-24T11:57:25.250123+00:00",
   "last_failure": {
-    "at": "2026-11-24T05:10:07.474124+00:00",
-    "kind": "analysis",
-    "section": "merged",
-    "category": "unverified_numeric",
-    "reason": "unverified_numeric_compound_reason_26"
+    "at": "2026-11-24T11:57:25.241355+00:00",
+    "kind": "reflection",
+    "section": "-",
+    "category": "empty_content",
+    "reason": "empty_content"
   }
 }
