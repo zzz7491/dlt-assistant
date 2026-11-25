@@ -2,7 +2,7 @@
   "schema_version": 1,
   "counts": {
     "review": {
-      "unverified_numeric": 41
+      "unverified_numeric": 45
     },
     "reflection": {
       "empty_content": 8,
@@ -16,34 +16,6 @@
     }
   },
   "events": [
-    {
-      "at": "2026-11-21T15:43:09.973994+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_limitations_4"
-    },
-    {
-      "at": "2026-11-21T15:43:17.152197+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_limitations_4"
-    },
-    {
-      "at": "2026-11-21T15:44:01.008825+00:00",
-      "kind": "analysis",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_overview_38"
-    },
-    {
-      "at": "2026-11-21T20:25:32.808242+00:00",
-      "kind": "review",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_limitations_4"
-    },
     {
       "at": "2026-11-21T20:25:42.546651+00:00",
       "kind": "review",
@@ -225,15 +197,43 @@
       "section": "merged",
       "category": "unverified_numeric",
       "reason": "unverified_numeric_next_focus_9"
+    },
+    {
+      "at": "2026-11-25T22:55:57.459061+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_next_focus_9"
+    },
+    {
+      "at": "2026-11-25T22:56:05.475946+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_next_focus_9"
+    },
+    {
+      "at": "2026-11-25T22:56:10.066858+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_next_focus_9"
+    },
+    {
+      "at": "2026-11-25T22:56:14.653698+00:00",
+      "kind": "review",
+      "section": "merged",
+      "category": "unverified_numeric",
+      "reason": "unverified_numeric_next_focus_9"
     }
   ],
   "last_statuses": {
     "review": "invalid_response",
     "analysis": "completed"
   },
-  "updated_at": "2026-11-25T13:57:21.882038+00:00",
+  "updated_at": "2026-11-25T22:56:14.659403+00:00",
   "last_failure": {
-    "at": "2026-11-25T13:56:28.504071+00:00",
+    "at": "2026-11-25T22:56:14.653698+00:00",
     "kind": "review",
     "section": "merged",
     "category": "unverified_numeric",
