@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-11-23 15:05:06",
+  "updated_at": "2026-11-25 13:54:23",
   "empty": false,
-  "issue": "26134",
+  "issue": "26135",
   "snapshot_status": "ok",
   "authoritative": true,
-  "snapshot_hash": "ab390488b09eda4935aca9e778204ceb6123a9cad1681bcd2921320985a37fe0",
+  "snapshot_hash": "970583dfde6c1a4ab9da2b82b45a05c720bf9a14e96f00dc5cf12f52661cd8e4",
   "recommendation": {
     "strategy": "F-综合AI型",
     "front": [
-      3,
       7,
-      14,
-      22,
-      31
+      17,
+      23,
+      28,
+      33
     ],
     "back": [
       5,
-      9
+      10
     ],
-    "score_total": 44.71,
+    "score_total": 44.54,
     "model_version": null
   },
   "reason": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
@@ -26,7 +26,7 @@
     "explanation_version": "1.1",
     "strategy_type": "unknown",
     "strategy": "F-综合AI型",
-    "target_issue": "26134",
+    "target_issue": "26135",
     "summary": "本期推荐理由暂未生成（缺少可追溯的统计依据）。",
     "factors": [],
     "generated_from": [],
@@ -35,21 +35,21 @@
   },
   "actual_result": {
     "front": [
-      4,
-      15,
-      17,
+      1,
+      8,
+      20,
       24,
-      31
+      33
     ],
     "back": [
-      6,
-      9
+      3,
+      4
     ]
   },
   "hit_count": {
     "front": 1,
-    "back": 1,
-    "total": 2,
+    "back": 0,
+    "total": 1,
     "level": 1
   },
   "prize": {
@@ -57,7 +57,7 @@
     "amount": 0
   },
   "analysis": {
-    "sum_diff": 14,
+    "sum_diff": 22,
     "factor_review": {}
   },
   "next_adjustment": [],
