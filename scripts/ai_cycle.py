@@ -466,6 +466,12 @@ def request_analysis(context):
         if context['kind']=='analysis':
             for name,refs in canonical.items():
                 raw[name]['evidence_ids']=list(dict.fromkeys(raw[name]['evidence_ids']+[r for r in refs if r in context['evidence']]))
+        if context['kind']=='review':
+            # Review's next_focus naturally restates the pre-draw analysis
+            # focus and the draw itself; attach those canonical facts the
+            # same way, or their numbers fail validation as unverified.
+            for name,refs in {'next_focus':['prior_analysis','draw']}.items():
+                raw[name]['evidence_ids']=list(dict.fromkeys(raw[name]['evidence_ids']+[r for r in refs if r in context['evidence']]))
         # validate_response gates BOTH kinds. Until 2026-11-01 this call sat
         # inside the analysis-only branch, so every review reached the return
         # below with `sections` unbound; the resulting UnboundLocalError is

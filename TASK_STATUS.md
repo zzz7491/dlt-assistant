@@ -1,3 +1,7 @@
+## 2026-11-28 — 大乐透复盘 review canonical 补挂修复（已上线，待今晚生产轮次验收）
+
+26135 期复盘连三晚 invalid_response（unverified_numeric_next_focus_9）已治本：根因为合并校验前的 canonical 证据补挂只覆盖 analysis、review 的 next_focus 复述事前分析数字（遗漏9期，只存在于 prior_analysis）时无兜底。scripts/ai_cycle.py 已按同机制给 review 的 next_focus 补挂 prior_analysis＋draw（详见 CHANGELOG 2026-11-28 条）。验证：全量测试零新增回归；26135 上下文针对性复现改动前失败、改动后通过；生产模型 qwen3.6:35b-a3b 真实生成 26135 复盘一次 completed。待验收：2026-11-28（周六）晚生产轮次 statuses.review 应为 completed。
+
 ## 2026-11-17 — AI 链修复第一阶段 P1–P5（代码完成并上线，待生产轮次验收）
 
 按 2026-11-17 审计提案（ai-selfimprove-audit）与所有者批准的顺序（先闭环 P1–P5、再走势输入 P6–P8、后度量 P9–P11）执行第一阶段：P1 ai_cycle 失败可观测化（ai_cycle_diag 落盘）、P2 解 awaiting_review 阻塞（degraded=review_stale）、P3 失败不清空产物（归档回填 + guidance 兜底）、P4 四彩种复盘闭环（src/common/review_cycle.py，程序核算错因 + improvement/verdict + synthesize 喂回存证）、P5 E-走势AI 分段链降级续跑（ai_pick_diag 计数）。提交：55cf32e / d9ac7b2 / 521337b / 0bad570 / 030fbd3。全量测试零新增回归（失败集合与基线逐项相同）；本地以生产数据实跑验收通过（详见 CHANGELOG 2026-11-17 条）。待验收：2026-11-17 晚双色球生产轮次（P4 首次真实运行）、2026-11-18 大乐透轮次（P1–P3/P5）。第二阶段 P6–P8 可直接衔接。

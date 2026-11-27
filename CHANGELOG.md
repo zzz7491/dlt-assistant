@@ -1,3 +1,11 @@
+## 2026-11-28 — 大乐透复盘 review 补 canonical 证据补挂（修复连三晚 invalid_response）
+
+- 现象：26135 期复盘连续三晚（11-25/26/27）statuses.review=invalid_response，diag 同因 unverified_numeric_next_focus_9；分析与出号不受影响。
+- 根因：review 的 next_focus 复述事前分析「遗漏9期」，数字 9 只存在于证据 prior_analysis，模型未引用它；合并校验前的 canonical 证据补挂只对 analysis 生效，review 无兜底，4 轮反馈重试同因耗尽。
+- 修复：scripts/ai_cycle.py 的 request_analysis() 在 analysis 补挂分支后按同一机制加 review 分支——review 的 next_focus 自动补挂 prior_analysis 与 draw 两条证据。不改校验规则、不改提示词、不动其他章节补挂。
+- 验证：全量 462 项测试失败集合与改动前基线逐项相同（51 项均为既有环境性失败），零新增回归；以站点公开数据重建 26135 复盘上下文（snapshot_hash 校验通过）做针对性复现——同一构造响应改动前四轮均抛 unverified_numeric_next_focus_9 以 invalid_response 收尾，改动后 completed；再经 ai.mootlsv.com 中继以生产模型 qwen3.6:35b-a3b 真实生成 26135 复盘一次通过（该轮模型仍未自引 prior_analysis、正文含「遗漏9期」，靠补挂过校验）。
+- 回滚：revert 本提交即恢复。
+
 ## 2026-11-17 — AI 链修复第一阶段：复盘闭环 P1–P5（审计提案 ai-selfimprove-audit-2026-11-17）
 
 - 背景：审计实锤——大乐透复盘闭环静默断裂（复盘失败→下期分析被 awaiting_review 硬挡→improvement 被 fail-open 丢弃且无告警）、四数字彩根本没有复盘闭环、E-走势AI 分段链任一段失败整策略跳过（生产样本仅 1 期）、失败 reason 只 print 到 Actions 日志不可回溯。mo 2026-11-17 批准按 P1–P11 顺序开修（先闭环、再走势输入、后度量），本阶段为 P1–P5。
