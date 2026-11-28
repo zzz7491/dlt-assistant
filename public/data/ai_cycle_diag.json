@@ -6,7 +6,7 @@
     },
     "reflection": {
       "empty_content": 9,
-      "json_parse": 1
+      "json_parse": 2
     },
     "analysis": {
       "unverified_numeric": 12,
@@ -16,13 +16,6 @@
     }
   },
   "events": [
-    {
-      "at": "2026-11-24T05:09:56.500646+00:00",
-      "kind": "analysis",
-      "section": "merged",
-      "category": "unverified_numeric",
-      "reason": "unverified_numeric_overview_14"
-    },
     {
       "at": "2026-11-24T05:10:07.474124+00:00",
       "kind": "analysis",
@@ -225,18 +218,25 @@
       "section": "-",
       "category": "empty_content",
       "reason": "empty_content"
+    },
+    {
+      "at": "2026-11-28T09:44:33.702424+00:00",
+      "kind": "reflection",
+      "section": "-",
+      "category": "json_parse",
+      "reason": "json_or_schema_error"
     }
   ],
   "last_statuses": {
     "review": "completed",
     "analysis": "completed"
   },
-  "updated_at": "2026-11-27T17:59:52.148189+00:00",
+  "updated_at": "2026-11-28T09:44:33.709462+00:00",
   "last_failure": {
-    "at": "2026-11-27T17:59:52.132083+00:00",
+    "at": "2026-11-28T09:44:33.702424+00:00",
     "kind": "reflection",
     "section": "-",
-    "category": "empty_content",
-    "reason": "empty_content"
+    "category": "json_parse",
+    "reason": "json_or_schema_error"
   }
 }
